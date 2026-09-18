@@ -18,9 +18,9 @@ three virtual machines running K3s.
 
 | Node | Role | Hostname | IP Address | vCPU | RAM | Disk | OS |
 |---|---|---|---|---:|---:|---:|---|
-| Server | K3s control plane | `k3s-server` | `[SERVER_IP]` | 2 | 4 GB | 40 GB | `[OS/VERSION]` |
-| Worker 1 | Primary fault target | `k3s-worker1` | `[WORKER1_IP]` | 2 | 2 GB | 40 GB | `[OS/VERSION]` |
-| Worker 2 | Recovery target | `k3s-worker2` | `[WORKER2_IP]` | 2 | 2 GB | 40 GB | `[OS/VERSION]` |
+| Server | K3s control plane | `k3s-server` | `102.34.160.89` | 4 | 4 GB | 100 GB | `Ubuntu 24.04.5 LTS, Kernel: 6.8.0-59-generic` |
+| Worker 1 | Primary fault target | `k3s-worker1` | `102.34.160.87` | 4 | 4 GB | 100 GB | `Ubuntu 24.04.5 LTS, Kernel: 6.8.0-59-generic` |
+| Worker 2 | Recovery target | `k3s-worker2` | `102.34.160.103` | 4 | 4 GB | 100 GB | `Ubuntu 24.04.5 LTS, Kernel: 6.8.0-59-generic` |
 
 The Rust experimental harness and external workload generator run from
 a separate client machine outside the K3s cluster.
@@ -35,15 +35,16 @@ formal experimental campaign.
 The initial Kubernetes configuration is:
 
 - Kubernetes distribution: **K3s**
-- K3s version: **[K3S_VERSION]**
+- K3s version: **v1.36.4+k3s1**
 - Kubernetes version: **[K8S_VERSION]**
 - Container runtime: **containerd**
+- Configuration: **Default K3s configuration**
 - CNI: **Flannel**
 - Cluster DNS: **CoreDNS**
 - Ingress Controller: **Traefik**
 - Service Load Balancer: **ServiceLB**
 - Initial storage provisioner: **Local Path Provisioner**
-- Formal experimental CSI implementation: **[CSI_IMPLEMENTATION]**
+- Formal experimental CSI implementation: **Flannel**
 - Cluster domain: **[CLUSTER_DOMAIN]**
 - Pod CIDR: **[POD_CIDR]**
 - Service CIDR: **[SERVICE_CIDR]**
@@ -112,6 +113,8 @@ experiment-role=recovery-target
 This separation allows a workload affected by a Worker 1 failure or
 partition to be recovered onto Worker 2 without modifying the native
 Kubernetes scheduler.
+
+![alt text](image.png)
 
 ---
 
@@ -244,9 +247,9 @@ The initial development configuration is:
 
 | Node | vCPU | RAM |
 |---|---:|---:|
-| `k3s-server` | 2 | 4 GB |
-| `k3s-worker1` | 2 | 2 GB |
-| `k3s-worker2` | 2 | 2 GB |
+| `k3s-server` | 4 | 4 GB |
+| `k3s-worker1` | 4 | 4 GB |
+| `k3s-worker2` | 4 | 4 GB |
 
 This profile is intended to provide sufficient capacity for initial
 cluster deployment, workload deployment, controller development, and
