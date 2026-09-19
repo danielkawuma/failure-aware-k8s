@@ -383,7 +383,6 @@ Record:
 
 ```text
 CNI: Flannel
-CNI version: [VERSION]
 Configuration: Default K3s configuration
 ```
 
@@ -428,11 +427,19 @@ Inspect K3s-managed Helm charts:
 sudo k3s kubectl get helmchart -n kube-system
 ```
 
+Get the Traefik version
+
+```bash
+sudo k3s kubectl get deployment traefik \
+  -n kube-system \
+  -o jsonpath='{.spec.template.spec.containers[0].image}'
+```
+
 Record:
 
 ```text
 Ingress Controller: Traefik
-Traefik version: [VERSION]
+Traefik version: 3.7.8
 Configuration: Default K3s configuration
 ```
 
