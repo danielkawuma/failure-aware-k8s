@@ -1476,9 +1476,8 @@ Packet loss:  0%
 The two directions of the native server-to-worker path therefore showed
 similar healthy RTT characteristics during this characterization run.
 
-```markdown
 ![K3s server to Worker 1 healthy ping baseline](images/server-to-worker1-ping.png)
-```
+
 
 ---
 
@@ -1525,11 +1524,8 @@ This path is important because it represents the independent client path
 that should remain available during the Scenario B control-plane
 partition experiment.
 
-Suggested screenshot location:
-
-```markdown
 ![External client to Worker 1 healthy ping baseline](images/client-to-worker1-ping.png)
-```
+
 
 ---
 
@@ -1578,9 +1574,8 @@ the intra-cluster paths during this measurement period.
 The observed packet loss is retained as part of the baseline rather
 than being discarded.
 
-```markdown
 ![External client to K3s server healthy ping baseline](images/client-to-server-ping.png)
-```
+
 
 ---
 
@@ -1627,11 +1622,8 @@ Packet loss:  0%
 This path will later be relevant when workloads recover from Worker 1
 onto Worker 2.
 
-Suggested screenshot location:
-
-```markdown
 ![Worker 1 to Worker 2 healthy ping baseline](images/worker1-to-worker2-ping.png)
-```
+
 
 ---
 
@@ -1696,9 +1688,7 @@ Healthy TCP throughput:
 Worker1 -> Server = 9.41 Gbit/s
 ```
 
-```markdown
 ![Worker 1 to K3s server TCP throughput](images/worker1-to-server-tcp.png)
-```
 
 ---
 
@@ -1728,9 +1718,8 @@ Healthy reverse throughput:
 Server -> Worker1 = 9.72 Gbit/s
 ```
 
-```markdown
 ![K3s server to Worker 1 TCP throughput](images/server-to-worker1-tcp.png)
-```
+
 
 ---
 
@@ -1764,9 +1753,7 @@ Healthy external-client throughput:
 External Client -> Worker1 ~= 44 Mbit/s
 ```
 
-```markdown
 ![External client to Worker 1 TCP throughput](images/client-to-worker1-tcp.png)
-```
 
 ---
 
@@ -1797,9 +1784,8 @@ Worker1 -> External Client ~= 48-50 Mbit/s
 The retransmission count is retained as part of the raw baseline rather
 than discarded.
 
-```markdown
 ![Worker 1 to external client TCP throughput](images/worker1-to-client-tcp.png)
-```
+
 
 ---
 
@@ -1833,9 +1819,7 @@ Healthy Worker1-to-Worker2 throughput:
 Worker1 -> Worker2 = 13.2 Gbit/s
 ```
 
-```markdown
 ![Worker 1 to Worker 2 TCP throughput](images/worker1-to-worker2-tcp.png)
-```
 
 ---
 
@@ -1867,9 +1851,7 @@ The observed asymmetry between the two directions is retained as part
 of the baseline characterization. A single pilot measurement is not
 used to attribute this difference to a specific cause.
 
-```markdown
 ![Worker 2 to Worker 1 TCP throughput](images/worker2-to-worker1-tcp.png)
-```
 
 ---
 
@@ -1933,9 +1915,7 @@ Worker1 -> Server UDP jitter = 0.033 ms
 Worker1 -> Server UDP loss   = 0%
 ```
 
-```markdown
 ![Worker 1 to K3s server UDP jitter baseline](images/worker1-to-server-udp.png)
-```
 
 ---
 
@@ -1976,9 +1956,8 @@ This confirms that the healthy external path exhibited measurable
 variability and a small amount of UDP datagram loss even before
 artificial degradation was introduced.
 
-```markdown
 ![External client to Worker 1 UDP jitter baseline](images/client-to-worker1-udp.png)
-```
+
 
 ---
 
@@ -2015,9 +1994,8 @@ Worker1 -> Worker2 UDP jitter = 0.056 ms
 Worker1 -> Worker2 UDP loss   = 0%
 ```
 
-```markdown
 ![Worker 1 to Worker 2 UDP jitter baseline](images/worker1-to-worker2-udp.png)
-```
+
 
 ---
 
