@@ -1,617 +1,101 @@
 # Experimental Testbed
 
-This document describes the infrastructure, Kubernetes configuration,
-workload environment, resource profiles, networking, storage, and
-installation procedure used for the experimental evaluation of the
-Failure-Aware Kubernetes Controller.
+This document describes the infrastructure, K3s installation,
+Kubernetes configuration, baseline workload validation, networking,
+storage, resource profiles, and experimental procedures used for the
+evaluation of the Failure-Aware Kubernetes Controller.
 
 The testbed configuration forms part of the reproducibility record for
-the project. Configuration changes made after formal experimentation
-begins must be documented and version-controlled.
+the project. Configuration changes made after the formal experimental
+configuration is frozen must be documented and version-controlled.
 
 ---
 
-## Infrastructure Overview
+# 1. Infrastructure Overview
 
 The experimental environment is hosted on **Proxmox** and consists of
 three virtual machines running K3s.
 
 | Node | Role | Hostname | IP Address | vCPU | RAM | Disk | OS |
 |---|---|---|---|---:|---:|---:|---|
-| Server | K3s control plane | `k3s-server` | `102.34.160.89` | 4 | 4 GB | 100 GB | `Ubuntu 24.04.5 LTS, Kernel: 6.8.0-59-generic` |
-| Worker 1 | Primary fault target | `k3s-worker1` | `102.34.160.87` | 4 | 4 GB | 100 GB | `Ubuntu 24.04.5 LTS, Kernel: 6.8.0-59-generic` |
-| Worker 2 | Recovery target | `k3s-worker2` | `102.34.160.103` | 4 | 4 GB | 100 GB | `Ubuntu 24.04.5 LTS, Kernel: 6.8.0-59-generic` |
+| Server | K3s control plane | `k3s-server` | `102.34.160.89` | 4 | 4 GB | 100 GB | Ubuntu 24.04.5 LTS, Kernel `6.8.0-59-generic` |
+| Worker 1 | Primary fault target | `k3s-worker1` | `102.34.160.87` | 4 | 4 GB | 100 GB | Ubuntu 24.04.5 LTS, Kernel `6.8.0-59-generic` |
+| Worker 2 | Recovery target | `k3s-worker2` | `102.34.160.103` | 4 | 4 GB | 100 GB | Ubuntu 24.04.5 LTS, Kernel `6.8.0-59-generic` |
 
 The Rust experimental harness and external workload generator run from
 a separate client machine outside the K3s cluster.
 
-Where possible, the VM addresses should remain fixed throughout the
-formal experimental campaign.
+The VM addresses are intended to remain fixed throughout the formal
+experimental campaign.
 
 ---
 
-## Kubernetes Configuration
+# 2. Repository Layout
 
-The initial Kubernetes configuration is:
-
-- Kubernetes distribution: **K3s**
-- K3s version: **v1.36.4+k3s1**
-- Kubernetes version: **[K8S_VERSION]**
-- Container runtime: **containerd**
-- Configuration: **Default K3s configuration**
-- CNI: **Flannel**
-- Cluster DNS: **CoreDNS**
-- Ingress Controller: **Traefik**
-- Service Load Balancer: **ServiceLB**
-- Initial storage provisioner: **Local Path Provisioner**
-- Formal experimental CSI implementation: **Flannel**
-- Cluster domain: **[CLUSTER_DOMAIN]**
-- Pod CIDR: **[POD_CIDR]**
-- Service CIDR: **[SERVICE_CIDR]**
-
-These components should remain constant between the default K3s baseline
-and the K3s + Failure-Aware Controller experiments unless the component
-itself is explicitly being evaluated as an independent variable.
-
----
-
-## Node Roles
-
-### `k3s-server`
-
-Role: **K3s control plane**
-
-Primary responsibilities include:
-
-- Kubernetes API Server
-- Controller Manager
-- Scheduler
-- cluster datastore
-- Node lifecycle management
-- NodeLease observation
-- cluster-state management
-
-The Failure-Aware Controller will consume native Kubernetes state through
-the Kubernetes API rather than replacing these control-plane mechanisms.
-
----
-
-### `k3s-worker1`
-
-Role: **Primary fault-injection target**
-
-This worker will primarily host workloads used for:
-
-- genuine node-failure experiments
-- control-plane partition experiments
-- complete-isolation experiments
-- degraded-network experiments
-- workload reachability verification
-- stateful workload experiments where applicable
-
-The node will be labelled:
+The project repository currently follows this structure:
 
 ```text
-experiment-role=fault-target
+failure-aware-k8s/
+├── LICENSE
+├── Makefile
+├── README.md
+├── analysis/
+├── controller/
+├── docs/
+│   ├── architecture/
+│   ├── experimental-design.md
+│   ├── hypothesis.md
+│   ├── image.png
+│   └── testbed.md
+├── experiments/
+├── harness/
+├── kubernetes/
+├── scripts/
+└── workloads/
+    └── test-workload/
+        ├── nginx.yaml
+        ├── independent-path-test.sh
+        └── healthy-http-latency.sh
 ```
+
+Workload-specific scripts are kept with the workload to which they
+belong. Generic experimental orchestration scripts will be maintained
+under `scripts/` or `experiments/`, while the formal Rust experimental
+harness will be maintained under `harness/`.
 
 ---
 
-### `k3s-worker2`
+# 3. K3s Installation and Cluster Bootstrap
 
-Role: **Recovery target**
+## 3.1 Operating-System Preparation
 
-This worker provides available compute capacity when workloads on
-`k3s-worker1` require recovery.
-
-The node will be labelled:
+All three K3s nodes use:
 
 ```text
-experiment-role=recovery-target
+Ubuntu 24.04.5 LTS
+Kernel: 6.8.0-59-generic
 ```
 
-This separation allows a workload affected by a Worker 1 failure or
-partition to be recovered onto Worker 2 without modifying the native
-Kubernetes scheduler.
-
-![alt text](image.png)
-
----
-
-## External Experimental Client
-
-The external experimental client is separate from the K3s cluster.
-
-Client details:
-
-- Host: **[PC/LAPTOP NAME]**
-- OS: **[OS/VERSION]**
-- CPU: **[CPU MODEL / CORES]**
-- RAM: **[RAM]**
-- Network connection: **[WIRED / WIFI / OTHER]**
-
-The external client will run:
-
-- Rust experimental harness
-- workload generation
-- experiment coordination
-- fault orchestration
-- event timestamping
-- result collection
-- statistical analysis
-
-Keeping the load generator outside the K3s workers prevents the
-experimental harness itself from consuming the constrained CPU and
-memory resources being measured on the worker nodes.
-
-It also provides an independent client path for determining whether an
-application remains operationally useful when its worker loses
-control-plane connectivity.
-
----
-
-## Workload Configuration
-
-The experimental workload will use an actual containerised Electronic
-Medical Record application.
-
-Healthcare application:
-
-- EMR system: **[EMR NAME]**
-- EMR version: **[VERSION]**
-- Application deployment model: **[DEPLOYMENT MODEL]**
-- Application tier: **[STATELESS / OTHER]**
-- Database: **[MYSQL / MARIADB / POSTGRESQL / OTHER]**
-- Database version: **[VERSION]**
-
-The application tier represents the duplication-safe portion of the
-workload where appropriate.
-
-The relational database represents a
-**duplication-sensitive stateful workload** because concurrent
-authoritative execution may create consistency risks.
-
-The workload should expose repeatable operations suitable for automated
-experimental testing.
-
-Examples:
-
-- read operation: **[ENDPOINT / ACTION]**
-- write operation: **[ENDPOINT / ACTION]**
-- health endpoint: **[ENDPOINT]**
-
-The exact workload configuration will be frozen before formal
-experimental data collection.
-
----
-
-## Storage Configuration
-
-Persistent database data must not rely on ephemeral container storage.
-
-The storage path is expected to follow:
-
-```text
-EMR Application
-      |
-      v
-Relational Database
-      |
-      v
-PersistentVolumeClaim
-      |
-      v
-CSI / Persistent Storage
-```
-
-Initial development storage:
-
-- StorageClass: **[STORAGE_CLASS]**
-- Provisioner: **[PROVISIONER]**
-- Access mode: **[RWO / RWOP / OTHER]**
-- Volume size: **[SIZE]**
-- Volume type: **[LOCAL / LONGHORN / CEPH / NFS / OTHER]**
-
-The K3s Local Path Provisioner may be used during initial application
-deployment and development.
-
-For formal stateful recovery experiments, a CSI-backed storage system
-capable of supporting recovery on another worker will be selected and
-documented.
-
-Formal experimental storage:
-
-- CSI implementation: **[CSI_IMPLEMENTATION]**
-- CSI version: **[VERSION]**
-- StorageClass: **[STORAGE_CLASS]**
-- Access mode: **[RWO / RWOP]**
-- Replication factor: **[VALUE / N/A]**
-- Persistent volume size: **[SIZE]**
-
-Native RWO/RWOP access-mode enforcement will remain part of the storage
-stack. However, the project does not assume that these mechanisms alone
-constitute sufficient fencing under the target network-partition
-scenarios.
-
-Explicit fencing will therefore be evaluated for recovery of
-duplication-sensitive stateful workloads before a replacement instance
-is permitted to become authoritative.
-
----
-
-## Resource Profiles
-
-### Development Profile
-
-The initial development configuration is:
-
-| Node | vCPU | RAM |
-|---|---:|---:|
-| `k3s-server` | 4 | 4 GB |
-| `k3s-worker1` | 4 | 4 GB |
-| `k3s-worker2` | 4 | 4 GB |
-
-This profile is intended to provide sufficient capacity for initial
-cluster deployment, workload deployment, controller development, and
-pilot experiments.
-
----
-
-### Formal Experimental Profiles
-
-Resource constraints will later be introduced as controlled
-experimental variables.
-
-Initial candidate profiles are:
-
-#### Low Resource Profile
-
-- CPU: **1 vCPU**
-- RAM: **1 GB**
-
-#### Medium Resource Profile
-
-- CPU: **2 vCPU**
-- RAM: **2 GB**
-
-#### Higher Resource Profile
-
-- CPU: **4 vCPU**
-- RAM: **4 GB**
-
-The final profiles will be frozen after preliminary testbed
-characterisation.
-
-For a given baseline-versus-controller comparison, worker CPU and memory
-allocations must remain identical.
-
----
-
-## Network Configuration
-
-The normal network profile should be recorded before experimental fault
-injection.
-
-Baseline network:
-
-- available bandwidth: **[VALUE]**
-- round-trip latency: **[VALUE]**
-- packet loss: **[VALUE]**
-- jitter: **[VALUE]**
-
-The experimental network condition is represented by:
-
-```text
-N = {B, L, P, J}
-```
-
-where:
-
-- `B` = available bandwidth
-- `L` = round-trip latency
-- `P` = packet-loss rate
-- `J` = network jitter
-
-Experimental network controls may include:
-
-- `tc/netem`
-- `iptables` / `nftables`
-- Chaos Mesh
-- other documented fault-injection mechanisms
-
-The network configuration must support selective partitions.
-
-In particular, Scenario B requires:
-
-```text
-k3s-worker1  X  k3s-server
-
-while
-
-External Client  --->  k3s-worker1 / workload
-```
-
-The worker-to-control-plane path must therefore be disrupted without
-simultaneously destroying the independent client-to-workload path.
-
----
-
-## Primary Experimental Comparison
-
-The principal experimental comparison is:
-
-```text
-DEFAULT K3s
-Failure-Aware Controller OFF
-```
-
-versus:
-
-```text
-K3s + FAILURE-AWARE CONTROLLER
-Failure-Aware Controller ON
-```
-
-For each comparison, the following must remain fixed:
-
-- K3s version
-- Kubernetes version
-- CNI
-- Ingress Controller
-- workload version
-- database version
-- storage configuration
-- worker resource profile
-- network condition
-- fault condition
-- request rate
-- client concurrency
-- transaction mix
-- experiment duration
-
-The intended architectural difference is the presence or absence of the
-Failure-Aware Controller.
-
----
-
-## Failure Scenarios
-
-The experimental evaluation contains five principal scenarios.
-
-### Scenario A — Genuine Worker Failure
-
-The target worker is terminated.
-
-Expected operational state:
-
-```text
-unreachable
-```
-
-Primary measurements include:
-
-- Failure Detection Latency
-- Failure Classification Latency
-- Decision Timing Difference
-- Workload Switching Latency
-- Service Interruption Duration
-- End-to-End Recovery Latency
-
----
-
-### Scenario B — Control-Plane Partition, Workload Reachable
-
-Communication between `k3s-worker1` and `k3s-server` is severed while
-the external client-to-workload path remains available.
-
-Expected operational state:
-
-```text
-reachable_outside_control_plane
-```
-
-This is the primary scenario demonstrating the ambiguity addressed by
-the project.
-
-The expected condition is:
-
-```text
-Kubernetes view:
-
-k3s-worker1
-     |
-     X
-     |
-k3s-server
-
-Node -> Unknown / Unreachable
-
-
-Independent client view:
-
-External Client
-     |
-     | HTTP/Application traffic
-     v
-EMR on k3s-worker1
-
-Service -> Still Available
-```
-
-Primary measurements include:
-
-- Failure Classification Latency
-- Decision Timing Difference
-- unnecessary workload recreation
-- local service availability
-- application latency
-- diagnostic overhead
-
----
-
-### Scenario C — Complete Worker Isolation
-
-`k3s-worker1` remains operational but all relevant network paths are
-isolated.
-
-Expected operational state:
-
-```text
-unreachable
-```
-
-The Failure-Aware Controller intentionally does not claim that this
-observation proves a physical worker crash because the same externally
-observable state may result from complete network isolation.
-
----
-
-### Scenario D — Stateful Database Failure and Recovery
-
-The worker hosting the duplication-sensitive relational database is
-failed or isolated.
-
-The experiment evaluates:
-
-- recovery decision
-- explicit fencing
-- storage authority transition
-- volume detach/attach
-- database startup
-- database crash recovery
-- duplicate authoritative execution
-
-Recovery must follow the safety sequence:
-
-```text
-RECOVER requested
-       |
-       v
-Duplication-sensitive workload?
-       |
-      YES
-       |
-       v
-Explicit fencing
-       |
-       v
-Verify old authority excluded
-       |
-       v
-Permit native Kubernetes recovery
-       |
-       v
-Replacement becomes authoritative
-```
-
----
-
-### Scenario E — Degraded Network
-
-The worker remains operational while network quality is degraded using
-controlled changes to:
-
-- bandwidth
-- latency
-- packet loss
-- jitter
-
-No genuine worker failure is deliberately introduced.
-
-The experiment measures whether degradation causes inappropriate
-recovery decisions and how much diagnostic traffic is introduced by
-the Failure-Aware Controller.
-
----
-
-## Baseline Test Workload
-
-Before deploying the full EMR, a lightweight HTTP workload may be used
-to verify:
-
-- scheduling
-- Pod networking
-- Service exposure
-- worker placement
-- external client reachability
-- selective control-plane partition behaviour
-
-Suggested initial application:
-
-```text
-nginx
-```
-
-Suggested namespace:
-
-```text
-failure-aware
-```
-
-The test workload should be scheduled specifically onto:
-
-```text
-k3s-worker1
-```
-
-using the experimental node label.
-
-Example node selector:
-
-```yaml
-nodeSelector:
-  experiment-role: fault-target
-```
-
-The temporary workload can be exposed through a NodePort during early
-development so that the external client can independently verify
-service reachability.
-
-Record:
-
-- application: **[APPLICATION]**
-- namespace: **[NAMESPACE]**
-- node: **[NODE]**
-- service type: **[SERVICE TYPE]**
-- external URL: **[URL]**
-
----
-
-# K3s Installation and Cluster Bootstrap
-
-This section documents the procedure used to install and bootstrap the
-experimental K3s cluster.
-
-The installation procedure is retained so that the cluster can be
-recreated using the same software versions and configuration.
-
----
-
-## Operating System Preparation
-
-All K3s nodes should use the same operating-system distribution and
-version where practical.
-
-Record the operating system on each node:
+The operating system can be verified using:
 
 ```bash
 cat /etc/os-release
 ```
 
-Record the kernel:
+The kernel can be verified using:
 
 ```bash
 uname -r
 ```
 
-Update each node:
+The nodes were updated using:
 
 ```bash
 sudo apt update
 sudo apt upgrade -y
 ```
 
-Install the basic administrative tools:
+Basic administration tools were installed using:
 
 ```bash
 sudo apt install -y curl vim git jq
@@ -619,7 +103,7 @@ sudo apt install -y curl vim git jq
 
 ---
 
-## Configure Node Hostnames
+## 3.2 Configure Node Hostnames
 
 On the control-plane node:
 
@@ -645,20 +129,20 @@ Verify:
 hostname
 ```
 
-Record the node addresses:
+The configured node addresses are:
 
-```bash
-hostname -I
+```text
+102.34.160.89   k3s-server
+102.34.160.87   k3s-worker1
+102.34.160.103  k3s-worker2
 ```
 
 ---
 
-## Optional Local Name Resolution
+## 3.3 Optional Local Name Resolution
 
-Where DNS resolution is not available, add the experimental nodes to
-`/etc/hosts`.
-
-Edit:
+Where DNS-based hostname resolution is not available, the nodes may be
+added to `/etc/hosts`.
 
 ```bash
 sudo nano /etc/hosts
@@ -667,9 +151,9 @@ sudo nano /etc/hosts
 Add:
 
 ```text
-[SERVER_IP]   k3s-server
-[WORKER1_IP]  k3s-worker1
-[WORKER2_IP]  k3s-worker2
+102.34.160.89   k3s-server
+102.34.160.87   k3s-worker1
+102.34.160.103  k3s-worker2
 ```
 
 Verify:
@@ -682,9 +166,9 @@ ping -c 3 k3s-worker2
 
 ---
 
-## Install the K3s Server
+## 3.4 Install the K3s Server
 
-On `k3s-server`, install K3s:
+K3s was installed on `k3s-server` using:
 
 ```bash
 curl -sfL https://get.k3s.io | sh -
@@ -702,7 +186,7 @@ Check cluster state:
 sudo k3s kubectl get nodes -o wide
 ```
 
-Initially, the expected cluster contains:
+Initially, the cluster contains:
 
 ```text
 k3s-server    Ready    control-plane,master
@@ -710,48 +194,47 @@ k3s-server    Ready    control-plane,master
 
 ---
 
-## Record and Pin the K3s Version
+## 3.5 Record and Pin the K3s Version
 
-Determine the installed version:
+The installed K3s version is:
+
+```text
+v1.36.4+k3s1
+```
+
+Verify using:
 
 ```bash
 sudo k3s --version
 ```
 
-Record:
-
-```text
-K3s version: [K3S_VERSION]
-```
-
-Also record the Kubernetes version:
+The Kubernetes/kubelet versions can be recorded using:
 
 ```bash
 sudo k3s kubectl get nodes \
   -o custom-columns=NAME:.metadata.name,K8S:.status.nodeInfo.kubeletVersion
 ```
 
-For reproducible future installation, pin the recorded K3s version
-rather than relying on the moving stable channel:
+Recorded Kubernetes version:
 
-```bash
-curl -sfL https://get.k3s.io | \
-INSTALL_K3S_VERSION='[K3S_VERSION]' sh -
+```text
+[K8S_VERSION]
 ```
 
-Example:
+For reproducibility, future installations should explicitly pin the
+K3s version:
 
 ```bash
 curl -sfL https://get.k3s.io | \
 INSTALL_K3S_VERSION='v1.36.4+k3s1' sh -
 ```
 
-The exact version actually used in the formal experiments must be
-recorded in this document.
+The same K3s version must be used on the server and both workers during
+formal experiments.
 
 ---
 
-## Obtain the Worker Join Token
+## 3.6 Obtain the Worker Join Token
 
 On `k3s-server`:
 
@@ -759,29 +242,28 @@ On `k3s-server`:
 sudo cat /var/lib/rancher/k3s/server/node-token
 ```
 
-The token is a cluster secret.
+The token is a cluster secret and must **not** be committed to the
+repository.
 
-**Do not store the token in this repository.**
-
-The repository should also exclude:
+The repository must also exclude:
 
 - K3s join tokens
 - kubeconfig credentials
 - database passwords
-- TLS private keys
+- private keys
 - API secrets
 - other authentication material
 
 ---
 
-## Join Worker 1
+## 3.7 Join Worker 1
 
 On `k3s-worker1`:
 
 ```bash
 curl -sfL https://get.k3s.io | \
-INSTALL_K3S_VERSION='[K3S_VERSION]' \
-K3S_URL=https://[SERVER_IP]:6443 \
+INSTALL_K3S_VERSION='v1.36.4+k3s1' \
+K3S_URL=https://102.34.160.89:6443 \
 K3S_TOKEN='[K3S_TOKEN]' sh -
 ```
 
@@ -806,14 +288,14 @@ k3s-worker1    Ready
 
 ---
 
-## Join Worker 2
+## 3.8 Join Worker 2
 
 On `k3s-worker2`:
 
 ```bash
 curl -sfL https://get.k3s.io | \
-INSTALL_K3S_VERSION='[K3S_VERSION]' \
-K3S_URL=https://[SERVER_IP]:6443 \
+INSTALL_K3S_VERSION='v1.36.4+k3s1' \
+K3S_URL=https://102.34.160.89:6443 \
 K3S_TOKEN='[K3S_TOKEN]' sh -
 ```
 
@@ -823,7 +305,7 @@ Verify:
 sudo systemctl status k3s-agent
 ```
 
-Then verify the full cluster from `k3s-server`:
+Then verify the complete cluster:
 
 ```bash
 sudo k3s kubectl get nodes -o wide
@@ -840,35 +322,40 @@ k3s-worker2   Ready    <none>
 
 ---
 
-# Native K3s Components
+# 4. Native K3s Configuration
 
-The experiment initially retains the standard K3s components.
+The initial Kubernetes configuration is:
 
-| Function | Implementation |
-|---|---|
-| Kubernetes distribution | K3s |
-| Container runtime | containerd |
-| CNI | Flannel |
-| Cluster DNS | CoreDNS |
-| Ingress Controller | Traefik |
-| Service Load Balancer | ServiceLB |
-| Initial storage | Local Path Provisioner |
-| Formal experimental storage | `[CSI_IMPLEMENTATION]` |
+- Kubernetes distribution: **K3s**
+- K3s version: **v1.36.4+k3s1**
+- Kubernetes version: **[K8S_VERSION]**
+- Container runtime: **containerd**
+- Configuration: **Default K3s configuration**
+- CNI: **Flannel**
+- Cluster DNS: **CoreDNS**
+- Ingress Controller: **Traefik**
+- Service Load Balancer: **ServiceLB**
+- Initial storage provisioner: **Local Path Provisioner**
+- Formal experimental CSI implementation: **[CSI_IMPLEMENTATION]**
+- Cluster domain: **[CLUSTER_DOMAIN]**
+- Pod CIDR: **[POD_CIDR]**
+- Service CIDR: **[SERVICE_CIDR]**
 
-These components are kept constant between baseline and proposed-system
-experiments.
+These components remain constant between the default K3s baseline and
+the K3s + Failure-Aware Controller experiments unless the component
+itself is explicitly evaluated as an independent variable.
 
 ---
 
-## Verify System Components
+## 4.1 Verify System Components
 
-Inspect the K3s system workloads:
+Inspect K3s system workloads:
 
 ```bash
 sudo k3s kubectl get pods -n kube-system -o wide
 ```
 
-Inspect all cluster workloads:
+Inspect all workloads:
 
 ```bash
 sudo k3s kubectl get pods -A -o wide
@@ -888,14 +375,19 @@ measurements begin.
 
 ---
 
-# CNI Configuration
+## 4.2 CNI Configuration
 
 The initial experimental cluster uses the default **Flannel CNI**.
 
-Flannel provides the Kubernetes Pod network used for communication
-between workloads running across the cluster.
+Record:
 
-The CNI implementation remains unchanged between:
+```text
+CNI: Flannel
+CNI version: [VERSION]
+Configuration: Default K3s configuration
+```
+
+The CNI remains unchanged between:
 
 ```text
 Default K3s
@@ -909,29 +401,14 @@ K3s + Failure-Aware Controller
 Controller ON
 ```
 
-This prevents the networking implementation from becoming a confounding
+This prevents CNI differences from becoming a confounding experimental
 variable.
-
-Record:
-
-```text
-CNI: Flannel
-CNI version: [VERSION]
-Configuration: [DEFAULT / MODIFIED]
-```
 
 ---
 
-# Ingress Configuration
+## 4.3 Ingress Configuration
 
-The initial K3s environment uses **Traefik** as the Ingress Controller.
-
-Traefik is installed as a packaged K3s component unless explicitly
-disabled during K3s installation.
-
-The experiment retains Traefik so that replacing the Ingress Controller
-does not introduce an unnecessary architectural difference from the
-initial K3s environment.
+The K3s environment uses **Traefik** as its packaged Ingress Controller.
 
 Verify Traefik:
 
@@ -945,7 +422,7 @@ Inspect its Service:
 sudo k3s kubectl get svc -n kube-system | grep traefik
 ```
 
-Inspect the K3s-managed Helm charts:
+Inspect K3s-managed Helm charts:
 
 ```bash
 sudo k3s kubectl get helmchart -n kube-system
@@ -956,7 +433,7 @@ Record:
 ```text
 Ingress Controller: Traefik
 Traefik version: [VERSION]
-Configuration: [DEFAULT / MODIFIED]
+Configuration: Default K3s configuration
 ```
 
 K3s packaged component manifests are maintained under:
@@ -965,15 +442,63 @@ K3s packaged component manifests are maintained under:
 /var/lib/rancher/k3s/server/manifests/
 ```
 
-K3s-managed packaged manifests should not be manually modified without
+K3s-managed manifests should not be manually modified without
 documenting the change.
 
 ---
 
-# NodeLease and Heartbeat Verification
+# 5. Node Roles
 
-NodeLease objects provide the native Kubernetes heartbeat mechanism that
-forms the starting point of the Failure-Aware Controller.
+## 5.1 `k3s-server`
+
+Role: **K3s control plane**
+
+Primary responsibilities include:
+
+- Kubernetes API Server
+- Controller Manager
+- Scheduler
+- cluster datastore
+- Node lifecycle management
+- NodeLease observation
+- cluster-state management
+
+The Failure-Aware Controller consumes native Kubernetes state through
+the Kubernetes API rather than replacing these mechanisms.
+
+---
+
+## 5.2 `k3s-worker1`
+
+Role: **Primary fault-injection target**
+
+This worker will primarily host workloads used for:
+
+- genuine node-failure experiments
+- control-plane partition experiments
+- complete-isolation experiments
+- degraded-network experiments
+- workload reachability verification
+- stateful workload experiments where applicable
+
+---
+
+## 5.3 `k3s-worker2`
+
+Role: **Recovery target**
+
+This worker provides compute capacity when workloads on
+`k3s-worker1` require recovery.
+
+This separation enables recovery onto Worker 2 without replacing or
+modifying the Kubernetes scheduler.
+
+---
+
+# 6. NodeLease and Heartbeat Verification
+
+NodeLease objects provide the native Kubernetes heartbeat mechanism
+that forms the starting point of the Failure-Aware Controller.
 
 List NodeLeases:
 
@@ -989,14 +514,14 @@ k3s-worker1
 k3s-worker2
 ```
 
-Inspect Worker 1's Lease:
+Inspect Worker 1:
 
 ```bash
 sudo k3s kubectl get lease k3s-worker1 \
   -n kube-node-lease -o yaml
 ```
 
-The Lease should contain information similar to:
+Expected Lease fields include:
 
 ```yaml
 spec:
@@ -1013,7 +538,7 @@ watch -n 2 \
 -o custom-columns=NODE:.metadata.name,RENEW:.spec.renewTime"
 ```
 
-The `renewTime` should change periodically while the worker maintains
+The `renewTime` changes periodically while Worker 1 maintains
 communication with the control plane.
 
 Simultaneously observe node state:
@@ -1022,7 +547,7 @@ Simultaneously observe node state:
 sudo k3s kubectl get nodes -w
 ```
 
-The relationship relevant to this research is:
+The native path relevant to this project is:
 
 ```text
 k3s-worker1 kubelet
@@ -1032,29 +557,29 @@ k3s-worker1 kubelet
 Kubernetes API Server
         |
         v
-Node lifecycle monitoring
+Node lifecycle controller
         |
         v
 Ready / Unknown
 ```
 
-The Failure-Aware Controller does **not** replace this mechanism.
+The proposed controller does not replace this mechanism.
 
 It consumes the native Kubernetes failure-suspicion signal after the
 node-health mechanism raises suspicion.
 
 ---
 
-# Experimental Node Labels
+# 7. Experimental Node Labels
 
-Label Worker 1 as the fault target:
+Label Worker 1:
 
 ```bash
 sudo k3s kubectl label node k3s-worker1 \
   experiment-role=fault-target
 ```
 
-Label Worker 2 as the recovery target:
+Label Worker 2:
 
 ```bash
 sudo k3s kubectl label node k3s-worker2 \
@@ -1064,10 +589,10 @@ sudo k3s kubectl label node k3s-worker2 \
 Verify:
 
 ```bash
-sudo k3s kubectl get nodes --show-labels
+sudo k3s kubectl get nodes -L experiment-role
 ```
 
-Expected experimental roles:
+Expected:
 
 | Node | Experimental Role |
 |---|---|
@@ -1075,17 +600,31 @@ Expected experimental roles:
 | `k3s-worker1` | Fault/partition target |
 | `k3s-worker2` | Recovery target |
 
-These labels are used to control experimental workload placement without
-replacing or modifying the Kubernetes scheduler.
+These labels control experimental workload placement without modifying
+the native Kubernetes scheduler.
 
 ---
 
-# Native K3s Baseline Checks
+# 8. Experimental Namespace
 
-Before enabling the Failure-Aware Controller, capture the native K3s
-environment.
+Create:
 
-Run:
+```bash
+sudo k3s kubectl create namespace failure-aware
+```
+
+Verify:
+
+```bash
+sudo k3s kubectl get namespace failure-aware
+```
+
+---
+
+# 9. Native Healthy-State Baseline
+
+Before introducing the Failure-Aware Controller or fault injection, the
+native K3s environment was inspected.
 
 ```bash
 sudo k3s kubectl get nodes -o wide
@@ -1103,99 +642,868 @@ sudo k3s kubectl describe node k3s-worker1
 sudo k3s kubectl get pods -A -o wide
 ```
 
-Record the normal Worker 1 state:
+Worker 1 healthy state:
 
 ```text
 Ready = True
 ```
 
-Inspect current taints:
+Inspect existing taints:
 
 ```bash
 sudo k3s kubectl get node k3s-worker1 \
   -o jsonpath='{.spec.taints}'
 ```
 
-These observations establish the healthy baseline before fault
-injection.
+No unexpected `node.kubernetes.io/unreachable` condition should exist
+during the healthy baseline.
 
 ---
 
-# Monitoring During Pilot Experiments
+# 10. Baseline HTTP Test Workload
 
-During early experiments, multiple views should be maintained.
+Before deploying the formal EMR workload, a lightweight Nginx workload
+is used to validate:
 
-## Terminal 1 — Node State
+- Pod scheduling
+- worker placement
+- Flannel networking
+- Kubernetes Services
+- CoreDNS
+- external client reachability
+- continuous application availability
+- the independent client path required by Scenario B
 
-On `k3s-server`:
+The workload-specific files are stored under:
 
-```bash
-sudo k3s kubectl get nodes -w
+```text
+workloads/test-workload/
 ```
 
-## Terminal 2 — Workload State
+Current structure:
+
+```text
+workloads/test-workload/
+├── nginx.yaml
+├── independent-path-test.sh
+└── healthy-http-latency.sh
+```
+
+---
+
+## 10.1 Baseline Nginx Manifest
+
+File:
+
+```text
+workloads/test-workload/nginx.yaml
+```
+
+Contents:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: baseline-web
+  namespace: failure-aware
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: baseline-web
+  template:
+    metadata:
+      labels:
+        app: baseline-web
+    spec:
+      nodeSelector:
+        experiment-role: fault-target
+      containers:
+        - name: nginx
+          image: nginx:1.27
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: "25m"
+              memory: "32Mi"
+            limits:
+              cpu: "100m"
+              memory: "128Mi"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: baseline-web
+  namespace: failure-aware
+spec:
+  selector:
+    app: baseline-web
+  type: NodePort
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+```
+
+Deploy:
+
+```bash
+sudo k3s kubectl apply \
+  -f workloads/test-workload/nginx.yaml
+```
+
+Verify:
 
 ```bash
 sudo k3s kubectl get pods \
   -n failure-aware \
-  -o wide -w
+  -o wide
 ```
 
-## Terminal 3 — Worker Lease
+Verify workload placement:
 
 ```bash
-watch -n 2 \
-"sudo k3s kubectl get lease k3s-worker1 \
--n kube-node-lease \
--o custom-columns=NODE:.metadata.name,RENEW:.spec.renewTime"
+sudo k3s kubectl get pod \
+  -n failure-aware \
+  -l app=baseline-web \
+  -o jsonpath='{.items[0].spec.nodeName}'
 ```
 
-## External Client — Application Reachability
-
-From the external experimental client:
-
-```bash
-watch -n 1 \
-"curl -s -o /dev/null -w '%{http_code}\n' \
-http://[WORKER1_IP]:[PORT]"
-```
-
-During normal operation, repeated successful responses should be
-observed.
-
-These simultaneous views allow the experiment to compare:
+Observed node:
 
 ```text
-CONTROL-PLANE VIEW
-NodeLease / Node condition
-
-versus
-
-CLIENT VIEW
-Application reachability
+k3s-worker1
 ```
-
-This distinction is central to the research problem.
 
 ---
 
-# Rust Experimental Harness
+## 10.2 Service Verification
+
+Inspect the Service:
+
+```bash
+sudo k3s kubectl get svc \
+  -n failure-aware
+```
+
+Retrieve the NodePort:
+
+```bash
+sudo k3s kubectl get svc baseline-web \
+  -n failure-aware \
+  -o jsonpath='{.spec.ports[0].nodePort}'
+```
+
+Recorded NodePort:
+
+```text
+[ACTUAL_NODEPORT]
+```
+
+Retrieve the ClusterIP:
+
+```bash
+sudo k3s kubectl get svc baseline-web \
+  -n failure-aware \
+  -o jsonpath='{.spec.clusterIP}'
+```
+
+Observed ClusterIP:
+
+```text
+10.43.86.169
+```
+
+---
+
+## 10.3 Pod and Service Reachability
+
+Retrieve Pod details:
+
+```bash
+sudo k3s kubectl get pods \
+  -n failure-aware \
+  -o wide
+```
+
+Test the Pod directly:
+
+```bash
+curl http://[POD_IP]
+```
+
+Expected:
+
+```text
+Welcome to nginx!
+```
+
+Test the Service:
+
+```bash
+curl http://10.43.86.169
+```
+
+Expected:
+
+```text
+Welcome to nginx!
+```
+
+Both tests completed successfully during baseline validation.
+
+---
+
+# 11. CoreDNS Verification
+
+A temporary BusyBox Pod was used to verify Kubernetes DNS resolution.
+
+Create:
+
+```bash
+sudo k3s kubectl run dns-test \
+  --image=busybox:1.36 \
+  --restart=Never \
+  -n failure-aware \
+  -- sleep 3600
+```
+
+Verify:
+
+```bash
+sudo k3s kubectl get pod dns-test \
+  -n failure-aware
+```
+
+Resolve the fully qualified Service name:
+
+```bash
+sudo k3s kubectl exec \
+  -n failure-aware dns-test -- \
+  nslookup baseline-web.failure-aware.svc.cluster.local
+```
+
+Observed successful resolution:
+
+```text
+Server:  10.43.0.10
+Address: 10.43.0.10:53
+
+Name:    baseline-web.failure-aware.svc.cluster.local
+Address: 10.43.86.169
+```
+
+Therefore:
+
+```text
+baseline-web.failure-aware.svc.cluster.local
+                    |
+                    v
+               10.43.86.169
+```
+
+CoreDNS service discovery is functioning correctly.
+
+BusyBox `nslookup` may additionally issue lookups based on Kubernetes
+search domains and display `NXDOMAIN` for those alternate names. These
+additional unsuccessful lookups do not invalidate the successful fully
+qualified Service lookup above.
+
+Remove the test Pod:
+
+```bash
+sudo k3s kubectl delete pod dns-test \
+  -n failure-aware
+```
+
+---
+
+# 12. External Independent-Path Verification
+
+The workload was tested from the external experimental client.
+
+This verifies the path required for Scenario B:
+
+```text
+Control-plane path:
+
+k3s-worker1  ---->  k3s-server
+
+
+Independent application path:
+
+External Client
+      |
+      v
+102.34.160.87
+      |
+      v
+baseline-web on k3s-worker1
+```
+
+The independent application path must remain available when the
+worker-to-control-plane path is deliberately disrupted.
+
+---
+
+## 12.1 Firewall Requirement
+
+The Kubernetes NodePort range is normally:
+
+```text
+30000-32767/TCP
+```
+
+The firewall must permit the NodePort used by the test workload.
+
+Check UFW:
+
+```bash
+sudo ufw status
+```
+
+Where appropriate for the controlled test environment, allow the
+NodePort range:
+
+```bash
+sudo ufw allow 30000:32767/tcp
+```
+
+Alternatively, allow only the allocated NodePort.
+
+For a controlled and isolated experimental environment, UFW may
+temporarily be disabled where permitted:
+
+```bash
+sudo ufw disable
+```
+
+**Caution:** disabling the firewall reduces host protection and should
+only be done in an appropriately isolated experimental environment.
+
+Firewall state must remain consistent between comparable experimental
+runs.
+
+A blocked NodePort could otherwise be incorrectly interpreted as
+application or network-partition failure.
+
+---
+
+# 13. Continuous Independent-Path Test
+
+File:
+
+```text
+workloads/test-workload/independent-path-test.sh
+```
+
+Script:
+
+```sh
+#!/bin/sh
+
+URL="http://102.34.160.87:[NODEPORT]"
+
+while true; do
+    date '+%Y-%m-%dT%H:%M:%S.%3N'
+
+    curl -s -o /dev/null \
+        -w 'HTTP=%{http_code} time=%{time_total}s\n' \
+        "$URL"
+
+    sleep 1
+done
+```
+
+Run from the repository root:
+
+```bash
+sh workloads/test-workload/independent-path-test.sh
+```
+
+Observed healthy responses included:
+
+```text
+2026-09-19T09:36:24.540
+HTTP=200 time=0.110325s
+
+2026-09-19T09:36:26.053
+HTTP=200 time=0.033957s
+
+2026-09-19T09:36:27.103
+HTTP=200 time=0.027503s
+
+2026-09-19T09:36:28.607
+HTTP=200 time=0.025054s
+
+2026-09-19T09:36:29.649
+HTTP=200 time=0.042599s
+```
+
+Repeated HTTP `200` responses demonstrate that the external client can
+continuously reach the workload under healthy conditions.
+
+This script is a pilot validation utility. Formal workload generation
+and measurement will later be implemented in the Rust experimental
+harness.
+
+---
+
+# 14. Healthy HTTP Latency Pilot
+
+File:
+
+```text
+workloads/test-workload/healthy-http-latency.sh
+```
+
+Script:
+
+```sh
+#!/bin/sh
+
+URL="http://102.34.160.87:[NODEPORT]"
+OUTPUT="baseline-http-latency.txt"
+
+: > "$OUTPUT"
+
+i=1
+
+while [ "$i" -le 100 ]; do
+    curl -s -o /dev/null \
+        -w '%{time_total}\n' \
+        "$URL" >> "$OUTPUT"
+
+    sleep 0.1
+    i=$((i + 1))
+done
+```
+
+Run:
+
+```bash
+sh workloads/test-workload/healthy-http-latency.sh
+```
+
+The first ten observations were:
+
+```text
+0.022381
+0.022032
+0.028396
+0.016413
+0.026923
+0.019650
+0.021870
+0.020069
+0.016057
+0.021782
+```
+
+`curl` reports `time_total` in seconds.
+
+For example:
+
+```text
+0.022381 seconds = 22.381 ms
+```
+
+These values are pilot measurements used to confirm that the
+measurement path functions correctly.
+
+They are **not formal experimental results**.
+
+---
+
+# 15. NodePort Path Behaviour
+
+The NodePort should also be tested against Worker 2:
+
+```bash
+curl http://102.34.160.103:[NODEPORT]
+```
+
+Record:
+
+```text
+External Client -> k3s-worker1:NodePort = [WORKS / DOES NOT WORK]
+External Client -> k3s-worker2:NodePort = [WORKS / DOES NOT WORK]
+```
+
+This matters because NodePort Service forwarding may allow traffic
+arriving through another node to reach the Pod on Worker 1.
+
+Therefore the formal Scenario B probe must distinguish:
+
+```text
+The Kubernetes Service remains reachable somewhere
+```
+
+from:
+
+```text
+The existing workload on the partitioned Worker 1
+remains independently reachable.
+```
+
+---
+
+# 16. Development Resource Profile
+
+The current development environment uses:
+
+| Node | vCPU | RAM | Disk |
+|---|---:|---:|---:|
+| `k3s-server` | 4 | 4 GB | 100 GB |
+| `k3s-worker1` | 4 | 4 GB | 100 GB |
+| `k3s-worker2` | 4 | 4 GB | 100 GB |
+
+This profile is used for:
+
+- initial cluster deployment
+- workload validation
+- controller development
+- baseline characterization
+- pilot experiments
+
+---
+
+# 17. Candidate Formal Resource Profiles
+
+Resource constraints will later be introduced as controlled independent
+variables.
+
+Candidate profiles are:
+
+## Low
+
+```text
+1 vCPU
+1 GB RAM
+```
+
+## Medium
+
+```text
+2 vCPU
+2 GB RAM
+```
+
+## Higher
+
+```text
+4 vCPU
+4 GB RAM
+```
+
+The final profiles will be frozen only after preliminary
+characterization.
+
+For any baseline-versus-controller comparison, CPU and memory
+allocations must remain identical.
+
+---
+
+# 18. Healthy Network Characterization
+
+The baseline network properties have not yet been formally measured.
+
+They will be measured before any artificial degradation is introduced.
+
+The network condition is represented as:
+
+```text
+N = {B, L, P, J}
+```
+
+where:
+
+```text
+B = available bandwidth
+L = round-trip latency
+P = packet-loss rate
+J = jitter
+```
+
+Current baseline placeholders:
+
+```text
+Available bandwidth: [TO BE MEASURED]
+RTT:                 [TO BE MEASURED]
+Packet loss:         [TO BE MEASURED]
+Jitter:              [TO BE MEASURED]
+```
+
+The values will be obtained during the next characterization stage
+using appropriate network measurement tools rather than being assumed.
+
+---
+
+# 19. External Experimental Client
+
+The external client is separate from the K3s cluster.
+
+Client details:
+
+- Host: **[PC/LAPTOP NAME]**
+- OS: **[OS/VERSION]**
+- CPU: **[CPU MODEL / CORES]**
+- RAM: **[RAM]**
+- Network connection: **[WIRED / WIFI / OTHER]**
+
+The external client will run:
+
+- Rust experimental harness
+- workload generation
+- experiment coordination
+- fault orchestration
+- event timestamping
+- result collection
+- statistical analysis
+
+Keeping it external prevents the measurement system from consuming
+worker resources and provides an independent path for determining
+whether a workload remains useful after loss of control-plane
+connectivity.
+
+---
+
+# 20. Formal EMR Workload
+
+The final workload will use an actual containerised Electronic Medical
+Record application.
+
+To be selected:
+
+- EMR system: **[EMR NAME]**
+- EMR version: **[VERSION]**
+- deployment model: **[DEPLOYMENT MODEL]**
+- application tier: **[STATELESS / OTHER]**
+- relational database: **[MYSQL / MARIADB / POSTGRESQL / OTHER]**
+- database version: **[VERSION]**
+
+The relational database will represent a
+**duplication-sensitive stateful workload**.
+
+The final workload should expose repeatable:
+
+- read operations
+- write operations
+- application-health checks
+
+Exact workload parameters will be frozen before formal experiments.
+
+---
+
+# 21. Storage Configuration
+
+Persistent database state must not rely on ephemeral container storage.
+
+Expected path:
+
+```text
+EMR Application
+      |
+      v
+Relational Database
+      |
+      v
+PersistentVolumeClaim
+      |
+      v
+CSI / Persistent Storage
+```
+
+Initial K3s development storage:
+
+```text
+Local Path Provisioner
+```
+
+Formal stateful storage remains to be selected:
+
+```text
+CSI implementation:  [CSI_IMPLEMENTATION]
+CSI version:         [VERSION]
+StorageClass:        [STORAGE_CLASS]
+Access mode:         [RWO / RWOP]
+Replication factor:  [VALUE / N/A]
+Volume size:         [SIZE]
+```
+
+Native RWO/RWOP access-mode enforcement will remain part of the
+storage stack.
+
+The project does not assume that RWO/RWOP alone provides sufficient
+fencing during the target network-partition scenarios.
+
+Explicit fencing will therefore be evaluated before recovery of
+duplication-sensitive stateful workloads.
+
+---
+
+# 22. Primary Experimental Comparison
+
+The principal comparison is:
+
+```text
+DEFAULT K3s
+Failure-Aware Controller OFF
+```
+
+versus:
+
+```text
+K3s + FAILURE-AWARE CONTROLLER
+Failure-Aware Controller ON
+```
+
+The following must remain fixed for each comparison:
+
+- K3s version
+- Kubernetes version
+- CNI
+- Ingress Controller
+- workload version
+- database version
+- storage configuration
+- worker resource profile
+- network condition
+- fault condition
+- request rate
+- client concurrency
+- transaction mix
+- experiment duration
+
+The intended architectural difference is the presence or absence of the
+Failure-Aware Controller.
+
+---
+
+# 23. Failure Scenarios
+
+## Scenario A — Genuine Worker Failure
+
+Target:
+
+```text
+k3s-worker1
+```
+
+Expected operational state:
+
+```text
+unreachable
+```
+
+---
+
+## Scenario B — Control-Plane Partition, Workload Reachable
+
+Target condition:
+
+```text
+k3s-worker1  X  k3s-server
+```
+
+while preserving:
+
+```text
+External Client ---> k3s-worker1 ---> workload
+```
+
+Expected operational state:
+
+```text
+reachable_outside_control_plane
+```
+
+This is the principal scenario demonstrating the ambiguity targeted by
+the project.
+
+---
+
+## Scenario C — Complete Worker Isolation
+
+`k3s-worker1` remains operational but all relevant communication paths
+are unavailable.
+
+Expected operational state:
+
+```text
+unreachable
+```
+
+The controller will not claim to distinguish complete isolation from a
+physical crash when no independent evidence exists.
+
+---
+
+## Scenario D — Stateful Database Failure and Recovery
+
+The worker hosting the duplication-sensitive database is failed or
+isolated.
+
+Required recovery sequence:
+
+```text
+RECOVER requested
+       |
+       v
+Duplication-sensitive?
+       |
+      YES
+       |
+       v
+Explicit fencing
+       |
+       v
+Verify old authority excluded
+       |
+       v
+Permit Kubernetes recovery
+       |
+       v
+Replacement becomes authoritative
+```
+
+---
+
+## Scenario E — Degraded Network
+
+Network degradation will vary:
+
+```text
+bandwidth
+latency
+packet loss
+jitter
+```
+
+without deliberately failing the worker.
+
+---
+
+# 24. Rust Experimental Harness
 
 The formal experimental harness will run outside the K3s cluster.
 
-The harness will be implemented in Rust and will eventually provide:
+It will eventually provide:
 
 - workload generation
-- concurrent client requests
+- concurrent requests
 - request timestamps
 - latency measurement
-- request success/failure recording
+- success/failure recording
 - Kubernetes event observation
 - fault-injection coordination
 - experiment start/stop control
 - raw result export
 
-The harness is conceptually separate from the Failure-Aware Controller.
+The harness and controller are separate:
 
 ```text
 Rust Experimental Harness
@@ -1212,7 +1520,7 @@ Failure-Aware Controller
 Kubernetes recovery behaviour
 ```
 
-The harness will record timestamps including:
+The harness will record:
 
 ```text
 t_failure
@@ -1224,13 +1532,11 @@ t_last_success
 t_first_success
 ```
 
-These timestamps will be used to derive the formal experimental metrics.
-
 ---
 
-# Experimental Measurements
+# 25. Experimental Measurements
 
-Principal timing measurements include:
+Timing metrics:
 
 - Failure Detection Latency (FDL)
 - Failure Classification Latency (FCL)
@@ -1239,23 +1545,23 @@ Principal timing measurements include:
 - Service Interruption Duration (SID)
 - End-to-End Recovery Latency (ERL)
 
-Application measurements include:
+Application metrics:
 
-- P50 response latency
-- P95 response latency
-- P99 response latency
+- P50 latency
+- P95 latency
+- P99 latency
 - request failure rate
 - throughput
 - local service availability
 
-Controller overhead measurements include:
+Controller overhead:
 
 - CPU consumption
 - memory consumption
-- diagnostic network bytes
-- number of diagnostic probes per event
+- diagnostic network traffic
+- diagnostic probe count
 
-Correctness measurements include:
+Correctness:
 
 - unnecessary workload recreation
 - incorrect recovery decisions
@@ -1264,25 +1570,24 @@ Correctness measurements include:
 
 ---
 
-# Formal Experimental Repetitions
+# 26. Formal Experimental Repetitions
 
-Pilot runs will first be used to validate:
+Pilot runs validate:
 
 - fault injection
 - environment reset
 - timestamps
 - workload generation
-- metrics
-- controller behaviour
-- data collection
+- metrics collection
+- controller behavior
+- data export
 
-Pilot runs are not part of the formal headline result set.
+Pilot runs are not included in the formal headline results.
 
-Once the experimental configuration is frozen, each formal
-configuration will be executed for a minimum of:
+After the configuration is frozen:
 
 ```text
-30 independent repetitions
+Minimum repetitions per configuration: 30
 ```
 
 Formal results will report:
@@ -1295,32 +1600,34 @@ Formal results will report:
 
 ---
 
-# Reproducibility Requirements
+# 27. Reproducibility Requirements
 
-The experimental repository will preserve:
+The repository will preserve:
 
 - K3s version
 - Kubernetes version
-- operating-system version
+- OS version
 - kernel version
+- VM resource allocation
 - container image versions/digests
 - CNI configuration
 - Ingress configuration
 - CSI configuration
 - EMR version
 - database version
-- experiment configurations
+- experimental configuration files
+- workload manifests
 - fault-injection scripts
 - Rust harness source
-- Failure-Aware Controller source
+- controller source
 - raw experimental data
-- statistical analysis scripts
+- analysis scripts
 - generated figures and tables
 
 Secrets and credentials must not be committed.
 
-The project will eventually expose a single reproduction entry point,
-for example:
+The repository will eventually expose a single reproduction entry
+point such as:
 
 ```bash
 make reproduce
@@ -1332,105 +1639,94 @@ or:
 cargo xtask reproduce
 ```
 
-The reproduction workflow will be implemented incrementally as the
-experimental environment matures.
-
 ---
 
-# Cluster Bootstrap Verification Checklist
+# 28. Current Healthy-Baseline Status
 
-Before deploying the formal EMR workload or beginning baseline
-experiments, verify:
+Completed:
 
-- [ ] `k3s-server` reports `Ready`
-- [ ] `k3s-worker1` reports `Ready`
-- [ ] `k3s-worker2` reports `Ready`
-- [ ] All three NodeLease objects exist
-- [ ] Worker NodeLeases renew normally
-- [ ] Flannel networking is operational
-- [ ] CoreDNS is operational
-- [ ] Traefik is operational
-- [ ] containerd is operational
-- [ ] No unexplained system Pods are failing
-- [ ] Worker experimental labels are configured
-- [ ] K3s version has been recorded
-- [ ] Kubernetes version has been recorded
-- [ ] OS version has been recorded
-- [ ] Kernel version has been recorded
-- [ ] Node IP addresses have been recorded
-- [ ] No cluster secrets have been committed
+- [x] Git repository initialized
+- [x] Hypotheses pre-registered
+- [x] Experimental design documented
+- [x] Three Proxmox VMs provisioned
+- [x] K3s server installed
+- [x] Worker 1 joined
+- [x] Worker 2 joined
+- [x] All nodes operational
+- [x] NodeLeases verified
+- [x] Flannel present
+- [x] CoreDNS verified
+- [x] Traefik retained
+- [x] Experimental worker labels configured
+- [x] `failure-aware` namespace created
+- [x] Baseline Nginx workload deployed
+- [x] Workload placed on `k3s-worker1`
+- [x] Kubernetes Service verified
+- [x] CoreDNS Service resolution verified
+- [x] External independent HTTP path verified
+- [x] Continuous HTTP `200` responses observed
+- [x] Healthy HTTP latency pilot completed
 
----
+Pending next:
 
-# Experimental Implementation Status
-
-## Completed
-
-- [ ] Git repository initialized
-- [ ] Hypotheses pre-registered
-- [ ] Experimental design committed
-- [ ] Three Proxmox VMs provisioned
-- [ ] K3s server installed
-- [ ] Worker 1 joined
-- [ ] Worker 2 joined
-- [ ] All nodes `Ready`
-- [ ] NodeLeases verified
-- [ ] Flannel verified
-- [ ] CoreDNS verified
-- [ ] Traefik verified
-- [ ] Experimental node labels configured
-
-## Baseline Preparation
-
-- [ ] Temporary HTTP workload deployed
-- [ ] Workload pinned to `k3s-worker1`
-- [ ] External client reachability verified
-- [ ] Native healthy-state baseline captured
-- [ ] Scenario B selective partition validated
-- [ ] Native K3s behaviour recorded
-
-## Application Environment
-
-- [ ] EMR selected
-- [ ] EMR container deployed
-- [ ] Relational database deployed
-- [ ] Persistent storage configured
-- [ ] Read operation automated
-- [ ] Write operation automated
-- [ ] Application health check identified
-
-## Experimental Tooling
-
+- [ ] Healthy bandwidth measurement
+- [ ] Healthy RTT measurement
+- [ ] Healthy packet-loss measurement
+- [ ] Healthy jitter measurement
+- [ ] NodePort behavior through Worker 2 documented
+- [ ] First Scenario B selective-partition pilot
+- [ ] Native K3s response to partition documented
+- [ ] EMR selected and deployed
+- [ ] Stateful CSI storage selected
 - [ ] Rust harness initialized
-- [ ] Request generator implemented
-- [ ] Latency recording implemented
-- [ ] Kubernetes event observation implemented
-- [ ] Fault-injection scripts implemented
-- [ ] Raw-data export implemented
+- [ ] Failure-Aware Controller implementation started
 
-## Failure-Aware Controller
+---
 
-- [ ] Failure-Suspicion Listener implemented
-- [ ] Post-Suspicion Verification implemented
-- [ ] Operational-state assessment implemented
-- [ ] Workload awareness implemented
-- [ ] Resource awareness implemented
-- [ ] Recovery-safety awareness implemented
-- [ ] PRESERVE decision implemented
-- [ ] RECOVER decision implemented
-- [ ] Explicit fencing implemented
-- [ ] Recovery actuation implemented
+# 29. Next Experimental Stage
 
-## Formal Evaluation
+The next stage is **healthy network characterization**.
 
-- [ ] Pilot experiments completed
-- [ ] Formal configuration frozen
-- [ ] Baseline repetitions completed
-- [ ] Controller repetitions completed
-- [ ] Scenario A completed
-- [ ] Scenario B completed
-- [ ] Scenario C completed
-- [ ] Scenario D completed
-- [ ] Scenario E completed
-- [ ] Statistical analysis completed
-- [ ] Production validation completed
+The baseline values to be measured are:
+
+```text
+B = available bandwidth
+L = round-trip latency
+P = packet-loss rate
+J = jitter
+```
+
+Only after those healthy characteristics are measured will artificial
+network degradation or selective partitioning be introduced.
+
+The subsequent Scenario B pilot will disrupt:
+
+```text
+k3s-worker1  X  k3s-server
+```
+
+while preserving:
+
+```text
+External Client ---> k3s-worker1 ---> baseline-web
+```
+
+The expected native-K3s observation is:
+
+```text
+Worker Lease stops renewing
+          |
+          v
+Kubernetes eventually raises failure suspicion
+          |
+          +-------------------------------+
+                                          |
+                              meanwhile   |
+                                          v
+                              existing workload
+                              remains reachable
+                              to external client
+```
+
+This establishes the central failure ambiguity before the
+Failure-Aware Controller is introduced.

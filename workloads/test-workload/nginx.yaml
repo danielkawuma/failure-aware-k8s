@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: baseline-web
+  namespace: failure-aware
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: baseline-web
+  template:
+    metadata:
+      labels:
+        app: baseline-web
+    spec:
+      nodeSelector:
+        experiment-role: fault-target
+      containers:
+        - name: nginx
+          image: nginx:1.27
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: "25m"
+              memory: "32Mi"
+            limits:
+              cpu: "100m"
+              memory: "128Mi"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: baseline-web
+  namespace: failure-aware
+spec:
+  selector:
+    app: baseline-web
+  type: NodePort
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
