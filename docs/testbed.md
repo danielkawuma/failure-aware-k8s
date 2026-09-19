@@ -218,7 +218,7 @@ sudo k3s kubectl get nodes \
 Recorded Kubernetes version:
 
 ```text
-[K8S_VERSION]
+v1.36.4+k3s1
 ```
 
 For reproducibility, future installations should explicitly pin the
@@ -328,7 +328,7 @@ The initial Kubernetes configuration is:
 
 - Kubernetes distribution: **K3s**
 - K3s version: **v1.36.4+k3s1**
-- Kubernetes version: **[K8S_VERSION]**
+- Kubernetes version: **v1.36.4+k3s1**
 - Container runtime: **containerd**
 - Configuration: **Default K3s configuration**
 - CNI: **Flannel**
@@ -600,6 +600,8 @@ Expected:
 | `k3s-worker1` | Fault/partition target |
 | `k3s-worker2` | Recovery target |
 
+![Experimental K3s node labels](image.png)
+
 These labels control experimental workload placement without modifying
 the native Kubernetes scheduler.
 
@@ -829,7 +831,7 @@ sudo k3s kubectl get pods \
   -o wide
 ```
 
-Test the Pod directly:
+Test the Pod directly while on the any node in the cluster:
 
 ```bash
 curl http://[POD_IP]
@@ -852,8 +854,6 @@ Expected:
 ```text
 Welcome to nginx!
 ```
-
-Both tests completed successfully during baseline validation.
 
 ---
 
@@ -878,12 +878,12 @@ sudo k3s kubectl get pod dns-test \
   -n failure-aware
 ```
 
-Resolve the fully qualified Service name:
+Resolve the Service name:
 
 ```bash
 sudo k3s kubectl exec \
   -n failure-aware dns-test -- \
-  nslookup baseline-web.failure-aware.svc.cluster.local
+  nslookup baseline-web
 ```
 
 Observed successful resolution:
@@ -923,7 +923,9 @@ sudo k3s kubectl delete pod dns-test \
 
 # 12. External Independent-Path Verification
 
-The workload was tested from the external experimental client.
+The workload was tested from the external experimental client (My personal PC).
+
+![Workload reachable from my personal PC](image-1.png)
 
 This verifies the path required for Scenario B:
 
@@ -1125,7 +1127,7 @@ The NodePort should also be tested against Worker 2:
 ```bash
 curl http://102.34.160.103:[NODEPORT]
 ```
-
+![Workload on worker1 reachable from worker2](image-2.png)
 Record:
 
 ```text
@@ -1730,3 +1732,4 @@ Kubernetes eventually raises failure suspicion
 
 This establishes the central failure ambiguity before the
 Failure-Aware Controller is introduced.
+
