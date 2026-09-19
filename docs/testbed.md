@@ -1428,9 +1428,8 @@ Packet loss:  0%
 
 This represents the healthy Worker 1 to control-plane path.
 
-```markdown
 ![Worker 1 to K3s server healthy ping baseline](images/worker1-to-server-ping.png)
-```
+
 
 ---
 
