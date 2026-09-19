@@ -218,7 +218,7 @@ sudo k3s kubectl get nodes \
 Recorded Kubernetes version:
 
 ```text
-v1.36.4+k3s1
+v1.36.4
 ```
 
 For reproducibility, future installations should explicitly pin the
@@ -328,7 +328,7 @@ The initial Kubernetes configuration is:
 
 - Kubernetes distribution: **K3s**
 - K3s version: **v1.36.4+k3s1**
-- Kubernetes version: **v1.36.4+k3s1**
+- Kubernetes version: **v1.36.4**
 - Container runtime: **containerd**
 - Configuration: **Default K3s configuration**
 - CNI: **Flannel**
@@ -1130,6 +1130,7 @@ curl http://102.34.160.103:[NODEPORT]
 ![Workload on worker1 reachable from worker2](image-2.png)
 Record:
 
+
 ```text
 External Client -> k3s-worker1:NodePort = [WORKS / DOES NOT WORK]
 External Client -> k3s-worker2:NodePort = [WORKS / DOES NOT WORK]
@@ -1254,7 +1255,7 @@ Client details:
 - OS: **[OS/VERSION]**
 - CPU: **[CPU MODEL / CORES]**
 - RAM: **[RAM]**
-- Network connection: **[WIRED / WIFI / OTHER]**
+- Network connection: **WIFI**
 
 The external client will run:
 
