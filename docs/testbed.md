@@ -1219,9 +1219,13 @@ allocations must remain identical.
 
 # 18. Healthy Network Characterization
 
-The baseline network properties have not yet been formally measured.
+Before introducing network partitions, artificial latency, packet loss,
+bandwidth restrictions, or the Failure-Aware Controller, the healthy
+network characteristics of the experimental environment were measured.
 
-They will be measured before any artificial degradation is introduced.
+The purpose of this characterization is to establish the native network
+baseline against which later degraded-network and failure experiments
+can be compared.
 
 The network condition is represented as:
 
@@ -1231,25 +1235,918 @@ N = {B, L, P, J}
 
 where:
 
-```text
-B = available bandwidth
-L = round-trip latency
-P = packet-loss rate
-J = jitter
-```
+- `B` = available/sustained bandwidth or throughput
+- `L` = round-trip latency
+- `P` = packet-loss rate
+- `J` = network jitter
 
-Current baseline placeholders:
+Three principal experimental paths were characterized:
 
 ```text
-Available bandwidth: [TO BE MEASURED]
-RTT:                 [TO BE MEASURED]
-Packet loss:         [TO BE MEASURED]
-Jitter:              [TO BE MEASURED]
+1. k3s-server <------> k3s-worker1
+   Control-plane path
+
+2. External Client <------> k3s-worker1
+   Independent application/client path
+
+3. k3s-worker1 <------> k3s-worker2
+   Worker-to-worker / recovery path
 ```
 
-The values will be obtained during the next characterization stage
-using appropriate network measurement tools rather than being assumed.
+The external client was also tested against `k3s-server` to provide
+additional context for the client-to-cluster path.
 
+No `tc/netem`, Chaos Mesh network fault, artificial bandwidth limit,
+or deliberate partition was active during these measurements.
+
+---
+
+## 18.1 Network Measurement Tools
+
+The following tools were used:
+
+- `ping` for round-trip latency and ICMP packet loss
+- `iperf3` TCP mode for sustained network throughput
+- `iperf3` UDP mode for jitter and datagram-loss characterization
+
+Install the tools on the K3s nodes:
+
+```bash
+sudo apt update
+sudo apt install -y iperf3 iputils-ping
+```
+
+Install the same tools on the external experimental client where
+required.
+
+Verify `iperf3`:
+
+```bash
+iperf3 --version
+```
+
+The external experimental client used:
+
+```text
+iperf 3.16
+```
+
+---
+
+## 18.2 Important `iperf3` Service Configuration
+
+`iperf3` should **not** be configured as a permanently running server
+during these experiments.
+
+On some Ubuntu installations, package installation may offer to run
+`iperf3` automatically as a system service. If enabled, the service
+occupies the default `iperf3` port:
+
+```text
+5201/TCP
+```
+
+Attempting to subsequently run:
+
+```bash
+iperf3 -s
+```
+
+will then produce an error similar to:
+
+```text
+iperf3: error - unable to start listener for connections:
+Address already in use
+```
+
+This occurred during initial testbed characterization because
+`iperf3.service` was already running.
+
+The running service can be identified using:
+
+```bash
+systemctl status iperf3
+```
+
+If the daemon was enabled, stop it using:
+
+```bash
+sudo systemctl stop iperf3
+```
+
+Disable automatic startup where applicable:
+
+```bash
+sudo systemctl disable iperf3
+```
+
+For the experimental measurements, the server is instead started
+manually on the required destination:
+
+```bash
+iperf3 -s
+```
+
+The server is stopped after the required measurements using:
+
+```text
+Ctrl+C
+```
+
+This approach ensures that the measurement endpoint is deliberately
+selected for every test and avoids port conflicts.
+
+---
+
+## 18.3 Healthy RTT and Packet-Loss Measurements
+
+ICMP measurements were performed using 100 packets per path.
+
+The general command was:
+
+```bash
+ping -c 100 <DESTINATION_IP>
+```
+
+The final `ping` summary provides:
+
+```text
+min / avg / max / mdev
+```
+
+where:
+
+- `min` = minimum observed RTT
+- `avg` = mean observed RTT
+- `max` = maximum observed RTT
+- `mdev` = mean deviation of the RTT observations
+
+The complete summaries are retained because average RTT alone does not
+describe network variability.
+
+---
+
+### 18.3.1 Worker1 → Server
+
+Source:
+
+```text
+k3s-worker1
+102.34.160.87
+```
+
+Destination:
+
+```text
+k3s-server
+102.34.160.89
+```
+
+Command:
+
+```bash
+ping -c 100 102.34.160.89
+```
+
+Observed result:
+
+```text
+100 packets transmitted
+100 packets received
+0% packet loss
+
+RTT min/avg/max/mdev:
+0.394 / 0.593 / 0.830 / 0.078 ms
+```
+
+Therefore:
+
+```text
+Average RTT:  0.593 ms
+Packet loss:  0%
+```
+
+This represents the healthy Worker 1 to control-plane path.
+
+```markdown
+![Worker 1 to K3s server healthy ping baseline](images/worker1-to-server-ping.png)
+```
+
+---
+
+### 18.3.2 Server → Worker1
+
+Source:
+
+```text
+k3s-server
+102.34.160.89
+```
+
+Destination:
+
+```text
+k3s-worker1
+102.34.160.87
+```
+
+Command:
+
+```bash
+ping -c 100 102.34.160.87
+```
+
+Observed result:
+
+```text
+100 packets transmitted
+100 packets received
+0% packet loss
+
+RTT min/avg/max/mdev:
+0.395 / 0.608 / 0.831 / 0.080 ms
+```
+
+Therefore:
+
+```text
+Average RTT:  0.608 ms
+Packet loss:  0%
+```
+
+The two directions of the native server-to-worker path therefore showed
+similar healthy RTT characteristics during this characterization run.
+
+```markdown
+![K3s server to Worker 1 healthy ping baseline](images/server-to-worker1-ping.png)
+```
+
+---
+
+### 18.3.3 External Client → Worker1
+
+Source:
+
+```text
+External experimental client
+```
+
+Destination:
+
+```text
+k3s-worker1
+102.34.160.87
+```
+
+Command:
+
+```bash
+ping -c 100 102.34.160.87
+```
+
+Observed result:
+
+```text
+100 packets transmitted
+100 packets received
+0% packet loss
+
+RTT min/avg/max/mdev:
+5.892 / 14.553 / 117.830 / 20.147 ms
+```
+
+Therefore:
+
+```text
+Average RTT:  14.553 ms
+Packet loss:  0%
+```
+
+This path is important because it represents the independent client path
+that should remain available during the Scenario B control-plane
+partition experiment.
+
+Suggested screenshot location:
+
+```markdown
+![External client to Worker 1 healthy ping baseline](images/client-to-worker1-ping.png)
+```
+
+---
+
+### 18.3.4 External Client → Server
+
+Source:
+
+```text
+External experimental client
+```
+
+Destination:
+
+```text
+k3s-server
+102.34.160.89
+```
+
+Command:
+
+```bash
+ping -c 100 102.34.160.89
+```
+
+Observed result:
+
+```text
+100 packets transmitted
+99 packets received
+1% packet loss
+
+RTT min/avg/max/mdev:
+4.057 / 15.259 / 128.919 / 19.355 ms
+```
+
+Therefore:
+
+```text
+Average RTT:  15.259 ms
+Packet loss:  1%
+```
+
+The healthy external path therefore exhibited greater variability than
+the intra-cluster paths during this measurement period.
+
+The observed packet loss is retained as part of the baseline rather
+than being discarded.
+
+```markdown
+![External client to K3s server healthy ping baseline](images/client-to-server-ping.png)
+```
+
+---
+
+### 18.3.5 Worker1 → Worker2
+
+Source:
+
+```text
+k3s-worker1
+102.34.160.87
+```
+
+Destination:
+
+```text
+k3s-worker2
+102.34.160.103
+```
+
+Command:
+
+```bash
+ping -c 100 102.34.160.103
+```
+
+Observed result:
+
+```text
+100 packets transmitted
+100 packets received
+0% packet loss
+
+RTT min/avg/max/mdev:
+0.366 / 0.586 / 1.280 / 0.116 ms
+```
+
+Therefore:
+
+```text
+Average RTT:  0.586 ms
+Packet loss:  0%
+```
+
+This path will later be relevant when workloads recover from Worker 1
+onto Worker 2.
+
+Suggested screenshot location:
+
+```markdown
+![Worker 1 to Worker 2 healthy ping baseline](images/worker1-to-worker2-ping.png)
+```
+
+---
+
+## 18.4 TCP Throughput Characterization
+
+TCP throughput was measured using `iperf3`.
+
+For each path, one endpoint was explicitly started as an `iperf3`
+server:
+
+```bash
+iperf3 -s
+```
+
+The other endpoint then initiated a 30-second TCP measurement:
+
+```bash
+iperf3 -c <SERVER_IP> -t 30
+```
+
+Reverse mode was measured using:
+
+```bash
+iperf3 -c <SERVER_IP> -t 30 -R
+```
+
+The `-R` option causes the remote `iperf3` server to send traffic back
+to the initiating client.
+
+The resulting throughput values characterize the sustained TCP
+throughput observed during these healthy pilot measurements.
+
+---
+
+### 18.4.1 Worker1 → Server
+
+Start the `iperf3` server on `k3s-server`:
+
+```bash
+iperf3 -s
+```
+
+From `k3s-worker1`:
+
+```bash
+iperf3 -c 102.34.160.89 -t 30
+```
+
+Observed result:
+
+```text
+Duration:         30 seconds
+Transfer:         32.9 GBytes
+Sender bitrate:   9.41 Gbit/s
+Receiver bitrate: 9.41 Gbit/s
+Retransmissions:  1
+```
+
+Healthy TCP throughput:
+
+```text
+Worker1 -> Server = 9.41 Gbit/s
+```
+
+```markdown
+![Worker 1 to K3s server TCP throughput](images/worker1-to-server-tcp.png)
+```
+
+---
+
+### 18.4.2 Server → Worker1
+
+With the `iperf3` server still running on `k3s-server`, execute from
+Worker 1:
+
+```bash
+iperf3 -c 102.34.160.89 -t 30 -R
+```
+
+Observed result:
+
+```text
+Duration:          30 seconds
+Sender transfer:   34.0 GBytes
+Receiver transfer: 33.9 GBytes
+Sender bitrate:    9.72 Gbit/s
+Receiver bitrate:  9.72 Gbit/s
+Retransmissions:   3
+```
+
+Healthy reverse throughput:
+
+```text
+Server -> Worker1 = 9.72 Gbit/s
+```
+
+```markdown
+![K3s server to Worker 1 TCP throughput](images/server-to-worker1-tcp.png)
+```
+
+---
+
+### 18.4.3 External Client → Worker1
+
+Start the `iperf3` server on `k3s-worker1`:
+
+```bash
+iperf3 -s
+```
+
+From the external experimental client:
+
+```bash
+iperf3 -c 102.34.160.87 -t 30
+```
+
+Observed result:
+
+```text
+Sender transfer:    158 MBytes
+Sender bitrate:     44.0 Mbit/s
+Receiver transfer:  156 MBytes
+Receiver bitrate:   44.2 Mbit/s
+Retransmissions:    16
+```
+
+Healthy external-client throughput:
+
+```text
+External Client -> Worker1 ~= 44 Mbit/s
+```
+
+```markdown
+![External client to Worker 1 TCP throughput](images/client-to-worker1-tcp.png)
+```
+
+---
+
+### 18.4.4 Worker1 → External Client
+
+Using reverse mode from the external client:
+
+```bash
+iperf3 -c 102.34.160.87 -t 30 -R
+```
+
+Observed result:
+
+```text
+Sender transfer:    176 MBytes
+Sender bitrate:     50.1 Mbit/s
+Receiver transfer:  173 MBytes
+Receiver bitrate:   48.3 Mbit/s
+Retransmissions:    257
+```
+
+The observed healthy reverse-path throughput was approximately:
+
+```text
+Worker1 -> External Client ~= 48-50 Mbit/s
+```
+
+The retransmission count is retained as part of the raw baseline rather
+than discarded.
+
+```markdown
+![Worker 1 to external client TCP throughput](images/worker1-to-client-tcp.png)
+```
+
+---
+
+### 18.4.5 Worker1 → Worker2
+
+Start the `iperf3` server on `k3s-worker2`:
+
+```bash
+iperf3 -s
+```
+
+From `k3s-worker1`:
+
+```bash
+iperf3 -c 102.34.160.103 -t 30
+```
+
+Observed result:
+
+```text
+Duration:         30 seconds
+Transfer:         46.1 GBytes
+Sender bitrate:   13.2 Gbit/s
+Receiver bitrate: 13.2 Gbit/s
+Retransmissions:  1
+```
+
+Healthy Worker1-to-Worker2 throughput:
+
+```text
+Worker1 -> Worker2 = 13.2 Gbit/s
+```
+
+```markdown
+![Worker 1 to Worker 2 TCP throughput](images/worker1-to-worker2-tcp.png)
+```
+
+---
+
+### 18.4.6 Worker2 → Worker1
+
+With the server running on Worker 2, execute reverse mode from Worker 1:
+
+```bash
+iperf3 -c 102.34.160.103 -t 30 -R
+```
+
+Observed result:
+
+```text
+Duration:         30 seconds
+Transfer:         30.2 GBytes
+Sender bitrate:   8.65 Gbit/s
+Receiver bitrate: 8.65 Gbit/s
+Retransmissions:  2
+```
+
+Healthy reverse throughput:
+
+```text
+Worker2 -> Worker1 = 8.65 Gbit/s
+```
+
+The observed asymmetry between the two directions is retained as part
+of the baseline characterization. A single pilot measurement is not
+used to attribute this difference to a specific cause.
+
+```markdown
+![Worker 2 to Worker 1 TCP throughput](images/worker2-to-worker1-tcp.png)
+```
+
+---
+
+## 18.5 UDP Jitter and Loss Characterization
+
+UDP tests were used to characterize jitter and datagram loss.
+
+The general command was:
+
+```bash
+iperf3 -c <DESTINATION_IP> -u -b 10M -t 30
+```
+
+The UDP offered load was deliberately fixed at:
+
+```text
+10 Mbit/s
+```
+
+for 30 seconds.
+
+**Important:** the `10 Mbit/s` value is the offered UDP measurement
+rate. It is **not** interpreted as the available bandwidth of the
+network.
+
+Available/sustained throughput was characterized separately using the
+TCP measurements above.
+
+---
+
+### 18.5.1 Worker1 → Server
+
+Start:
+
+```bash
+iperf3 -s
+```
+
+on `k3s-server`.
+
+From Worker 1:
+
+```bash
+iperf3 -c 102.34.160.89 -u -b 10M -t 30
+```
+
+Observed receiver result:
+
+```text
+Transfer:        35.8 MBytes
+Bitrate:         10.0 Mbit/s
+Jitter:          0.033 ms
+Lost datagrams:  0 / 25898
+Packet loss:     0%
+```
+
+Therefore:
+
+```text
+Worker1 -> Server UDP jitter = 0.033 ms
+Worker1 -> Server UDP loss   = 0%
+```
+
+```markdown
+![Worker 1 to K3s server UDP jitter baseline](images/worker1-to-server-udp.png)
+```
+
+---
+
+### 18.5.2 External Client → Worker1
+
+Start:
+
+```bash
+iperf3 -s
+```
+
+on `k3s-worker1`.
+
+From the external client:
+
+```bash
+iperf3 -c 102.34.160.87 -u -b 10M -t 30
+```
+
+Observed receiver result:
+
+```text
+Transfer:        35.8 MBytes
+Bitrate:         10.2 Mbit/s
+Jitter:          0.426 ms
+Lost datagrams:  4 / 27017
+Packet loss:     0.015%
+```
+
+Therefore:
+
+```text
+External Client -> Worker1 UDP jitter = 0.426 ms
+External Client -> Worker1 UDP loss   = 0.015%
+```
+
+This confirms that the healthy external path exhibited measurable
+variability and a small amount of UDP datagram loss even before
+artificial degradation was introduced.
+
+```markdown
+![External client to Worker 1 UDP jitter baseline](images/client-to-worker1-udp.png)
+```
+
+---
+
+### 18.5.3 Worker1 → Worker2
+
+Start:
+
+```bash
+iperf3 -s
+```
+
+on `k3s-worker2`.
+
+From Worker 1:
+
+```bash
+iperf3 -c 102.34.160.103 -u -b 10M -t 30
+```
+
+Observed receiver result:
+
+```text
+Transfer:        35.8 MBytes
+Bitrate:         10.0 Mbit/s
+Jitter:          0.056 ms
+Lost datagrams:  0 / 25898
+Packet loss:     0%
+```
+
+Therefore:
+
+```text
+Worker1 -> Worker2 UDP jitter = 0.056 ms
+Worker1 -> Worker2 UDP loss   = 0%
+```
+
+```markdown
+![Worker 1 to Worker 2 UDP jitter baseline](images/worker1-to-worker2-udp.png)
+```
+
+---
+
+## 18.6 Consolidated Healthy Network Baseline
+
+The initial healthy network characterization produced the following
+results.
+
+| Path | RTT min/avg/max/mdev | ICMP Loss | TCP Throughput | UDP Jitter | UDP Loss |
+|---|---|---:|---:|---:|---:|
+| Worker1 → Server | `0.394 / 0.593 / 0.830 / 0.078 ms` | 0% | 9.41 Gbit/s | 0.033 ms | 0% |
+| Server → Worker1 | `0.395 / 0.608 / 0.831 / 0.080 ms` | 0% | 9.72 Gbit/s | Not measured | Not measured |
+| External Client → Worker1 | `5.892 / 14.553 / 117.830 / 20.147 ms` | 0% | 44.0–44.2 Mbit/s | 0.426 ms | 0.015% |
+| Worker1 → External Client | Not separately measured by ICMP | — | 48.3–50.1 Mbit/s | Not measured | Not measured |
+| External Client → Server | `4.057 / 15.259 / 128.919 / 19.355 ms` | 1% | Not measured | Not measured | Not measured |
+| Worker1 → Worker2 | `0.366 / 0.586 / 1.280 / 0.116 ms` | 0% | 13.2 Gbit/s | 0.056 ms | 0% |
+| Worker2 → Worker1 | Not separately measured by ICMP | — | 8.65 Gbit/s | Not measured | Not measured |
+
+The measurements show that the intra-cluster paths and external-client
+path have substantially different healthy characteristics.
+
+The intra-cluster VM paths exhibited:
+
+- sub-millisecond average RTT;
+- no observed ICMP loss during the 100-packet samples;
+- multi-gigabit TCP throughput; and
+- very low UDP jitter.
+
+The external-client path exhibited:
+
+- higher and more variable RTT;
+- approximately 44–50 Mbit/s TCP throughput;
+- greater UDP jitter; and
+- small but non-zero UDP datagram loss during the Worker 1 test.
+
+These differences are retained as part of the experimental baseline and
+will be considered when later defining degraded-network profiles.
+
+No causal explanation is inferred from these initial characterization
+runs alone.
+
+---
+
+## 18.7 Raw Network Measurement Storage
+
+The raw network characterization outputs are retained under:
+
+```text
+experiments/
+└── baseline/
+    └── network/
+        ├── ping/
+        │   ├── worker1-to-server.txt
+        │   ├── server-to-worker1.txt
+        │   ├── client-to-worker1.txt
+        │   ├── client-to-server.txt
+        │   └── worker1-to-worker2.txt
+        │
+        ├── tcp/
+        │   ├── worker1-to-server.txt
+        │   ├── server-to-worker1.txt
+        │   ├── client-to-worker1.txt
+        │   ├── worker1-to-client.txt
+        │   ├── worker1-to-worker2.txt
+        │   └── worker2-to-worker1.txt
+        │
+        └── udp/
+            ├── worker1-to-server.txt
+            ├── client-to-worker1.txt
+            └── worker1-to-worker2.txt
+```
+
+The above measurements are captured directly into these files rather
+than relying only on screenshots.
+
+For example, ping output can be captured using:
+
+```bash
+ping -c 100 102.34.160.89 \
+  | tee experiments/baseline/network/ping/worker1-to-server.txt
+```
+
+TCP output can be captured using:
+
+```bash
+iperf3 -c 102.34.160.89 -t 30 \
+  | tee experiments/baseline/network/tcp/worker1-to-server.txt
+```
+
+UDP output can be captured using:
+
+```bash
+iperf3 -c 102.34.160.89 -u -b 10M -t 30 \
+  | tee experiments/baseline/network/udp/worker1-to-server.txt
+```
+---
+
+## 18.8 Network Baseline Status
+
+The following healthy network characterization tasks have been
+completed:
+
+- [x] `iperf3` installed
+- [x] `ping` available
+- [x] Worker1 → Server RTT measured
+- [x] Server → Worker1 RTT measured
+- [x] External Client → Worker1 RTT measured
+- [x] External Client → Server RTT measured
+- [x] Worker1 → Worker2 RTT measured
+- [x] Worker1 → Server TCP throughput measured
+- [x] Server → Worker1 TCP throughput measured
+- [x] External Client → Worker1 TCP throughput measured
+- [x] Worker1 → External Client TCP throughput measured
+- [x] Worker1 → Worker2 TCP throughput measured
+- [x] Worker2 → Worker1 TCP throughput measured
+- [x] Worker1 → Server UDP jitter/loss measured
+- [x] External Client → Worker1 UDP jitter/loss measured
+- [x] Worker1 → Worker2 UDP jitter/loss measured
+- [x] No artificial network degradation active during characterization
+- [x] Raw baseline results retained under `experiments/baseline/network/`
+
+The healthy network baseline is therefore sufficiently characterized
+for the subsequent native K3s failure and partition pilot experiments.
+
+The next experimental activity will evaluate the Scenario B condition
+in which communication between `k3s-worker1` and `k3s-server` is
+deliberately disrupted while the independent external-client path to
+the workload on `k3s-worker1` remains available.
 ---
 
 # 19. External Experimental Client
