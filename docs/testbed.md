@@ -2126,33 +2126,929 @@ deliberately disrupted while the independent external-client path to
 the workload on `k3s-worker1` remains available.
 ---
 
-# 19. External Experimental Client
+# 19. Native K3s Scenario B — Control-Plane Partition Baseline
 
-The external client is separate from the K3s cluster.
+This section documents the native K3s behaviour observed when
+`k3s-worker1` loses communication with the Kubernetes control plane
+while the workload hosted on the worker remains independently reachable.
 
-Client details:
+The experiment was performed **without the proposed Failure-Aware
+Controller**. Its purpose was to establish the native Kubernetes
+baseline and verify the central ambiguity motivating the proposed
+controller.
 
-- Host: **[PC/LAPTOP NAME]**
-- OS: **[OS/VERSION]**
-- CPU: **[CPU MODEL / CORES]**
-- RAM: **[RAM]**
-- Network connection: **WIFI**
+The target condition was:
 
-The external client will run:
+```text
+CONTROL-PLANE PATH
 
-- Rust experimental harness
-- workload generation
-- experiment coordination
-- fault orchestration
-- event timestamping
-- result collection
-- statistical analysis
+k3s-worker1                  k3s-server
+102.34.160.87               102.34.160.89
 
-Keeping it external prevents the measurement system from consuming
-worker resources and provides an independent path for determining
-whether a workload remains useful after loss of control-plane
-connectivity.
+      X -------------------- X
+          TCP/6443 blocked
+```
 
+while preserving:
+
+```text
+INDEPENDENT APPLICATION PATH
+
+External Client
+      |
+      | HTTP
+      v
+k3s-worker1
+102.34.160.87
+      |
+      v
+baseline-web
+```
+
+The experiment successfully reproduced a condition in which Kubernetes
+considered Worker 1 unreachable while the existing workload on Worker 1
+continued serving external requests.
+
+---
+
+## 19.1 Experimental Objective
+
+The experiment tested whether loss of Worker 1's control-plane
+connectivity necessarily implies loss of the workload executing on the
+worker.
+
+Specifically, the experiment sought to establish the following
+condition:
+
+```text
+Kubernetes control-plane observation:
+Worker 1 is unreachable
+
+                 while
+
+Independent application observation:
+Workload on Worker 1 remains reachable
+```
+
+This experiment provides the native baseline for the operational state
+later represented by the proposed controller as:
+
+```text
+reachable_outside_control_plane
+```
+
+No controller-level intervention was active during this experiment.
+
+---
+
+## 19.2 Experimental Environment
+
+The relevant nodes were:
+
+| Component | Hostname | IP Address | Role |
+|---|---|---|---|
+| Control plane | `k3s-server` | `102.34.160.89` | Kubernetes control plane |
+| Fault target | `k3s-worker1` | `102.34.160.87` | Partitioned worker |
+| Recovery worker | `k3s-worker2` | `102.34.160.103` | Available recovery capacity |
+| External client | External machine | `[CLIENT_IP]` | Independent service verification |
+
+The baseline workload was:
+
+```text
+Application:  Nginx
+Deployment:   baseline-web
+Namespace:    failure-aware
+Worker:       k3s-worker1
+Service:      NodePort
+NodePort:     30364
+```
+
+The externally tested endpoint was:
+
+```text
+http://102.34.160.87:30364
+```
+
+---
+
+## 19.3 Pre-Experiment Verification
+
+Before introducing the partition, verify that all cluster nodes are
+healthy:
+
+```bash
+kubectl get nodes -o wide
+```
+
+Expected initial state:
+
+```text
+k3s-server     Ready
+k3s-worker1    Ready
+k3s-worker2    Ready
+```
+
+Verify that the workload is executing on Worker 1:
+
+```bash
+kubectl get pods \
+  -n failure-aware \
+  -o wide
+```
+
+The baseline workload must show:
+
+```text
+NODE = k3s-worker1
+```
+
+Verify that Worker 1's Lease is renewing:
+
+```bash
+watch -n 2 \
+"kubectl get lease k3s-worker1 \
+-n kube-node-lease \
+-o custom-columns=NODE:.metadata.name,RENEW:.spec.renewTime"
+```
+
+During healthy operation, the Lease renewal timestamp was observed to
+change at approximately **10-second intervals**.
+
+Verify the external application path:
+
+```bash
+sh workloads/test-workload/independent-path-test.sh
+```
+
+Successful requests should return:
+
+```text
+HTTP=200
+```
+
+before fault injection begins.
+
+---
+
+## 19.4 Monitoring During the Experiment
+
+Several observations were performed concurrently so that the
+control-plane view could be compared with the independent application
+view.
+
+![monitoring several states during failure injection](images/monitor-several-states.png)
+
+### 19.4.1 Node State
+
+On the control-plane side:
+
+```bash
+kubectl get nodes -w
+```
+
+This was used to observe the transition from:
+
+```text
+Ready
+```
+
+to:
+
+```text
+NotReady
+```
+
+---
+
+### 19.4.2 Worker 1 Lease
+
+Worker 1's Lease was monitored using:
+
+```bash
+watch -n 2 \
+"kubectl get lease k3s-worker1 \
+-n kube-node-lease \
+-o custom-columns=NODE:.metadata.name,RENEW:.spec.renewTime"
+```
+
+Before the partition, the Lease renewed periodically.
+
+After the partition, the observed Lease renewal timestamp stopped at:
+
+```text
+2026-09-19T13:24:17.830355Z
+```
+![the lease froze during failure injection](images/frozen-lease.png)
+---
+
+### 19.4.3 Pod State
+
+The workload state was monitored using:
+
+```bash
+kubectl get pods \
+  -n failure-aware \
+  -o wide -w
+```
+
+This allowed the native Kubernetes Pod lifecycle to be observed while
+Worker 1 was unreachable.
+
+---
+
+### 19.4.4 Kubernetes Events
+
+Cluster events were monitored using:
+
+```bash
+kubectl get events \
+  --all-namespaces \
+  --sort-by='.lastTimestamp' \
+  -w
+```
+
+Events associated with Worker 1 included native node-health changes such
+as:
+
+```text
+NodeNotReady
+```
+
+and workload-related events indicating that the node was not ready.
+
+---
+
+### 19.4.5 Independent Application Reachability
+
+From the external client:
+
+```bash
+sh workloads/test-workload/independent-path-test.sh
+```
+
+The script continued sending HTTP requests directly to:
+
+```text
+102.34.160.87:30364
+```
+
+throughout the partition.
+
+The output contained timestamped observations such as:
+
+```text
+19 September 2026 16:25:29.592 | HTTP=200 latency=0.026970s
+19 September 2026 16:25:30.639 | HTTP=200 latency=0.026489s
+19 September 2026 16:25:31.683 | HTTP=200 latency=0.014325s
+19 September 2026 16:25:32.724 | HTTP=200 latency=0.015104s
+```
+
+The repeated `HTTP=200` responses were used as independent evidence that
+the workload remained operationally reachable.
+
+---
+
+## 19.5 Selective Control-Plane Partition
+
+The experiment intentionally blocked only the Worker 1 to K3s API
+Server path.
+
+The relevant communication path was:
+
+```text
+k3s-worker1
+102.34.160.87
+      |
+      | TCP/6443
+      v
+k3s-server
+102.34.160.89
+```
+
+The following rule was inserted on `k3s-worker1`:
+
+```bash
+sudo iptables -I OUTPUT 1 \
+  -p tcp \
+  -d 102.34.160.89 \
+  --dport 6443 \
+  -j DROP
+```
+
+The rule blocks Worker 1's outbound TCP communication to the K3s API
+Server while leaving unrelated Worker 1 traffic available.
+
+The entire Worker 1 network interface was **not** disabled because doing
+so would create complete worker isolation rather than the required
+Scenario B control-plane partition.
+
+Verify the inserted rule using:
+
+```bash
+sudo iptables -L OUTPUT -n -v --line-numbers
+```
+
+---
+
+## 19.6 Fault-Injection Timestamp
+
+The partition injection time was recorded as:
+
+```text
+2026-09-19 13:24:28.367
+```
+
+This represents:
+
+```text
+t_partition
+```
+
+for this pilot run.
+
+The timestamp was stored under:
+
+```text
+experiments/baseline/scenario-b/fault-time.txt
+```
+
+A reproducible command for future runs is:
+
+```bash
+date '+%Y-%m-%d %H:%M:%S.%3N' \
+  | tee experiments/baseline/scenario-b/fault-time.txt
+```
+
+For formal automated experiments, timestamp collection will later be
+performed by the experimental harness.
+
+---
+
+## 19.7 Lease Behaviour After Partition
+
+Before fault injection, Worker 1 renewed its NodeLease at approximately
+10-second intervals.
+
+The last observed Lease renewal was:
+
+```text
+2026-09-19T13:24:17.830355Z
+```
+
+The partition was injected at:
+
+```text
+2026-09-19 13:24:28.367
+```
+
+After the Worker 1 to API Server path was blocked, the Lease renewal
+timestamp stopped advancing.
+
+The observed sequence was therefore:
+
+```text
+Healthy Worker1
+      |
+      | periodic Lease renewal
+      | approximately every 10 seconds
+      v
+2026-09-19T13:24:17.830355Z
+      |
+      | control-plane path blocked
+      v
+2026-09-19 13:24:28.367
+      |
+      v
+No subsequent Lease renewal observed
+```
+
+This provided the native failure-suspicion precursor for the experiment.
+
+---
+
+## 19.8 Native Node-State Transition
+
+Following the loss of Worker 1's control-plane communication, Kubernetes
+eventually changed Worker 1 from:
+
+```text
+Ready
+```
+
+to:
+
+```text
+NotReady
+```
+
+The observed control-plane state was:
+
+```text
+k3s-worker1    NotReady
+```
+
+This occurred while `k3s-server` and `k3s-worker2` remained healthy.
+
+The experiment therefore selectively affected Worker 1 rather than the
+entire cluster.
+
+---
+
+## 19.9 Native Unreachable Taints
+
+After Kubernetes detected loss of communication with Worker 1, the
+node received native unreachable taints.
+
+The taints were inspected using:
+
+```bash
+kubectl get node k3s-worker1 \
+  -o jsonpath='{.spec.taints}'
+```
+
+The observed output contained:
+
+```text
+node.kubernetes.io/unreachable
+```
+
+with both:
+
+```text
+NoSchedule
+```
+
+and:
+
+```text
+NoExecute
+```
+
+effects.
+
+The taint state was preserved in:
+
+```text
+experiments/baseline/scenario-b/unreachable-taint.txt
+```
+
+using:
+
+```bash
+kubectl get node k3s-worker1 \
+  -o jsonpath='{.spec.taints}' \
+  > experiments/baseline/scenario-b/unreachable-taint.txt
+```
+
+This file forms part of the reproducible evidence for the native
+Kubernetes failure response.
+
+---
+
+## 19.10 Native Pod Lifecycle Observation
+
+The baseline workload initially executed normally on:
+
+```text
+k3s-worker1
+```
+
+After Worker 1 became unreachable, Kubernetes progressed the Pod object
+toward termination.
+
+The observed state included:
+
+```text
+baseline-web-...    1/1    Terminating    ...    k3s-worker1
+```
+
+A replacement Pod was also observed in:
+
+```text
+Pending
+```
+
+state.
+
+The existing Pod therefore appeared from the control-plane perspective
+as:
+
+```text
+Running
+   |
+   v
+Terminating
+```
+
+However, the `Terminating` state did **not** demonstrate that the
+container process had stopped on Worker 1.
+
+Because the control plane could no longer communicate with the kubelet
+on Worker 1, the control-plane Pod lifecycle state and the actual
+execution state of the workload became distinguishable.
+
+---
+
+## 19.11 Independent Workload Remained Reachable
+
+While Kubernetes reported:
+
+```text
+k3s-worker1 = NotReady
+```
+
+and the original Pod object was:
+
+```text
+Terminating
+```
+
+the external client continued successfully accessing:
+
+```text
+http://102.34.160.87:30364
+```
+
+The workload continued returning:
+
+```text
+HTTP=200
+```
+
+The Nginx service was also independently accessible through a web
+browser using:
+
+```text
+102.34.160.87:30364
+```
+![Workload accessible in the browser during a partition](images/workload-browser-access.png)
+
+The resulting observation was therefore:
+
+```text
+KUBERNETES CONTROL-PLANE VIEW
+
+Worker1 = NotReady
+       |
+       v
+unreachable taint
+       |
+       v
+Pod = Terminating
+
+
+              BUT
+
+
+INDEPENDENT APPLICATION VIEW
+
+External Client
+       |
+       v
+102.34.160.87:30364
+       |
+       v
+Nginx workload
+       |
+       v
+HTTP 200
+```
+
+This distinction is the principal result of the native Scenario B pilot.
+
+---
+
+## 19.12 Interpretation of `Terminating`
+
+The observed `Terminating` Pod state is retained as part of the native
+Kubernetes baseline.
+
+The proposed Failure-Aware Controller will **not** attempt to rewrite
+the native Pod status back to `Running`.
+
+Instead, the architecture distinguishes:
+
+```text
+Native Kubernetes state
+```
+
+from:
+
+```text
+Observed operational state
+```
+
+For this scenario:
+
+```text
+Native Kubernetes:
+
+Node = NotReady
+Pod  = Terminating
+
+          +
+
+Independent evidence:
+
+HTTP service = reachable
+
+          ↓
+
+Failure-Aware operational classification:
+
+reachable_outside_control_plane
+```
+
+The controller will therefore consume native Kubernetes failure
+signals and supplement them with post-suspicion operational evidence
+rather than modifying Kubernetes-owned status fields.
+
+---
+
+## 19.13 Native Baseline Decision Context
+
+The Scenario B observation establishes the condition that the proposed
+controller must later evaluate.
+
+Conceptually:
+
+```text
+NodeLease stops
+       |
+       v
+Native failure suspicion
+       |
+       v
+Node becomes NotReady
+       |
+       v
+Post-suspicion verification
+       |
+       +---- Service reachable?
+       |
+       +---- Workload useful?
+       |
+       v
+reachable_outside_control_plane
+       |
+       v
+PRESERVE
+```
+
+The `PRESERVE` behaviour is part of the proposed controller and was
+**not active during this baseline experiment**.
+
+This experiment therefore does not demonstrate an improvement by the
+proposed system. It establishes the native condition against which the
+controller will later be evaluated.
+
+---
+
+## 19.14 Evidence Capture
+
+The Scenario B pilot evidence is stored under:
+
+```text
+experiments/
+└── baseline/
+    └── scenario-b/
+        ├── fault-time.txt
+        ├── independent-path.txt
+        ├── worker1-node-describe.txt
+        ├── worker1-node.yaml
+        ├── worker1-lease.yaml
+        ├── unreachable-taint.txt
+        └── pods.txt
+```
+
+The following commands are used to capture the relevant state.
+
+### Node description
+
+```bash
+kubectl describe node k3s-worker1 \
+  > experiments/baseline/scenario-b/worker1-node-describe.txt
+```
+
+### Complete Node object
+
+```bash
+kubectl get node k3s-worker1 -o yaml \
+  > experiments/baseline/scenario-b/worker1-node.yaml
+```
+
+### NodeLease
+
+```bash
+kubectl get lease k3s-worker1 \
+  -n kube-node-lease \
+  -o yaml \
+  > experiments/baseline/scenario-b/worker1-lease.yaml
+```
+
+### Unreachable taints
+
+```bash
+kubectl get node k3s-worker1 \
+  -o jsonpath='{.spec.taints}' \
+  > experiments/baseline/scenario-b/unreachable-taint.txt
+```
+
+### Pod state
+
+```bash
+kubectl get pods \
+  -n failure-aware \
+  -o wide \
+  > experiments/baseline/scenario-b/pods.txt
+```
+
+### Independent application observations
+
+```bash
+sh workloads/test-workload/independent-path-test.sh \
+  | tee experiments/baseline/scenario-b/independent-path.txt
+```
+
+Screenshots used for visual documentation are maintained separately
+under:
+
+```text
+images/
+```
+---
+
+## 19.15 Restore Control-Plane Connectivity
+
+After completing the observation period, the experimental firewall rule
+was removed using the exact rule specification:
+
+```bash
+sudo iptables -D OUTPUT \
+  -p tcp \
+  -d 102.34.160.89 \
+  --dport 6443 \
+  -j DROP
+```
+
+This method is preferred over deleting the rule by line number because
+it explicitly removes the rule introduced by the experiment.
+
+Verify that the rule has been removed:
+
+```bash
+sudo iptables -L OUTPUT -n -v --line-numbers
+```
+
+No Scenario B TCP/6443 DROP rule should remain.
+
+---
+
+## 19.16 Verify Native Recovery
+
+After removing the partition, observe node state:
+
+```bash
+kubectl get nodes -w
+```
+
+Worker 1 should return to:
+
+```text
+Ready
+```
+
+Observe its Lease:
+
+```bash
+watch -n 2 \
+"kubectl get lease k3s-worker1 \
+-n kube-node-lease \
+-o custom-columns=NODE:.metadata.name,RENEW:.spec.renewTime"
+```
+
+The Lease renewal timestamp should resume advancing.
+
+Verify workload state:
+
+```bash
+kubectl get pods \
+  -n failure-aware \
+  -o wide
+```
+
+Verify external application access:
+
+```bash
+sh workloads/test-workload/independent-path-test.sh
+```
+
+Successful restoration requires:
+
+```text
+Worker1 = Ready
+Lease renewal = resumed
+External workload access = successful
+Experimental DROP rule = absent
+```
+
+---
+
+## 19.17 Scenario B Baseline Result
+
+The native K3s Scenario B pilot successfully demonstrated the target
+failure ambiguity.
+
+The observed sequence was:
+
+```text
+Worker1 healthy
+       |
+       | Lease renews approximately every 10 s
+       v
+Control-plane path blocked
+       |
+       v
+Lease stops renewing
+       |
+       v
+Kubernetes marks Worker1 NotReady
+       |
+       v
+node.kubernetes.io/unreachable applied
+       |
+       v
+Original Pod enters Terminating
+       |
+       +--------------------------------------+
+                                              |
+                                  simultaneously
+                                              |
+                                              v
+                               Existing Nginx workload
+                               continues serving HTTP
+                                              |
+                                              v
+                                          HTTP 200
+```
+
+The experiment therefore established that:
+
+```text
+loss of Kubernetes control-plane reachability
+```
+
+did not necessarily imply:
+
+```text
+loss of application usefulness
+```
+
+for the workload executing on the affected worker.
+
+This observation provides the empirical baseline for the proposed
+operational state:
+
+```text
+reachable_outside_control_plane
+```
+
+and motivates post-suspicion verification before recovery decisions are
+made.
+
+---
+
+## 19.18 Scenario B Completion Status
+
+The following pilot objectives were successfully completed:
+
+- [x] Worker 1 initially observed as `Ready`
+- [x] Worker 1 NodeLease renewal observed
+- [x] Approximately 10-second Lease renewal cadence observed
+- [x] Baseline workload confirmed on `k3s-worker1`
+- [x] External application path confirmed before partition
+- [x] Worker1 → Server TCP/6443 selectively blocked
+- [x] Partition injection timestamp recorded
+- [x] Worker 1 Lease renewal stopped
+- [x] Worker 1 transitioned to `NotReady`
+- [x] `node.kubernetes.io/unreachable` observed
+- [x] `NoSchedule` unreachable taint observed
+- [x] `NoExecute` unreachable taint observed
+- [x] Original workload Pod observed entering `Terminating`
+- [x] External client continued receiving HTTP `200`
+- [x] Workload independently verified through `102.34.160.87:30364`
+- [x] Native Kubernetes behaviour recorded without controller intervention
+- [x] Unreachable taints captured to reproducibility file
+- [x] Experimental firewall rule removed using exact-rule deletion
+- [x] Control-plane connectivity restored
+- [x] Native recovery verified
+
+The native Scenario B baseline is therefore complete.
+
+The next implementation stage is the development of the experimental
+harness required to automate timestamp collection, workload probing,
+Kubernetes-state observation, fault coordination, and result recording
+before the Failure-Aware Controller itself is introduced.
 ---
 
 # 20. Formal EMR Workload

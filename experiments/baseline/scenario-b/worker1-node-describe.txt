@@ -1,0 +1,86 @@
+Name:               k3s-worker1
+Roles:              <none>
+Labels:             beta.kubernetes.io/arch=amd64
+                    beta.kubernetes.io/instance-type=k3s
+                    beta.kubernetes.io/os=linux
+                    experiment-role=fault-target
+                    kubernetes.io/arch=amd64
+                    kubernetes.io/hostname=k3s-worker1
+                    kubernetes.io/os=linux
+                    node.kubernetes.io/instance-type=k3s
+Annotations:        alpha.kubernetes.io/provided-node-ip: 102.34.160.87
+                    flannel.alpha.coreos.com/backend-data: {"VNI":1,"VtepMAC":"fa:88:cb:7f:89:95"}
+                    flannel.alpha.coreos.com/backend-type: vxlan
+                    flannel.alpha.coreos.com/kube-subnet-manager: true
+                    flannel.alpha.coreos.com/public-ip: 102.34.160.87
+                    k3s.io/hostname: k3s-worker1
+                    k3s.io/internal-ip: 102.34.160.87
+                    k3s.io/node-args: ["agent"]
+                    k3s.io/node-config-hash: 5ONVHY3J5MSH7MMXCXJNCQHW3TOPWEWG5BYUZPG6AXWWG56DVP6Q====
+                    k3s.io/node-env: {"K3S_TOKEN":"********","K3S_URL":"https://102.34.160.89:6443"}
+                    node.alpha.kubernetes.io/ttl: 0
+                    volumes.kubernetes.io/controller-managed-attach-detach: true
+CreationTimestamp:  Wed, 16 Sep 2026 23:24:02 +0300
+Taints:             node.kubernetes.io/unreachable:NoExecute
+                    node.kubernetes.io/unreachable:NoSchedule
+Unschedulable:      false
+Lease:
+  HolderIdentity:  k3s-worker1
+  AcquireTime:     <unset>
+  RenewTime:       Sat, 19 Sep 2026 16:24:17 +0300
+Conditions:
+  Type             Status    LastHeartbeatTime                 LastTransitionTime                Reason              Message
+  ----             ------    -----------------                 ------------------                ------              -------
+  MemoryPressure   Unknown   Sat, 19 Sep 2026 16:21:39 +0300   Sat, 19 Sep 2026 16:25:10 +0300   NodeStatusUnknown   Kubelet stopped posting node status.
+  DiskPressure     Unknown   Sat, 19 Sep 2026 16:21:39 +0300   Sat, 19 Sep 2026 16:25:10 +0300   NodeStatusUnknown   Kubelet stopped posting node status.
+  PIDPressure      Unknown   Sat, 19 Sep 2026 16:21:39 +0300   Sat, 19 Sep 2026 16:25:10 +0300   NodeStatusUnknown   Kubelet stopped posting node status.
+  Ready            Unknown   Sat, 19 Sep 2026 16:21:39 +0300   Sat, 19 Sep 2026 16:25:10 +0300   NodeStatusUnknown   Kubelet stopped posting node status.
+Addresses:
+  InternalIP:  102.34.160.87
+  Hostname:    k3s-worker1
+Capacity:
+  cpu:                4
+  ephemeral-storage:  100476656Ki
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             4009276Ki
+  pods:               110
+Allocatable:
+  cpu:                4
+  ephemeral-storage:  97743690881
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             4009276Ki
+  pods:               110
+System Info:
+  Machine ID:                 bc9b2280a6214b94bbdb065cb3ffb937
+  System UUID:                bc9b2280-a621-4b94-bbdb-065cb3ffb937
+  Boot ID:                    b6c41d14-daa7-4e59-9c45-43a5c1400711
+  Kernel Version:             6.8.0-59-generic
+  OS Image:                   Ubuntu 24.04.5 LTS
+  Operating System:           linux
+  Architecture:               amd64
+  Container Runtime Version:  containerd://2.3.4-k3s1.36
+  Kubelet Version:            v1.36.4+k3s1
+  Kube-Proxy Version:         
+PodCIDR:                      10.42.1.0/24
+PodCIDRs:                     10.42.1.0/24
+ProviderID:                   k3s://k3s-worker1
+Non-terminated Pods:          (2 in total)
+  Namespace                   Name                             CPU Requests  CPU Limits  Memory Requests  Memory Limits  Age
+  ---------                   ----                             ------------  ----------  ---------------  -------------  ---
+  failure-aware               baseline-web-667b468c8d-h7sb4    25m (0%)      100m (2%)   32Mi (0%)        128Mi (3%)     23m
+  kube-system                 svclb-traefik-4652a1e7-l9n8s     0 (0%)        0 (0%)      0 (0%)           0 (0%)         2d17h
+Allocated resources:
+  (Total limits may be over 100 percent, i.e., overcommitted.)
+  Resource           Requests   Limits
+  --------           --------   ------
+  cpu                25m (0%)   100m (2%)
+  memory             32Mi (0%)  128Mi (3%)
+  ephemeral-storage  0 (0%)     0 (0%)
+  hugepages-1Gi      0 (0%)     0 (0%)
+  hugepages-2Mi      0 (0%)     0 (0%)
+Events:
+  Type    Reason        Age                From             Message
+  ----    ------        ----               ----             -------
+  Normal  NodeNotReady  11m (x2 over 28m)  node-controller  Node k3s-worker1 status is now: NodeNotReady
