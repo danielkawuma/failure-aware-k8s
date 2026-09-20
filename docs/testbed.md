@@ -2723,6 +2723,10 @@ This distinction is the principal result of the native Scenario B pilot.
 The observed `Terminating` Pod state is retained as part of the native
 Kubernetes baseline.
 
+![alt text](images/pod-termination-pending.png)
+
+And the replacement cannot simply go to Worker2 since it's node affinity is set to worker1. On top of that, Worker1 is unreachable/tainted. Hence the replacement remains Pending.
+
 The proposed Failure-Aware Controller will **not** attempt to rewrite
 the native Pod status back to `Running`.
 
