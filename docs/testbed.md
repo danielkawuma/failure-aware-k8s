@@ -3055,6 +3055,1293 @@ Kubernetes-state observation, fault coordination, and result recording
 before the Failure-Aware Controller itself is introduced.
 ---
 
+# 20. Rust Experimental Harness
+
+Following completion of the native K3s Scenario B baseline, a Rust-based
+experimental harness was developed to automate the observations that had
+previously been collected manually.
+
+The harness is intentionally separate from the proposed Failure-Aware
+Controller.
+
+Its purpose is to:
+
+- generate independent application-health requests;
+- timestamp observations using a common UTC time base;
+- observe Kubernetes Node state;
+- observe NodeLease renewal;
+- observe Pod lifecycle state;
+- observe Node taints;
+- capture Kubernetes events;
+- record application latency and request failures;
+- preserve experiment metadata; and
+- generate machine-readable evidence for subsequent statistical analysis.
+
+The relationship between the harness and the system under test is:
+
+```text
+                    RUST HARNESS
+                         |
+          +--------------+--------------+
+          |              |              |
+          v              v              v
+     HTTP Probe       K8s State      Event State
+          |              |              |
+          +--------------+--------------+
+                         |
+                         v
+                  Timestamped Results
+
+
+              FAILURE-AWARE CONTROLLER
+                         |
+                         v
+                  System Under Test
+```
+
+The harness measures and records experimental behaviour.
+
+It does not implement the Failure-Aware Controller logic.
+
+---
+
+## 20.1 Harness Repository Structure
+
+The harness is maintained under:
+
+```text
+harness/
+```
+
+The current structure is:
+
+```text
+harness/
+├── Cargo.toml
+├── config/
+│   └── scenario-b.json
+└── src/
+    ├── main.rs
+    ├── config.rs
+    ├── http_probe.rs
+    └── kubernetes.rs
+```
+
+The Rust source files have the following responsibilities:
+
+| File | Purpose |
+|---|---|
+| `main.rs` | Coordinates configuration, observers, run creation, result paths, metadata, and shutdown |
+| `config.rs` | Loads scenario configuration from JSON |
+| `http_probe.rs` | Performs independent workload reachability and latency probing |
+| `kubernetes.rs` | Observes Node, Lease, Pod, taint, and Kubernetes event state |
+
+---
+
+## 20.2 Rust Project Initialization
+
+The harness was initialized as a Rust binary project:
+
+```bash
+cd harness
+cargo init --bin .
+```
+
+The initial installation was verified using:
+
+```bash
+cargo run
+```
+
+The project uses:
+
+```text
+Rust edition: 2024
+```
+
+The Rust edition identifies the language edition under which the source
+code is compiled. It is separate from the installed Rust compiler
+version.
+
+For reproducibility, the actual compiler and Cargo versions should also
+be recorded:
+
+```bash
+rustc --version
+```
+
+```bash
+cargo --version
+```
+
+Recorded values:
+
+```text
+Rust compiler: [RUSTC_VERSION]
+Cargo:         [CARGO_VERSION]
+Rust edition:  2024
+```
+
+---
+
+## 20.3 Rust Dependencies
+
+The harness uses the following dependencies:
+
+```toml
+[package]
+name = "failure-aware-harness"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+tokio = { version = "1", features = ["full"] }
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }
+chrono = { version = "0.4", features = ["serde"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+csv = "1"
+anyhow = "1"
+```
+
+The dependencies provide the following functionality:
+
+| Dependency | Role |
+|---|---|
+| `tokio` | Asynchronous runtime used to execute multiple observers concurrently |
+| `reqwest` | HTTP client used for independent workload probing |
+| `rustls-tls` | Rust-based TLS backend used by `reqwest` |
+| `chrono` | UTC timestamp generation |
+| `serde` | Serialization and deserialization of Rust structures |
+| `serde_json` | JSON configuration and metadata handling |
+| `csv` | Machine-readable experiment result generation |
+| `anyhow` | Simplified application error handling |
+
+Rustls is explicitly enabled for the HTTP client to reduce dependence on
+the host OpenSSL installation.
+
+---
+
+## 20.4 Host Build Dependencies
+
+During initial development, the following system packages were also
+installed:
+
+```bash
+sudo apt update
+sudo apt install -y pkg-config libssl-dev
+```
+
+These were installed after an initial Rust build encountered an
+`openssl-sys` dependency error.
+
+The HTTP client was subsequently configured to use:
+
+```text
+rustls-tls
+```
+
+instead of the default native TLS backend.
+
+The OpenSSL development packages are nevertheless retained in this
+reproducibility record because they were installed in the development
+environment.
+
+The harness was rebuilt using:
+
+```bash
+cargo clean
+cargo build
+```
+
+---
+
+## 20.5 Scenario Configuration
+
+Experiment-specific settings are externalised from the Rust source code.
+
+Scenario B uses:
+
+```text
+harness/config/scenario-b.json
+```
+
+with:
+
+```json
+{
+  "scenario": "scenario-b",
+  "target_url": "http://102.34.160.87:30364",
+  "target_node": "k3s-worker1",
+  "namespace": "failure-aware",
+  "pod_label_selector": "app=baseline-web",
+  "request_interval_ms": 1000,
+  "request_timeout_ms": 3000
+}
+```
+
+The configuration fields are:
+
+| Parameter | Purpose |
+|---|---|
+| `scenario` | Experimental scenario identifier |
+| `target_url` | Independently reachable workload endpoint |
+| `target_node` | Kubernetes worker under observation |
+| `namespace` | Namespace containing the workload |
+| `pod_label_selector` | Selector used to identify the workload Pods |
+| `request_interval_ms` | Delay between HTTP probes |
+| `request_timeout_ms` | Maximum HTTP request duration before failure |
+
+For Scenario B:
+
+```text
+Request interval = 1000 ms
+Request timeout  = 3000 ms
+```
+
+Moving these values into the configuration file allows the same harness
+source code to support future experimental scenarios without recompiling
+scenario-specific values into the binary.
+
+---
+
+## 20.6 Reproducible Configuration Path
+
+The scenario configuration path is anchored to the Cargo manifest
+directory:
+
+```rust
+let config_path = concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/config/scenario-b.json"
+);
+```
+
+This prevents configuration loading from depending on the shell's
+current working directory.
+
+The harness can therefore locate its configuration consistently whether
+it is launched from the repository root or from within the `harness`
+directory.
+
+---
+
+## 20.7 Timestamp-Based Run Identification
+
+Each harness execution is assigned a unique run identifier based on its
+UTC start time.
+
+The run identifier is generated using:
+
+```rust
+let start_time = Utc::now();
+
+let run_id = format!(
+    "run-{}",
+    start_time.format("%Y%m%dT%H%M%SZ")
+);
+```
+
+A run beginning at:
+
+```text
+2026-09-20 16:15:00 UTC
+```
+
+therefore produces:
+
+```text
+run-20260920T161500Z
+```
+
+This convention provides two properties:
+
+```text
+unique run identifier
+        +
+run start time visible from directory name
+```
+
+The run identifier is also written into the run metadata.
+
+---
+
+## 20.8 Harness Result Hierarchy
+
+The existing Scenario B experimental evidence remains under:
+
+```text
+experiments/
+└── baseline/
+    └── scenario-b/
+```
+
+Automated harness executions are stored separately under:
+
+```text
+experiments/
+└── baseline/
+    └── scenario-b/
+        └── runs/
+```
+
+Each execution receives a timestamped subdirectory:
+
+```text
+runs/
+├── run-20260920T161500Z/
+├── run-20260920T162100Z/
+├── run-20260920T163015Z/
+└── ...
+```
+
+The output path is constructed using:
+
+```rust
+let output_dir = format!(
+    "{}/../experiments/baseline/{}/runs/{}",
+    env!("CARGO_MANIFEST_DIR"),
+    config.scenario,
+    run_id
+);
+```
+
+The directory is created using:
+
+```rust
+fs::create_dir_all(&output_dir)?;
+```
+
+This prevents observations from independent harness executions from
+being appended to the same CSV files.
+
+---
+
+## 20.9 Per-Run Output Files
+
+Each timestamped run directory contains:
+
+```text
+run-20260920T161500Z/
+├── metadata.json
+├── http-observations.csv
+├── node-observations.csv
+├── lease-observations.csv
+├── pod-observations.csv
+├── taint-observations.csv
+└── event-observations.csv
+```
+
+The complete hierarchy is therefore:
+
+```text
+experiments/
+└── baseline/
+    └── scenario-b/
+        ├── <manual baseline evidence>
+        │
+        └── runs/
+            ├── run-20260920T161500Z/
+            │   ├── metadata.json
+            │   ├── http-observations.csv
+            │   ├── node-observations.csv
+            │   ├── lease-observations.csv
+            │   ├── pod-observations.csv
+            │   ├── taint-observations.csv
+            │   └── event-observations.csv
+            │
+            └── run-20260920T162100Z/
+                └── ...
+```
+
+The formal experimental campaign will still contain at least 30
+independent repetitions per frozen configuration.
+
+The repetitions are identified by their timestamped run directories
+rather than sequential numeric folder names.
+
+---
+
+## 20.10 Experiment Metadata
+
+Each execution creates:
+
+```text
+metadata.json
+```
+
+containing the configuration associated with the run.
+
+The metadata is generated using the harness start time and loaded
+scenario configuration.
+
+A representative record is:
+
+```json
+{
+  "run_id": "run-20260920T161500Z",
+  "scenario": "scenario-b",
+  "start_time_utc": "2026-09-20T16:15:00+00:00",
+  "target_url": "http://102.34.160.87:30364",
+  "target_node": "k3s-worker1",
+  "namespace": "failure-aware",
+  "pod_label_selector": "app=baseline-web",
+  "request_interval_ms": 1000,
+  "request_timeout_ms": 3000
+}
+```
+
+This allows every result set to be interpreted independently without
+relying on external notes to determine the experimental parameters.
+
+---
+
+## 20.11 Independent HTTP Observer
+
+The HTTP observer automates the external application-path verification
+previously performed by:
+
+```text
+independent-path-test.sh
+```
+
+The target for Scenario B is:
+
+```text
+http://102.34.160.87:30364
+```
+
+Requests are issued approximately once per second.
+
+Each observation contains:
+
+```text
+timestamp_utc
+http_status
+latency_ms
+success
+error
+```
+
+A successful observation may appear as:
+
+```csv
+timestamp_utc,http_status,latency_ms,success,error
+2026-09-20T15:15:53.246626347+00:00,200,8.924409,true,
+```
+
+The latency measurement represents the elapsed duration of the HTTP
+request.
+
+---
+
+## 20.12 HTTP Failure Representation
+
+If the workload returns an HTTP response, the actual status is recorded,
+for example:
+
+```text
+200
+404
+500
+503
+```
+
+If the request fails before a valid HTTP response is obtained, the
+harness records:
+
+```text
+http_status = 0
+success = false
+```
+
+The value:
+
+```text
+0
+```
+
+is an experimental sentinel and is **not an HTTP status code**.
+
+The observer also records the request error.
+
+For example:
+
+```csv
+timestamp_utc,http_status,latency_ms,success,error
+2026-09-20T15:16:09.775298705+00:00,0,7.033641,false,<request error>
+```
+
+This permits subsequent analysis to distinguish failures such as:
+
+```text
+connection refused
+connection reset
+timeout
+transport failure
+```
+
+rather than grouping every failed probe into an undifferentiated
+`false` state.
+
+---
+
+## 20.13 Node-State Observer
+
+The Node observer records the native Kubernetes Ready condition for:
+
+```text
+k3s-worker1
+```
+
+Results are written to:
+
+```text
+node-observations.csv
+```
+
+with:
+
+```text
+timestamp_utc
+node
+ready_status
+```
+
+Under healthy conditions:
+
+```text
+Ready=True
+```
+
+During the native Scenario B partition, the observer successfully
+captured:
+
+```text
+True
+ |
+ v
+Unknown
+```
+
+After control-plane connectivity was restored, it subsequently captured:
+
+```text
+Unknown
+   |
+   v
+True
+```
+
+The underlying Kubernetes condition is recorded directly.
+
+Therefore:
+
+```text
+Ready condition = Unknown
+```
+
+may correspond to the human-readable:
+
+```text
+kubectl get nodes -> NotReady
+```
+
+display.
+
+---
+
+## 20.14 NodeLease Observer
+
+The Lease observer retrieves:
+
+```text
+spec.renewTime
+```
+
+for:
+
+```text
+kube-node-lease/k3s-worker1
+```
+
+and stores observations in:
+
+```text
+lease-observations.csv
+```
+
+Each record contains:
+
+```text
+timestamp_utc
+node
+renew_time
+```
+
+During healthy operation, Worker 1 was observed renewing its Lease
+approximately every 10 seconds.
+
+The harness polls more frequently than the Lease renewal interval.
+
+Consequently, several harness observations may contain the same
+`renewTime`.
+
+For example:
+
+```text
+Harness timestamp        Lease renewTime
+
+15:00:01                 14:59:57
+15:00:02                 14:59:57
+15:00:03                 14:59:57
+...
+15:00:08                 15:00:07
+```
+
+During the partition:
+
+```text
+renewTime freezes
+```
+
+and after connectivity returns:
+
+```text
+renewTime begins advancing again
+```
+
+---
+
+## 20.15 Pod-State Observer
+
+The Pod observer uses:
+
+```text
+namespace = failure-aware
+selector  = app=baseline-web
+```
+
+and writes:
+
+```text
+pod-observations.csv
+```
+
+Each observation contains:
+
+```text
+timestamp_utc
+pod
+phase
+deletion_timestamp
+node
+```
+
+Both:
+
+```text
+phase
+```
+
+and:
+
+```text
+deletion_timestamp
+```
+
+are recorded.
+
+This is required because:
+
+```text
+Terminating
+```
+
+is not a formal Kubernetes Pod phase.
+
+Formal phases include:
+
+```text
+Pending
+Running
+Succeeded
+Failed
+Unknown
+```
+
+A Pod displayed by `kubectl` as `Terminating` may therefore still have:
+
+```text
+phase = Running
+```
+
+while:
+
+```text
+metadata.deletionTimestamp != null
+```
+
+The two fields together provide a more accurate representation of the
+native Pod lifecycle.
+
+---
+
+## 20.16 Observed Pod Reconciliation
+
+During Scenario B harness validation, the existing Nginx Pod initially
+remained:
+
+```text
+Running
+```
+
+on:
+
+```text
+k3s-worker1
+```
+
+After the partition was removed and native Kubernetes reconciliation
+progressed, the harness observed the existing Pod transition away from
+active execution and a replacement Pod appear.
+
+The replacement progressed through:
+
+```text
+Pending
+   |
+   v
+assigned to k3s-worker1
+   |
+   v
+Running
+```
+
+The HTTP observer captured a temporary service interruption during this
+reconciliation period in one validation run.
+
+This reproduces in machine-readable form the behaviour initially
+identified manually during the native Scenario B experiment.
+
+---
+
+## 20.17 Taint Observer
+
+The harness records Node taints separately from the Node Ready
+condition.
+
+Results are stored in:
+
+```text
+taint-observations.csv
+```
+
+with:
+
+```text
+timestamp_utc
+node
+taints
+```
+
+Under normal operation, no relevant failure taint may be present.
+
+During native failure handling, the observer is intended to capture:
+
+```text
+node.kubernetes.io/unreachable
+```
+
+including effects such as:
+
+```text
+NoSchedule
+NoExecute
+```
+
+This replaces the need to manually collect:
+
+```bash
+kubectl get node k3s-worker1 \
+  -o jsonpath='{.spec.taints}'
+```
+
+for every run.
+
+---
+
+## 20.18 Kubernetes Event Observer
+
+The harness records Kubernetes events associated with:
+
+```text
+k3s-worker1
+```
+
+into:
+
+```text
+event-observations.csv
+```
+
+Each event record includes:
+
+```text
+timestamp_utc
+namespace
+event_type
+reason
+message
+event_time
+involved_kind
+involved_name
+```
+
+Events of interest include:
+
+```text
+NodeNotReady
+NodeReady
+```
+
+The observer avoids continuously writing an unchanged event every
+second by tracking previously observed event identifiers during the
+active harness execution.
+
+The event stream can later be correlated with:
+
+```text
+Lease cessation
+Ready transition
+taint application
+Pod reconciliation
+HTTP availability
+controller classification
+controller decision
+```
+
+---
+
+## 20.19 Concurrent Observation
+
+The harness executes the observation tasks concurrently using Tokio.
+
+The active observers are:
+
+```text
+HTTP observer
+Node observer
+Lease observer
+Pod observer
+Taint observer
+Event observer
+```
+
+Conceptually:
+
+```text
+                           HARNESS
+                              |
+          +---------+---------+---------+---------+---------+
+          |         |         |         |         |         |
+          v         v         v         v         v         v
+        HTTP       Node      Lease      Pod      Taint     Event
+          |         |         |         |         |         |
+          +---------+---------+---------+---------+---------+
+                              |
+                              v
+                      Timestamped run data
+```
+
+This replaces the multiple manually monitored terminals used during the
+initial Scenario B baseline.
+
+---
+
+## 20.20 UTC Timestamp Standardization
+
+All machine-readable harness observations use UTC.
+
+For example:
+
+```text
+2026-09-20T15:16:09.775298705+00:00
+```
+
+This provides a common time base for all measurement streams.
+
+It eliminates the earlier mismatch between:
+
+```text
+local fault timestamps
+```
+
+and:
+
+```text
+UTC Kubernetes timestamps
+```
+
+and enables direct calculation of subsequent timing metrics including:
+
+```text
+FDL
+FCL
+DTD
+WSL
+SID
+ERL
+```
+
+---
+
+## 20.21 Graceful Harness Shutdown
+
+The harness explicitly handles:
+
+```text
+Ctrl+C
+```
+
+using:
+
+```rust
+tokio::signal::ctrl_c()
+```
+
+When shutdown is requested:
+
+```text
+Shutdown requested.
+```
+
+is displayed.
+
+The active observation tasks are then aborted and the generated files
+remain in the current run directory.
+
+The harness also prints the location of the completed run:
+
+```text
+Harness stopped. Results saved under:
+<output_directory>
+```
+
+Formal experiments should only be stopped after the full fault and
+recovery lifecycle has been observed.
+
+---
+
+## 20.22 Harness Validation
+
+The harness was validated against the existing native Scenario B
+environment.
+
+The completed observers successfully recorded:
+
+```text
+Node:
+True -> Unknown -> True
+
+Lease:
+renewing -> frozen -> renewing
+
+Pod:
+Running -> native reconciliation -> Running
+
+HTTP:
+HTTP 200 -> temporary request failure -> HTTP 200
+```
+
+One validation run showed the temporary HTTP interruption during the
+post-partition reconciliation stage.
+
+Another run was stopped before the partition had been removed and
+therefore did not reproduce that HTTP interruption.
+
+This distinction is important.
+
+The expected complete validation sequence is:
+
+```text
+healthy period
+      |
+      v
+partition introduced
+      |
+      v
+Node becomes Unknown
+      |
+      v
+workload may remain reachable
+      |
+      v
+partition removed
+      |
+      v
+Lease resumes
+      |
+      v
+native reconciliation occurs
+      |
+      v
+workload stabilises
+      |
+      v
+harness stopped
+```
+
+The harness should therefore remain active through the recovery period
+when validating native reconciliation behaviour.
+
+---
+
+## 20.23 Current Fault Injection Method
+
+The harness currently observes the experiment but does **not** inject
+the network fault itself.
+
+Scenario B is still introduced manually on `k3s-worker1`:
+
+```bash
+sudo iptables -I OUTPUT 1 \
+  -p tcp \
+  -d 102.34.160.89 \
+  --dport 6443 \
+  -j DROP
+```
+
+The partition is removed using:
+
+```bash
+sudo iptables -D OUTPUT \
+  -p tcp \
+  -d 102.34.160.89 \
+  --dport 6443 \
+  -j DROP
+```
+
+Keeping fault injection manual during the initial harness-development
+stage allows the observation system to be validated independently from
+fault-orchestration logic.
+
+Automated fault orchestration can be introduced before the formal
+repeated experiment campaign.
+
+---
+
+## 20.24 Recommended Harness Run Procedure
+
+Each Scenario B harness run should follow the same sequence.
+
+### 1. Verify healthy cluster
+
+```bash
+kubectl get nodes
+```
+
+Expected:
+
+```text
+k3s-server     Ready
+k3s-worker1    Ready
+k3s-worker2    Ready
+```
+
+### 2. Verify the workload
+
+```bash
+kubectl get pods \
+  -n failure-aware \
+  -o wide
+```
+
+Confirm that the target workload is healthy.
+
+### 3. Start the harness
+
+From the repository root:
+
+```bash
+cargo run \
+  --manifest-path harness/Cargo.toml
+```
+
+A timestamped directory is automatically created.
+
+For example:
+
+```text
+run-20260920T161500Z
+```
+
+### 4. Allow a healthy observation interval
+
+Confirm that the harness records:
+
+```text
+HTTP 200
+Ready=True
+Lease advancing
+Pod Running
+```
+
+before injecting the fault.
+
+### 5. Introduce Scenario B
+
+On Worker 1:
+
+```bash
+sudo iptables -I OUTPUT 1 \
+  -p tcp \
+  -d 102.34.160.89 \
+  --dport 6443 \
+  -j DROP
+```
+
+### 6. Observe native failure detection
+
+Allow sufficient time to observe:
+
+```text
+Lease stops advancing
+Ready becomes Unknown
+unreachable taints appear
+Node events are generated
+```
+
+while continuing HTTP probing.
+
+### 7. Restore connectivity
+
+```bash
+sudo iptables -D OUTPUT \
+  -p tcp \
+  -d 102.34.160.89 \
+  --dport 6443 \
+  -j DROP
+```
+
+### 8. Continue observing recovery
+
+Do not immediately stop the harness.
+
+Allow it to observe:
+
+```text
+Lease renewal resumes
+Node returns to True
+Pod reconciliation completes
+HTTP stabilises
+```
+
+### 9. Stop the harness
+
+After the cluster and workload return to a stable state:
+
+```text
+Ctrl+C
+```
+
+The complete result set remains stored under the timestamped run
+directory.
+
+---
+
+## 20.25 Formal Repetition Strategy
+
+Once the experiment configuration has been frozen, Scenario B will be
+executed for at least:
+
+```text
+30 independent repetitions
+```
+
+The harness does not require sequential numeric folder names.
+
+Instead, each repetition receives a unique UTC timestamp-based
+identifier:
+
+```text
+run-YYYYMMDDTHHMMSSZ
+```
+
+For example:
+
+```text
+run-20260920T161500Z
+run-20260920T163100Z
+run-20260920T164800Z
+```
+
+The analysis stage will enumerate the completed timestamped directories
+and validate the number of usable independent runs.
+
+---
+
+## 20.26 Harness Completion Status
+
+The following harness foundation has been completed:
+
+- [x] Rust binary project initialized
+- [x] Rust edition recorded
+- [x] Rust dependency roles documented
+- [x] Rustls enabled for the HTTP client
+- [x] Host development dependencies documented
+- [x] Scenario configuration externalised to JSON
+- [x] Configuration path made independent of current working directory
+- [x] Target URL externalised
+- [x] Target node externalised
+- [x] Namespace externalised
+- [x] Pod label selector externalised
+- [x] Request interval configurable
+- [x] Request timeout configurable
+- [x] Timestamp-based run IDs implemented
+- [x] Separate result directory created per harness execution
+- [x] Run metadata recorded
+- [x] HTTP status recorded
+- [x] HTTP latency recorded
+- [x] HTTP success/failure recorded
+- [x] HTTP failure reason recorded
+- [x] UTC timestamps standardised
+- [x] Node Ready condition recorded
+- [x] NodeLease renewal recorded
+- [x] Pod phase recorded
+- [x] Pod deletion timestamp recorded
+- [x] Node taints observed
+- [x] Kubernetes Node events observed
+- [x] CSV output generated per observation stream
+- [x] Concurrent observation implemented
+- [x] Ctrl+C shutdown handling implemented
+- [x] Manual baseline evidence retained separately
+- [x] Automated harness run hierarchy established
+- [x] Harness validated against native Scenario B behaviour
+
+The experimental observation foundation is therefore complete.
+
+The next implementation stage is the development of the proposed
+Failure-Aware Controller, beginning with the **Failure-Suspicion
+Listener**.
+
+The listener will consume native Kubernetes failure suspicion rather
+than replacing Kubernetes NodeLease or node-lifecycle handling.
+
+The first controller trigger will therefore be based on a native
+condition transition such as:
+
+```text
+Ready=True
+    |
+    v
+Ready=Unknown
+```
+
+After this trigger, the subsequent post-suspicion verification stage
+will determine whether the affected workload remains independently
+reachable and operationally useful.
+
 # 20. Formal EMR Workload
 
 The final workload will use an actual containerised Electronic Medical
