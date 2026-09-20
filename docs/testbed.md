@@ -5116,6 +5116,766 @@ controller uses independent evidence to determine whether a workload
 associated with a Kubernetes-unreachable Node remains operationally
 reachable.
 
+# 22. Post-Suspicion Verification
+
+Following successful implementation of the Failure-Suspicion Listener,
+the controller was extended with a **Post-Suspicion Verification**
+stage.
+
+The purpose of this stage is to collect independent operational evidence
+after Kubernetes has raised native failure suspicion.
+
+The central question evaluated by this stage is:
+
+```text
+Kubernetes cannot communicate with the Node.
+
+                BUT
+
+Is the workload on that Node still operationally reachable?
+```
+
+This stage addresses the ambiguity demonstrated during the native
+Scenario B baseline, where loss of control-plane communication did not
+necessarily imply loss of the workload executing on the affected worker.
+
+The implemented controller path is now:
+
+```text
+Native Kubernetes
+       |
+       v
+Ready=True -> Unknown
+       |
+       v
+Failure-Suspicion Listener
+       |
+       v
+FailureSuspicion
+       |
+       v
+Post-Suspicion Verification
+       |
+       v
+Independent HTTP probe
+       |
+       +------------------+
+       |                  |
+       v                  v
+   reachable          unreachable
+```
+
+At this stage, the controller still does **not** issue a `PRESERVE` or
+`RECOVER` decision.
+
+The purpose of Step 22 is only to determine whether independent evidence
+supports continued workload reachability following native Kubernetes
+failure suspicion.
+
+---
+
+## 22.1 Controller Structure
+
+The controller source tree was extended with a dedicated verification
+module:
+
+```text
+controller/
+├── Cargo.toml
+├── config/
+│   └── controller.json
+└── src/
+    ├── main.rs
+    ├── config.rs
+    ├── suspicion.rs
+    └── verification.rs
+```
+
+The responsibilities are now:
+
+| File | Purpose |
+|---|---|
+| `main.rs` | Initializes the controller and passes configuration to controller components |
+| `config.rs` | Loads controller configuration |
+| `suspicion.rs` | Detects native Kubernetes failure suspicion and invokes verification |
+| `verification.rs` | Performs independent post-suspicion workload verification |
+
+The separation allows failure suspicion and secondary verification to
+remain logically distinct controller stages.
+
+---
+
+## 22.2 Verification Dependency
+
+HTTP verification is implemented using the Rust `reqwest` client.
+
+The following dependency was added:
+
+```toml
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls"] }
+```
+
+The controller dependency set therefore includes:
+
+```toml
+[dependencies]
+tokio = { version = "1", features = ["full"] }
+kube = { version = "4.2.0", features = ["runtime", "client", "rustls-tls"] }
+k8s-openapi = { version = "0.28.0", features = ["v1_36"] }
+futures = "0.3"
+chrono = { version = "0.4", features = ["serde"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+anyhow = "1"
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls"] }
+```
+
+Rustls is used for the HTTP client rather than the default native TLS
+backend.
+
+---
+
+## 22.3 Verification Configuration
+
+The controller configuration was extended from:
+
+```json
+{
+  "target_node": "k3s-worker1",
+  "trigger_ready_status": "Unknown"
+}
+```
+
+to:
+
+```json
+{
+  "target_node": "k3s-worker1",
+  "trigger_ready_status": "Unknown",
+  "verification_url": "http://102.34.160.87:30364",
+  "verification_timeout_ms": 3000
+}
+```
+
+The new fields are:
+
+| Parameter | Purpose |
+|---|---|
+| `verification_url` | Independent workload endpoint used for post-suspicion verification |
+| `verification_timeout_ms` | Maximum duration allowed for the verification request |
+
+For the Scenario B test:
+
+```text
+Verification endpoint:
+http://102.34.160.87:30364
+
+Verification timeout:
+3000 ms
+```
+
+The endpoint directly targets the NodePort address associated with
+Worker 1 rather than relying on the Kubernetes control-plane path being
+tested.
+
+---
+
+## 22.4 Controller Configuration Loading
+
+The `ControllerConfig` structure was extended to include:
+
+```rust
+pub verification_url: String,
+pub verification_timeout_ms: u64,
+```
+
+The complete configuration structure is:
+
+```rust
+#[derive(Debug, Deserialize, Clone)]
+pub struct ControllerConfig {
+    pub target_node: String,
+    pub trigger_ready_status: String,
+    pub verification_url: String,
+    pub verification_timeout_ms: u64,
+}
+```
+
+This keeps verification parameters external to the controller source
+code.
+
+Future experiments can therefore change verification endpoints or
+timeouts through configuration rather than recompilation.
+
+---
+
+## 22.5 Verification Result Structure
+
+The post-suspicion verifier returns a structured result containing:
+
+```text
+checked_at
+reachable
+http_status
+latency_ms
+error
+```
+
+Conceptually:
+
+```text
+VerificationResult
+|
++-- checked_at
+|
++-- reachable
+|
++-- http_status
+|
++-- latency_ms
+|
++-- error
+```
+
+The corresponding Rust structure is:
+
+```rust
+#[derive(Debug, Clone)]
+pub struct VerificationResult {
+    pub checked_at: DateTime<Utc>,
+    pub reachable: bool,
+    pub http_status: Option<u16>,
+    pub latency_ms: f64,
+    pub error: Option<String>,
+}
+```
+
+This allows subsequent controller stages to consume verification
+evidence programmatically rather than parsing log messages.
+
+---
+
+## 22.6 Independent HTTP Verification
+
+When native Kubernetes suspicion is raised, the verifier sends an HTTP
+request to:
+
+```text
+http://102.34.160.87:30364
+```
+
+The request is independent of the Kubernetes Node-health signal.
+
+The verification path is therefore:
+
+```text
+CONTROL-PLANE PATH
+
+k3s-worker1
+      |
+      X
+      |
+k3s-server
+
+
+INDEPENDENT VERIFICATION PATH
+
+Failure-Aware Controller
+      |
+      | HTTP
+      v
+102.34.160.87:30364
+      |
+      v
+baseline-web
+```
+
+This distinction is essential to Scenario B.
+
+If verification reused the failed control-plane path, it would provide
+no additional evidence beyond the native Kubernetes suspicion signal.
+
+---
+
+## 22.7 Verification Timing
+
+The verification request is initiated only after the listener observes:
+
+```text
+Ready=True -> Ready=Unknown
+```
+
+The sequence is therefore:
+
+```text
+Native Kubernetes
+       |
+       v
+Ready=Unknown
+       |
+       v
+FailureSuspicion
+       |
+       v
+start verification timer
+       |
+       v
+HTTP request
+       |
+       v
+record result
+```
+
+The verifier records its own UTC timestamp:
+
+```text
+checked_at
+```
+
+and the HTTP request duration:
+
+```text
+latency_ms
+```
+
+These values can later contribute to measurement of the controller's
+classification latency.
+
+---
+
+## 22.8 Reachability Interpretation
+
+A successful HTTP response in the `2xx` range is currently interpreted
+as:
+
+```text
+reachable = true
+```
+
+For example:
+
+```text
+HTTP 200
+     |
+     v
+reachable=true
+```
+
+If the HTTP transaction fails before a valid response is obtained:
+
+```text
+reachable=false
+```
+
+and the error is retained.
+
+Conceptually:
+
+```text
+HTTP probe
+   |
+   +------ 2xx response ------> reachable
+   |
+   +------ request error -----> unreachable
+```
+
+At this stage, `reachable` represents the result of the configured HTTP
+verification probe.
+
+It does not yet represent the complete Failure-Awareness Engine
+classification.
+
+---
+
+## 22.9 Relationship Between Suspicion and Verification
+
+The verification stage is invoked only when the listener detects a
+transition **into** the configured suspicion state.
+
+Therefore:
+
+```text
+True -> Unknown
+       |
+       +---- verification performed
+```
+
+whereas:
+
+```text
+Unknown -> Unknown
+```
+
+does not initiate repeated verification through the current
+transition-triggered implementation.
+
+This preserves the duplicate-suspicion suppression implemented in
+Step 21.
+
+---
+
+## 22.10 Healthy-State Validation
+
+The controller was first executed with Worker 1 healthy.
+
+The startup output was:
+
+```text
+Starting Failure-Aware Controller
+Target node: k3s-worker1
+Native suspicion trigger: Ready=Unknown
+Verification URL: http://102.34.160.87:30364
+Verification timeout: 3000 ms
+Connected to Kubernetes API
+[LISTENER] Watching node=k3s-worker1 for Ready=Unknown
+[LISTENER] Initializing node watch
+[INITIAL STATE] node=k3s-worker1 | Ready=Some("True")
+[LISTENER] Initial node state synchronized
+```
+
+No verification request was generated while:
+
+```text
+Ready=True
+```
+
+This confirms that verification is post-suspicion rather than
+continuous health polling.
+
+---
+
+## 22.11 Scenario B Verification Test
+
+The Scenario B control-plane partition was reproduced by applying the
+existing selective firewall rule on Worker 1:
+
+```bash
+sudo iptables -I OUTPUT 1 \
+  -p tcp \
+  -d 102.34.160.89 \
+  --dport 6443 \
+  -j DROP
+```
+
+This blocked:
+
+```text
+k3s-worker1 -> k3s-server:6443
+```
+
+while preserving the independently reachable workload endpoint.
+
+The controller remained active throughout the test.
+
+---
+
+## 22.12 Observed Native Suspicion
+
+Kubernetes subsequently changed the underlying Worker 1 Ready condition
+from:
+
+```text
+True
+```
+
+to:
+
+```text
+Unknown
+```
+
+The controller observed:
+
+```text
+[SUSPICION] 2026-09-20T18:56:36.100607362+00:00 |
+node=k3s-worker1 |
+Ready=Some("True") -> Unknown
+```
+
+This event triggered the post-suspicion verification stage.
+
+---
+
+## 22.13 Observed Verification Request
+
+Immediately after native suspicion was received, the controller
+initiated the configured verification probe:
+
+```text
+[VERIFY] 2026-09-20T18:56:36.100973630+00:00 |
+probing http://102.34.160.87:30364
+```
+
+The difference between the recorded suspicion timestamp and the
+verification invocation timestamp was very small during this
+development run.
+
+These development timings demonstrate correct execution ordering but
+are not treated as formal performance results.
+
+---
+
+## 22.14 Observed Verification Result
+
+The workload responded successfully:
+
+```text
+[VERIFY RESULT] 2026-09-20T18:56:36.108482026+00:00 |
+reachable=true |
+HTTP=Some(200) |
+latency=29.019 ms
+```
+
+The controller therefore simultaneously held the following evidence:
+
+```text
+Native Kubernetes evidence:
+
+Ready=Unknown
+
+
+Independent operational evidence:
+
+HTTP=200
+reachable=true
+```
+
+This produced the experimentally important condition:
+
+```text
+Kubernetes cannot communicate
+with the worker through its
+normal control-plane relationship
+
+              BUT
+
+the workload hosted on that
+worker remains independently
+reachable
+```
+
+This reproduces programmatically the ambiguity first established during
+the native Scenario B baseline.
+
+---
+
+## 22.15 Verification Timeline
+
+The relevant timestamps for this validation run were:
+
+```text
+Native suspicion:
+2026-09-20T18:56:36.100607362+00:00
+
+Verification invocation:
+2026-09-20T18:56:36.100973630+00:00
+
+Verification result:
+2026-09-20T18:56:36.108482026+00:00
+```
+
+The HTTP probe reported:
+
+```text
+29.019 ms
+```
+
+request latency.
+
+These values are retained as implementation-validation observations.
+
+They are **not formal experimental results**.
+
+Formal timing measurements will be produced using repeated frozen
+experimental configurations.
+
+---
+
+## 22.16 Recovery Observation
+
+After the verification test, the partition was removed using:
+
+```bash
+sudo iptables -D OUTPUT \
+  -p tcp \
+  -d 102.34.160.89 \
+  --dport 6443 \
+  -j DROP
+```
+
+The controller subsequently observed:
+
+```text
+[RECOVERED] 2026-09-20T18:58:38.056743476+00:00 |
+node=k3s-worker1 |
+Ready=Unknown -> True
+```
+
+This recovery was performed by native Kubernetes after control-plane
+communication was restored.
+
+The Failure-Aware Controller only observed the transition.
+
+---
+
+## 22.17 Current Verification Semantics
+
+At completion of this stage, the controller can distinguish:
+
+```text
+CASE 1
+
+Ready=Unknown
+      +
+HTTP verification succeeds
+      |
+      v
+workload independently reachable
+```
+
+from:
+
+```text
+CASE 2
+
+Ready=Unknown
+      +
+HTTP verification fails
+      |
+      v
+workload not verified as reachable
+```
+
+However, the controller does not yet interpret these results as final
+recovery-policy decisions.
+
+In particular:
+
+```text
+reachable=true
+```
+
+does not yet directly execute:
+
+```text
+PRESERVE
+```
+
+and:
+
+```text
+reachable=false
+```
+
+does not yet directly execute:
+
+```text
+RECOVER
+```
+
+The result is evidence for the subsequent Failure-Awareness Engine.
+
+---
+
+## 22.18 Current Architectural Position
+
+After Step 22, the implemented path is:
+
+```text
+                  IMPLEMENTED
+
+              Native Kubernetes
+                     |
+                     v
+            Ready=True -> Unknown
+                     |
+                     v
+          Failure-Suspicion Listener
+                     |
+                     v
+              FailureSuspicion
+                     |
+                     v
+        Post-Suspicion Verification
+                     |
+              HTTP verification
+                     |
+            +--------+--------+
+            |                 |
+            v                 v
+        reachable         unreachable
+
+
+                     NEXT
+
+            Failure-Awareness Engine
+                     |
+                     v
+          Operational classification
+                     |
+                     v
+             Decision Engine
+                /         \
+               v           v
+           PRESERVE      RECOVER
+```
+
+The current verifier therefore provides one input to the wider
+Failure-Awareness Engine.
+
+---
+
+## 22.19 Post-Suspicion Verification Validation Status
+
+The following objectives were successfully completed:
+
+- [x] Verification module added to the controller
+- [x] HTTP client dependency added
+- [x] Rustls used by the HTTP client
+- [x] Verification URL externalised to controller configuration
+- [x] Verification timeout externalised to controller configuration
+- [x] Structured verification result implemented
+- [x] Verification triggered by native failure suspicion
+- [x] No verification triggered while Node remains healthy
+- [x] Independent workload endpoint probed
+- [x] HTTP status recorded
+- [x] HTTP latency recorded
+- [x] Verification errors supported
+- [x] `Ready=Unknown` successfully observed
+- [x] HTTP `200` successfully obtained after native suspicion
+- [x] `reachable=true` successfully produced
+- [x] Recovery transition subsequently observed
+- [x] No `PRESERVE` action executed
+- [x] No `RECOVER` action executed
+- [x] No Kubernetes Pod or Node state modified by the verifier
+
+The initial Post-Suspicion Verification stage is therefore operational.
+
+The next implementation stage is the **Failure-Awareness Engine**.
+
+The first awareness classification will convert the combination:
+
+```text
+Ready=Unknown
+       +
+HTTP verification reachable
+```
+
+into the explicit operational state:
+
+```text
+reachable_outside_control_plane
+```
+
+while a failed verification will initially map to:
+
+```text
+unreachable
+```
+
+before additional workload, resource, and recovery-safety awareness is
+introduced.
+
 # 20. Formal EMR Workload
 
 The final workload will use an actual containerised Electronic Medical
