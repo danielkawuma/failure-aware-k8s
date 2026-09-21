@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: baseline-web
+  namespace: failure-aware
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: baseline-web
+
+  template:
+    metadata:
+      labels:
+        app: baseline-web
+
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - k3s-worker1
+
+      containers:
+        - name: nginx
+          image: nginx:alpine
+
+          ports:
+            - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: baseline-web
+  namespace: failure-aware
+
+spec:
+  selector:
+    app: baseline-web
+
+  type: NodePort
+
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80

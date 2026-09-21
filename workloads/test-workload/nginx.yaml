@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: baseline-web
   namespace: failure-aware
+
 spec:
   replicas: 1
 
@@ -16,8 +17,16 @@ spec:
         app: baseline-web
 
     spec:
-      nodeSelector:
-        experiment-role: fault-target
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - k3s-worker1
 
       tolerations:
         - key: "node.kubernetes.io/unreachable"
@@ -41,10 +50,13 @@ kind: Service
 metadata:
   name: baseline-web
   namespace: failure-aware
+
 spec:
   selector:
     app: baseline-web
+
   type: NodePort
+
   ports:
     - name: http
       port: 80

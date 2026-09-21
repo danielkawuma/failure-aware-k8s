@@ -7655,464 +7655,3258 @@ Recovery Enforcement
 
 path, beginning with recovery of the current stateless baseline before
 introducing fencing for duplication-sensitive stateful workloads.
+# 26. RECOVER Enforcement
 
-# 20. Formal EMR Workload
+Following validation of the `PRESERVE` path, the controller was extended
+with the complementary **RECOVER enforcement path**.
 
-The final workload will use an actual containerised Electronic Medical
-Record application.
+The purpose of this stage is to permit recovery when the Failure-Aware
+Controller establishes that:
 
-To be selected:
+```text
+the existing workload is unreachable
+        +
+suitable recovery capacity exists
+        +
+recovery is safe
+```
 
-- EMR system: **[EMR NAME]**
-- EMR version: **[VERSION]**
-- deployment model: **[DEPLOYMENT MODEL]**
-- application tier: **[STATELESS / OTHER]**
-- relational database: **[MYSQL / MARIADB / POSTGRESQL / OTHER]**
-- database version: **[VERSION]**
+The resulting high-level policy is:
 
-The relational database will represent a
-**duplication-sensitive stateful workload**.
+```text
+                    Failure Suspicion
+                           |
+                           v
+                    Verification
+                           |
+                           v
+                  Awareness Context
+                           |
+                           v
+                    Decision Engine
+                     /           \
+                    /             \
+                   v               v
+              PRESERVE          RECOVER
+                  |                |
+                  v                v
+          retain existing     release preserved
+             workload             workload
+                                      |
+                                      v
+                            native Kubernetes
+                             reconciliation
+                                      |
+                                      v
+                              replacement Pod
+```
 
-The final workload should expose repeatable:
+The controller does not directly schedule the replacement Pod.
 
-- read operations
-- write operations
-- application-health checks
-
-Exact workload parameters will be frozen before formal experiments.
+Instead, when recovery is permitted, the controller releases the
+preserved workload from Kubernetes control-plane state and allows the
+native Deployment/ReplicaSet controllers and scheduler to perform the
+replacement.
 
 ---
 
-# 21. Storage Configuration
+## 26.1 Recovery-Capable Workload Placement
 
-Persistent database state must not rely on ephemeral container storage.
+The original experimental workload used a hard `nodeSelector`:
 
-Expected path:
-
-```text
-EMR Application
-      |
-      v
-Relational Database
-      |
-      v
-PersistentVolumeClaim
-      |
-      v
-CSI / Persistent Storage
+```yaml
+nodeSelector:
+  experiment-role: fault-target
 ```
 
-Initial K3s development storage:
+This was appropriate for the original baseline because it ensured that
+the workload remained on the fault-target node.
 
-```text
-Local Path Provisioner
+However, such a hard placement constraint would prevent recovery onto a
+different worker.
+
+For recovery experiments, the hard placement constraint was therefore
+replaced with preferred node affinity:
+
+```yaml
+affinity:
+  nodeAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        preference:
+          matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - k3s-worker1
 ```
 
-Formal stateful storage remains to be selected:
+The resulting behavior is:
 
 ```text
-CSI implementation:  [CSI_IMPLEMENTATION]
-CSI version:         [VERSION]
-StorageClass:        [STORAGE_CLASS]
-Access mode:         [RWO / RWOP]
-Replication factor:  [VALUE / N/A]
-Volume size:         [SIZE]
+k3s-worker1 healthy
+        |
+        v
+scheduler prefers Worker1
+
+
+k3s-worker1 unavailable
+        |
+        v
+preference is not mandatory
+        |
+        v
+Worker2 remains eligible
 ```
 
-Native RWO/RWOP access-mode enforcement will remain part of the
-storage stack.
-
-The project does not assume that RWO/RWOP alone provides sufficient
-fencing during the target network-partition scenarios.
-
-Explicit fencing will therefore be evaluated before recovery of
-duplication-sensitive stateful workloads.
+This retains deterministic initial placement for the experiments while
+allowing Kubernetes to perform recovery placement.
 
 ---
 
-# 22. Primary Experimental Comparison
+## 26.2 Preservation Tolerations Retained
 
-The principal comparison is:
+The preservation envelope introduced in Step 25 remains part of the
+workload specification:
 
-```text
-DEFAULT K3s
-Failure-Aware Controller OFF
+```yaml
+tolerations:
+  - key: "node.kubernetes.io/unreachable"
+    operator: "Exists"
+    effect: "NoExecute"
+
+  - key: "node.kubernetes.io/not-ready"
+    operator: "Exists"
+    effect: "NoExecute"
 ```
 
-versus:
+No finite `tolerationSeconds` is specified.
+
+Consequently, native Kubernetes failure handling does not independently
+evict the managed workload during ambiguous unreachability.
+
+This creates an important requirement for the RECOVER path:
 
 ```text
-K3s + FAILURE-AWARE CONTROLLER
-Failure-Aware Controller ON
+PRESERVE
+    |
+    v
+retain existing Pod
+
+
+RECOVER
+    |
+    v
+controller deliberately releases Pod
 ```
 
-The following must remain fixed for each comparison:
-
-- K3s version
-- Kubernetes version
-- CNI
-- Ingress Controller
-- workload version
-- database version
-- storage configuration
-- worker resource profile
-- network condition
-- fault condition
-- request rate
-- client concurrency
-- transaction mix
-- experiment duration
-
-The intended architectural difference is the presence or absence of the
-Failure-Aware Controller.
+Without explicit recovery enforcement, the preservation envelope would
+also prevent legitimate recovery.
 
 ---
 
-# 23. Failure Scenarios
+## 26.3 Recovery Release
 
-## Scenario A — Genuine Worker Failure
-
-Target:
+For a safe `RECOVER` decision, the enforcement layer identifies the
+managed Pod using:
 
 ```text
+namespace
+pod label selector
+target node
+```
+
+For the current experiment:
+
+```text
+Namespace:
+failure-aware
+
+Label selector:
+app=baseline-web
+
+Target node:
 k3s-worker1
 ```
 
-Expected operational state:
+The controller verifies that the selected Pod is assigned to the
+affected target node before releasing it.
+
+The release operation removes the old Pod object from Kubernetes
+control-plane state.
+
+The controller does not directly create the replacement.
+
+The resulting sequence is:
 
 ```text
-unreachable
+RECOVER
+   |
+   v
+identify managed Pod
+   |
+   v
+verify Pod is on target node
+   |
+   v
+release old Pod
+   |
+   v
+Deployment replica count becomes unsatisfied
+   |
+   v
+ReplicaSet reconciliation
+   |
+   v
+new Pod created
+   |
+   v
+native scheduler chooses eligible node
 ```
 
 ---
 
-## Scenario B — Control-Plane Partition, Workload Reachable
+## 26.4 Stateless Recovery Safety
 
-Target condition:
-
-```text
-k3s-worker1  X  k3s-server
-```
-
-while preserving:
+The initial RECOVER experiment used the existing Nginx baseline
+workload configured as:
 
 ```text
-External Client ---> k3s-worker1 ---> workload
+Workload type         = Stateless
+Duplication sensitive = false
 ```
 
-Expected operational state:
+Therefore:
 
 ```text
-reachable_outside_control_plane
+RecoverySafety=Safe
+fencing_required=false
 ```
 
-This is the principal scenario demonstrating the ambiguity targeted by
-the project.
+For this workload, the controller can release the old Pod immediately
+after the `RECOVER` decision.
+
+This behavior must not be generalized to duplication-sensitive
+stateful workloads.
+
+Those workloads require the additional fencing gate implemented in
+Step 27.
 
 ---
 
-## Scenario C — Complete Worker Isolation
+## 26.5 Recovery Fault Condition
 
-`k3s-worker1` remains operational but all relevant communication paths
-are unavailable.
-
-Expected operational state:
+The earlier Scenario B experiment deliberately created:
 
 ```text
-unreachable
+control-plane path unavailable
+        +
+workload path available
 ```
 
-The controller will not claim to distinguish complete isolation from a
-physical crash when no independent evidence exists.
+which correctly resulted in:
+
+```text
+PRESERVE
+```
+
+To exercise the RECOVER path, the experiment was changed so that:
+
+```text
+control-plane path unavailable
+        +
+independent workload path unavailable
+```
+
+while the recovery candidate remained healthy.
+
+Conceptually:
+
+```text
+                     k3s-worker1
+                         |
+               +---------+---------+
+               |                   |
+               X                   X
+        Kubernetes API       workload path
+               |                   |
+               v                   v
+         Ready=Unknown        HTTP failure
+
+
+                     k3s-worker2
+                         |
+                         v
+                       Ready
+                         +
+                 recovery capacity
+```
 
 ---
 
-## Scenario D — Stateful Database Failure and Recovery
+## 26.6 RECOVER Decision Validation
 
-The worker hosting the duplication-sensitive database is failed or
-isolated.
+During the recovery experiment, bounded verification failed for all
+three attempts.
 
-Required recovery sequence:
+The Awareness Engine produced:
 
 ```text
-RECOVER requested
-       |
-       v
-Duplication-sensitive?
-       |
-      YES
-       |
-       v
-Explicit fencing
-       |
-       v
-Verify old authority excluded
-       |
-       v
-Permit Kubernetes recovery
-       |
-       v
-Replacement becomes authoritative
+[AWARENESS]
+2026-09-21T07:06:34.985849361+00:00
+
+node=k3s-worker1
+operational_state=Unreachable
+
+workload=baseline-web
+workload_type=Stateless
+duplication_sensitive=false
+service_criticality=Medium
+
+resource_state=Available
+recovery_candidate=k3s-worker2
+
+recovery_safety=Safe
+fencing_required=false
+
+attempts=3
+successes=0
+failures=3
+```
+
+The Decision Engine therefore produced:
+
+```text
+[DECISION]
+2026-09-21T07:06:34.985856126+00:00
+
+node=k3s-worker1
+decision=Recover
+fencing_required=false
+
+reason=workload is unreachable,
+recovery capacity is available,
+and recovery is safe
+```
+
+This validates the intended rule:
+
+```text
+Unreachable
+     +
+Resources Available
+     +
+Recovery Safe
+     |
+     v
+RECOVER
 ```
 
 ---
 
-## Scenario E — Degraded Network
+## 26.7 RECOVER Enforcement
 
-Network degradation will vary:
+Following the decision, the enforcement layer identified the preserved
+Pod on Worker1 and released it:
 
 ```text
-bandwidth
-latency
-packet loss
-jitter
+[RECOVERY RELEASE]
+2026-09-21T07:06:35.078249609+00:00
+
+deleting preserved pod=
+baseline-web-5f5bbfb459-wjpsn
+
+node=k3s-worker1
 ```
 
-without deliberately failing the worker.
+The enforcement layer then recorded:
+
+```text
+[ENFORCEMENT]
+2026-09-21T07:06:35.091474335+00:00
+
+node=k3s-worker1
+action=RecoveryReleased
+enforced=true
+```
+
+The controller therefore transitioned from:
+
+```text
+decision=Recover
+```
+
+to an actual Kubernetes recovery-enabling action.
 
 ---
 
-# 24. Rust Experimental Harness
+## 26.8 Native Kubernetes Replacement
 
-The formal experimental harness will run outside the K3s cluster.
-
-It will eventually provide:
-
-- workload generation
-- concurrent requests
-- request timestamps
-- latency measurement
-- success/failure recording
-- Kubernetes event observation
-- fault-injection coordination
-- experiment start/stop control
-- raw result export
-
-The harness and controller are separate:
+The Rust harness recorded the old Pod as:
 
 ```text
-Rust Experimental Harness
+baseline-web-5f5bbfb459-wjpsn
+Running
+k3s-worker1
+```
+
+immediately before recovery.
+
+For example:
+
+```text
+2026-09-21T07:06:34.277478023+00:00,
+baseline-web-5f5bbfb459-wjpsn,
+Running,,
+k3s-worker1
+```
+
+Following the recovery release, a new Pod appeared:
+
+```text
+2026-09-21T07:06:36.079596937+00:00,
+baseline-web-5f5bbfb459-jbphj,
+Pending,,
+k3s-worker2
+```
+
+The replacement remained `Pending` briefly while the container was
+created.
+
+It subsequently became:
+
+```text
+2026-09-21T07:06:43.062942614+00:00,
+baseline-web-5f5bbfb459-jbphj,
+Running,,
+k3s-worker2
+```
+
+The recovery sequence was therefore:
+
+```text
+baseline-web-5f5bbfb459-wjpsn
+Running
+k3s-worker1
         |
-        | drives and measures
         v
-Experimental K3s Environment
+RECOVER
+        |
+        v
+RecoveryReleased
+        |
+        v
+baseline-web-5f5bbfb459-jbphj
+Pending
+k3s-worker2
+        |
+        v
+baseline-web-5f5bbfb459-jbphj
+Running
+k3s-worker2
+```
+
+---
+
+## 26.9 Recovery Timing Observations
+
+The implementation-validation timestamps provide the following sequence:
+
+```text
+07:06:34.985849  Awareness completed
+07:06:34.985856  RECOVER selected
+07:06:35.078250  old Pod release initiated
+07:06:35.091474  recovery release recorded
+07:06:36.079597  replacement observed Pending on Worker2
+07:06:43.062943  replacement observed Running on Worker2
+```
+
+These timestamps are retained as development observations.
+
+They are not treated as formal experimental performance results until
+the repeated experimental campaign and statistical analysis are
+performed.
+
+---
+
+# 26.10 Dynamic Service Availability Observation
+
+The original Rust harness used a fixed HTTP target:
+
+```text
+http://102.34.160.87:30364
+```
+
+which corresponds to Worker1.
+
+This was appropriate for the original baseline and PRESERVE
+experiments.
+
+However, after successful recovery to Worker2, continuing to probe only
+Worker1 would incorrectly report the service as unavailable even though
+the recovered workload was operational.
+
+The harness was therefore extended with **dynamic service availability
+observation**.
+
+---
+
+## 26.10.1 Separation of Verification and Availability Measurement
+
+Two different HTTP measurements are now deliberately maintained.
+
+### Controller verification
+
+The controller asks:
+
+```text
+Is the workload associated with the suspicious node
+still independently reachable?
+```
+
+Therefore its verification URL remains associated with the affected
+Worker1 path:
+
+```text
+http://102.34.160.87:30364
+```
+
+This evidence is used for:
+
+```text
+PRESERVE / RECOVER
+```
+
+classification.
+
+### Harness service observation
+
+The harness instead asks:
+
+```text
+Where is the active workload currently running,
+and is the service available there?
+```
+
+This measurement must therefore follow workload placement.
+
+The two measurements must not be conflated.
+
+---
+
+## 26.10.2 Service Target Configuration
+
+The harness configuration was extended with:
+
+```json
+"service_targets": [
+  {
+    "node": "k3s-worker1",
+    "url": "http://102.34.160.87:30364"
+  },
+  {
+    "node": "k3s-worker2",
+    "url": "http://102.34.160.103:30364"
+  }
+]
+```
+
+The harness dynamically determines the node hosting the active
+`Running` Pod and selects the corresponding service target.
+
+Conceptually:
+
+```text
+observe Running Pod
+        |
+        v
+determine .spec.nodeName
+        |
+        +----------------------+
+        |                      |
+        v                      v
+  k3s-worker1             k3s-worker2
+        |                      |
+        v                      v
+102.34.160.87           102.34.160.103
+        |                      |
+        +----------+-----------+
+                   |
+                   v
+               HTTP probe
+```
+
+---
+
+## 26.10.3 Dynamic Harness Metadata
+
+A validation run created:
+
+```text
+run-20260921T074358Z
+```
+
+with metadata:
+
+```json
+{
+  "namespace": "failure-aware",
+  "pod_label_selector": "app=baseline-web",
+  "request_interval_ms": 1000,
+  "request_timeout_ms": 3000,
+  "run_id": "run-20260921T074358Z",
+  "scenario": "scenario-b",
+  "service_targets": [
+    {
+      "node": "k3s-worker1",
+      "url": "http://102.34.160.87:30364"
+    },
+    {
+      "node": "k3s-worker2",
+      "url": "http://102.34.160.103:30364"
+    }
+  ],
+  "start_time_utc": "2026-09-21T07:43:58.003714783+00:00",
+  "target_node": "k3s-worker1"
+}
+```
+
+This makes the service-observation topology part of the reproducible run
+metadata.
+
+---
+
+## 26.10.4 Dynamic Harness Validation
+
+At the start of the validation run, the harness discovered:
+
+```text
+[POD]
+baseline-web-5f5bbfb459-jbphj
+phase=Running
+node=k3s-worker2
+```
+
+It automatically selected:
+
+```text
+http://102.34.160.103:30364
+```
+
+and recorded:
+
+```text
+[HTTP]
+node=k3s-worker2
+target=http://102.34.160.103:30364
+status=200
+latency=24.310 ms
+success=true
+```
+
+Subsequent CSV observations continued to identify:
+
+```text
+node=k3s-worker2
+target=http://102.34.160.103:30364
+status=200
+success=true
+```
+
+For example:
+
+```text
+2026-09-21T07:46:03.778115802+00:00,
+k3s-worker2,
+http://102.34.160.103:30364,
+200,
+12.346724,
+true,
+```
+
+and:
+
+```text
+2026-09-21T07:46:34.283766112+00:00,
+k3s-worker2,
+http://102.34.160.103:30364,
+200,
+11.804561,
+true,
+```
+
+This validates that the experimental harness can follow the active
+service after recovery instead of continuing to probe only the failed
+node.
+
+---
+
+## 26.11 Stateless RECOVER Result
+
+The complete validated path is:
+
+```text
+Worker1 workload
+      |
+      v
+fault introduced
+      |
+      v
+Ready=Unknown
+      |
+      v
+3/3 independent verification failures
+      |
+      v
+OperationalState=Unreachable
+      |
+      v
+Worker2 resources=Available
+      |
+      v
+RecoverySafety=Safe
+      |
+      v
+RECOVER
+      |
+      v
+RecoveryReleased
+      |
+      v
+old Pod removed from control-plane state
+      |
+      v
+Deployment reconciliation
+      |
+      v
+replacement scheduled on Worker2
+      |
+      v
+replacement Running
+      |
+      v
+dynamic harness follows Worker2
+      |
+      v
+HTTP 200
+```
+
+---
+
+## 26.12 Step 26 Status
+
+The following functionality has been implemented and validated:
+
+- [x] Recovery-capable workload placement
+- [x] Worker1 remains preferred under healthy conditions
+- [x] Worker2 remains eligible for recovery
+- [x] Preservation tolerations retained
+- [x] `Unreachable` operational classification
+- [x] Recovery resource availability confirmed
+- [x] Safe stateless recovery identified
+- [x] `RECOVER` decision produced
+- [x] Existing preserved Pod identified
+- [x] Existing Pod released by controller
+- [x] Native Deployment reconciliation triggered
+- [x] Replacement Pod created
+- [x] Replacement scheduled on Worker2
+- [x] Replacement reached `Running`
+- [x] Dynamic service-target observation implemented
+- [x] Harness automatically identified Worker2
+- [x] HTTP `200` observed through Worker2
+- [x] Recovery path recorded by experimental harness
+
+The stateless RECOVER path is therefore operational.
+
+---
+
+# 27. Fencing-Gated Recovery
+
+Stateless recovery alone is insufficient for workloads where two
+simultaneously active instances could violate application or data
+consistency requirements.
+
+The controller was therefore extended with **fencing-gated recovery**.
+
+The purpose is to enforce:
+
+```text
+duplication-sensitive workload
+        +
+RECOVER selected
+        |
+        v
+fence old authority
+        |
+        v
+verify fencing
+        |
+        v
+only then permit replacement
+```
+
+This prevents the controller from treating deletion of a Kubernetes Pod
+object as proof that the workload has actually stopped executing on an
+unreachable worker.
+
+---
+
+## 27.1 Why Pod Deletion Is Not Fencing
+
+During a worker partition, the control plane may be able to delete the
+Pod object even though it cannot communicate with the affected kubelet.
+
+Therefore:
+
+```text
+Pod object deleted
+```
+
+does not necessarily imply:
+
+```text
+old workload process stopped
+```
+
+For a stateless workload this may be acceptable.
+
+For a duplication-sensitive stateful workload it can create:
+
+```text
+old instance still active
+        +
+new instance started elsewhere
+        |
+        v
+dual authority
+```
+
+The recovery path must therefore establish that the old execution
+authority has been fenced before replacement is permitted.
+
+---
+
+## 27.2 Recovery-Safety States
+
+The recovery-safety model distinguishes:
+
+```text
+Safe
+FencingRequired
+Unsafe
+```
+
+For the current stateful validation configuration:
+
+```text
+workload_type=Stateful
+duplication_sensitive=true
+```
+
+If fencing is unavailable:
+
+```text
+fencing_supported=false
+        |
+        v
+Unsafe
+```
+
+If fencing is available:
+
+```text
+fencing_supported=true
+        |
+        v
+FencingRequired
+```
+
+This state becomes part of the Awareness Context before the Recovery
+Decision Engine acts.
+
+---
+
+# 27.3 Fail-Closed Recovery Validation
+
+The first fencing validation tested whether the controller would refuse
+unsafe recovery when fencing was unavailable.
+
+The workload was configured as:
+
+```text
+workload_type=Stateful
+duplication_sensitive=true
+fencing_supported=false
+```
+
+The fault caused Worker1 to become unreachable through both the
+control-plane and workload verification paths.
+
+---
+
+## 27.3.1 Verification Result
+
+The controller observed:
+
+```text
+[SUSPICION]
+2026-09-21T08:34:56.591716053+00:00
+
+node=k3s-worker1
+Ready=Some("True") -> Unknown
+```
+
+All three bounded verification attempts failed:
+
+```text
+Attempt 1:
+reachable=false
+HTTP=None
+latency=3004.076 ms
+
+Attempt 2:
+reachable=false
+HTTP=None
+latency=3002.304 ms
+
+Attempt 3:
+reachable=false
+HTTP=None
+latency=3001.546 ms
+```
+
+The Awareness Engine therefore classified:
+
+```text
+operational_state=Unreachable
+```
+
+---
+
+## 27.3.2 Recovery-Safety Result
+
+Worker2 remained available:
+
+```text
+[RESOURCE]
+candidate=k3s-worker2
+state=Available
+Ready=true
+labels_match=true
+CPU=4000m required=100m
+memory=3915Mi required=128Mi
+```
+
+However:
+
+```text
+[RECOVERY SAFETY]
+state=Unsafe
+fencing_required=true
+fencing_supported=false
+```
+
+The complete context included:
+
+```text
+operational_state=Unreachable
+workload_type=Stateful
+duplication_sensitive=true
+resource_state=Available
+recovery_candidate=k3s-worker2
+recovery_safety=Unsafe
+fencing_required=true
+attempts=3
+successes=0
+failures=3
+```
+
+---
+
+## 27.3.3 Fail-Closed Decision
+
+Despite:
+
+```text
+workload unreachable
+        +
+Worker2 available
+```
+
+the Decision Engine produced:
+
+```text
+[DECISION]
+2026-09-21T08:35:06.682036088+00:00
+
+node=k3s-worker1
+decision=Preserve
+fencing_required=true
+
+reason=recovery cannot safely proceed
+because required fencing is unavailable
+```
+
+The enforcement layer consequently produced:
+
+```text
+[ENFORCEMENT]
+2026-09-21T08:35:06.682147671+00:00
+
+node=k3s-worker1
+action=PreserveExisting
+enforced=true
+
+message=existing workload remains bound;
+no recovery action initiated
+```
+
+No:
+
+```text
+[RECOVERY RELEASE]
+```
+
+occurred.
+
+---
+
+## 27.3.4 Harness Confirmation
+
+The experimental harness independently confirmed:
+
+```text
+Ready=Unknown
+```
+
+with the taints:
+
+```text
+node.kubernetes.io/unreachable | NoSchedule
+node.kubernetes.io/unreachable | NoExecute
+```
+
+The original Pod remained:
+
+```text
+baseline-web-5f5bbfb459-mwssj
+phase=Running
+node=k3s-worker1
+deletion=
+```
+
+The NodeLease renew time remained frozen at:
+
+```text
+2026-09-21T08:34:03.423676Z
+```
+
+and the HTTP probe continued failing.
+
+Therefore, the controller deliberately accepted service unavailability
+rather than initiating a recovery that it had classified as unsafe.
+
+The demonstrated rule is:
+
+```text
+Unreachable
+      +
+Resources Available
+      +
+Duplication Sensitive
+      +
+Fencing Unavailable
+      |
+      v
+DO NOT RECOVER
+```
+
+This validates fail-closed recovery behavior.
+
+---
+
+# 27.4 Fencing Abstraction
+
+The controller was subsequently extended with a fencing abstraction.
+
+Rather than embedding infrastructure-specific fencing logic directly
+inside the Recovery Decision Engine, the controller invokes a configured
+fencing backend.
+
+Conceptually:
+
+```text
+Failure-Aware Controller
+          |
+          v
+      fencing.rs
+          |
+          v
+ configured backend
+      /    |     \
+     /     |      \
+    v      v       v
+network   power   infrastructure
+ fence    fence       API
+```
+
+This separates:
+
+```text
+recovery policy
+```
+
+from:
+
+```text
+infrastructure-specific fencing implementation
+```
+
+and permits different fencing mechanisms to be used in different
+environments.
+
+---
+
+## 27.5 Fencing Gate
+
+For a duplication-sensitive workload where recovery is viable:
+
+```text
+RECOVER
+   |
+   v
+fencing_required=true
+   |
+   v
+execute configured fence
+   |
+   v
+did fencing succeed?
+      /       \
+     no       yes
+     |         |
+     v         v
+ block       verify
+ recovery      |
+               v
+          release Pod
+               |
+               v
+        Kubernetes recovery
+```
+
+The existing workload is therefore not released until the fencing
+backend reports successful completion.
+
+---
+
+# 27.6 Testbed Fencing Backend
+
+For implementation validation, a simple test fencing backend was
+created:
+
+```bash
+#!/bin/bash
+
+echo "TESTBED_FENCE_OK"
+exit 0
+```
+
+This backend deliberately returns successful completion.
+
+It is used only to validate:
+
+```text
+fencing invocation
+        +
+success detection
+        +
+ordering
+        +
+recovery gating
+```
+
+It does **not** constitute physical node fencing, power isolation, or a
+production STONITH implementation.
+
+The result must therefore be interpreted as validation of the
+controller's fencing control path rather than validation of an
+infrastructure-level fencing mechanism.
+
+---
+
+# 27.7 Fencing-Success Configuration
+
+For the fencing-success validation, the workload context was configured
+as:
+
+```text
+workload_type=Stateful
+duplication_sensitive=true
+fencing_supported=true
+```
+
+The configured fencing backend was:
+
+```text
+../scripts/fence-worker1.sh
+```
+
+The intended safety state therefore became:
+
+```text
+FencingRequired
+```
+
+rather than:
+
+```text
+Unsafe
+```
+
+---
+
+# 27.8 Successful Fencing-Gated Recovery
+
+During the test, all bounded verification attempts failed.
+
+The final verification attempt produced:
+
+```text
+[VERIFY]
+attempt=3/3
+reachable=false
+HTTP=None
+latency=3004.637 ms
+```
+
+Resource Awareness established:
+
+```text
+[RESOURCE]
+2026-09-21T08:56:37.103401656+00:00
+
+candidate=k3s-worker2
+state=Available
+Ready=true
+labels_match=true
+CPU=4000m required=100m
+memory=3915Mi required=128Mi
+```
+
+Recovery-Safety Awareness then produced:
+
+```text
+[RECOVERY SAFETY]
+2026-09-21T08:56:37.103480477+00:00
+
+state=FencingRequired
+fencing_required=true
+fencing_supported=true
+```
+
+The resulting Awareness Context was:
+
+```text
+[AWARENESS]
+2026-09-21T08:56:37.103503715+00:00
+
+node=k3s-worker1
+operational_state=Unreachable
+
+workload=baseline-web
+workload_type=Stateful
+duplication_sensitive=true
+service_criticality=Medium
+
+resource_state=Available
+recovery_candidate=k3s-worker2
+
+recovery_safety=FencingRequired
+fencing_required=true
+
+attempts=3
+successes=0
+failures=3
+```
+
+---
+
+## 27.9 Recovery Decision
+
+The Decision Engine produced:
+
+```text
+[DECISION]
+2026-09-21T08:56:37.103518811+00:00
+
+node=k3s-worker1
+decision=Recover
+fencing_required=true
+
+reason=workload is unreachable and recovery is viable,
+but fencing must complete before replacement
+```
+
+Critically, this did **not** immediately release the existing Pod.
+
+Instead, the controller progressed to the fencing stage.
+
+---
+
+## 27.10 Fencing Execution
+
+Fencing began at:
+
+```text
+2026-09-21T08:56:37.103651588+00:00
+```
+
+with:
+
+```text
+[FENCING]
+executing=../scripts/fence-worker1.sh
+```
+
+The configured backend returned:
+
+```text
+[FENCING RESULT]
+2026-09-21T08:56:37.109060565+00:00
+
+state=Succeeded
+output=TESTBED_FENCE_OK
+```
+
+The controller then explicitly recorded:
+
+```text
+[FENCING VERIFIED]
+2026-09-21T08:56:37.109126057+00:00
+
+node=k3s-worker1
+recovery may proceed
+```
+
+Only after this event did workload release occur.
+
+---
+
+## 27.11 Recovery Release After Fencing
+
+The preserved workload was released at:
+
+```text
+2026-09-21T08:56:37.871851556+00:00
+```
+
+with:
+
+```text
+[RECOVERY RELEASE]
+
+deleting preserved pod=
+baseline-web-5f5bbfb459-mwssj
+
+node=k3s-worker1
+```
+
+The enforcement result was:
+
+```text
+[ENFORCEMENT]
+2026-09-21T08:56:37.892626611+00:00
+
+node=k3s-worker1
+action=RecoveryReleased
+enforced=true
+
+message=preserved pod
+baseline-web-5f5bbfb459-mwssj
+released after recovery safety
+requirements were satisfied
+```
+
+The ordering is therefore explicit:
+
+```text
+08:56:37.103519
+RECOVER decision
+        |
+        v
+08:56:37.103652
+FENCING begins
+        |
+        v
+08:56:37.109061
+FENCING succeeds
+        |
+        v
+08:56:37.109126
+FENCING VERIFIED
+        |
+        v
+08:56:37.871852
+RECOVERY RELEASE
+        |
+        v
+08:56:37.892627
+enforcement complete
+```
+
+No workload release occurred before successful fencing verification.
+
+---
+
+## 27.12 Replacement Workload
+
+Following release of the original Pod:
+
+```text
+baseline-web-5f5bbfb459-mwssj
+```
+
+Kubernetes created a replacement.
+
+The resulting workload was observed as:
+
+```text
+NAME:
+baseline-web-5f5bbfb459-8d4t9
+
+READY:
+1/1
+
+STATUS:
+Running
+
+RESTARTS:
+0
+
+IP:
+10.42.2.5
+
+NODE:
+k3s-worker2
+```
+
+The resulting sequence was:
+
+```text
+Original:
+baseline-web-5f5bbfb459-mwssj
+k3s-worker1
+        |
+        v
+RECOVER
+        |
+        v
+FencingRequired
+        |
+        v
+TESTBED_FENCE_OK
+        |
+        v
+Fencing Verified
+        |
+        v
+old Pod released
+        |
+        v
+native Kubernetes reconciliation
+        |
+        v
+Replacement:
+baseline-web-5f5bbfb459-8d4t9
+k3s-worker2
+Running
+```
+
+---
+
+# 27.13 Combined Fencing Validation
+
+The two fencing experiments demonstrate complementary safety behavior.
+
+### Fencing unavailable
+
+```text
+Unreachable
+      +
+Duplication Sensitive
+      +
+Worker2 Available
+      +
+Fencing unavailable
+      |
+      v
+RecoverySafety=Unsafe
+      |
+      v
+PRESERVE
+      |
+      v
+NO RecoveryRelease
+```
+
+### Fencing available
+
+```text
+Unreachable
+      +
+Duplication Sensitive
+      +
+Worker2 Available
+      +
+Fencing available
+      |
+      v
+RecoverySafety=FencingRequired
+      |
+      v
+RECOVER
+      |
+      v
+execute fence
+      |
+      v
+fence succeeds
+      |
+      v
+FENCING VERIFIED
+      |
+      v
+RecoveryRelease
+      |
+      v
+replacement on Worker2
+```
+
+This validates the controller's **fail-closed recovery gate**.
+
+---
+
+## 27.14 Important Limitation
+
+The fencing-success experiment validates the controller's **logical
+fencing sequence**, not physical fencing of Worker1.
+
+The test backend:
+
+```text
+TESTBED_FENCE_OK
+```
+
+does not power off, network-isolate, or otherwise guarantee cessation of
+execution on the old worker.
+
+Therefore, the experiment demonstrates:
+
+```text
+fencing required
+        ↓
+controller invokes fencing backend
+        ↓
+controller requires success
+        ↓
+only then recovery proceeds
+```
+
+It does not demonstrate:
+
+```text
+physical Worker1 isolation
+```
+
+A production deployment would replace the test backend with an
+appropriate infrastructure fencing mechanism, for example a
+hypervisor/power-management or equivalent authoritative isolation
+operation, followed by verification of the fencing outcome.
+
+---
+
+## 27.15 Step 27 Status
+
+The following fencing-related functionality has been implemented and
+validated:
+
+- [x] Duplication-sensitive workload representation
+- [x] Stateful workload representation
+- [x] `FencingRequired` recovery-safety state
+- [x] `Unsafe` recovery-safety state
+- [x] Recovery blocked when fencing is unavailable
+- [x] No Pod release during unsafe recovery
+- [x] Fencing abstraction implemented
+- [x] Configurable fencing backend
+- [x] Fence execution occurs before recovery release
+- [x] Fence result checked
+- [x] Successful fence permits recovery
+- [x] Failed/unavailable fencing prevents unsafe recovery
+- [x] Recovery release occurs only after fencing verification
+- [x] Replacement workload successfully established on Worker2
+- [x] Fail-closed recovery semantics demonstrated
+- [ ] Production infrastructure-level fencing backend
+- [ ] Physical fencing validation
+- [ ] Validation with a real stateful application/data service
+
+The controller-side fencing architecture is therefore implemented and
+validated, while production-grade physical fencing and application-level
+stateful validation remain future experimental work.
+
+---
+
+# 28. Current Failure-Aware Controller Architecture
+
+Following completion of Steps 21 through 27, the implemented prototype
+now provides the following end-to-end control path:
+
+```text
+                     Kubernetes
+                         |
+                         v
+                 Native Node State
+                         |
+                  Ready=Unknown
+                         |
+                         v
+               Failure Suspicion
+                         |
+                         v
+              Bounded Verification
+                         |
+                         v
+             +---------------------+
+             | Failure Awareness   |
+             +---------------------+
+             | Operational State   |
+             | Workload Context    |
+             | Resource State      |
+             | Recovery Safety     |
+             +---------------------+
+                         |
+                         v
+                 AwarenessContext
+                         |
+                         v
+                 Decision Engine
+                    /         \
+                   /           \
+                  v             v
+             PRESERVE         RECOVER
+                 |               |
+                 |        duplication-sensitive?
+                 |             /       \
+                 |           no         yes
+                 |           |           |
+                 |           |           v
+                 |           |        Fencing
+                 |           |           |
+                 |           |      success?
+                 |           |       /     \
+                 |           |      no     yes
+                 |           |      |       |
+                 |           |      v       |
+                 |           |    BLOCK     |
+                 |           |              |
+                 |           +-------+------+
+                 |                   |
+                 v                   v
+         PreserveExisting      RecoveryRelease
+                 |                   |
+                 v                   v
+          existing Pod         Kubernetes native
+          remains bound        reconciliation
+                                     |
+                                     v
+                              replacement Pod
+```
+
+The prototype therefore demonstrates the principal distinction of the
+failure-aware recovery approach:
+
+```text
+Kubernetes suspicion
+        !=
+automatic recovery
+```
+
+Instead:
+
+```text
+Kubernetes suspicion
+        |
+        v
+independent evidence
+        |
+        v
+context-aware classification
+        |
+        v
+PRESERVE or RECOVER
+        |
+        v
+safety-gated enforcement
+```
+
+The next phase of the work should focus primarily on **repeated
+experimentation, quantitative comparison with native Kubernetes, and
+statistical analysis**, rather than further expansion of the controller
+architecture.
+
+---
+# 29. Experimental Campaign and Quantitative Evaluation
+
+Following implementation and functional validation of the Failure-Aware
+Controller, the next phase of the work evaluates its behavior
+quantitatively against native Kubernetes.
+
+The evaluation compares:
+
+```text
+Native Kubernetes
+        vs
+Failure-Aware Controller
+```
+
+under controlled network-failure conditions.
+
+The purpose of the experiments is to determine whether the proposed
+controller:
+
+- avoids unnecessary workload replacement during ambiguous
+  control-plane isolation;
+- recovers genuinely unavailable workloads;
+- changes recovery and service-outage duration relative to native
+  Kubernetes;
+- preserves workloads that remain useful outside the control-plane path;
+- prevents unsafe recovery when fencing is required but unavailable; and
+- permits recovery only after the required safety conditions have been
+  satisfied.
+
+---
+
+## 29.1 Experimental Scenarios
+
+The formal evaluation focuses primarily on two scenarios that can be
+executed under both native Kubernetes and Failure-Aware control.
+
+### Scenario B — Control-Plane Isolation with Workload Reachability
+
+Scenario B creates a condition where:
+
+```text
+Worker1 -> Kubernetes API       unavailable
+
+BUT
+
+external client -> workload     available
+```
+
+The worker becomes unreachable from the Kubernetes control plane while
+the application remains externally usable.
+
+The expected behaviors are:
+
+```text
+Native Kubernetes
+        |
+        v
+Ready=Unknown
+        |
+        v
+native failure handling
+        |
+        v
+eventual reconciliation/replacement
 
 
 Failure-Aware Controller
         |
-        | system under test
         v
-Kubernetes recovery behaviour
+Ready=Unknown
+        |
+        v
+independent HTTP verification
+        |
+        v
+workload still reachable
+        |
+        v
+PRESERVE
+        |
+        v
+existing workload retained
 ```
 
-The harness will record:
+This scenario evaluates unnecessary recovery.
+
+---
+
+### Scenario C — Control-Plane Isolation with Workload Unreachability
+
+Scenario C creates:
 
 ```text
-t_failure
-t_suspect
-t_classified
-t_authorized
-t_restored
-t_last_success
-t_first_success
+Worker1 -> Kubernetes API       unavailable
+
+AND
+
+external client -> workload     unavailable
 ```
 
----
+Worker2 remains healthy and available as a recovery target.
 
-# 25. Experimental Measurements
-
-Timing metrics:
-
-- Failure Detection Latency (FDL)
-- Failure Classification Latency (FCL)
-- Decision Timing Difference (DTD)
-- Workload Switching Latency (WSL)
-- Service Interruption Duration (SID)
-- End-to-End Recovery Latency (ERL)
-
-Application metrics:
-
-- P50 latency
-- P95 latency
-- P99 latency
-- request failure rate
-- throughput
-- local service availability
-
-Controller overhead:
-
-- CPU consumption
-- memory consumption
-- diagnostic network traffic
-- diagnostic probe count
-
-Correctness:
-
-- unnecessary workload recreation
-- incorrect recovery decisions
-- duplicate authoritative execution
-- successful stateful recovery
-
----
-
-# 26. Formal Experimental Repetitions
-
-Pilot runs validate:
-
-- fault injection
-- environment reset
-- timestamps
-- workload generation
-- metrics collection
-- controller behavior
-- data export
-
-Pilot runs are not included in the formal headline results.
-
-After the configuration is frozen:
+The expected behavior is:
 
 ```text
-Minimum repetitions per configuration: 30
+Native Kubernetes
+        |
+        v
+Ready=Unknown
+        |
+        v
+native failure handling
+        |
+        v
+replacement eventually created
+
+
+Failure-Aware Controller
+        |
+        v
+Ready=Unknown
+        |
+        v
+bounded verification
+        |
+        v
+workload unreachable
+        |
+        v
+RECOVER
+        |
+        v
+old Pod released
+        |
+        v
+replacement created on Worker2
 ```
 
-Formal results will report:
-
-- raw observations
-- mean
-- 95% confidence interval
-- P50/P95/P99 where applicable
-- effect size where applicable
+This scenario evaluates recovery latency and user-visible service
+restoration.
 
 ---
 
-# 27. Reproducibility Requirements
+## 29.2 Experimental Matrix
 
-The repository will preserve:
+The primary repeated experiment matrix is:
 
-- K3s version
-- Kubernetes version
-- OS version
-- kernel version
-- VM resource allocation
-- container image versions/digests
-- CNI configuration
-- Ingress configuration
-- CSI configuration
-- EMR version
-- database version
-- experimental configuration files
-- workload manifests
-- fault-injection scripts
-- Rust harness source
-- controller source
-- raw experimental data
-- analysis scripts
-- generated figures and tables
+| Scenario | Mode | Fault Condition | Expected Outcome |
+|---|---|---|---|
+| Scenario B | Native | API path unavailable, workload reachable | Native reconciliation eventually replaces workload |
+| Scenario B | Failure-Aware | Same fault | `PRESERVE`, original workload retained |
+| Scenario C | Native | API path and workload path unavailable | Native recovery to Worker2 |
+| Scenario C | Failure-Aware | Same fault | `RECOVER`, replacement on Worker2 |
 
-Secrets and credentials must not be committed.
+The previously implemented fencing experiments are treated primarily as
+controller-safety validation rather than the main timing comparison.
 
-The repository will eventually expose a single reproduction entry
-point such as:
+---
+
+## 29.3 Number of Repetitions
+
+Each primary Scenario × Mode configuration is scheduled for:
+
+```text
+30 runs
+```
+
+The final experiment therefore consists of:
+
+```text
+Scenario B / Native           x 30
+Scenario B / Failure-Aware    x 30
+
+Scenario C / Native           x 30
+Scenario C / Failure-Aware    x 30
+```
+
+for a total of:
+
+```text
+120 formal experimental runs
+```
+
+The campaigns are executed sequentially because all experiments share
+the same Kubernetes cluster, Deployment, Worker1 fault rules and
+recovery nodes.
+
+Running multiple campaigns simultaneously on the same testbed would
+allow one experiment to modify another experiment's fault state,
+workload manifest or Pod placement and would invalidate the results.
+
+---
+
+# 30. Automated Experimental Execution
+
+Manual repetition of the experiment would introduce unnecessary timing
+variation and make 30-run campaigns difficult to reproduce.
+
+An automated experiment framework was therefore added.
+
+The relevant repository structure is:
+
+```text
+failure-aware-k8s/
+├── analysis/
+├── controller/
+├── experiments/
+│   ├── baseline/
+│   └── evaluation/
+├── harness/
+│   └── config/
+│       ├── scenario-b.json
+│       └── scenario-c.json
+├── scripts/
+│   ├── experiment-config.sh
+│   ├── fault.sh
+│   ├── run-experiment.sh
+│   ├── run-campaign.sh
+│   ├── fence-worker1.sh
+│   └── remote/
+│       └── failure-aware-fault.sh
+└── workloads/
+    └── test-workload/
+        ├── nginx.yaml
+        └── nginx-native.yaml
+```
+
+---
+
+## 30.1 Native and Failure-Aware Workload Definitions
+
+Two workload manifests are maintained.
+
+### Failure-Aware workload
+
+```text
+workloads/test-workload/nginx.yaml
+```
+
+This version contains the preservation envelope:
+
+```yaml
+tolerations:
+  - key: "node.kubernetes.io/unreachable"
+    operator: "Exists"
+    effect: "NoExecute"
+
+  - key: "node.kubernetes.io/not-ready"
+    operator: "Exists"
+    effect: "NoExecute"
+```
+
+No finite `tolerationSeconds` is specified.
+
+This allows the Failure-Aware Controller to decide whether the existing
+Pod should be preserved or released.
+
+### Native Kubernetes workload
+
+```text
+workloads/test-workload/nginx-native.yaml
+```
+
+The native version uses the same Nginx workload and preferred placement
+policy, but does not contain the indefinite preservation tolerations.
+
+Native Kubernetes therefore retains its normal node-failure and
+eviction behavior.
+
+This ensures that the primary experiment difference is:
+
+```text
+Native mode
+    native Kubernetes failure handling
+
+vs
+
+Failure-Aware mode
+    preservation envelope
+    +
+    Failure-Aware Controller
+```
+
+---
+
+## 30.2 Harness Scenario Configuration
+
+Separate harness configuration files are used:
+
+```text
+harness/config/scenario-b.json
+harness/config/scenario-c.json
+```
+
+The harness can select the required configuration through:
+
+```text
+HARNESS_CONFIG
+```
+
+For example:
 
 ```bash
+HARNESS_CONFIG="$PWD/harness/config/scenario-c.json" \
+./harness/target/debug/failure-aware-harness
+```
+
+This prevents experiment scripts from modifying Rust source code when
+switching scenarios.
+
+---
+
+## 30.3 Dynamic Service Targets
+
+The harness contains both eligible service paths:
+
+```json
+"service_targets": [
+  {
+    "node": "k3s-worker1",
+    "url": "http://102.34.160.87:30364"
+  },
+  {
+    "node": "k3s-worker2",
+    "url": "http://102.34.160.103:30364"
+  }
+]
+```
+
+The active HTTP target is selected according to the node hosting the
+currently Running workload.
+
+This is important after recovery because the application may move from
+Worker1 to Worker2.
+
+---
+
+# 30.4 Automation Scripts
+
+The automated experiment framework consists of several small scripts
+with clearly separated responsibilities.
+
+## `scripts/experiment-config.sh`
+
+This script provides the common configuration used by the automation.
+
+It contains:
+
+```text
+namespace
+label selector
+Worker1 node name
+Worker2 node name
+Worker1 IP
+Worker2 IP
+SSH target
+SSH key
+Kubernetes API IP
+NodePort
+experiment durations
+compiled binary paths
+workload manifest paths
+harness configuration paths
+```
+
+Centralizing these values prevents experiment scripts from duplicating
+testbed-specific configuration.
+
+---
+
+## `scripts/remote/failure-aware-fault.sh`
+
+This script is installed on Worker1.
+
+Its responsibility is to add and remove the `iptables` rules used to
+create the controlled faults.
+
+It supports:
+
+```text
+scenario-b apply
+scenario-b clear
+
+scenario-c apply <pod-ip>
+scenario-c clear
+
+clear-all
+```
+
+### Scenario B
+
+Scenario B blocks:
+
+```text
+Worker1 -> Kubernetes API:6443
+```
+
+while leaving the workload path available.
+
+### Scenario C
+
+Scenario C blocks:
+
+```text
+Worker1 -> Kubernetes API:6443
+```
+
+and:
+
+```text
+forwarded HTTP traffic -> original Pod:80
+```
+
+The script also records the Pod IP used by Scenario C so the exact rule
+can later be removed.
+
+---
+
+## `scripts/fault.sh`
+
+This is the local fault-control wrapper.
+
+It connects to Worker1 using SSH and executes the remote fault helper.
+
+The configured SSH identity is:
+
+```text
+/home/daniel/.ssh/k8s-aware
+```
+
+The Worker1 `ubuntu` account already has passwordless `sudo`, so no
+additional experiment-specific sudoers configuration was required.
+
+The wrapper uses:
+
+```text
+BatchMode=yes
+```
+
+so unattended campaign execution fails rather than prompting for SSH
+credentials.
+
+---
+
+## `scripts/run-experiment.sh`
+
+This is the main single-run experiment orchestrator.
+
+One invocation executes one complete experiment.
+
+For example:
+
+```bash
+./scripts/run-experiment.sh \
+  scenario-c \
+  failure-aware \
+  001
+```
+
+The script performs the following sequence:
+
+```text
+clear stale fault rules
+        |
+        v
+wait for Worker1 and Worker2 Ready
+        |
+        v
+apply Native or Failure-Aware workload
+        |
+        v
+normalize workload state
+        |
+        v
+require exactly one clean Pod on Worker1
+        |
+        v
+verify HTTP availability
+        |
+        v
+start Rust harness
+        |
+        v
+start controller if Failure-Aware mode
+        |
+        v
+record healthy baseline
+        |
+        v
+inject fault
+        |
+        v
+observe experiment
+        |
+        v
+record recovery
+        |
+        v
+clear fault
+        |
+        v
+record post-fault state
+        |
+        v
+stop observers
+        |
+        v
+copy run artifacts
+        |
+        v
+create COMPLETE marker
+```
+
+---
+
+## 30.5 Clean Initial-State Validation
+
+A formal run is allowed to start only when the workload satisfies:
+
+```text
+exactly one managed Pod
+        +
+phase = Running
+        +
+deletionTimestamp absent
+        +
+node = k3s-worker1
+        +
+Pod IP assigned
+```
+
+This check was added after an early native pilot run began while one Pod
+was terminating and another was Running.
+
+Without this check, the fault injector could select the IP address of a
+Pod that was already being removed.
+
+If the workload does not meet the required initial state, the automation
+recreates the managed Pod and waits for a clean Worker1 placement.
+
+---
+
+## 30.6 Scenario C Recovery Validation
+
+A NodePort request to Worker2 alone is not sufficient evidence that the
+workload has migrated to Worker2.
+
+NodePort traffic can be forwarded through another Kubernetes node even
+when the target Pod resides elsewhere.
+
+Scenario C recovery therefore requires all of the following:
+
+```text
+replacement Pod name != original Pod name
+        +
+replacement phase = Running
+        +
+deletionTimestamp absent
+        +
+replacement node = k3s-worker2
+        +
+Worker2 HTTP path succeeds
+```
+
+Only after all conditions hold does the script write:
+
+```text
+service-restored-time.txt
+```
+
+and:
+
+```text
+replacement-pod.txt
+```
+
+This ensures that the measured recovery event represents actual workload
+replacement rather than only NodePort reachability.
+
+---
+
+## `scripts/run-campaign.sh`
+
+This script executes repeated calls to `run-experiment.sh`.
+
+For example:
+
+```bash
+./scripts/run-campaign.sh \
+  scenario-c \
+  failure-aware \
+  30
+```
+
+produces:
+
+```text
+run-001
+run-002
+...
+run-030
+```
+
+A run that already contains:
+
+```text
+COMPLETE
+```
+
+is skipped.
+
+This makes interrupted campaigns resumable.
+
+For example, if:
+
+```text
+run-001 ... run-010
+```
+
+are complete and the process stops during `run-011`, the partial run can
+be removed and the campaign restarted.
+
+The completed runs are skipped and execution resumes from the missing
+run.
+
+---
+
+# 30.7 Formal Result Directory
+
+Formal repeated experiments are stored under:
+
+```text
+experiments/evaluation/
+```
+
+The structure is:
+
+```text
+experiments/evaluation/
+├── scenario-b/
+│   ├── native/
+│   │   ├── run-001/
+│   │   ├── run-002/
+│   │   └── ...
+│   └── failure-aware/
+│       ├── run-001/
+│       └── ...
+└── scenario-c/
+    ├── native/
+    │   ├── run-001/
+    │   └── ...
+    └── failure-aware/
+        ├── run-001/
+        └── ...
+```
+
+---
+
+## 30.8 Run Artifacts
+
+A completed experiment contains artifacts including:
+
+```text
+COMPLETE
+controller.log
+experiment-metadata.json
+fault-time.txt
+fault-clear-time.txt
+harness.log
+http-observations.csv
+lease-observations.csv
+metadata.json
+node-observations.csv
+nodes-before.txt
+nodes-after.txt
+pod-observations.csv
+pods-before.txt
+pods-after.txt
+taint-observations.csv
+event-observations.csv
+```
+
+Scenario C additionally records:
+
+```text
+replacement-pod.txt
+service-restored-time.txt
+```
+
+---
+
+## 30.9 Experiment Metadata
+
+Each run records metadata such as:
+
+```text
+scenario
+mode
+run number
+experiment start time
+original Pod
+original Pod IP
+original node
+Worker1 IP
+Worker2 IP
+NodePort
+```
+
+This provides the context required to interpret the associated
+observations.
+
+---
+
+# 30.10 Automated Scenario C Failure-Aware Validation
+
+The automated Failure-Aware Scenario C path was exercised repeatedly.
+
+A representative run produced:
+
+```text
+SUSPICION
+        |
+        v
+operational_state=Unreachable
+        |
+        v
+decision=Recover
+        |
+        v
+RecoveryReleased
+```
+
+The old and replacement Pods were observed as:
+
+```text
+original Pod
+    -> k3s-worker1
+
+replacement Pod
+    -> k3s-worker2
+```
+
+The HTTP trace showed:
+
+```text
+Worker1 HTTP 200
+        |
+        v
+Worker1 HTTP failure
+        |
+        v
+no Running Pod during transition
+        |
+        v
+Worker2 replacement
+        |
+        v
+Worker2 HTTP 200
+```
+
+Three consecutive automated Failure-Aware Scenario C runs completed
+successfully during automation validation.
+
+This also demonstrated that the testbed-reset logic could return the
+workload to Worker1 before the next repetition.
+
+---
+
+# 30.11 Automated Scenario C Native Validation
+
+An initial native Scenario C pilot exposed two automation issues:
+
+1. the experiment could begin while a previous Pod was still
+   terminating; and
+2. a successful NodePort request through Worker2 did not necessarily
+   prove that the workload had moved to Worker2.
+
+The runner was therefore strengthened using the clean-start and genuine
+Worker2-placement conditions described above.
+
+Following the correction, the native experiment produced the expected
+sequence:
+
+```text
+original Pod on Worker1
+        |
+        v
+fault
+        |
+        v
+native Kubernetes failure handling
+        |
+        v
+replacement Pending on Worker2
+        |
+        v
+replacement Running on Worker2
+        |
+        v
+HTTP service restored
+```
+
+A representative corrected native run observed:
+
+```text
+replacement Pending:
+approximately 347.5 s after fault
+
+replacement Running:
+approximately 349.5 s after fault
+
+service restoration:
+approximately 350.5 s after fault
+```
+
+These values are development observations from a representative run and
+are not final statistical results.
+
+---
+
+# 30.12 Scenario B Automated Observations
+
+The Scenario B campaign has also been exercised through the automation.
+
+Native Kubernetes runs show replacement behavior after prolonged
+Worker1 control-plane isolation.
+
+Current completed native observations show replacement becoming Running
+roughly in the:
+
+```text
+343–355 second
+```
+
+range after fault injection.
+
+The Failure-Aware Scenario B path instead produced:
+
+```text
+Ready=Unknown
+        |
+        v
+verification
+        |
+        v
+workload reachable
+        |
+        v
+PRESERVE
+        |
+        v
+replacement_occurred=false
+```
+
+A representative Failure-Aware run observed:
+
+```text
+suspicion delay:
+approximately 46.6 s
+
+decision after suspicion:
+approximately 2.3 s
+
+decision:
+Preserve
+
+replacement:
+false
+```
+
+These values remain preliminary until the full repeated campaign is
+complete.
+
+---
+
+# 30.13 Campaign Execution Status
+
+At the time of documenting this stage, the formal repeated campaigns are
+still in progress.
+
+Therefore:
+
+```text
+single-run validation          COMPLETE
+campaign automation            COMPLETE
+campaign resumability          COMPLETE
+formal 30-run dataset          IN PROGRESS
+final statistical results      NOT YET REPORTED
+```
+
+No final mean or confidence interval is reported until the scheduled
+repetitions have completed.
+
+---
+
+# 31. Reproducibility Interface
+
+A top-level `Makefile` was added to provide a simple experiment
+interface from the repository root.
+
+The intended workflow is:
+
+```text
+make build
+make validate
+make campaign
+make analyze
+```
+
+and ultimately:
+
+```text
 make reproduce
 ```
 
-or:
+---
+
+## 31.1 Build Target
+
+The build target compiles:
+
+```text
+Rust experimental harness
+Failure-Aware Controller
+```
+
+using:
 
 ```bash
-cargo xtask reproduce
+make build
+```
+
+This invokes Cargo for the harness and controller.
+
+---
+
+## 31.2 Validation Target
+
+The environment can be checked using:
+
+```bash
+make validate
+```
+
+Validation includes:
+
+```text
+SSH access to Worker1
+passwordless sudo
+Kubernetes API access
+baseline Deployment
+baseline Service
+compiled harness binary
+compiled controller binary
+```
+
+This allows testbed problems to be detected before a long campaign is
+started.
+
+---
+
+## 31.3 Campaign Targets
+
+Individual campaign targets are provided for:
+
+```text
+scenario-c-native
+scenario-c-failure-aware
+scenario-b-native
+scenario-b-failure-aware
+```
+
+The combined campaign target executes the experiments sequentially.
+
+Sequential execution is required because the experiments share the same
+cluster and fault target.
+
+---
+
+## 31.4 Reproduce Target
+
+The intended top-level reproducibility workflow is:
+
+```text
+make reproduce
+        |
+        v
+build
+        |
+        v
+validate
+        |
+        v
+campaign
+        |
+        v
+analyze
+```
+
+This command assumes that the documented Kubernetes testbed already
+exists.
+
+It does not provision:
+
+```text
+virtual machines
+K3s
+network interfaces
+SSH keys
+```
+
+Those testbed prerequisites remain documented separately.
+
+---
+
+# 32. Automated Metric Extraction
+
+The experimental campaign produces detailed raw observations.
+
+To convert these into a form suitable for statistical analysis, an
+analysis pipeline was added under:
+
+```text
+analysis/
+├── extract_metrics.py
+├── summarize_results.py
+└── results/
 ```
 
 ---
 
-# 28. Current Healthy-Baseline Status
+## 32.1 `extract_metrics.py`
 
-Completed:
+This script recursively reads:
 
-- [x] Git repository initialized
-- [x] Hypotheses pre-registered
-- [x] Experimental design documented
-- [x] Three Proxmox VMs provisioned
-- [x] K3s server installed
-- [x] Worker 1 joined
-- [x] Worker 2 joined
-- [x] All nodes operational
-- [x] NodeLeases verified
-- [x] Flannel present
-- [x] CoreDNS verified
-- [x] Traefik retained
-- [x] Experimental worker labels configured
-- [x] `failure-aware` namespace created
-- [x] Baseline Nginx workload deployed
-- [x] Workload placed on `k3s-worker1`
-- [x] Kubernetes Service verified
-- [x] CoreDNS Service resolution verified
-- [x] External independent HTTP path verified
-- [x] Continuous HTTP `200` responses observed
-- [x] Healthy HTTP latency pilot completed
+```text
+experiments/evaluation/
+```
 
-Pending next:
+and creates one row per experimental run.
 
-- [ ] Healthy bandwidth measurement
-- [ ] Healthy RTT measurement
-- [ ] Healthy packet-loss measurement
-- [ ] Healthy jitter measurement
-- [ ] NodePort behavior through Worker 2 documented
-- [ ] First Scenario B selective-partition pilot
-- [ ] Native K3s response to partition documented
-- [ ] EMR selected and deployed
-- [ ] Stateful CSI storage selected
-- [ ] Rust harness initialized
-- [ ] Failure-Aware Controller implementation started
+The resulting master dataset is:
+
+```text
+analysis/results/run-metrics.csv
+```
+
+The script extracts fields including:
+
+```text
+scenario
+mode
+run
+valid
+invalid_reason
+
+fault_time
+suspicion_time
+decision_time
+
+replacement_pending_time
+replacement_running_time
+
+service_restored_time
+fault_clear_time
+
+suspicion_delay_s
+decision_delay_s
+recovery_release_delay_s
+
+replacement_pending_delay_s
+replacement_running_delay_s
+
+service_recovery_s
+http_outage_s
+
+original_pod
+replacement_pod
+
+original_node
+replacement_node
+
+replacement_occurred
+decision
+
+first_http_failure_time
+first_http_success_after_failure_time
+
+recovery_release_time
+```
 
 ---
 
-# 29. Next Experimental Stage
+## 32.2 Invalid Run Detection
 
-The next stage is **healthy network characterization**.
+The extractor does not assume that every experiment directory is valid.
 
-The baseline values to be measured are:
-
-```text
-B = available bandwidth
-L = round-trip latency
-P = packet-loss rate
-J = jitter
-```
-
-Only after those healthy characteristics are measured will artificial
-network degradation or selective partitioning be introduced.
-
-The subsequent Scenario B pilot will disrupt:
+It verifies the presence of important artifacts such as:
 
 ```text
-k3s-worker1  X  k3s-server
+COMPLETE
+experiment-metadata.json
+http-observations.csv
+pod-observations.csv
 ```
 
-while preserving:
+Scenario C additionally requires:
 
 ```text
-External Client ---> k3s-worker1 ---> baseline-web
+replacement observed
+service restoration observed
 ```
 
-The expected native-K3s observation is:
+Invalid runs remain visible in the master dataset with:
 
 ```text
-Worker Lease stops renewing
-          |
-          v
-Kubernetes eventually raises failure suspicion
-          |
-          +-------------------------------+
-                                          |
-                              meanwhile   |
-                                          v
-                              existing workload
-                              remains reachable
-                              to external client
+valid=false
 ```
 
-This establishes the central failure ambiguity before the
-Failure-Aware Controller is introduced.
+and an explanation under:
 
+```text
+invalid_reason
+```
+
+This allows incomplete or interrupted experiments to be audited instead
+of silently contaminating the final statistics.
+
+A partially executed Scenario B run was correctly identified as:
+
+```text
+COMPLETE marker missing
+HTTP observations missing
+Pod observations missing
+```
+
+and excluded from the valid-run count.
+
+---
+
+## 32.3 Derived Timing Metrics
+
+The analysis derives several timing quantities.
+
+### Suspicion delay
+
+```text
+T_suspicion - T_fault
+```
+
+This represents the delay between fault injection and native Kubernetes
+node suspicion observed by the controller.
+
+### Decision delay
+
+```text
+T_decision - T_suspicion
+```
+
+For Failure-Aware runs this includes bounded verification, awareness
+classification and recovery decision generation.
+
+### Recovery-release delay
+
+```text
+T_release - T_decision
+```
+
+This measures controller enforcement overhead after `RECOVER` has been
+selected.
+
+### Replacement Pending delay
+
+```text
+T_replacement_pending - T_fault
+```
+
+### Replacement Running delay
+
+```text
+T_replacement_running - T_fault
+```
+
+### Service-recovery time
+
+```text
+T_service_restored - T_fault
+```
+
+### Observed HTTP outage duration
+
+```text
+first successful HTTP after failure
+-
+first observed HTTP failure
+```
+
+---
+
+## 32.4 Recovery Time and HTTP Outage Are Different Metrics
+
+Two separate service metrics are intentionally retained:
+
+```text
+service_recovery_s
+http_outage_s
+```
+
+They answer different questions.
+
+### `service_recovery_s`
+
+Measured by the experiment orchestrator:
+
+```text
+fault introduced
+        |
+        v
+replacement Running on required node
+        +
+HTTP success
+```
+
+### `http_outage_s`
+
+Measured from the independent Rust HTTP probe:
+
+```text
+first observed failed request
+        |
+        v
+first subsequent successful request
+```
+
+Because the harness samples HTTP periodically, the two values do not
+need to be identical.
+
+The distinction is useful when presenting both:
+
+```text
+control/recovery completion
+```
+
+and:
+
+```text
+user-visible service outage
+```
+
+---
+
+# 32.5 Preliminary Scenario C Comparison
+
+The current preliminary data demonstrates the intended difference
+between native Kubernetes and Failure-Aware recovery.
+
+A representative native Scenario C run observed service restoration at
+approximately:
+
+```text
+350.5 s after fault injection
+```
+
+The first three automated Failure-Aware Scenario C runs observed
+service restoration approximately at:
+
+```text
+Run 001: 66.3 s
+Run 002: 61.6 s
+Run 003: 66.7 s
+```
+
+The Failure-Aware timeline can be decomposed as:
+
+```text
+fault
+  |
+  +---- Kubernetes reaches Ready=Unknown
+  |
+  +---- independent bounded verification
+  |
+  +---- awareness classification
+  |
+  +---- RECOVER decision
+  |
+  +---- recovery release
+  |
+  +---- replacement starts
+  |
+  +---- HTTP restored
+```
+
+For example, a representative run observed:
+
+```text
+fault -> suspicion:
+approximately 47.2 s
+
+suspicion -> RECOVER decision:
+approximately 13.3 s
+
+decision -> recovery release:
+approximately 0.02 s
+
+fault -> replacement Running:
+approximately 61.4 s
+
+fault -> service restored:
+approximately 66.3 s
+```
+
+These values remain preliminary until all repeated runs have completed.
+
+---
+
+# 32.6 Preliminary Scenario B Comparison
+
+Current automated Scenario B observations also show the expected
+behavioral difference.
+
+Native runs have generally observed:
+
+```text
+replacement Running
+approximately 343–355 s after fault
+```
+
+whereas the representative Failure-Aware run produced:
+
+```text
+suspicion
+approximately 46.6 s after fault
+
+decision
+approximately 2.3 s after suspicion
+
+decision=PRESERVE
+
+replacement_occurred=false
+```
+
+The purpose of the completed 30-run campaign will be to quantify this
+difference statistically.
+
+---
+
+# 33. Statistical Summary
+
+The second analysis script:
+
+```text
+analysis/summarize_results.py
+```
+
+reads:
+
+```text
+analysis/results/run-metrics.csv
+```
+
+and computes summary statistics for each:
+
+```text
+Scenario × Mode × Metric
+```
+
+The output is:
+
+```text
+analysis/results/summary.csv
+```
+
+The reported statistics include:
+
+```text
+n
+mean
+sample standard deviation
+95% confidence interval
+minimum
+maximum
+```
+
+For sample sizes up to 30, the analysis uses the Student's
+`t` distribution for the 95% confidence interval.
+
+For a sample mean:
+
+```text
+CI95 =
+mean ± t × (s / sqrt(n))
+```
+
+where:
+
+```text
+s = sample standard deviation
+n = number of valid runs
+```
+
+For the planned 30-run configuration:
+
+```text
+df = 29
+```
+
+---
+
+# 33.1 Behavioral Statistics
+
+In addition to timing measurements, the summary records:
+
+```text
+replacement count
+replacement rate
+PRESERVE decision count
+RECOVER decision count
+```
+
+These metrics are particularly important for Scenario B.
+
+The intended comparison is:
+
+```text
+Native Kubernetes
+    unnecessary replacement count
+
+vs
+
+Failure-Aware
+    PRESERVE count
+    replacement count
+```
+
+---
+
+# 34. Planned Results Presentation
+
+Once the repeated campaigns complete, the final results should contain
+both numerical tables and timeline visualizations.
+
+For Scenario C, the presentation should show the different recovery
+paths:
+
+```text
+Native Kubernetes
+
+Fault
+  |
+  +---------------- native node-failure handling ----------------+
+                                                               |
+                                                               v
+                                                         replacement
+                                                               |
+                                                               v
+                                                        HTTP restored
+```
+
+compared with:
+
+```text
+Failure-Aware Controller
+
+Fault
+  |
+  v
+Ready=Unknown
+  |
+  v
+bounded verification
+  |
+  v
+RECOVER
+  |
+  v
+release
+  |
+  v
+replacement
+  |
+  v
+HTTP restored
+```
+
+The final presentation should therefore include:
+
+```text
+mean suspicion delay
+mean decision delay
+mean replacement delay
+mean service recovery time
+mean observed HTTP outage
+95% confidence intervals
+replacement frequency
+PRESERVE/RECOVER decision counts
+```
+
+The raw timestamp traces remain available for explaining how the
+aggregate results were derived.
+
+---
+
+# 35. Current Status
+
+At the current stage:
+
+```text
+Failure-Aware Controller implementation      COMPLETE
+
+PRESERVE path                                COMPLETE
+RECOVER path                                 COMPLETE
+Fencing gate                                COMPLETE
+
+Rust experimental harness                    COMPLETE
+Dynamic HTTP observation                     COMPLETE
+
+Automated single-run execution               COMPLETE
+Environment-reset automation                 COMPLETE
+Campaign automation                          COMPLETE
+Run validity checking                        COMPLETE
+
+Reproducibility Makefile                     COMPLETE
+
+Metric extraction                            COMPLETE
+Statistical summarization                    COMPLETE
+
+30-run experimental campaigns                IN PROGRESS
+
+Final statistical tables                     PENDING
+Final plots                                   PENDING
+Final results interpretation                  PENDING
+```
+
+The implementation phase is therefore substantially complete.
+
+The remaining work is primarily:
+
+```text
+complete repeated runs
+        |
+        v
+extract final metrics
+        |
+        v
+compute final statistics
+        |
+        v
+generate plots and tables
+        |
+        v
+interpret Native vs Failure-Aware results
+        |
+        v
+prepare final report and presentation
+```

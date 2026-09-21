@@ -28,3 +28,85 @@ __pycache__/
 # Temporary files
 *.tmp
 *.log
+
+
+# --------------------------------------------------
+# Rust build artifacts
+# --------------------------------------------------
+
+controller/target/
+harness/target/
+
+# --------------------------------------------------
+# Raw experimental runs
+# --------------------------------------------------
+
+experiments/baseline/*/runs/
+experiments/evaluation/*/native/run-*/
+experiments/evaluation/*/failure-aware/run-*/
+
+# Preserve directory structure if .gitkeep files exist
+!experiments/**/.gitkeep
+
+# --------------------------------------------------
+# Generated analysis results
+# --------------------------------------------------
+
+analysis/results/*.csv
+analysis/results/*.json
+analysis/results/*.png
+analysis/results/*.pdf
+
+# Keep the directory itself
+!analysis/results/.gitkeep
+
+# --------------------------------------------------
+# Runtime / temporary files
+# --------------------------------------------------
+
+*.log
+*.pid
+*.tmp
+*.swp
+*~
+
+# --------------------------------------------------
+# Python generated files
+# --------------------------------------------------
+
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# --------------------------------------------------
+# Editor / IDE metadata
+# --------------------------------------------------
+
+.vscode/
+.idea/
+
+# --------------------------------------------------
+# OS-generated files
+# --------------------------------------------------
+
+.DS_Store
+Thumbs.db
+
+# --------------------------------------------------
+# Local environment and secrets
+# --------------------------------------------------
+
+.env
+.env.*
+*.pem
+*.key
+
+# Never commit local SSH material
+.ssh/
+
+# --------------------------------------------------
+# Temporary experiment/debug files
+# --------------------------------------------------
+
+*-invalid/

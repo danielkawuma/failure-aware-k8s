@@ -5,7 +5,10 @@ use k8s_openapi::api::core::v1::Node;
 use kube::{
     Api,
     Client,
-    runtime::watcher::{self, Event},
+    runtime::watcher::{
+        self,
+        Event,
+    },
 };
 use std::collections::HashMap;
 
@@ -25,14 +28,24 @@ pub struct FailureSuspicion {
     pub current_ready: String,
 }
 
-fn ready_status(node: &Node) -> Option<String> {
+fn ready_status(
+    node: &Node,
+) -> Option<String> {
     node.status
         .as_ref()?
         .conditions
         .as_ref()?
         .iter()
-        .find(|condition| condition.type_ == "Ready")
-        .map(|condition| condition.status.clone())
+        .find(
+            |condition| {
+                condition.type_ == "Ready"
+            }
+        )
+        .map(
+            |condition| {
+                condition.status.clone()
+            }
+        )
 }
 
 pub async fn run_suspicion_listener(
@@ -45,17 +58,25 @@ pub async fn run_suspicion_listener(
     verification_attempts: u32,
     verification_interval_ms: u64,
 
-    workload_awareness: WorkloadAwareness,
+    workload_awareness:
+        WorkloadAwareness,
+
+    namespace: String,
+    pod_label_selector: String,
 
     recovery_candidate_node: String,
     required_cpu_millicores: u64,
     required_memory_mib: u64,
-    required_node_labels: HashMap<String, String>,
+    required_node_labels:
+        HashMap<String, String>,
 
     fencing_supported: bool,
+    fencing_command: String,
 ) -> Result<()> {
     let nodes: Api<Node> =
-        Api::all(client.clone());
+        Api::all(
+            client.clone()
+        );
 
     let watcher_config =
         watcher::Config::default()
@@ -73,7 +94,8 @@ pub async fn run_suspicion_listener(
         )
         .boxed();
 
-    let mut previous_ready: Option<String> = None;
+    let mut previous_ready:
+        Option<String> = None;
 
     println!(
         "[LISTENER] Watching node={} for Ready={}",
@@ -93,7 +115,9 @@ pub async fn run_suspicion_listener(
 
             Event::InitApply(node) => {
                 let current =
-                    ready_status(&node);
+                    ready_status(
+                        &node
+                    );
 
                 println!(
                     "[INITIAL STATE] node={} | Ready={:?}",
@@ -101,7 +125,8 @@ pub async fn run_suspicion_listener(
                     current
                 );
 
-                previous_ready = current;
+                previous_ready =
+                    current;
             }
 
             Event::InitDone => {
@@ -112,28 +137,42 @@ pub async fn run_suspicion_listener(
 
             Event::Apply(node) => {
                 let current_ready =
-                    ready_status(&node)
-                        .unwrap_or_else(
-                            || "Unknown".to_string()
-                        );
+                    ready_status(
+                        &node
+                    )
+                    .unwrap_or_else(
+                        || {
+                            "Unknown"
+                                .to_string()
+                        }
+                    );
 
-                if current_ready == trigger_status
-                    && previous_ready.as_deref()
-                        != Some(trigger_status.as_str())
+                if current_ready
+                    == trigger_status
+                    &&
+                    previous_ready
+                        .as_deref()
+                    != Some(
+                        trigger_status
+                            .as_str()
+                    )
                 {
                     let suspicion =
                         FailureSuspicion {
                             node:
-                                target_node.clone(),
+                                target_node
+                                    .clone(),
 
                             detected_at:
                                 Utc::now(),
 
                             previous_ready:
-                                previous_ready.clone(),
+                                previous_ready
+                                    .clone(),
 
                             current_ready:
-                                current_ready.clone(),
+                                current_ready
+                                    .clone(),
                         };
 
                     println!(
@@ -148,92 +187,147 @@ pub async fn run_suspicion_listener(
 
                     println!(
                         "[VERIFY] {} | starting bounded verification against {}",
-                        Utc::now().to_rfc3339(),
+                        Utc::now()
+                            .to_rfc3339(),
                         verification_url
                     );
 
                     let evidence =
-                        verification::verify_http_bounded(
-                            &verification_url,
-                            verification_timeout_ms,
-                            verification_attempts,
-                            verification_interval_ms,
-                        )
-                        .await?;
+                        verification::
+                            verify_http_bounded(
+                                &verification_url,
+                                verification_timeout_ms,
+                                verification_attempts,
+                                verification_interval_ms,
+                            )
+                            .await?;
 
                     let operational_state =
-                        awareness::classify_operational_state(
-                            &evidence
-                        );
+                        awareness::
+                            classify_operational_state(
+                                &evidence
+                            );
 
                     let resource_awareness =
-                        resource::evaluate_resources(
-                            client.clone(),
-                            &recovery_candidate_node,
-                            required_cpu_millicores,
-                            required_memory_mib,
-                            &required_node_labels,
-                        )
-                        .await?;
+                        resource::
+                            evaluate_resources(
+                                client.clone(),
+                                &recovery_candidate_node,
+                                required_cpu_millicores,
+                                required_memory_mib,
+                                &required_node_labels,
+                            )
+                            .await?;
 
                     let recovery_safety_awareness =
-                        recovery_safety::evaluate_recovery_safety(
-                            &workload_awareness,
-                            fencing_supported,
-                        );
+                        recovery_safety::
+                            evaluate_recovery_safety(
+                                &workload_awareness,
+                                fencing_supported,
+                            );
 
                     let context =
-                        awareness::AwarenessContext {
-                            operational_state:
-                                operational_state.clone(),
+                        awareness::
+                            AwarenessContext {
+                                operational_state:
+                                    operational_state
+                                        .clone(),
 
-                            workload:
-                                workload_awareness.clone(),
+                                workload:
+                                    workload_awareness
+                                        .clone(),
 
-                            resources:
-                                resource_awareness.clone(),
+                                resources:
+                                    resource_awareness
+                                        .clone(),
 
-                            recovery_safety:
-                                recovery_safety_awareness.clone(),
-                        };
+                                recovery_safety:
+                                    recovery_safety_awareness
+                                        .clone(),
+                            };
 
                     println!(
                         "[RESOURCE] {} | candidate={} | state={:?} | Ready={} | labels_match={} | CPU={}m required={}m | memory={}Mi required={}Mi",
-                        Utc::now().to_rfc3339(),
-                        context.resources.candidate_node,
-                        context.resources.state,
-                        context.resources.node_ready,
-                        context.resources.labels_match,
-                        context.resources.allocatable_cpu_millicores,
-                        context.resources.required_cpu_millicores,
-                        context.resources.allocatable_memory_mib,
-                        context.resources.required_memory_mib
+                        Utc::now()
+                            .to_rfc3339(),
+                        context
+                            .resources
+                            .candidate_node,
+                        context
+                            .resources
+                            .state,
+                        context
+                            .resources
+                            .node_ready,
+                        context
+                            .resources
+                            .labels_match,
+                        context
+                            .resources
+                            .allocatable_cpu_millicores,
+                        context
+                            .resources
+                            .required_cpu_millicores,
+                        context
+                            .resources
+                            .allocatable_memory_mib,
+                        context
+                            .resources
+                            .required_memory_mib
                     );
 
                     println!(
                         "[RECOVERY SAFETY] {} | state={:?} | fencing_required={} | fencing_supported={}",
-                        Utc::now().to_rfc3339(),
-                        context.recovery_safety.state,
-                        context.recovery_safety.fencing_required,
-                        context.recovery_safety.fencing_supported
+                        Utc::now()
+                            .to_rfc3339(),
+                        context
+                            .recovery_safety
+                            .state,
+                        context
+                            .recovery_safety
+                            .fencing_required,
+                        context
+                            .recovery_safety
+                            .fencing_supported
                     );
 
                     println!(
                         "[AWARENESS] {} | node={} | operational_state={:?} | workload={} | workload_type={:?} | duplication_sensitive={} | service_criticality={:?} | resource_state={:?} | recovery_candidate={} | recovery_safety={:?} | fencing_required={} | attempts={} | successes={} | failures={}",
-                        Utc::now().to_rfc3339(),
+                        Utc::now()
+                            .to_rfc3339(),
                         target_node,
-                        context.operational_state,
-                        context.workload.name,
-                        context.workload.workload_type,
-                        context.workload.duplication_sensitive,
-                        context.workload.service_criticality,
-                        context.resources.state,
-                        context.resources.candidate_node,
-                        context.recovery_safety.state,
-                        context.recovery_safety.fencing_required,
-                        evidence.attempts,
-                        evidence.successes,
-                        evidence.failures
+                        context
+                            .operational_state,
+                        context
+                            .workload
+                            .name,
+                        context
+                            .workload
+                            .workload_type,
+                        context
+                            .workload
+                            .duplication_sensitive,
+                        context
+                            .workload
+                            .service_criticality,
+                        context
+                            .resources
+                            .state,
+                        context
+                            .resources
+                            .candidate_node,
+                        context
+                            .recovery_safety
+                            .state,
+                        context
+                            .recovery_safety
+                            .fencing_required,
+                        evidence
+                            .attempts,
+                        evidence
+                            .successes,
+                        evidence
+                            .failures
                     );
 
                     let decision_result =
@@ -243,44 +337,68 @@ pub async fn run_suspicion_listener(
 
                     println!(
                         "[DECISION] {} | node={} | decision={:?} | fencing_required={} | reason={}",
-                        Utc::now().to_rfc3339(),
+                        Utc::now()
+                            .to_rfc3339(),
                         target_node,
-                        decision_result.decision,
-                        decision_result.fencing_required,
-                        decision_result.reason
+                        decision_result
+                            .decision,
+                        decision_result
+                            .fencing_required,
+                        decision_result
+                            .reason
                     );
 
                     let enforcement_result =
-                        enforcement::enforce_decision(
-                            &decision_result
-                        );
+                        enforcement::
+                            enforce_decision(
+                                client.clone(),
+                                &decision_result,
+                                &namespace,
+                                &pod_label_selector,
+                                &target_node,
+                                fencing_supported,
+                                &fencing_command,
+                            )
+                            .await?;
 
-                    enforcement::log_enforcement(
-                        &target_node,
-                        &enforcement_result,
-                    );
+                    enforcement::
+                        log_enforcement(
+                            &target_node,
+                            &enforcement_result,
+                        );
                 }
 
-                if previous_ready.as_deref()
-                    == Some(trigger_status.as_str())
-                    && current_ready == "True"
+                if previous_ready
+                    .as_deref()
+                    ==
+                    Some(
+                        trigger_status
+                            .as_str()
+                    )
+                    &&
+                    current_ready
+                        == "True"
                 {
                     println!(
                         "[RECOVERED] {} | node={} | Ready={} -> True",
-                        Utc::now().to_rfc3339(),
+                        Utc::now()
+                            .to_rfc3339(),
                         target_node,
                         trigger_status
                     );
                 }
 
                 previous_ready =
-                    Some(current_ready);
+                    Some(
+                        current_ready
+                    );
             }
 
             Event::Delete(node) => {
                 println!(
                     "[NODE DELETE] {}",
-                    node.metadata
+                    node
+                        .metadata
                         .name
                         .unwrap_or_default()
                 );
