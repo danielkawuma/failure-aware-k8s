@@ -1,6 +1,12 @@
+mod awareness;
 mod config;
+mod decision;
+mod enforcement;
+mod recovery_safety;
+mod resource;
 mod suspicion;
 mod verification;
+mod workload;
 
 use anyhow::Result;
 use config::ControllerConfig;
@@ -40,6 +46,69 @@ async fn main() -> Result<()> {
         config.verification_timeout_ms
     );
 
+    println!(
+        "Verification attempts: {}",
+        config.verification_attempts
+    );
+
+    println!(
+        "Verification interval: {} ms",
+        config.verification_interval_ms
+    );
+
+    let workload_awareness =
+        workload::WorkloadAwareness::new(
+            config.workload_name.clone(),
+            config.workload_type.clone(),
+            config.duplication_sensitive,
+            config.service_criticality.clone(),
+        );
+
+    println!(
+        "Workload: {}",
+        workload_awareness.name
+    );
+
+    println!(
+        "Workload type: {:?}",
+        workload_awareness.workload_type
+    );
+
+    println!(
+        "Duplication sensitive: {}",
+        workload_awareness.duplication_sensitive
+    );
+
+    println!(
+        "Service criticality: {:?}",
+        workload_awareness.service_criticality
+    );
+
+    println!(
+        "Recovery candidate: {}",
+        config.recovery_candidate_node
+    );
+
+    println!(
+        "Required recovery CPU: {}m",
+        config.required_cpu_millicores
+    );
+
+    println!(
+        "Required recovery memory: {} MiB",
+        config.required_memory_mib
+    );
+
+    println!(
+        "Required recovery node labels: {:?}",
+        config.required_node_labels
+    );
+
+    println!(
+        "Fencing supported: {}",
+        config.fencing_supported
+    );
+
     let client =
         Client::try_default().await?;
 
@@ -51,8 +120,20 @@ async fn main() -> Result<()> {
         client,
         config.target_node,
         config.trigger_ready_status,
+
         config.verification_url,
         config.verification_timeout_ms,
+        config.verification_attempts,
+        config.verification_interval_ms,
+
+        workload_awareness,
+
+        config.recovery_candidate_node,
+        config.required_cpu_millicores,
+        config.required_memory_mib,
+        config.required_node_labels,
+
+        config.fencing_supported,
     )
     .await?;
 

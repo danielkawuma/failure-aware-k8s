@@ -5,28 +5,35 @@ metadata:
   namespace: failure-aware
 spec:
   replicas: 1
+
   selector:
     matchLabels:
       app: baseline-web
+
   template:
     metadata:
       labels:
         app: baseline-web
+
     spec:
       nodeSelector:
         experiment-role: fault-target
+
+      tolerations:
+        - key: "node.kubernetes.io/unreachable"
+          operator: "Exists"
+          effect: "NoExecute"
+
+        - key: "node.kubernetes.io/not-ready"
+          operator: "Exists"
+          effect: "NoExecute"
+
       containers:
         - name: nginx
-          image: nginx:1.27
+          image: nginx:alpine
+
           ports:
             - containerPort: 80
-          resources:
-            requests:
-              cpu: "25m"
-              memory: "32Mi"
-            limits:
-              cpu: "100m"
-              memory: "128Mi"
 
 ---
 apiVersion: v1

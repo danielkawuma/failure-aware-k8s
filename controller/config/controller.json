@@ -1,6 +1,21 @@
 {
   "target_node": "k3s-worker1",
   "trigger_ready_status": "Unknown",
+
   "verification_url": "http://102.34.160.87:30364",
-  "verification_timeout_ms": 3000
+  "verification_timeout_ms": 3000,
+  "verification_attempts": 3,
+  "verification_interval_ms": 500,
+
+  "workload_name": "baseline-web",
+  "workload_type": "stateless",
+  "duplication_sensitive": false,
+  "service_criticality": "medium",
+
+  "recovery_candidate_node": "k3s-worker2",
+  "required_cpu_millicores": 100,
+  "required_memory_mib": 128,
+  "required_node_labels": {},
+
+  "fencing_supported": false
 }

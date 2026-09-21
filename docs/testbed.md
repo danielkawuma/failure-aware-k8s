@@ -5876,6 +5876,1786 @@ unreachable
 before additional workload, resource, and recovery-safety awareness is
 introduced.
 
+# 23. Failure-Awareness Engine
+
+Following implementation of native failure-suspicion detection and
+post-suspicion verification, the controller was extended with a
+**Failure-Awareness Engine**.
+
+The purpose of the Failure-Awareness Engine is to transform evidence
+collected after Kubernetes raises failure suspicion into structured
+context for the Recovery Decision Engine.
+
+The implemented awareness model contains four components:
+
+```text
+                 Failure-Awareness Engine
+                           |
+          +----------------+----------------+
+          |                |                |
+          v                v                v
+   Operational         Workload         Resource
+    Awareness          Awareness        Awareness
+          |                |                |
+          +----------------+----------------+
+                           |
+                           v
+                  Recovery-Safety
+                     Awareness
+                           |
+                           v
+                    AwarenessContext
+```
+
+The controller therefore does not treat:
+
+```text
+Ready=Unknown
+```
+
+as sufficient evidence for immediate workload recovery.
+
+Instead, native Kubernetes suspicion is augmented with evidence about:
+
+1. workload operational state;
+2. workload characteristics;
+3. recovery-resource availability; and
+4. recovery safety.
+
+---
+
+## 23.1 Awareness Context
+
+The controller represents the collected evidence through an
+`AwarenessContext`.
+
+Conceptually:
+
+```text
+AwarenessContext
+|
++-- operational_state
+|
++-- workload
+|
++-- resources
+|
++-- recovery_safety
+```
+
+This context becomes the input to the Recovery Decision Engine.
+
+---
+
+# 23A. Operational-State Awareness
+
+The first awareness component determines whether the workload remains
+operationally reachable after Kubernetes has raised native failure
+suspicion.
+
+The implemented path is:
+
+```text
+Ready=True
+     |
+     v
+Ready=Unknown
+     |
+     v
+FailureSuspicion
+     |
+     v
+Bounded Verification
+     |
+     v
+OperationalState
+```
+
+---
+
+## 23A.1 Bounded Verification
+
+The initial single HTTP verification request implemented during
+post-suspicion verification was extended to use multiple bounded probes.
+
+The controller configuration contains:
+
+```json
+"verification_timeout_ms": 3000,
+"verification_attempts": 3,
+"verification_interval_ms": 500
+```
+
+The development configuration therefore uses:
+
+```text
+Verification attempts = 3
+Probe interval        = 500 ms
+Per-request timeout   = 3000 ms
+```
+
+These values represent the current implementation configuration and are
+not treated as experimentally optimized thresholds.
+
+---
+
+## 23A.2 Verification Evidence
+
+Individual verification results are aggregated into:
+
+```text
+VerificationEvidence
+|
++-- attempts
++-- successes
++-- failures
++-- individual results
+```
+
+For example:
+
+```text
+Attempt 1 -> HTTP 200
+Attempt 2 -> HTTP 200
+Attempt 3 -> HTTP 200
+
+Attempts  = 3
+Successes = 3
+Failures  = 0
+```
+
+The individual probe results are retained so that latency and failure
+characteristics can also be analyzed later.
+
+---
+
+## 23A.3 Operational States
+
+The current implementation defines:
+
+```text
+ReachableOutsideControlPlane
+Unreachable
+Indeterminate
+```
+
+The current classification rule is:
+
+```text
+successes > failures
+        |
+        v
+ReachableOutsideControlPlane
+```
+
+If:
+
+```text
+successes = 0
+and
+failures > 0
+```
+
+the state is:
+
+```text
+Unreachable
+```
+
+Otherwise the state is:
+
+```text
+Indeterminate
+```
+
+With three probes:
+
+| Successful | Failed | Classification |
+|---:|---:|---|
+| 3 | 0 | `ReachableOutsideControlPlane` |
+| 2 | 1 | `ReachableOutsideControlPlane` |
+| 1 | 2 | `Indeterminate` |
+| 0 | 3 | `Unreachable` |
+
+This avoids basing operational classification on one potentially
+transient request failure.
+
+---
+
+## 23A.4 Operational-Awareness Validation
+
+Scenario B was reproduced by selectively disrupting Worker 1's
+communication with the Kubernetes API Server.
+
+The controller observed:
+
+```text
+[SUSPICION]
+2026-09-20T19:18:20.940077644+00:00
+node=k3s-worker1
+Ready=Some("True") -> Unknown
+```
+
+The bounded verification produced:
+
+```text
+Attempt 1:
+reachable=true
+HTTP=200
+latency=15.997 ms
+
+Attempt 2:
+reachable=true
+HTTP=200
+latency=17.161 ms
+
+Attempt 3:
+reachable=true
+HTTP=200
+latency=24.263 ms
+```
+
+The resulting classification was:
+
+```text
+operational_state=ReachableOutsideControlPlane
+attempts=3
+successes=3
+failures=0
+```
+
+This confirms that the controller can distinguish:
+
+```text
+control-plane unreachability
+```
+
+from:
+
+```text
+workload unreachability
+```
+
+for the tested Scenario B condition.
+
+The recorded timings are implementation-validation observations rather
+than formal performance results.
+
+---
+
+# 23B. Workload Awareness
+
+Operational reachability alone does not describe the recovery
+characteristics of the affected workload.
+
+The controller was therefore extended with **Workload Awareness**.
+
+The current workload context contains:
+
+```text
+workload name
+workload type
+duplication sensitivity
+service criticality
+```
+
+---
+
+## 23B.1 Current Workload Configuration
+
+The current baseline workload is configured as:
+
+```json
+"workload_name": "baseline-web",
+"workload_type": "stateless",
+"duplication_sensitive": false,
+"service_criticality": "medium"
+```
+
+This represents:
+
+```text
+Workload              = baseline-web
+Workload type         = Stateless
+Duplication sensitive = false
+Service criticality   = Medium
+```
+
+The properties are currently explicitly configured to keep the
+development implementation deterministic.
+
+Where properties can later be reliably discovered from Kubernetes
+objects, they may be derived automatically.
+
+Properties whose semantics cannot safely be inferred from Kubernetes
+metadata alone, such as application-level duplication sensitivity or
+institutional service criticality, should remain explicitly declared
+through workload metadata or policy.
+
+---
+
+## 23B.2 Workload-Awareness Representation
+
+The controller currently represents workload type as:
+
+```text
+Stateless
+Stateful
+```
+
+and service criticality as:
+
+```text
+Low
+Medium
+High
+```
+
+The resulting context is:
+
+```text
+WorkloadAwareness
+|
++-- name
++-- workload_type
++-- duplication_sensitive
++-- service_criticality
+```
+
+---
+
+## 23B.3 Workload-Awareness Validation
+
+During Scenario B validation, the controller produced:
+
+```text
+[SUSPICION]
+2026-09-20T19:31:57.001200109+00:00
+Ready=Some("True") -> Unknown
+```
+
+The bounded probes returned:
+
+```text
+Attempt 1:
+HTTP=200
+latency=18.691 ms
+
+Attempt 2:
+HTTP=200
+latency=19.471 ms
+
+Attempt 3:
+HTTP=200
+latency=14.385 ms
+```
+
+The resulting Awareness Context included:
+
+```text
+operational_state=ReachableOutsideControlPlane
+workload=baseline-web
+workload_type=Stateless
+duplication_sensitive=false
+service_criticality=Medium
+attempts=3
+successes=3
+failures=0
+```
+
+The Node subsequently returned to:
+
+```text
+Ready=True
+```
+
+without affecting the workload-awareness representation.
+
+---
+
+# 23C. Resource Awareness
+
+The Failure-Awareness Engine was subsequently extended with
+**Resource Awareness**.
+
+The purpose of Resource Awareness is to establish whether recovery
+capacity exists if the Decision Engine later determines that recovery
+is required.
+
+Resource Awareness does not itself reschedule the workload.
+
+Actual placement remains the responsibility of the native Kubernetes
+scheduler.
+
+---
+
+## 23C.1 Recovery Candidate
+
+For the current experimental topology:
+
+```text
+Affected node:
+k3s-worker1
+
+Candidate recovery node:
+k3s-worker2
+```
+
+The controller configuration contains:
+
+```json
+"recovery_candidate_node": "k3s-worker2",
+"required_cpu_millicores": 100,
+"required_memory_mib": 128,
+"required_node_labels": {}
+```
+
+The current test workload therefore requires:
+
+```text
+CPU    = 100 millicores
+Memory = 128 MiB
+```
+
+No additional candidate-node label is required for this baseline.
+
+---
+
+## 23C.2 Resource States
+
+The controller defines:
+
+```text
+Available
+Insufficient
+Unavailable
+```
+
+The current implementation considers:
+
+```text
+candidate node exists
+        |
+        v
+candidate Ready?
+        |
+        v
+configured labels satisfied?
+        |
+        v
+CPU requirement satisfied?
+        |
+        v
+memory requirement satisfied?
+        |
+        v
+ResourceState
+```
+
+Resource Awareness contributes evidence to the Decision Engine but does
+not perform placement.
+
+---
+
+## 23C.3 Scheduling Boundary
+
+The controller is not intended to replace or reproduce the complete
+Kubernetes scheduler.
+
+The controller determines whether the configured recovery context
+indicates that recovery capacity exists.
+
+Kubernetes remains responsible for actual Pod placement when recovery
+is subsequently permitted.
+
+The current implementation supports explicitly configured required node
+labels as a limited placement constraint where needed.
+
+---
+
+## 23C.4 Resource-Awareness Validation
+
+During Scenario B, the controller observed:
+
+```text
+[SUSPICION]
+2026-09-20T19:43:46.956047298+00:00
+Ready=Some("True") -> Unknown
+```
+
+All three independent HTTP probes succeeded.
+
+Resource Awareness then produced:
+
+```text
+[RESOURCE]
+2026-09-20T19:43:48.084272725+00:00
+candidate=k3s-worker2
+state=Available
+Ready=true
+labels_match=true
+CPU=4000m required=100m
+memory=3915Mi required=128Mi
+```
+
+The resulting Awareness Context included:
+
+```text
+operational_state=ReachableOutsideControlPlane
+workload=baseline-web
+workload_type=Stateless
+duplication_sensitive=false
+service_criticality=Medium
+resource_state=Available
+recovery_candidate=k3s-worker2
+attempts=3
+successes=3
+failures=0
+```
+
+This confirms that alternative recovery capacity can be represented
+without automatically causing recovery.
+
+---
+
+# 23D. Recovery-Safety Awareness
+
+The fourth component of the Failure-Awareness Engine evaluates whether
+recovery could safely establish another workload authority.
+
+This is particularly important for duplication-sensitive stateful
+workloads where the original workload may continue executing despite
+loss of control-plane communication.
+
+The relevant question is:
+
+```text
+If recovery were selected,
+could another instance safely become authoritative?
+```
+
+---
+
+## 23D.1 Recovery-Safety States
+
+The current implementation defines:
+
+```text
+Safe
+FencingRequired
+Unsafe
+```
+
+For a workload that is not duplication-sensitive:
+
+```text
+duplication_sensitive=false
+        |
+        v
+Safe
+```
+
+For a duplication-sensitive workload where fencing is supported:
+
+```text
+duplication_sensitive=true
+        +
+fencing_supported=true
+        |
+        v
+FencingRequired
+```
+
+For a duplication-sensitive workload where required fencing cannot be
+provided:
+
+```text
+duplication_sensitive=true
+        +
+fencing_supported=false
+        |
+        v
+Unsafe
+```
+
+`FencingRequired` does not mean recovery has already become safe.
+
+It means fencing must successfully complete before another authoritative
+instance may be established.
+
+---
+
+## 23D.2 Current Baseline
+
+The current Nginx workload is:
+
+```text
+Stateless
+Duplication sensitive = false
+```
+
+and therefore does not require fencing.
+
+The current configuration contains:
+
+```json
+"fencing_supported": false
+```
+
+This is acceptable for the current workload because:
+
+```text
+fencing_required=false
+```
+
+---
+
+## 23D.3 Recovery-Safety Validation
+
+During validation, the controller produced:
+
+```text
+[SUSPICION]
+2026-09-20T19:57:12.175368129+00:00
+Ready=Some("True") -> Unknown
+```
+
+The three bounded probes returned:
+
+```text
+12.078 ms
+14.513 ms
+15.191 ms
+```
+
+with HTTP `200` for all three attempts.
+
+Resource Awareness produced:
+
+```text
+candidate=k3s-worker2
+state=Available
+Ready=true
+labels_match=true
+CPU=4000m required=100m
+memory=3915Mi required=128Mi
+```
+
+Recovery-Safety Awareness produced:
+
+```text
+[RECOVERY SAFETY]
+state=Safe
+fencing_required=false
+fencing_supported=false
+```
+
+The complete Awareness Context was:
+
+```text
+operational_state=ReachableOutsideControlPlane
+workload=baseline-web
+workload_type=Stateless
+duplication_sensitive=false
+service_criticality=Medium
+resource_state=Available
+recovery_candidate=k3s-worker2
+recovery_safety=Safe
+fencing_required=false
+attempts=3
+successes=3
+failures=0
+```
+
+---
+
+## 23.2 Completed Failure-Awareness Context
+
+At completion of Step 23, the controller produces:
+
+```text
+AwarenessContext
+|
++-- operational_state
+|     ReachableOutsideControlPlane
+|
++-- workload
+|     name                  = baseline-web
+|     type                  = Stateless
+|     duplication_sensitive = false
+|     service_criticality   = Medium
+|
++-- resources
+|     candidate             = k3s-worker2
+|     state                 = Available
+|
++-- recovery_safety
+      state                 = Safe
+      fencing_required      = false
+```
+
+The complete controller path is now:
+
+```text
+Native Kubernetes Suspicion
+            |
+            v
+Post-Suspicion Verification
+            |
+            v
++-----------------------------------+
+|      Failure-Awareness Engine     |
+|                                   |
+| Operational Awareness             |
+| Workload Awareness                |
+| Resource Awareness                |
+| Recovery-Safety Awareness         |
++-----------------------------------+
+            |
+            v
+      AwarenessContext
+```
+
+---
+
+## 23.3 Failure-Awareness Engine Status
+
+The following components have been implemented and validated:
+
+- [x] Bounded post-suspicion verification
+- [x] Multiple independent verification attempts
+- [x] Verification result aggregation
+- [x] `ReachableOutsideControlPlane`
+- [x] `Unreachable` representation
+- [x] `Indeterminate` representation
+- [x] Workload name awareness
+- [x] Stateful/stateless representation
+- [x] Duplication-sensitivity representation
+- [x] Service-criticality representation
+- [x] Recovery candidate representation
+- [x] Candidate Node health check
+- [x] CPU-capacity check
+- [x] Memory-capacity check
+- [x] Configured required-label check
+- [x] Resource-state classification
+- [x] Recovery-safety classification
+- [x] Fencing requirement representation
+- [x] Combined `AwarenessContext`
+
+The Failure-Awareness Engine is operational for the current baseline
+configuration.
+
+---
+
+# 24. Recovery Decision Engine
+
+Following construction of the complete Awareness Context, the controller
+was extended with a **Recovery Decision Engine**.
+
+The Decision Engine converts the available awareness evidence into one
+of the two policies defined by the proposed architecture:
+
+```text
+PRESERVE
+RECOVER
+```
+
+The Decision Engine itself does not perform eviction, rescheduling, or
+fencing.
+
+It determines which policy the enforcement layer should execute.
+
+---
+
+## 24.1 Decision Flow
+
+The implemented sequence is:
+
+```text
+Native Kubernetes
+        |
+        v
+Failure Suspicion
+        |
+        v
+Post-Suspicion Verification
+        |
+        v
+Failure-Awareness Engine
+        |
+        v
+AwarenessContext
+        |
+        v
+Recovery Decision Engine
+       /                 \
+      v                   v
+ PRESERVE               RECOVER
+```
+
+---
+
+## 24.2 Decision Result
+
+The Decision Engine returns:
+
+```text
+decision
+reason
+fencing_required
+```
+
+The decision itself remains binary:
+
+```text
+Preserve
+Recover
+```
+
+while the fencing flag records whether a selected recovery path has an
+additional safety prerequisite.
+
+---
+
+## 24.3 PRESERVE Rule
+
+If the workload is:
+
+```text
+ReachableOutsideControlPlane
+```
+
+the Decision Engine selects:
+
+```text
+PRESERVE
+```
+
+even when alternative recovery capacity exists.
+
+Therefore:
+
+```text
+ReachableOutsideControlPlane
+        +
+Worker2 Available
+        +
+Recovery Safety = Safe
+        |
+        v
+PRESERVE
+```
+
+The existence of recovery capacity does not by itself justify replacing
+an independently useful workload.
+
+---
+
+## 24.4 Indeterminate Evidence
+
+If the operational state is:
+
+```text
+Indeterminate
+```
+
+the current implementation selects:
+
+```text
+PRESERVE
+```
+
+because the evidence does not justify disruptive recovery.
+
+In this context, `PRESERVE` means:
+
+```text
+do not progress to disruptive recovery under the current evidence
+```
+
+rather than asserting that the workload is known to be healthy.
+
+---
+
+## 24.5 RECOVER Rule
+
+For an unreachable workload:
+
+```text
+OperationalState=Unreachable
+        +
+ResourceState=Available
+        +
+RecoverySafety=Safe
+        |
+        v
+RECOVER
+```
+
+For a duplication-sensitive workload where fencing is available:
+
+```text
+OperationalState=Unreachable
+        +
+ResourceState=Available
+        +
+RecoverySafety=FencingRequired
+        |
+        v
+RECOVER
+        |
+        v
+fencing must complete before replacement
+```
+
+The Decision Engine therefore does not use `RECOVER` to bypass the
+recovery-safety requirements established by the Awareness Engine.
+
+---
+
+## 24.6 Unsafe or Unavailable Recovery
+
+If no suitable recovery capacity exists, the current policy does not
+progress to recovery.
+
+Similarly, if:
+
+```text
+RecoverySafety=Unsafe
+```
+
+because required fencing cannot be provided, disruptive recovery is not
+permitted.
+
+The controller therefore avoids creating another workload authority
+under conditions it has classified as unsafe.
+
+---
+
+## 24.7 Scenario B Decision Validation
+
+Scenario B was reproduced after implementation of the Decision Engine.
+
+The controller observed:
+
+```text
+[SUSPICION]
+2026-09-20T20:03:17.670079738+00:00
+node=k3s-worker1
+Ready=Some("True") -> Unknown
+```
+
+Bounded verification produced:
+
+```text
+Attempt 1: HTTP 200, 20.190 ms
+Attempt 2: HTTP 200, 15.005 ms
+Attempt 3: HTTP 200, 12.526 ms
+```
+
+Resource Awareness produced:
+
+```text
+candidate=k3s-worker2
+state=Available
+Ready=true
+labels_match=true
+CPU=4000m required=100m
+memory=3915Mi required=128Mi
+```
+
+Recovery-Safety Awareness produced:
+
+```text
+state=Safe
+fencing_required=false
+fencing_supported=false
+```
+
+The Awareness Engine therefore produced:
+
+```text
+operational_state=ReachableOutsideControlPlane
+workload=baseline-web
+workload_type=Stateless
+duplication_sensitive=false
+service_criticality=Medium
+resource_state=Available
+recovery_candidate=k3s-worker2
+recovery_safety=Safe
+fencing_required=false
+```
+
+The Decision Engine then emitted:
+
+```text
+[DECISION]
+2026-09-20T20:03:18.799076404+00:00
+node=k3s-worker1
+decision=Preserve
+fencing_required=false
+reason=workload remains reachable outside the control-plane path
+```
+
+---
+
+## 24.8 Scenario B Interpretation
+
+The resulting decision demonstrates:
+
+```text
+Worker2 recovery capacity = Available
+
+Recovery safety           = Safe
+
+              BUT
+
+Worker1 workload          = ReachableOutsideControlPlane
+
+              THEREFORE
+
+Decision                  = PRESERVE
+```
+
+This is the central distinction between native failure suspicion and
+failure-aware recovery policy.
+
+---
+
+## 24.9 Recovery Observation
+
+After the partition was removed, the controller observed:
+
+```text
+[RECOVERED]
+2026-09-20T20:03:38.313348819+00:00
+node=k3s-worker1
+Ready=Unknown -> True
+```
+
+No recovery policy was required from the controller because the selected
+decision was:
+
+```text
+PRESERVE
+```
+
+---
+
+## 24.10 Recovery Decision Engine Status
+
+The following functionality has been implemented:
+
+- [x] Structured `PRESERVE`
+- [x] Structured `RECOVER`
+- [x] Decision reason
+- [x] Fencing prerequisite propagation
+- [x] `ReachableOutsideControlPlane -> PRESERVE`
+- [x] `Indeterminate -> PRESERVE`
+- [x] Unreachable + available resources + safe recovery can produce `RECOVER`
+- [x] Fencing-required recovery represented
+- [x] Unsafe recovery prevented
+- [x] Unavailable recovery capacity prevents recovery progression
+- [x] Scenario B produces `PRESERVE`
+
+The Decision Engine is operational for the current Scenario B
+configuration.
+
+---
+
+# 25. PRESERVE Enforcement
+
+Following implementation of the Recovery Decision Engine, the controller
+was extended with the initial enforcement path for:
+
+```text
+PRESERVE
+```
+
+The objective is to prevent native Kubernetes taint-based eviction from
+turning an ambiguous control-plane partition into unnecessary workload
+replacement when independent evidence indicates that the existing
+workload remains useful.
+
+---
+
+## 25.1 Preservation Must Precede Failure
+
+The controller reaches its decision only after:
+
+```text
+native suspicion
+       |
+       v
+bounded verification
+       |
+       v
+workload awareness
+       |
+       v
+resource awareness
+       |
+       v
+recovery-safety awareness
+       |
+       v
+PRESERVE / RECOVER
+```
+
+The current controller completes this processing quickly.
+
+However, correctness should not depend on the controller always
+finishing before native Kubernetes eviction progresses.
+
+A verification operation could take longer because of:
+
+```text
+network degradation
+request timeouts
+multiple verification attempts
+API delays
+additional recovery-safety checks
+```
+
+Furthermore, once a Pod has already entered deletion, a later
+`PRESERVE` decision cannot be assumed to safely reverse the lifecycle
+operation.
+
+Controller-managed workloads are therefore given a preservation
+capability before failure occurs.
+
+---
+
+## 25.2 Preservation Envelope
+
+The managed workload was configured with explicit `NoExecute`
+tolerations for:
+
+```text
+node.kubernetes.io/unreachable
+node.kubernetes.io/not-ready
+```
+
+without a finite `tolerationSeconds`.
+
+The Pod template therefore contains:
+
+```yaml
+tolerations:
+  - key: "node.kubernetes.io/unreachable"
+    operator: "Exists"
+    effect: "NoExecute"
+
+  - key: "node.kubernetes.io/not-ready"
+    operator: "Exists"
+    effect: "NoExecute"
+```
+
+No value is configured for:
+
+```yaml
+tolerationSeconds:
+```
+
+This allows the existing Pod binding to tolerate the corresponding
+failure taints while the Failure-Aware Controller determines whether the
+workload should be preserved or recovered.
+
+---
+
+## 25.3 Preservation Semantics
+
+The preservation mechanism separates:
+
+```text
+ability to preserve
+```
+
+from:
+
+```text
+decision to preserve
+```
+
+The tolerations provide:
+
+```text
+ability to keep the Pod bound
+```
+
+while the Decision Engine provides:
+
+```text
+PRESERVE
+```
+
+and the enforcement layer provides:
+
+```text
+PreserveExisting
+```
+
+The complete relationship is:
+
+```text
+Preservation Envelope
+        +
+Failure-Aware Evidence
+        +
+PRESERVE Decision
+        |
+        v
+retain existing workload
+and do not initiate recovery
+```
+
+---
+
+## 25.4 Native Kubernetes State Is Retained
+
+The controller does not rewrite native Kubernetes Node health.
+
+During the partition Kubernetes can therefore legitimately report:
+
+```text
+Ready=Unknown
+```
+
+and apply:
+
+```text
+node.kubernetes.io/unreachable
+```
+
+while the affected workload remains independently useful.
+
+The intended condition is:
+
+```text
+Kubernetes:
+Node = Unknown
+
+Controller:
+OperationalState = ReachableOutsideControlPlane
+
+Decision:
+PRESERVE
+
+Enforcement:
+retain existing workload
+```
+
+This avoids falsely reporting the affected Node as healthy.
+
+---
+
+## 25.5 Enforcement Representation
+
+The enforcement layer defines:
+
+```text
+PreserveExisting
+RecoveryPending
+```
+
+For:
+
+```text
+decision=Preserve
+```
+
+the controller emits:
+
+```text
+action=PreserveExisting
+```
+
+For:
+
+```text
+decision=Recover
+```
+
+the current enforcement layer represents:
+
+```text
+RecoveryPending
+```
+
+until the recovery-execution path is implemented.
+
+---
+
+## 25.6 Controller-Side PRESERVE Validation
+
+During the Step 25 Scenario B test, the controller observed:
+
+```text
+[SUSPICION]
+2026-09-20T20:19:56.666593091+00:00
+node=k3s-worker1
+Ready=Some("True") -> Unknown
+```
+
+Bounded verification produced:
+
+```text
+Attempt 1:
+HTTP=200
+latency=12.882 ms
+
+Attempt 2:
+HTTP=200
+latency=14.351 ms
+
+Attempt 3:
+HTTP=200
+latency=17.271 ms
+```
+
+Resource Awareness produced:
+
+```text
+candidate=k3s-worker2
+state=Available
+Ready=true
+labels_match=true
+CPU=4000m required=100m
+memory=3915Mi required=128Mi
+```
+
+Recovery-Safety Awareness produced:
+
+```text
+state=Safe
+fencing_required=false
+fencing_supported=false
+```
+
+The Decision Engine produced:
+
+```text
+[DECISION]
+2026-09-20T20:19:57.791486897+00:00
+node=k3s-worker1
+decision=Preserve
+fencing_required=false
+reason=workload remains reachable outside the control-plane path
+```
+
+The enforcement layer then produced:
+
+```text
+[ENFORCEMENT]
+2026-09-20T20:19:57.791489998+00:00
+node=k3s-worker1
+action=PreserveExisting
+enforced=true
+message=existing workload remains bound; no recovery action initiated
+```
+
+---
+
+## 25.7 Long-Duration PRESERVE Validation
+
+A subsequent long-duration Scenario B experiment was performed to test
+whether the preservation mechanism actually prevented the native
+eviction/replacement sequence.
+
+The control-plane partition was maintained for more than six minutes.
+
+During the partition, the Rust experimental harness continued observing
+the workload.
+
+A Pod observation after this extended period showed:
+
+```text
+[POD]
+2026-09-21T04:26:57.516713760+00:00
+baseline-web-6bcdbcf667-vgfzn
+phase=Running
+node=k3s-worker1
+deletion=
+```
+
+The important properties are:
+
+```text
+Pod:
+baseline-web-6bcdbcf667-vgfzn
+
+Phase:
+Running
+
+Node:
+k3s-worker1
+
+Deletion timestamp:
+absent
+```
+
+Therefore, after more than six minutes of control-plane isolation:
+
+```text
+same Pod remained bound
+        +
+Pod remained Running
+        +
+no deletionTimestamp was assigned
+```
+
+The Pod had not entered the native deletion/eviction path observed in
+the earlier baseline experiment.
+
+---
+
+## 25.8 Recovery After Extended PRESERVE
+
+After the extended partition, control-plane communication was restored.
+
+The workload was then inspected again.
+
+The resulting state was:
+
+```text
+NAME:
+baseline-web-6bcdbcf667-vgfzn
+
+READY:
+1/1
+
+STATUS:
+Running
+
+RESTARTS:
+0
+
+IP:
+10.42.1.8
+
+NODE:
+k3s-worker1
+```
+
+Critically, the Pod name remained:
+
+```text
+baseline-web-6bcdbcf667-vgfzn
+```
+
+before, during, and after the partition.
+
+The Pod also remained on:
+
+```text
+k3s-worker1
+```
+
+with:
+
+```text
+RESTARTS=0
+```
+
+This provides evidence that the workload did not undergo a
+terminate/recreate cycle when control-plane connectivity returned.
+
+---
+
+## 25.9 Interpretation of Repeated Watch Output
+
+The `kubectl ... -w` observation displayed the same Pod more than once:
+
+```text
+baseline-web-6bcdbcf667-vgfzn
+baseline-web-6bcdbcf667-vgfzn
+```
+
+These entries had the same:
+
+```text
+Pod name
+Pod IP
+Node
+```
+
+and represent repeated watch updates for the same Kubernetes object,
+rather than separate workload replicas.
+
+No different replacement Pod identity was observed in the supplied
+post-recovery output.
+
+---
+
+## 25.10 Comparison with Native Baseline
+
+The preservation experiment can now be compared with the earlier native
+Scenario B behavior.
+
+### Native behavior
+
+```text
+Control-plane partition
+        |
+        v
+Ready=Unknown
+        |
+        v
+native failure handling
+        |
+        v
+old Pod enters reconciliation/deletion
+        |
+        v
+replacement Pod created
+        |
+        v
+temporary service interruption observed
+```
+
+### Failure-Aware PRESERVE behavior
+
+```text
+Control-plane partition
+        |
+        v
+Ready=Unknown
+        |
+        v
+bounded verification
+        |
+        v
+workload independently reachable
+        |
+        v
+PRESERVE
+        |
+        v
+PreserveExisting
+        |
+        v
+partition remains >6 minutes
+        |
+        v
+same Pod remains Running
+        |
+        v
+no deletionTimestamp
+        |
+        v
+connectivity restored
+        |
+        v
+same Pod remains Running
+        |
+        v
+RESTARTS=0
+```
+
+The preservation mechanism therefore prevented the Pod lifecycle
+transition observed during the native baseline for this validation run.
+
+---
+
+## 25.11 Independent HTTP Continuity Evidence
+
+The Rust experimental harness was run concurrently with the controller
+during the long-duration validation.
+
+The harness recorded:
+
+```text
+http-observations.csv
+node-observations.csv
+lease-observations.csv
+pod-observations.csv
+taint-observations.csv
+event-observations.csv
+```
+
+The Pod evidence confirms preservation of the original workload
+identity.
+
+The HTTP observation stream should additionally be inspected for:
+
+```text
+success=false
+```
+
+entries across the complete partition and recovery interval.
+
+This can be checked using:
+
+```bash
+grep ',false' \
+  experiments/baseline/scenario-b/runs/<RUN_ID>/http-observations.csv
+```
+
+If no failed observations are returned, this provides the additional
+evidence that the preservation path avoided the temporary HTTP outage
+previously observed during native post-partition reconciliation.
+
+---
+
+## 25.12 Pod-Identity Verification
+
+The harness Pod observations can also be used to verify that only one
+Pod identity was observed throughout the run.
+
+For example:
+
+```bash
+cut -d',' -f2 \
+  experiments/baseline/scenario-b/runs/<RUN_ID>/pod-observations.csv \
+  | sort -u
+```
+
+The expected result for this validation run is:
+
+```text
+baseline-web-6bcdbcf667-vgfzn
+```
+
+This provides a machine-readable confirmation that no replacement Pod
+was introduced during the preserved partition.
+
+---
+
+## 25.13 PRESERVE Enforcement Result
+
+The evidence collected so far demonstrates:
+
+```text
+Native suspicion:
+Ready=Unknown
+
+Controller verification:
+workload independently reachable
+
+Decision:
+PRESERVE
+
+Enforcement:
+PreserveExisting
+
+Partition duration:
+>6 minutes
+
+Pod during partition:
+baseline-web-6bcdbcf667-vgfzn
+Running
+k3s-worker1
+no deletionTimestamp
+
+Pod after recovery:
+baseline-web-6bcdbcf667-vgfzn
+Running
+k3s-worker1
+0 restarts
+```
+
+The central Step 25 property has therefore been demonstrated:
+
+> A controller-managed workload selected for `PRESERVE` can remain
+> bound to the affected worker across an extended control-plane
+> partition instead of automatically progressing through the native
+> eviction/replacement path.
+
+---
+
+## 25.14 Step 25 Validation Status
+
+The following have now been demonstrated:
+
+- [x] `PRESERVE` produced by the Decision Engine
+- [x] Preservation envelope configured
+- [x] `node.kubernetes.io/unreachable` `NoExecute` toleration
+- [x] `node.kubernetes.io/not-ready` `NoExecute` toleration
+- [x] No finite `tolerationSeconds` used
+- [x] `PreserveExisting` enforcement path implemented
+- [x] Native Node health state left unchanged
+- [x] Scenario B produces `Ready=Unknown`
+- [x] Scenario B produces `PRESERVE`
+- [x] Scenario B produces `PreserveExisting`
+- [x] Partition maintained for more than six minutes
+- [x] Original Pod remains `Running` during extended partition
+- [x] Original Pod remains bound to `k3s-worker1`
+- [x] No `deletionTimestamp` observed during extended partition
+- [x] Same Pod identity observed after connectivity restoration
+- [x] Pod remains `Running` after recovery
+- [x] Pod restart count remains `0`
+- [ ] Full HTTP observation stream checked for failed probes
+- [ ] Harness Pod CSV checked for unique Pod identity across complete run
+
+The core PRESERVE enforcement behavior has therefore been successfully
+validated.
+
+The remaining two checks provide additional machine-readable
+confirmation of service continuity and Pod identity and should be
+completed before freezing the Step 25 evidence set.
+
+---
+
+# Current Controller Implementation State
+
+At the completion of the work through Step 25, the implemented
+controller path is:
+
+```text
+                  Native Kubernetes
+                         |
+                         v
+                 Ready=True -> Unknown
+                         |
+                         v
+              Failure-Suspicion Listener
+                         |
+                         v
+                 FailureSuspicion
+                         |
+                         v
+            Post-Suspicion Verification
+                         |
+                         v
+              Bounded HTTP Evidence
+                         |
+                         v
+              Failure-Awareness Engine
+             /        |        |        \
+            /         |        |         \
+           v          v        v          v
+    Operational   Workload  Resource   Recovery
+     Awareness    Awareness Awareness    Safety
+            \         |        |         /
+             \        |        |        /
+                      v
+               AwarenessContext
+                      |
+                      v
+              Recovery Decision
+                 /          \
+                v            v
+           PRESERVE        RECOVER
+                |
+                v
+         PreserveExisting
+                |
+                v
+      Existing workload retained
+```
+
+The next implementation stage is the complementary:
+
+```text
+RECOVER
+   |
+   v
+Recovery Enforcement
+```
+
+path, beginning with recovery of the current stateless baseline before
+introducing fencing for duplication-sensitive stateful workloads.
+
 # 20. Formal EMR Workload
 
 The final workload will use an actual containerised Electronic Medical
