@@ -10283,484 +10283,1414 @@ repetitions have completed.
 
 ---
 
-# 31. Reproducibility Interface
+# Reproducing the Failure-Aware Kubernetes Experiments
 
-A top-level `Makefile` was added to provide a simple experiment
-interface from the repository root.
+This section provides an end-to-end procedure for recreating the experimental
+environment used to evaluate the Failure-Aware Kubernetes Controller.
 
-The intended workflow is:
+The objective is to compare:
 
 ```text
-make build
-make validate
-make campaign
-make analyze
+Native K3s
+    vs.
+K3s + Failure-Aware Controller
 ```
 
-and ultimately:
+under controlled worker/network failure conditions.
+
+The main experiments are:
+
+- **Scenario B — Control-plane partition, workload reachable**
+- **Scenario C — Control-plane and workload path unavailable**
+
+> Run only one experiment or campaign at a time. All experiments use the same
+> Kubernetes cluster, workload, and Worker1 fault-injection rules.
+
+---
+
+## 1. Reference Architecture
+
+The reference testbed consists of three Ubuntu virtual machines:
+
+| Node | Role | Reference IP |
+|---|---|---|
+| `k3s-server` | K3s control plane | `102.34.160.89` |
+| `k3s-worker1` | Primary workload node and fault target | `102.34.160.87` |
+| `k3s-worker2` | Recovery candidate | `102.34.160.103` |
+
+The experiment is controlled from a separate Linux workstation containing the
+repository, Rust controller, measurement harness, automation scripts, and
+`kubectl`.
+
+The logical topology is:
 
 ```text
-make reproduce
+                     Experiment Host
+                    /       |       \
+                   /        |        \
+             kubectl       SSH      HTTP
+                 |           |         |
+                 v           v         v
+          +-------------+  +-------------+
+          | k3s-server  |  | k3s-worker1 |
+          | Control     |  | Fault Target|
+          | Plane       |  | Workload    |
+          +-------------+  +-------------+
+                 |                |
+                 |                |
+                 +----------------+
+                         |
+                         |
+                  +-------------+
+                  | k3s-worker2 |
+                  | Recovery    |
+                  | Candidate   |
+                  +-------------+
+```
+
+Different IP addresses may be used, but all corresponding configuration files
+must be updated consistently.
+
+---
+
+# 2. Operating-System Requirements
+
+The reference environment uses:
+
+```text
+Ubuntu 24.04 LTS
+```
+
+Verify on every node:
+
+```bash
+cat /etc/os-release
+```
+
+Also record:
+
+```bash
+uname -a
+```
+
+Update the operating system:
+
+```bash
+sudo apt update
+sudo apt upgrade -y
+```
+
+Install common utilities:
+
+```bash
+sudo apt install -y \
+  curl \
+  git \
+  wget \
+  ca-certificates \
+  gnupg \
+  jq \
+  openssh-server \
+  iptables \
+  iproute2 \
+  net-tools
+```
+
+Ensure SSH is enabled on the worker nodes:
+
+```bash
+sudo systemctl enable --now ssh
+```
+
+Verify:
+
+```bash
+sudo systemctl status ssh
 ```
 
 ---
 
-## 31.1 Build Target
+# 3. Configure Hostnames
 
-The build target compiles:
+On the control-plane node:
 
-```text
-Rust experimental harness
-Failure-Aware Controller
+```bash
+sudo hostnamectl set-hostname k3s-server
 ```
 
-using:
+On Worker1:
+
+```bash
+sudo hostnamectl set-hostname k3s-worker1
+```
+
+On Worker2:
+
+```bash
+sudo hostnamectl set-hostname k3s-worker2
+```
+
+Verify on each machine:
+
+```bash
+hostname
+```
+
+The expected names are:
+
+```text
+k3s-server
+k3s-worker1
+k3s-worker2
+```
+
+---
+
+# 4. Verify Network Connectivity
+
+Before installing Kubernetes, ensure the nodes can communicate.
+
+From the control-plane node:
+
+```bash
+ping -c 4 102.34.160.87
+ping -c 4 102.34.160.103
+```
+
+From Worker1:
+
+```bash
+ping -c 4 102.34.160.89
+ping -c 4 102.34.160.103
+```
+
+From Worker2:
+
+```bash
+ping -c 4 102.34.160.89
+ping -c 4 102.34.160.87
+```
+
+The exact addresses should be replaced when reproducing the experiment on
+another network.
+
+---
+
+# 5. Configure Time Synchronization
+
+Experimental events are correlated using UTC timestamps.
+
+Check:
+
+```bash
+timedatectl status
+```
+
+Enable network time synchronization if required:
+
+```bash
+sudo timedatectl set-ntp true
+```
+
+Verify:
+
+```bash
+timedatectl status
+```
+
+All experiment hosts should report synchronized clocks.
+
+---
+
+# 6. Install K3s Control Plane
+
+Run the following on `k3s-server`:
+
+```bash
+curl -sfL https://get.k3s.io | sh -
+```
+
+Verify:
+
+```bash
+sudo systemctl status k3s
+```
+
+Check the node:
+
+```bash
+sudo k3s kubectl get nodes
+```
+
+Obtain the worker registration token:
+
+```bash
+sudo cat /var/lib/rancher/k3s/server/node-token
+```
+
+Save this token temporarily. It is required when joining Worker1 and Worker2.
+
+Do not commit the token to Git.
+
+---
+
+# 7. Join Worker1
+
+On `k3s-worker1`, set:
+
+```bash
+export K3S_URL="https://102.34.160.89:6443"
+export K3S_TOKEN="<TOKEN-FROM-K3S-SERVER>"
+```
+
+Install the K3s agent:
+
+```bash
+curl -sfL https://get.k3s.io | \
+  K3S_URL="$K3S_URL" \
+  K3S_TOKEN="$K3S_TOKEN" \
+  sh -
+```
+
+Verify:
+
+```bash
+sudo systemctl status k3s-agent
+```
+
+---
+
+# 8. Join Worker2
+
+On `k3s-worker2`:
+
+```bash
+export K3S_URL="https://102.34.160.89:6443"
+export K3S_TOKEN="<TOKEN-FROM-K3S-SERVER>"
+```
+
+Install:
+
+```bash
+curl -sfL https://get.k3s.io | \
+  K3S_URL="$K3S_URL" \
+  K3S_TOKEN="$K3S_TOKEN" \
+  sh -
+```
+
+Verify:
+
+```bash
+sudo systemctl status k3s-agent
+```
+
+---
+
+# 9. Verify the K3s Cluster
+
+On the server:
+
+```bash
+sudo k3s kubectl get nodes -o wide
+```
+
+Expected:
+
+```text
+NAME          STATUS   ROLES
+k3s-server    Ready    control-plane
+k3s-worker1   Ready
+k3s-worker2   Ready
+```
+
+Record the installed K3s version:
+
+```bash
+k3s --version
+```
+
+For strict reproduction of published measurements, use the same K3s version as
+the reference experiment.
+
+---
+
+# 10. Configure kubectl on the Experiment Host
+
+Install `kubectl` on the workstation used to execute the experiments:
+
+```bash
+curl -LO \
+  "https://dl.k8s.io/release/$(curl -L -s \
+  https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+```
+
+Install:
+
+```bash
+sudo install \
+  -o root \
+  -g root \
+  -m 0755 \
+  kubectl \
+  /usr/local/bin/kubectl
+```
+
+Verify:
+
+```bash
+kubectl version --client
+```
+
+Copy the K3s kubeconfig from the control-plane node:
+
+```text
+/etc/rancher/k3s/k3s.yaml
+```
+
+to:
+
+```text
+$HOME/.kube/config
+```
+
+For example:
+
+```bash
+mkdir -p "$HOME/.kube"
+```
+
+Then copy the file securely from the K3s server and update the `server:` address
+inside the kubeconfig so that it points to the reachable control-plane IP:
+
+```text
+https://102.34.160.89:6443
+```
+
+Protect the file:
+
+```bash
+chmod 600 "$HOME/.kube/config"
+```
+
+Test:
+
+```bash
+kubectl get nodes
+```
+
+All three nodes should be visible.
+
+---
+
+# 11. Install Rust
+
+The Failure-Aware Controller and experiment harness are implemented in Rust.
+
+On the experiment-control host:
+
+```bash
+curl --proto '=https' \
+  --tlsv1.2 \
+  -sSf \
+  https://sh.rustup.rs \
+  | sh
+```
+
+Reload the shell environment:
+
+```bash
+source "$HOME/.cargo/env"
+```
+
+Verify:
+
+```bash
+rustc --version
+cargo --version
+```
+
+---
+
+# 12. Install Experiment-Host Dependencies
+
+Install:
+
+```bash
+sudo apt update
+```
+
+```bash
+sudo apt install -y \
+  git \
+  curl \
+  make \
+  python3 \
+  python3-pip \
+  openssh-client \
+  jq
+```
+
+Verify:
+
+```bash
+git --version
+curl --version
+make --version
+python3 --version
+ssh -V
+```
+
+---
+
+# 13. Clone the Repository
+
+```bash
+git clone <REPOSITORY-URL>
+```
+
+Enter the repository:
+
+```bash
+cd failure-aware-k8s
+```
+
+The important structure is:
+
+```text
+failure-aware-k8s/
+├── Makefile
+├── controller/
+├── harness/
+│   └── config/
+│       ├── scenario-b.json
+│       └── scenario-c.json
+├── scripts/
+│   ├── experiment-config.sh
+│   ├── fault.sh
+│   ├── run-experiment.sh
+│   ├── run-campaign.sh
+│   └── remote/
+│       └── failure-aware-fault.sh
+├── workloads/
+│   └── test-workload/
+│       ├── nginx.yaml
+│       └── nginx-native.yaml
+├── experiments/
+└── analysis/
+    ├── extract_metrics.py
+    └── summarize_results.py
+```
+
+---
+
+# 14. Configure SSH Authentication
+
+The experiment host remotely controls fault injection on Worker1.
+
+If a suitable SSH key does not already exist, create one:
+
+```bash
+ssh-keygen \
+  -t ed25519 \
+  -f "$HOME/.ssh/k8s-aware"
+```
+
+Copy the public key to Worker1:
+
+```bash
+ssh-copy-id \
+  -i "$HOME/.ssh/k8s-aware.pub" \
+  ubuntu@102.34.160.87
+```
+
+Test:
+
+```bash
+ssh \
+  -i "$HOME/.ssh/k8s-aware" \
+  -o BatchMode=yes \
+  ubuntu@102.34.160.87 \
+  hostname
+```
+
+Expected:
+
+```text
+k3s-worker1
+```
+
+---
+
+# 15. Verify Passwordless sudo
+
+The remote experiment account must be able to execute the fault helper without
+an interactive password prompt.
+
+Test:
+
+```bash
+ssh \
+  -i "$HOME/.ssh/k8s-aware" \
+  ubuntu@102.34.160.87 \
+  'sudo -n true && echo "passwordless sudo works"'
+```
+
+Expected:
+
+```text
+passwordless sudo works
+```
+
+If the selected account does not already have passwordless sudo, configure the
+account according to the security policy of the reproduction environment before
+continuing.
+
+---
+
+# 16. Configure the Local SSH Key Variable
+
+The repository deliberately does not contain a hard-coded private-key path.
+
+Configure the local path:
+
+```bash
+export SSH_KEY="$HOME/.ssh/k8s-aware"
+```
+
+Verify:
+
+```bash
+echo "$SSH_KEY"
+```
+
+To make it persistent:
+
+```bash
+echo 'export SSH_KEY="$HOME/.ssh/k8s-aware"' \
+  >> "$HOME/.bashrc"
+```
+
+Reload:
+
+```bash
+source "$HOME/.bashrc"
+```
+
+The private key must never be committed to Git.
+
+---
+
+# 17. Install the Remote Fault Helper
+
+From the repository root:
+
+```bash
+scp \
+  -i "$SSH_KEY" \
+  scripts/remote/failure-aware-fault.sh \
+  ubuntu@102.34.160.87:/tmp/failure-aware-fault
+```
+
+Install on Worker1:
+
+```bash
+ssh \
+  -i "$SSH_KEY" \
+  ubuntu@102.34.160.87 \
+  'sudo install \
+     -o root \
+     -g root \
+     -m 0755 \
+     /tmp/failure-aware-fault \
+     /usr/local/sbin/failure-aware-fault'
+```
+
+Test:
+
+```bash
+ssh \
+  -i "$SSH_KEY" \
+  ubuntu@102.34.160.87 \
+  'sudo -n /usr/local/sbin/failure-aware-fault clear-all'
+```
+
+---
+
+# 18. Configure the Experiment
+
+Review:
+
+```text
+scripts/experiment-config.sh
+```
+
+The reference testbed uses:
+
+```bash
+NAMESPACE="failure-aware"
+LABEL_SELECTOR="app=baseline-web"
+
+WORKER1_NODE="k3s-worker1"
+WORKER2_NODE="k3s-worker2"
+
+WORKER1_IP="102.34.160.87"
+WORKER2_IP="102.34.160.103"
+
+WORKER1_SSH="ubuntu@102.34.160.87"
+
+API_SERVER_IP="102.34.160.89"
+API_SERVER_PORT="6443"
+
+NODEPORT="30364"
+
+BASELINE_SECONDS="10"
+
+SCENARIO_B_FAULT_SECONDS="360"
+
+SCENARIO_C_TIMEOUT_SECONDS="420"
+
+POST_CLEAR_SECONDS="20"
+```
+
+If the new testbed uses different IP addresses, update them here.
+
+Do not place the private-key path in this file. It is provided through:
+
+```text
+SSH_KEY
+```
+
+---
+
+# 19. Configure Harness Observation Targets
+
+Review:
+
+```text
+harness/config/scenario-b.json
+harness/config/scenario-c.json
+```
+
+Update the service targets for the new environment.
+
+For example:
+
+```json
+"service_targets": [
+  {
+    "node": "k3s-worker1",
+    "url": "http://102.34.160.87:30364"
+  },
+  {
+    "node": "k3s-worker2",
+    "url": "http://102.34.160.103:30364"
+  }
+]
+```
+
+Also verify:
+
+```text
+target_node
+namespace
+pod_label_selector
+request_interval_ms
+request_timeout_ms
+```
+
+These JSON files configure the **measurement harness**.
+
+They do not inject faults.
+
+---
+
+# 20. Configure the Controller
+
+Review the controller configuration under:
+
+```text
+controller/config/
+```
+
+Verify:
+
+```text
+target node
+verification URL
+verification timeout
+verification attempts
+verification interval
+workload
+workload type
+duplication sensitivity
+service criticality
+fencing support
+fencing command
+```
+
+The controller uses Kubernetes' native:
+
+```text
+Ready=Unknown
+```
+
+transition as the failure-suspicion trigger.
+
+---
+
+# 21. Create the Experiment Namespace
+
+Run:
+
+```bash
+kubectl create namespace failure-aware
+```
+
+If it already exists, verify:
+
+```bash
+kubectl get namespace failure-aware
+```
+
+---
+
+# 22. Configure Node Labels
+
+The workload manifests require Worker1 and Worker2 to be eligible according to
+the documented experiment placement policy.
+
+Inspect the supplied manifests:
+
+```bash
+cat workloads/test-workload/nginx.yaml
+```
+
+```bash
+cat workloads/test-workload/nginx-native.yaml
+```
+
+Apply the required experiment labels to the appropriate nodes.
+
+Verify:
+
+```bash
+kubectl get nodes --show-labels
+```
+
+The intended experimental behavior is:
+
+```text
+Initial workload
+      |
+      v
+k3s-worker1
+
+Recovery
+      |
+      v
+k3s-worker2
+```
+
+---
+
+# 23. Deploy the Test Workload
+
+For initial validation, deploy the Failure-Aware workload:
+
+```bash
+kubectl apply \
+  -f workloads/test-workload/nginx.yaml
+```
+
+Wait:
+
+```bash
+kubectl rollout status \
+  deployment/baseline-web \
+  -n failure-aware
+```
+
+Check:
+
+```bash
+kubectl get pods \
+  -n failure-aware \
+  -l app=baseline-web \
+  -o wide
+```
+
+The Pod should initially run on:
+
+```text
+k3s-worker1
+```
+
+---
+
+# 24. Verify the Service
+
+Check:
+
+```bash
+kubectl get service \
+  -n failure-aware \
+  baseline-web
+```
+
+The reference NodePort is:
+
+```text
+30364
+```
+
+Test Worker1:
+
+```bash
+curl \
+  --connect-timeout 3 \
+  http://102.34.160.87:30364
+```
+
+A successful Nginx response should be returned.
+
+---
+
+# 25. Build the Controller and Harness
+
+From the repository root:
 
 ```bash
 make build
 ```
 
-This invokes Cargo for the harness and controller.
+Alternatively:
+
+```bash
+cd controller
+cargo build
+```
+
+and:
+
+```bash
+cd ../harness
+cargo build
+```
+
+Return to the repository root:
+
+```bash
+cd ..
+```
+
+The expected binaries are:
+
+```text
+controller/target/debug/failure-aware-controller
+harness/target/debug/failure-aware-harness
+```
 
 ---
 
-## 31.2 Validation Target
+# 26. Validate the Environment
 
-The environment can be checked using:
+Run:
 
 ```bash
 make validate
 ```
 
-Validation includes:
+The validation checks:
 
 ```text
-SSH access to Worker1
+SSH access
 passwordless sudo
-Kubernetes API access
-baseline Deployment
-baseline Service
-compiled harness binary
-compiled controller binary
+Kubernetes access
+Deployment availability
+Service availability
+controller binary
+harness binary
 ```
 
-This allows testbed problems to be detected before a long campaign is
-started.
+Do not begin formal experiments if this step fails.
 
 ---
 
-## 31.3 Campaign Targets
+# 27. Test Fault Injection
 
-Individual campaign targets are provided for:
+Before applying a fault:
 
-```text
-scenario-c-native
-scenario-c-failure-aware
-scenario-b-native
-scenario-b-failure-aware
+```bash
+./scripts/fault.sh clear-all
 ```
 
-The combined campaign target executes the experiments sequentially.
+## Scenario B
 
-Sequential execution is required because the experiments share the same
-cluster and fault target.
+Apply:
 
----
-
-## 31.4 Reproduce Target
-
-The intended top-level reproducibility workflow is:
-
-```text
-make reproduce
-        |
-        v
-build
-        |
-        v
-validate
-        |
-        v
-campaign
-        |
-        v
-analyze
+```bash
+./scripts/fault.sh scenario-b apply
 ```
 
-This command assumes that the documented Kubernetes testbed already
-exists.
-
-It does not provision:
+This blocks:
 
 ```text
-virtual machines
-K3s
-network interfaces
-SSH keys
+Worker1 -> K3s API Server:6443
 ```
 
-Those testbed prerequisites remain documented separately.
+while leaving the workload service path available.
 
----
+Observe:
 
-# 32. Automated Metric Extraction
+```bash
+kubectl get nodes -w
+```
 
-The experimental campaign produces detailed raw observations.
+After validation, clear:
 
-To convert these into a form suitable for statistical analysis, an
-analysis pipeline was added under:
+```bash
+./scripts/fault.sh scenario-b clear
+```
+
+Wait until Worker1 returns to:
 
 ```text
-analysis/
-├── extract_metrics.py
-├── summarize_results.py
-└── results/
+Ready
 ```
 
 ---
 
-## 32.1 `extract_metrics.py`
+## Scenario C
 
-This script recursively reads:
+Determine the current workload Pod IP:
+
+```bash
+kubectl get pods \
+  -n failure-aware \
+  -l app=baseline-web \
+  -o wide
+```
+
+Apply:
+
+```bash
+./scripts/fault.sh \
+  scenario-c \
+  apply \
+  <POD-IP>
+```
+
+This creates both:
+
+```text
+control-plane path failure
++
+workload path failure
+```
+
+Clear:
+
+```bash
+./scripts/fault.sh scenario-c clear
+```
+
+Finally:
+
+```bash
+./scripts/fault.sh clear-all
+```
+
+---
+
+# 28. Verify the Formal Starting State
+
+Before every formal experiment:
+
+```bash
+kubectl get nodes
+```
+
+must show:
+
+```text
+k3s-server    Ready
+k3s-worker1   Ready
+k3s-worker2   Ready
+```
+
+The workload should satisfy:
+
+```text
+exactly one experiment Pod
+Running
+no deletionTimestamp
+scheduled on k3s-worker1
+Pod IP assigned
+HTTP successful
+```
+
+The experiment runner also validates and normalizes this state automatically.
+
+---
+
+# 29. Execute One Experiment
+
+The syntax is:
+
+```bash
+./scripts/run-experiment.sh \
+  <scenario> \
+  <mode> \
+  <run-number>
+```
+
+Examples:
+
+### Scenario B — Native
+
+```bash
+./scripts/run-experiment.sh \
+  scenario-b \
+  native \
+  001
+```
+
+### Scenario B — Failure-Aware
+
+```bash
+./scripts/run-experiment.sh \
+  scenario-b \
+  failure-aware \
+  001
+```
+
+### Scenario C — Native
+
+```bash
+./scripts/run-experiment.sh \
+  scenario-c \
+  native \
+  001
+```
+
+### Scenario C — Failure-Aware
+
+```bash
+./scripts/run-experiment.sh \
+  scenario-c \
+  failure-aware \
+  001
+```
+
+---
+
+# 30. Expected Scenario B Behavior
+
+Scenario B creates:
+
+```text
+Kubernetes control-plane path   FAILED
+Application path                AVAILABLE
+```
+
+Native Kubernetes eventually follows its normal node-failure handling.
+
+The Failure-Aware controller should observe:
+
+```text
+Ready=Unknown
+      |
+      v
+SUSPICION
+      |
+      v
+bounded verification
+      |
+      v
+ReachableOutsideControlPlane
+      |
+      v
+PRESERVE
+```
+
+The existing workload should remain bound.
+
+---
+
+# 31. Expected Scenario C Behavior
+
+Scenario C creates:
+
+```text
+Kubernetes control-plane path   FAILED
+Application path                FAILED
+```
+
+The Failure-Aware controller should observe:
+
+```text
+Ready=Unknown
+      |
+      v
+SUSPICION
+      |
+      v
+verification failures
+      |
+      v
+Unreachable
+      |
+      v
+resource check
+      |
+      v
+recovery-safety check
+      |
+      v
+RECOVER
+      |
+      v
+release original workload
+      |
+      v
+replacement on Worker2
+      |
+      v
+HTTP restored
+```
+
+Recovery is considered complete only when:
+
+```text
+replacement Pod != original Pod
+replacement Pod = Running
+replacement node = k3s-worker2
+HTTP = successful
+```
+
+---
+
+# 32. Run the Formal Campaigns
+
+`run-experiment.sh` executes one run.
+
+`run-campaign.sh` repeats that experiment.
+
+The formal campaigns are:
+
+```bash
+./scripts/run-campaign.sh \
+  scenario-b \
+  native \
+  30
+```
+
+```bash
+./scripts/run-campaign.sh \
+  scenario-b \
+  failure-aware \
+  30
+```
+
+```bash
+./scripts/run-campaign.sh \
+  scenario-c \
+  native \
+  30
+```
+
+```bash
+./scripts/run-campaign.sh \
+  scenario-c \
+  failure-aware \
+  30
+```
+
+Run these **sequentially**.
+
+Do not run multiple campaigns against the same testbed simultaneously.
+
+---
+
+# 33. Resume an Interrupted Campaign
+
+A successfully completed run contains:
+
+```text
+COMPLETE
+```
+
+For example:
+
+```text
+experiments/evaluation/
+└── scenario-b/
+    └── native/
+        └── run-001/
+            └── COMPLETE
+```
+
+Completed runs are skipped when the campaign is restarted.
+
+If a run was interrupted and does not contain `COMPLETE`, remove only the
+partial run directory before resuming.
+
+For example:
+
+```bash
+rm -rf \
+  experiments/evaluation/scenario-b/native/run-014
+```
+
+Then:
+
+```bash
+./scripts/run-campaign.sh \
+  scenario-b \
+  native \
+  30
+```
+
+Previously completed runs are retained.
+
+---
+
+# 34. Experiment Outputs
+
+Results are stored under:
 
 ```text
 experiments/evaluation/
 ```
 
-and creates one row per experimental run.
-
-The resulting master dataset is:
-
-```text
-analysis/results/run-metrics.csv
-```
-
-The script extracts fields including:
-
-```text
-scenario
-mode
-run
-valid
-invalid_reason
-
-fault_time
-suspicion_time
-decision_time
-
-replacement_pending_time
-replacement_running_time
-
-service_restored_time
-fault_clear_time
-
-suspicion_delay_s
-decision_delay_s
-recovery_release_delay_s
-
-replacement_pending_delay_s
-replacement_running_delay_s
-
-service_recovery_s
-http_outage_s
-
-original_pod
-replacement_pod
-
-original_node
-replacement_node
-
-replacement_occurred
-decision
-
-first_http_failure_time
-first_http_success_after_failure_time
-
-recovery_release_time
-```
-
----
-
-## 32.2 Invalid Run Detection
-
-The extractor does not assume that every experiment directory is valid.
-
-It verifies the presence of important artifacts such as:
+A completed run contains files such as:
 
 ```text
 COMPLETE
+controller.log
 experiment-metadata.json
+fault-time.txt
+fault-clear-time.txt
+harness.log
 http-observations.csv
+lease-observations.csv
+node-observations.csv
 pod-observations.csv
+taint-observations.csv
+event-observations.csv
+pods-before.txt
+pods-after.txt
+nodes-before.txt
+nodes-after.txt
 ```
 
-Scenario C additionally requires:
+Scenario C additionally records:
 
 ```text
-replacement observed
-service restoration observed
+replacement-pod.txt
+service-restored-time.txt
 ```
-
-Invalid runs remain visible in the master dataset with:
-
-```text
-valid=false
-```
-
-and an explanation under:
-
-```text
-invalid_reason
-```
-
-This allows incomplete or interrupted experiments to be audited instead
-of silently contaminating the final statistics.
-
-A partially executed Scenario B run was correctly identified as:
-
-```text
-COMPLETE marker missing
-HTTP observations missing
-Pod observations missing
-```
-
-and excluded from the valid-run count.
 
 ---
 
-## 32.3 Derived Timing Metrics
+# 35. Evaluation Metrics
 
-The analysis derives several timing quantities.
+Six primary metrics are evaluated.
 
-### Suspicion delay
+| Metric | Definition |
+|---|---|
+| FDL | Failure Detection Latency |
+| FCL | Failure Classification Latency |
+| DTD | Decision Timing Difference |
+| WSL | Workload Switching Latency |
+| SID | Service Interruption Duration |
+| ERL | End-to-End Recovery Latency |
 
-```text
-T_suspicion - T_fault
-```
-
-This represents the delay between fault injection and native Kubernetes
-node suspicion observed by the controller.
-
-### Decision delay
-
-```text
-T_decision - T_suspicion
-```
-
-For Failure-Aware runs this includes bounded verification, awareness
-classification and recovery decision generation.
-
-### Recovery-release delay
+### FDL
 
 ```text
-T_release - T_decision
-```
-
-This measures controller enforcement overhead after `RECOVER` has been
-selected.
-
-### Replacement Pending delay
-
-```text
-T_replacement_pending - T_fault
-```
-
-### Replacement Running delay
-
-```text
-T_replacement_running - T_fault
-```
-
-### Service-recovery time
-
-```text
-T_service_restored - T_fault
-```
-
-### Observed HTTP outage duration
-
-```text
-first successful HTTP after failure
+FDL =
+T_suspicion
 -
-first observed HTTP failure
+T_fault
+```
+
+### FCL
+
+```text
+FCL =
+T_classification
+-
+T_suspicion
+```
+
+### DTD
+
+DTD compares the Failure-Aware decision timing with the corresponding observable
+native Kubernetes recovery-action timing.
+
+### WSL
+
+```text
+WSL =
+T_replacement_running
+-
+T_replacement_pending
+```
+
+### SID
+
+```text
+SID =
+T_first_HTTP_success_after_failure
+-
+T_first_HTTP_failure
+```
+
+### ERL
+
+```text
+ERL =
+T_service_restored
+-
+T_fault
 ```
 
 ---
 
-## 32.4 Recovery Time and HTTP Outage Are Different Metrics
+# 36. Analyze the Results
 
-Two separate service metrics are intentionally retained:
+Extract metrics:
 
-```text
-service_recovery_s
-http_outage_s
+```bash
+python3 analysis/extract_metrics.py
 ```
 
-They answer different questions.
-
-### `service_recovery_s`
-
-Measured by the experiment orchestrator:
-
-```text
-fault introduced
-        |
-        v
-replacement Running on required node
-        +
-HTTP success
-```
-
-### `http_outage_s`
-
-Measured from the independent Rust HTTP probe:
-
-```text
-first observed failed request
-        |
-        v
-first subsequent successful request
-```
-
-Because the harness samples HTTP periodically, the two values do not
-need to be identical.
-
-The distinction is useful when presenting both:
-
-```text
-control/recovery completion
-```
-
-and:
-
-```text
-user-visible service outage
-```
-
----
-
-# 32.5 Preliminary Scenario C Comparison
-
-The current preliminary data demonstrates the intended difference
-between native Kubernetes and Failure-Aware recovery.
-
-A representative native Scenario C run observed service restoration at
-approximately:
-
-```text
-350.5 s after fault injection
-```
-
-The first three automated Failure-Aware Scenario C runs observed
-service restoration approximately at:
-
-```text
-Run 001: 66.3 s
-Run 002: 61.6 s
-Run 003: 66.7 s
-```
-
-The Failure-Aware timeline can be decomposed as:
-
-```text
-fault
-  |
-  +---- Kubernetes reaches Ready=Unknown
-  |
-  +---- independent bounded verification
-  |
-  +---- awareness classification
-  |
-  +---- RECOVER decision
-  |
-  +---- recovery release
-  |
-  +---- replacement starts
-  |
-  +---- HTTP restored
-```
-
-For example, a representative run observed:
-
-```text
-fault -> suspicion:
-approximately 47.2 s
-
-suspicion -> RECOVER decision:
-approximately 13.3 s
-
-decision -> recovery release:
-approximately 0.02 s
-
-fault -> replacement Running:
-approximately 61.4 s
-
-fault -> service restored:
-approximately 66.3 s
-```
-
-These values remain preliminary until all repeated runs have completed.
-
----
-
-# 32.6 Preliminary Scenario B Comparison
-
-Current automated Scenario B observations also show the expected
-behavioral difference.
-
-Native runs have generally observed:
-
-```text
-replacement Running
-approximately 343–355 s after fault
-```
-
-whereas the representative Failure-Aware run produced:
-
-```text
-suspicion
-approximately 46.6 s after fault
-
-decision
-approximately 2.3 s after suspicion
-
-decision=PRESERVE
-
-replacement_occurred=false
-```
-
-The purpose of the completed 30-run campaign will be to quantify this
-difference statistically.
-
----
-
-# 33. Statistical Summary
-
-The second analysis script:
-
-```text
-analysis/summarize_results.py
-```
-
-reads:
+This creates:
 
 ```text
 analysis/results/run-metrics.csv
 ```
 
-and computes summary statistics for each:
+Generate summary statistics:
 
-```text
-Scenario × Mode × Metric
+```bash
+python3 analysis/summarize_results.py
 ```
 
-The output is:
+This creates:
 
 ```text
 analysis/results/summary.csv
 ```
 
-The reported statistics include:
+Alternatively:
+
+```bash
+make analyze
+```
+
+The statistical summary includes:
 
 ```text
 n
@@ -10769,177 +11699,158 @@ sample standard deviation
 95% confidence interval
 minimum
 maximum
-```
-
-For sample sizes up to 30, the analysis uses the Student's
-`t` distribution for the 95% confidence interval.
-
-For a sample mean:
-
-```text
-CI95 =
-mean ± t × (s / sqrt(n))
-```
-
-where:
-
-```text
-s = sample standard deviation
-n = number of valid runs
-```
-
-For the planned 30-run configuration:
-
-```text
-df = 29
-```
-
----
-
-# 33.1 Behavioral Statistics
-
-In addition to timing measurements, the summary records:
-
-```text
 replacement count
 replacement rate
-PRESERVE decision count
-RECOVER decision count
-```
-
-These metrics are particularly important for Scenario B.
-
-The intended comparison is:
-
-```text
-Native Kubernetes
-    unnecessary replacement count
-
-vs
-
-Failure-Aware
-    PRESERVE count
-    replacement count
+PRESERVE count
+RECOVER count
 ```
 
 ---
 
-# 34. Planned Results Presentation
+# 37. One-Command Reproduction After Testbed Setup
 
-Once the repeated campaigns complete, the final results should contain
-both numerical tables and timeline visualizations.
+Once Sections 1–24 have been completed, the repository provides:
 
-For Scenario C, the presentation should show the different recovery
-paths:
-
-```text
-Native Kubernetes
-
-Fault
-  |
-  +---------------- native node-failure handling ----------------+
-                                                               |
-                                                               v
-                                                         replacement
-                                                               |
-                                                               v
-                                                        HTTP restored
+```bash
+make build
 ```
 
-compared with:
+to build the software,
 
-```text
-Failure-Aware Controller
-
-Fault
-  |
-  v
-Ready=Unknown
-  |
-  v
-bounded verification
-  |
-  v
-RECOVER
-  |
-  v
-release
-  |
-  v
-replacement
-  |
-  v
-HTTP restored
+```bash
+make validate
 ```
 
-The final presentation should therefore include:
+to check the environment,
 
-```text
-mean suspicion delay
-mean decision delay
-mean replacement delay
-mean service recovery time
-mean observed HTTP outage
-95% confidence intervals
-replacement frequency
-PRESERVE/RECOVER decision counts
+```bash
+make campaign
 ```
 
-The raw timestamp traces remain available for explaining how the
-aggregate results were derived.
+to execute the repeated experiments, and
+
+```bash
+make analyze
+```
+
+to analyze the results.
+
+The complete prepared-testbed workflow is:
+
+```bash
+make reproduce
+```
+
+which performs:
+
+```text
+BUILD
+  |
+  v
+VALIDATE
+  |
+  v
+CAMPAIGNS
+  |
+  v
+ANALYSIS
+```
+
+`make reproduce` deliberately does not provision the Ubuntu VMs or install the
+K3s cluster. Those infrastructure steps are documented above because they
+normally require environment-specific networking and administrative access.
 
 ---
 
-# 35. Current Status
+# 38. Final Reproduction Checklist
 
-At the current stage:
+Before starting formal measurements:
 
 ```text
-Failure-Aware Controller implementation      COMPLETE
-
-PRESERVE path                                COMPLETE
-RECOVER path                                 COMPLETE
-Fencing gate                                COMPLETE
-
-Rust experimental harness                    COMPLETE
-Dynamic HTTP observation                     COMPLETE
-
-Automated single-run execution               COMPLETE
-Environment-reset automation                 COMPLETE
-Campaign automation                          COMPLETE
-Run validity checking                        COMPLETE
-
-Reproducibility Makefile                     COMPLETE
-
-Metric extraction                            COMPLETE
-Statistical summarization                    COMPLETE
-
-30-run experimental campaigns                IN PROGRESS
-
-Final statistical tables                     PENDING
-Final plots                                   PENDING
-Final results interpretation                  PENDING
+[ ] Ubuntu 24.04 LTS installed on all three nodes
+[ ] System packages installed
+[ ] Clocks synchronized
+[ ] Hostnames configured
+[ ] Nodes can communicate
+[ ] K3s server installed
+[ ] Worker1 joined
+[ ] Worker2 joined
+[ ] All nodes Ready
+[ ] kubectl installed on experiment host
+[ ] kubeconfig configured
+[ ] Rust/Cargo installed
+[ ] Repository cloned
+[ ] SSH key created
+[ ] Public key installed on Worker1
+[ ] SSH_KEY exported
+[ ] Passwordless sudo verified
+[ ] Remote fault helper installed
+[ ] experiment-config.sh reviewed
+[ ] scenario-b.json reviewed
+[ ] scenario-c.json reviewed
+[ ] Controller configuration reviewed
+[ ] Required Kubernetes node labels applied
+[ ] Namespace created
+[ ] Test workload deploys successfully
+[ ] NodePort responds successfully
+[ ] Controller builds
+[ ] Harness builds
+[ ] Scenario B fault apply/clear verified
+[ ] Scenario C fault apply/clear verified
+[ ] No stale iptables rules remain
+[ ] make validate succeeds
 ```
 
-The implementation phase is therefore substantially complete.
+---
 
-The remaining work is primarily:
+# 39. Record Software Versions
+
+For experimental traceability, record:
+
+```bash
+uname -a
+```
+
+```bash
+cat /etc/os-release
+```
+
+```bash
+kubectl version
+```
+
+```bash
+rustc --version
+```
+
+```bash
+cargo --version
+```
+
+```bash
+python3 --version
+```
+
+and on the K3s server:
+
+```bash
+k3s --version
+```
+
+These versions should accompany the final experiment dataset.
+
+---
+
+# 40. Files That Must Not Be Committed
+
+Do not commit:
 
 ```text
-complete repeated runs
-        |
-        v
-extract final metrics
-        |
-        v
-compute final statistics
-        |
-        v
-generate plots and tables
-        |
-        v
-interpret Native vs Failure-Aware results
-        |
-        v
-prepare final report and presentation
+SSH private keys
+K3s node tokens
+local kubeconfig credentials
+Rust target directories
+temporary logs
+partial experiment runs
+local environment files
 ```

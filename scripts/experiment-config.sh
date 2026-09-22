@@ -16,7 +16,18 @@ WORKER2_IP="102.34.160.103"
 
 WORKER1_SSH="ubuntu@102.34.160.87"
 
-SSH_KEY="/home/daniel/.ssh/k8s-aware"
+SSH_KEY="${SSH_KEY:-}"
+
+if [[ -z "${SSH_KEY}" ]]; then
+    echo "ERROR: SSH_KEY is not configured."
+    echo 'Set it using: export SSH_KEY="$HOME/.ssh/<your-private-key>"'
+    exit 1
+fi
+
+if [[ ! -f "${SSH_KEY}" ]]; then
+    echo "ERROR: SSH private key not found: ${SSH_KEY}"
+    exit 1
+fi
 
 API_SERVER_IP="102.34.160.89"
 API_SERVER_PORT="6443"
@@ -34,6 +45,7 @@ BASELINE_SECONDS="10"
 # Kubernetes eviction period.
 #
 SCENARIO_B_FAULT_SECONDS="360"
+# SCENARIO_B_FAULT_SECONDS="90"
 
 #
 # Scenario C waits for service recovery on Worker2.

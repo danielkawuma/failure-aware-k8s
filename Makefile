@@ -43,8 +43,15 @@ validate: validate-ssh validate-k8s validate-binaries
 
 validate-ssh:
 	@echo "Validating SSH and passwordless sudo..."
+	@test -n "$$SSH_KEY" || \
+		(echo "ERROR: SSH_KEY is not set."; \
+		 echo 'Set it using: export SSH_KEY="$$HOME/.ssh/<your-private-key>"'; \
+		 exit 1)
+	@test -f "$$SSH_KEY" || \
+		(echo "ERROR: SSH key not found: $$SSH_KEY"; \
+		 exit 1)
 	ssh \
-		-i /home/daniel/.ssh/k8s-aware \
+		-i "$$SSH_KEY" \
 		-o BatchMode=yes \
 		-o ConnectTimeout=5 \
 		ubuntu@102.34.160.87 \
