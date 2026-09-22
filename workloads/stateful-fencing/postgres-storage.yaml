@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgres-fencing-pv
+spec:
+  capacity:
+    storage: 2Gi
+
+  accessModes:
+    - ReadWriteOnce
+
+  persistentVolumeReclaimPolicy: Retain
+
+  storageClassName: postgres-fencing
+
+  mountOptions:
+    - hard
+    - nfsvers=4.1
+
+  nfs:
+    server: 102.34.160.89
+    path: /srv/failure-aware/postgres
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-fencing-pvc
+  namespace: failure-aware
+spec:
+  accessModes:
+    - ReadWriteOnce
+
+  storageClassName: postgres-fencing
+
+  resources:
+    requests:
+      storage: 2Gi

@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fenced-postgres
+  namespace: failure-aware
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: fenced-postgres
+
+  template:
+    metadata:
+      labels:
+        app: fenced-postgres
+
+    spec:
+      nodeSelector:
+        experiment-role: fault-target
+
+      tolerations:
+        - key: "node.kubernetes.io/unreachable"
+          operator: "Exists"
+          effect: "NoExecute"
+
+        - key: "node.kubernetes.io/not-ready"
+          operator: "Exists"
+          effect: "NoExecute"
+
+      containers:
+        - name: postgres
+          image: postgres:16-alpine
+
+          env:
+            - name: POSTGRES_PASSWORD
+              value: failure-aware-test
+
+            - name: POSTGRES_DB
+              value: fencing_test
+
+          ports:
+            - containerPort: 5432
+
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
+
+      volumes:
+        - name: postgres-data
+          persistentVolumeClaim:
+            claimName: postgres-fencing-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fenced-postgres
+  namespace: failure-aware
+
+spec:
+  selector:
+    app: fenced-postgres
+
+  ports:
+    - port: 5432
+      targetPort: 5432

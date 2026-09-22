@@ -44,8 +44,8 @@ BASELINE_SECONDS="10"
 # Scenario B must be held beyond the normal native
 # Kubernetes eviction period.
 #
-SCENARIO_B_FAULT_SECONDS="360"
-# SCENARIO_B_FAULT_SECONDS="90"
+# SCENARIO_B_FAULT_SECONDS="360"
+SCENARIO_B_FAULT_SECONDS="90"
 
 #
 # Scenario C waits for service recovery on Worker2.

@@ -20,8 +20,10 @@ ANALYSIS_DIR := $(REPO_ROOT)/analysis
 	scenario-c-failure-aware \
 	scenario-b-native \
 	scenario-b-failure-aware \
+	scenario-d-failure-aware \
 	campaign-scenario-c \
 	campaign-scenario-b \
+	campaign-scenario-d \
 	campaign \
 	analyze \
 	reproduce \
@@ -101,6 +103,10 @@ scenario-b-failure-aware:
 		scenario-b \
 		failure-aware \
 		30
+
+scenario-d-failure-aware:
+	$(SCRIPTS_DIR)/run-scenario-d-campaign.sh \
+		10
 
 campaign-scenario-c:
 	$(MAKE) scenario-c-native
