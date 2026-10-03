@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: failure-aware
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: remote-postgres
+  namespace: failure-aware
+type: Opaque
+stringData:
+  PGHOST: "102.134.147.233"
+  PGPORT: "32761"
+  PGDATABASE: "pjzccdhtchrrznpcdsfeojbv"
+  PGUSER: "iloylhhtetukfhxb"
+  PGPASSWORD: "-wfBok1hITrUjKbtBZ,zzxN=4KjMo<5f"
+  PGSSLMODE: "require"
+  DATABASE_URL: "postgresql://iloylhhtetukfhxb:-wfBok1hITrUjKbtBZ%2CzzxN%3D4KjMo%3C5f@102.134.147.233:32761/pjzccdhtchrrznpcdsfeojbv?sslmode=require"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-client
+  namespace: failure-aware
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-client
+  template:
+    metadata:
+      labels:
+        app: postgres-client
+    spec:
+      containers:
+        - name: postgres-client
+          image: postgres:16-alpine
+          command: ["sh", "-c", "sleep infinity"]
+          envFrom:
+            - secretRef:
+                name: remote-postgres
