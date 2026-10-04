@@ -18,14 +18,10 @@ pub struct AwarenessContext {
     pub recovery_safety: RecoverySafetyAwareness,
 }
 
-pub fn classify_operational_state(
-    evidence: &VerificationEvidence,
-) -> OperationalState {
+pub fn classify_operational_state(evidence: &VerificationEvidence) -> OperationalState {
     if evidence.successes > evidence.failures {
         OperationalState::ReachableOutsideControlPlane
-    } else if evidence.successes == 0
-        && evidence.failures > 0
-    {
+    } else if evidence.successes == 0 && evidence.failures > 0 {
         OperationalState::Unreachable
     } else {
         OperationalState::Indeterminate

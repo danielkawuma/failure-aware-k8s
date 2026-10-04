@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: worker3-resource-pressure
+  namespace: failure-aware
+  labels:
+    app: candidate-selection-resource-pressure
+    failure-aware.io/test: resource-exclusion
+spec:
+  nodeName: k3s-worker3
+  restartPolicy: Never
+  containers:
+    - name: hold
+      image: registry.k8s.io/pause:3.10
+      resources:
+        requests:
+          cpu: "1950m"
+          memory: "16Mi"
+        limits:
+          cpu: "1950m"
+          memory: "16Mi"

@@ -48,17 +48,11 @@ impl WorkloadAwareness {
         Self {
             name,
 
-            workload_type:
-                WorkloadType::from_str(
-                    &workload_type
-                ),
+            workload_type: WorkloadType::from_str(&workload_type),
 
             duplication_sensitive,
 
-            service_criticality:
-                ServiceCriticality::from_str(
-                    &service_criticality
-                ),
+            service_criticality: ServiceCriticality::from_str(&service_criticality),
         }
     }
 }

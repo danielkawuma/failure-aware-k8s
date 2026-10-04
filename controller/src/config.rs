@@ -31,19 +31,10 @@ pub struct ControllerConfig {
 }
 
 impl ControllerConfig {
-    pub fn load(
-        path: &str,
-    ) -> Result<Self> {
-        let contents =
-            fs::read_to_string(
-                path
-            )?;
+    pub fn load(path: &str) -> Result<Self> {
+        let contents = fs::read_to_string(path)?;
 
-        let config:
-            ControllerConfig =
-            serde_json::from_str(
-                &contents
-            )?;
+        let config: ControllerConfig = serde_json::from_str(&contents)?;
 
         Ok(config)
     }

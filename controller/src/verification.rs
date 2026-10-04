@@ -21,10 +21,7 @@ pub struct VerificationEvidence {
     pub results: Vec<VerificationResult>,
 }
 
-pub async fn verify_http(
-    url: &str,
-    timeout_ms: u64,
-) -> Result<VerificationResult> {
+pub async fn verify_http(url: &str, timeout_ms: u64) -> Result<VerificationResult> {
     let client = Client::builder()
         .timeout(Duration::from_millis(timeout_ms))
         .build()?;
@@ -32,38 +29,30 @@ pub async fn verify_http(
     let checked_at = Utc::now();
     let start = Instant::now();
 
-    let result = client
-        .get(url)
-        .send()
-        .await;
+    let result = client.get(url).send().await;
 
-    let latency_ms =
-        start.elapsed().as_secs_f64() * 1000.0;
+    let latency_ms = start.elapsed().as_secs_f64() * 1000.0;
 
     match result {
         Ok(response) => {
-            let status =
-                response.status().as_u16();
+            let status = response.status().as_u16();
 
             Ok(VerificationResult {
                 checked_at,
-                reachable:
-                    response.status().is_success(),
+                reachable: response.status().is_success(),
                 http_status: Some(status),
                 latency_ms,
                 error: None,
             })
         }
 
-        Err(error) => {
-            Ok(VerificationResult {
-                checked_at,
-                reachable: false,
-                http_status: None,
-                latency_ms,
-                error: Some(error.to_string()),
-            })
-        }
+        Err(error) => Ok(VerificationResult {
+            checked_at,
+            reachable: false,
+            http_status: None,
+            latency_ms,
+            error: Some(error.to_string()),
+        }),
     }
 }
 
@@ -78,12 +67,7 @@ pub async fn verify_http_bounded(
     let mut failures = 0;
 
     for attempt in 1..=attempts {
-        let result =
-            verify_http(
-                url,
-                timeout_ms,
-            )
-            .await?;
+        let result = verify_http(url, timeout_ms).await?;
 
         if result.reachable {
             successes += 1;
@@ -104,10 +88,7 @@ pub async fn verify_http_bounded(
         results.push(result);
 
         if attempt < attempts {
-            sleep(
-                Duration::from_millis(interval_ms)
-            )
-            .await;
+            sleep(Duration::from_millis(interval_ms)).await;
         }
     }
 

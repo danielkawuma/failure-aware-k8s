@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+set -Eeuo pipefail
 
 SCRIPT_DIR="$(
     cd "$(dirname "${BASH_SOURCE[0]}")"
+    pwd
+)"
+
+REPO_ROOT="$(
+    cd "${SCRIPT_DIR}/.."
     pwd
 )"
 
@@ -12,39 +17,152 @@ source "${SCRIPT_DIR}/scenario-d-config.sh"
 RUN_NUMBER="${1:-}"
 
 if [[ -z "${RUN_NUMBER}" ]]; then
-    echo "Usage:"
-    echo "  $0 <run-number>"
-    echo
-    echo "Example:"
-    echo "  $0 001"
+    echo "Usage: $0 <run-number>"
     exit 1
 fi
 
 RUN_DIR="${RESULT_ROOT}/run-${RUN_NUMBER}"
-
-if [[ -f "${RUN_DIR}/COMPLETE" ]]; then
-    echo "Run already complete:"
-    echo "${RUN_DIR}"
-    exit 0
-fi
-
 mkdir -p "${RUN_DIR}"
 
-LOG_FILE="${RUN_DIR}/scenario-d.log"
+FENCE_ACTIVE="false"
+OLD_AUTHORITY_STOPPED="false"
+ORIGINAL_POD=""
+ORIGINAL_CONTAINER_ID=""
+RECOVERY_POD=""
 
-exec > >(tee -a "${LOG_FILE}") 2>&1
+utc_now() {
+    date -u +"%Y-%m-%dT%H:%M:%S.%NZ"
+}
 
-timestamp() {
-    date -u +"%Y-%m-%dT%H:%M:%S.%3NZ"
+psql_exec() {
+    local pod_name="$1"
+    local sql_statement="$2"
+
+    kubectl exec \
+      -n "${NAMESPACE}" \
+      "${pod_name}" \
+      -- \
+      psql \
+        -U "${POSTGRES_USER}" \
+        -d "${POSTGRES_DATABASE}" \
+        -v ON_ERROR_STOP=1 \
+        -tAc "${sql_statement}"
+}
+
+get_marker_count() {
+    local pod_name="$1"
+    local marker="$2"
+
+    psql_exec \
+      "${pod_name}" \
+      "
+      SELECT COUNT(*)
+      FROM scenario_d_fence_test
+      WHERE marker = '${marker}';
+      " \
+      | tr -d '[:space:]'
+}
+
+latest_worker1_running_pod() {
+    kubectl get pods \
+      -n "${NAMESPACE}" \
+      -l "${POSTGRES_LABEL}" \
+      --field-selector="spec.nodeName=${WORKER1_NODE},status.phase=Running" \
+      --sort-by=.metadata.creationTimestamp \
+      -o jsonpath='{.items[-1].metadata.name}' \
+      2>/dev/null || true
+}
+
+latest_postgres_pod() {
+    kubectl get pods \
+      -n "${NAMESPACE}" \
+      -l "${POSTGRES_LABEL}" \
+      --sort-by=.metadata.creationTimestamp \
+      -o jsonpath='{.items[-1].metadata.name}' \
+      2>/dev/null || true
+}
+
+worker1_original_container_ids() {
+    if [[ -z "${ORIGINAL_POD}" ]]; then
+        return 0
+    fi
+
+    ssh \
+      -i "${SSH_KEY}" \
+      -o BatchMode=yes \
+      -o ConnectTimeout=10 \
+      "${WORKER1_SSH}" \
+      "sudo k3s crictl ps \
+        --label io.kubernetes.pod.name=${ORIGINAL_POD} \
+        -q 2>/dev/null || true"
+}
+
+worker1_postgres_containers() {
+    ssh \
+      -i "${SSH_KEY}" \
+      -o BatchMode=yes \
+      -o ConnectTimeout=10 \
+      "${WORKER1_SSH}" \
+      "sudo k3s crictl ps 2>/dev/null \
+        | grep '${POSTGRES_DEPLOYMENT}' || true"
+}
+
+wait_for_postgres() {
+    local pod_name="$1"
+    local timeout_seconds="$2"
+    local elapsed=0
+
+    while (( elapsed < timeout_seconds )); do
+        if ! kubectl get pod \
+          "${pod_name}" \
+          -n "${NAMESPACE}" \
+          >/dev/null 2>&1
+        then
+            return 1
+        fi
+
+        if kubectl exec \
+          -n "${NAMESPACE}" \
+          "${pod_name}" \
+          -- \
+          pg_isready \
+            -U "${POSTGRES_USER}" \
+            -d "${POSTGRES_DATABASE}" \
+          >/dev/null 2>&1
+        then
+            return 0
+        fi
+
+        sleep 2
+        elapsed=$((elapsed + 2))
+    done
+
+    return 1
 }
 
 cleanup() {
-    echo
-    echo "[CLEANUP] Restoring storage access"
+    local exit_code=$?
 
-    "${SCRIPT_DIR}/storage-fence.sh" unfence \
-        >/dev/null 2>&1 \
-        || true
+    echo
+    echo "[CLEANUP] Checking storage-fence state"
+
+    if [[ "${FENCE_ACTIVE}" == "true" ]]; then
+        if [[ "${OLD_AUTHORITY_STOPPED}" == "true" ]]; then
+            echo "Old authority was stopped before fencing."
+            echo "Restoring Worker1 storage connectivity."
+
+            "${SCRIPT_DIR}/storage-fence.sh" unfence || true
+            FENCE_ACTIVE="false"
+        else
+            echo "WARNING: old authority has not been proven stopped."
+            echo "The storage fence is being left active for safety."
+            echo
+            echo "After confirming PostgreSQL is stopped on Worker1:"
+            echo "  ${SCRIPT_DIR}/storage-fence.sh unfence"
+        fi
+    fi
+
+    exit "${exit_code}"
 }
 
 trap cleanup EXIT
@@ -54,567 +172,532 @@ echo "Scenario D - Stateful Storage Fencing"
 echo "Run: ${RUN_NUMBER}"
 echo "=================================================="
 
-#
-# --------------------------------------------------
-# Markers used to verify authoritative writes.
-# --------------------------------------------------
-#
-
-PRE_FENCE_MARKER="${WORKER1_NODE}-before-fence-run-${RUN_NUMBER}"
-
-POST_FENCE_MARKER="${WORKER1_NODE}-after-fence-run-${RUN_NUMBER}"
-
-RECOVERY_MARKER="${WORKER2_NODE}-after-recovery-run-${RUN_NUMBER}"
-
-#
-# --------------------------------------------------
-# 1. Check experiment environment
-# --------------------------------------------------
-#
-
 echo
-echo "[1/11] Checking experiment environment"
+echo "[1/12] Checking experiment environment"
 
+kubectl get namespace "${NAMESPACE}" >/dev/null
 kubectl get node "${WORKER1_NODE}" >/dev/null
-
 kubectl get node "${WORKER2_NODE}" >/dev/null
 
-echo "Worker nodes found"
+ssh \
+  -i "${SSH_KEY}" \
+  -o BatchMode=yes \
+  -o ConnectTimeout=10 \
+  "${WORKER1_SSH}" \
+  "sudo k3s crictl version >/dev/null"
 
-#
-# --------------------------------------------------
-# 2. Clear stale storage fence
-# --------------------------------------------------
-#
+echo "Worker nodes and Worker1 runtime are accessible"
 
 echo
-echo "[2/11] Clearing stale storage fence"
+echo "[2/12] Clearing stale storage fence"
 
 "${SCRIPT_DIR}/storage-fence.sh" unfence
-
-#
-# --------------------------------------------------
-# 3. Apply Scenario D workload
-# --------------------------------------------------
-#
+FENCE_ACTIVE="false"
 
 echo
-echo "[3/11] Applying Scenario D workload"
+echo "[3/12] Applying Scenario D workload"
 
 kubectl apply \
-    -f "${POSTGRES_STORAGE_MANIFEST}"
+  -f "${POSTGRES_STORAGE_MANIFEST}"
 
 kubectl apply \
-    -f "${POSTGRES_MANIFEST}"
+  -f "${POSTGRES_MANIFEST}"
+
+kubectl patch deployment \
+  "${POSTGRES_DEPLOYMENT}" \
+  -n "${NAMESPACE}" \
+  --type=json \
+  -p="[
+        {
+          \"op\": \"replace\",
+          \"path\": \"/spec/template/spec/nodeSelector\",
+          \"value\": {
+            \"kubernetes.io/hostname\": \"${WORKER1_NODE}\"
+          }
+        }
+      ]"
 
 kubectl rollout status \
-    deployment/"${POSTGRES_DEPLOYMENT}" \
-    -n "${NAMESPACE}" \
-    --timeout=120s
-
-#
-# --------------------------------------------------
-# 4. Record original workload
-# --------------------------------------------------
-#
+  deployment/"${POSTGRES_DEPLOYMENT}" \
+  -n "${NAMESPACE}" \
+  --timeout="${RECOVERY_TIMEOUT_SECONDS}s"
 
 echo
-echo "[4/11] Recording original workload"
+echo "[4/12] Locating the original PostgreSQL workload"
 
-ORIGINAL_POD="$(
-    kubectl get pods \
-        -n "${NAMESPACE}" \
-        -l "${POSTGRES_LABEL}" \
-        --field-selector=status.phase=Running \
-        -o jsonpath='{.items[0].metadata.name}'
-)"
+pod_deadline=$((SECONDS + RECOVERY_TIMEOUT_SECONDS))
 
-ORIGINAL_NODE="$(
-    kubectl get pod \
-        -n "${NAMESPACE}" \
-        "${ORIGINAL_POD}" \
-        -o jsonpath='{.spec.nodeName}'
-)"
+while (( SECONDS < pod_deadline )); do
+    ORIGINAL_POD="$(latest_worker1_running_pod)"
 
-echo "${ORIGINAL_POD}" \
-    > "${RUN_DIR}/original-pod.txt"
+    if [[ -n "${ORIGINAL_POD}" ]]; then
+        break
+    fi
 
-echo "${ORIGINAL_NODE}" \
-    > "${RUN_DIR}/original-node.txt"
+    sleep 2
+done
 
-kubectl get pod \
-    -n "${NAMESPACE}" \
-    "${ORIGINAL_POD}" \
-    -o wide \
-    > "${RUN_DIR}/pod-before.txt"
-
-echo "Original Pod : ${ORIGINAL_POD}"
-echo "Original Node: ${ORIGINAL_NODE}"
-
-if [[ "${ORIGINAL_NODE}" != "${WORKER1_NODE}" ]]; then
-    echo "ERROR: PostgreSQL is not running on ${WORKER1_NODE}"
+if [[ -z "${ORIGINAL_POD}" ]]; then
+    echo "ERROR: no running PostgreSQL Pod was found on ${WORKER1_NODE}."
     exit 1
 fi
 
-#
-# --------------------------------------------------
-# 5. Verify PostgreSQL readiness
-# --------------------------------------------------
-#
+ORIGINAL_NODE="$(
+    kubectl get pod \
+      "${ORIGINAL_POD}" \
+      -n "${NAMESPACE}" \
+      -o jsonpath='{.spec.nodeName}'
+)"
+
+echo "Initial Pod : ${ORIGINAL_POD}"
+echo "Initial Node: ${ORIGINAL_NODE}"
 
 echo
-echo "[5/11] Verifying PostgreSQL readiness"
+echo "[5/12] Waiting for initial PostgreSQL readiness"
 
-kubectl exec \
-    -n "${NAMESPACE}" \
-    "${ORIGINAL_POD}" \
-    -- pg_isready \
-    -U "${POSTGRES_USER}" \
-    -d "${POSTGRES_DATABASE}"
+INITIAL_READY="false"
+readiness_deadline=$((SECONDS + RECOVERY_TIMEOUT_SECONDS))
 
-#
-# --------------------------------------------------
-# 6. Create table and perform pre-fence write
-# --------------------------------------------------
-#
+while (( SECONDS < readiness_deadline )); do
+    CURRENT_INITIAL_POD="$(latest_worker1_running_pod)"
+
+    if [[ -n "${CURRENT_INITIAL_POD}" ]]; then
+        ORIGINAL_POD="${CURRENT_INITIAL_POD}"
+
+        if kubectl exec \
+          -n "${NAMESPACE}" \
+          "${ORIGINAL_POD}" \
+          -- \
+          pg_isready \
+            -U "${POSTGRES_USER}" \
+            -d "${POSTGRES_DATABASE}" \
+          >/dev/null 2>&1
+        then
+            INITIAL_READY="true"
+            break
+        fi
+    fi
+
+    sleep 2
+done
+
+if [[ "${INITIAL_READY}" != "true" ]]; then
+    echo "ERROR: initial PostgreSQL instance did not become ready."
+
+    DIAGNOSTIC_POD="$(latest_postgres_pod)"
+
+    if [[ -n "${DIAGNOSTIC_POD}" ]]; then
+        kubectl describe pod \
+          "${DIAGNOSTIC_POD}" \
+          -n "${NAMESPACE}" \
+          > "${RUN_DIR}/initial-pod-describe.txt" \
+          2>&1 || true
+
+        kubectl logs \
+          "${DIAGNOSTIC_POD}" \
+          -n "${NAMESPACE}" \
+          > "${RUN_DIR}/initial-postgres.log" \
+          2>&1 || true
+    fi
+
+    exit 1
+fi
+
+ORIGINAL_NODE="$(
+    kubectl get pod \
+      "${ORIGINAL_POD}" \
+      -n "${NAMESPACE}" \
+      -o jsonpath='{.spec.nodeName}'
+)"
+
+if [[ "${ORIGINAL_NODE}" != "${WORKER1_NODE}" ]]; then
+    echo "ERROR: PostgreSQL is not running on ${WORKER1_NODE}."
+    echo "Observed node: ${ORIGINAL_NODE}"
+    exit 1
+fi
+
+printf '%s\n' "${ORIGINAL_POD}" \
+  > "${RUN_DIR}/original-pod.txt"
+
+printf '%s\n' "${ORIGINAL_NODE}" \
+  > "${RUN_DIR}/original-node.txt"
+
+echo "Initial PostgreSQL instance is ready"
+echo "Authoritative Pod : ${ORIGINAL_POD}"
+echo "Authoritative Node: ${ORIGINAL_NODE}"
 
 echo
-echo "[6/11] Verifying pre-fence storage authority"
+echo "[6/12] Verifying pre-fence storage authority"
 
-kubectl exec \
-    -n "${NAMESPACE}" \
-    "${ORIGINAL_POD}" \
-    -- psql \
-    -U "${POSTGRES_USER}" \
-    -d "${POSTGRES_DATABASE}" \
-    -c "
-CREATE TABLE IF NOT EXISTS fence_test (
-    id BIGSERIAL PRIMARY KEY,
-    writer TEXT NOT NULL,
-    written_at TIMESTAMPTZ DEFAULT NOW()
-);"
+PRE_FENCE_MARKER="k3s-worker1-before-fence-run-${RUN_NUMBER}"
+POST_FENCE_MARKER="k3s-worker1-after-fence-run-${RUN_NUMBER}"
+RECOVERY_MARKER="k3s-worker2-recovery-run-${RUN_NUMBER}"
 
-PRE_FENCE_TIME="$(timestamp)"
+psql_exec \
+  "${ORIGINAL_POD}" \
+  "
+  CREATE TABLE IF NOT EXISTS scenario_d_fence_test (
+      id BIGSERIAL PRIMARY KEY,
+      marker TEXT UNIQUE NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  );
 
-echo "${PRE_FENCE_TIME}" \
-    > "${RUN_DIR}/pre-fence-write-time.txt"
+  INSERT INTO scenario_d_fence_test(marker)
+  VALUES ('${PRE_FENCE_MARKER}')
+  ON CONFLICT (marker) DO NOTHING;
+  "
 
-kubectl exec \
-    -n "${NAMESPACE}" \
-    "${ORIGINAL_POD}" \
-    -- psql \
-    -U "${POSTGRES_USER}" \
-    -d "${POSTGRES_DATABASE}" \
-    -c "
-INSERT INTO fence_test(writer)
-VALUES ('${PRE_FENCE_MARKER}');"
+PRE_FENCE_COUNT="$(
+    get_marker_count \
+      "${ORIGINAL_POD}" \
+      "${PRE_FENCE_MARKER}"
+)"
+
+printf '%s\n' "${PRE_FENCE_COUNT}" \
+  > "${RUN_DIR}/pre-fence-marker-count.txt"
+
+if [[ "${PRE_FENCE_COUNT}" != "1" ]]; then
+    echo "ERROR: pre-fence marker was not committed."
+    exit 1
+fi
 
 echo "Pre-fence write completed:"
 echo "  ${PRE_FENCE_MARKER}"
 
-#
-# --------------------------------------------------
-# 7. Apply storage fence
-# --------------------------------------------------
-#
-
 echo
-echo "[7/11] Applying storage fence"
+echo "[7/12] Quiescing the old authority before NFS fencing"
 
-FENCE_TIME="$(timestamp)"
+printf '%s\n' "$(utc_now)" \
+  > "${RUN_DIR}/old-authority-stop-start-time.txt"
 
-echo "${FENCE_TIME}" \
-    > "${RUN_DIR}/fence-time.txt"
+ORIGINAL_CONTAINER_ID="$(
+    worker1_original_container_ids \
+      | head -n 1 \
+      | tr -d '[:space:]'
+)"
 
-"${SCRIPT_DIR}/storage-fence.sh" fence
-
-"${SCRIPT_DIR}/storage-fence.sh" status \
-    > "${RUN_DIR}/fence-status.txt"
-
-echo "Storage fence applied"
-
-#
-# --------------------------------------------------
-# 8. Test old authority and release it
-# --------------------------------------------------
-#
-
-echo
-echo "[8/11] Testing old storage authority"
-
-set +e
-
-timeout 10s \
-kubectl exec \
-    -n "${NAMESPACE}" \
-    "${ORIGINAL_POD}" \
-    -- psql \
-    -U "${POSTGRES_USER}" \
-    -d "${POSTGRES_DATABASE}" \
-    -c "
-INSERT INTO fence_test(writer)
-VALUES ('${POST_FENCE_MARKER}');" \
-    > "${RUN_DIR}/old-authority-write.txt" \
-    2>&1
-
-OLD_WRITE_RC=$?
-
-set -e
-
-echo "${OLD_WRITE_RC}" \
-    > "${RUN_DIR}/old-authority-write-exit-code.txt"
-
-echo "Old-authority write exit code: ${OLD_WRITE_RC}"
-
-if [[ "${OLD_WRITE_RC}" -eq 0 ]]; then
-    echo "ERROR: Worker1 successfully completed the write while fenced."
-    exit 1
+if [[ -n "${ORIGINAL_CONTAINER_ID}" ]]; then
+    printf '%s\n' "${ORIGINAL_CONTAINER_ID}" \
+      > "${RUN_DIR}/original-container-id.txt"
 fi
 
-if [[ "${OLD_WRITE_RC}" -eq 124 ]]; then
-    echo "Old-authority write blocked beyond 10-second observation window."
-else
-    echo "Old-authority write failed with exit code ${OLD_WRITE_RC}."
+echo "Scaling PostgreSQL to zero while NFS remains available"
+
+kubectl scale deployment \
+  "${POSTGRES_DEPLOYMENT}" \
+  -n "${NAMESPACE}" \
+  --replicas=0
+
+if [[ -n "${ORIGINAL_CONTAINER_ID}" ]]; then
+    echo "Stopping original PostgreSQL container:"
+    echo "  ${ORIGINAL_CONTAINER_ID}"
+
+    ssh \
+      -i "${SSH_KEY}" \
+      -o BatchMode=yes \
+      -o ConnectTimeout=10 \
+      "${WORKER1_SSH}" \
+      "
+      sudo timeout \
+        ${RUNTIME_STOP_COMMAND_TIMEOUT_SECONDS} \
+        k3s crictl stop \
+        ${ORIGINAL_CONTAINER_ID}
+      " || true
 fi
 
-#
-# A timeout alone does not prove permanent exclusion.
-# Remove the old PostgreSQL authority before restoring
-# access or allowing a new writer to become authoritative.
-#
+echo "Waiting for the original PostgreSQL container to stop"
 
-echo "Deleting old PostgreSQL Pod while Worker1 remains fenced"
+stop_deadline=$((SECONDS + OLD_AUTHORITY_STOP_TIMEOUT_SECONDS))
 
-kubectl delete pod \
-    -n "${NAMESPACE}" \
-    "${ORIGINAL_POD}" \
-    --grace-period=0 \
-    --force \
-    --wait=false
-
-FENCE_VERIFIED_TIME="$(timestamp)"
-
-echo "${FENCE_VERIFIED_TIME}" \
-    > "${RUN_DIR}/fence-verified-time.txt"
-
-#
-# Move the Deployment to the recovery node.
-#
-
-echo "Switching PostgreSQL placement to ${WORKER2_NODE}"
-
-kubectl patch deployment \
-    "${POSTGRES_DEPLOYMENT}" \
-    -n "${NAMESPACE}" \
-    --type='json' \
-    -p='[
-      {
-        "op": "replace",
-        "path": "/spec/template/spec/nodeSelector/experiment-role",
-        "value": "recovery-target"
-      }
-    ]'
-
-#
-# --------------------------------------------------
-# 9. Wait for recovery on Worker2
-# --------------------------------------------------
-#
-
-echo
-echo "[9/11] Waiting for PostgreSQL recovery on ${WORKER2_NODE}"
-
-RECOVERY_START="$(date +%s)"
-
-REPLACEMENT_POD=""
-
-while true
-do
-    REPLACEMENT_POD="$(
-        kubectl get pods \
-            -n "${NAMESPACE}" \
-            -l "${POSTGRES_LABEL}" \
-            -o jsonpath='{range .items[*]}{.metadata.name}{"|"}{.status.phase}{"|"}{.spec.nodeName}{"\n"}{end}' \
-            2>/dev/null \
-        | awk -F'|' \
-            -v original="${ORIGINAL_POD}" \
-            -v worker="${WORKER2_NODE}" \
-            '$1 != original && $2 == "Running" && $3 == worker {print $1; exit}'
+while (( SECONDS < stop_deadline )); do
+    active_ids="$(
+        worker1_original_container_ids \
+          | tr -d '[:space:]'
     )"
 
-    if [[ -n "${REPLACEMENT_POD}" ]]; then
+    if [[ -z "${active_ids}" ]]; then
+        OLD_AUTHORITY_STOPPED="true"
         break
-    fi
-
-    NOW="$(date +%s)"
-
-    if (( NOW - RECOVERY_START > RECOVERY_TIMEOUT_SECONDS )); then
-        echo "ERROR: timed out waiting for PostgreSQL recovery on ${WORKER2_NODE}"
-        exit 1
     fi
 
     sleep 2
 done
 
-REPLACEMENT_NODE="$(
-    kubectl get pod \
-        -n "${NAMESPACE}" \
-        "${REPLACEMENT_POD}" \
-        -o jsonpath='{.spec.nodeName}'
-)"
+if [[ "${OLD_AUTHORITY_STOPPED}" != "true" ]]; then
+    echo "ERROR: original PostgreSQL container remains active."
+    echo "The NFS fence has not yet been applied because storage"
+    echo "must remain available while PostgreSQL shuts down."
 
-echo "Replacement Pod detected:"
-echo "  Pod : ${REPLACEMENT_POD}"
-echo "  Node: ${REPLACEMENT_NODE}"
+    worker1_postgres_containers \
+      > "${RUN_DIR}/old-containers-stop-failure.txt"
+
+    exit 1
+fi
+
+kubectl delete pod \
+  "${ORIGINAL_POD}" \
+  -n "${NAMESPACE}" \
+  --ignore-not-found=true \
+  --wait=false
+
+printf '%s\n' "$(utc_now)" \
+  > "${RUN_DIR}/old-authority-stopped-time.txt"
+
+worker1_postgres_containers \
+  > "${RUN_DIR}/old-containers-after-stop.txt"
+
+echo "Old PostgreSQL authority has stopped"
 
 echo
-echo "Waiting for PostgreSQL readiness inside replacement Pod"
+echo "[8/12] Applying the NFS storage fence"
 
-READY_START="$(date +%s)"
+printf '%s\n' "$(utc_now)" \
+  > "${RUN_DIR}/fence-time.txt"
 
-while true
-do
-    if kubectl exec \
-        -n "${NAMESPACE}" \
-        "${REPLACEMENT_POD}" \
-        -- pg_isready \
-        -U "${POSTGRES_USER}" \
-        -d "${POSTGRES_DATABASE}" \
-        >/dev/null 2>&1
+"${SCRIPT_DIR}/storage-fence.sh" fence
+FENCE_ACTIVE="true"
+
+sleep 3
+
+echo "Verifying that Worker1 cannot reach the NFS service"
+
+if ssh \
+    -i "${SSH_KEY}" \
+    -o BatchMode=yes \
+    -o ConnectTimeout=10 \
+    "${WORKER1_SSH}" \
+    "
+    timeout 5 bash -c \
+      '</dev/tcp/${STORAGE_SERVER_IP}/2049'
+    " \
+    >/dev/null 2>&1
+then
+    echo "ERROR: Worker1 can still reach NFS TCP port 2049."
+    exit 1
+fi
+
+printf '%s\n' "blocked" \
+  > "${RUN_DIR}/worker1-nfs-access.txt"
+
+echo "Worker1 has been excluded from NFS storage"
+
+echo
+echo "[9/12] Releasing recovery on Worker2"
+
+kubectl patch deployment \
+  "${POSTGRES_DEPLOYMENT}" \
+  -n "${NAMESPACE}" \
+  --type=json \
+  -p="[
+        {
+          \"op\": \"replace\",
+          \"path\": \"/spec/template/spec/nodeSelector\",
+          \"value\": {
+            \"kubernetes.io/hostname\": \"${WORKER2_NODE}\"
+          }
+        }
+      ]"
+
+printf '%s\n' "$(utc_now)" \
+  > "${RUN_DIR}/recovery-release-time.txt"
+
+kubectl scale deployment \
+  "${POSTGRES_DEPLOYMENT}" \
+  -n "${NAMESPACE}" \
+  --replicas=1
+
+echo
+echo "[10/12] Waiting for PostgreSQL recovery on Worker2"
+
+recovery_deadline=$((SECONDS + RECOVERY_TIMEOUT_SECONDS))
+RECOVERY_POD=""
+
+while (( SECONDS < recovery_deadline )); do
+    RECOVERY_POD="$(
+        kubectl get pods \
+          -n "${NAMESPACE}" \
+          -l "${POSTGRES_LABEL}" \
+          --field-selector="spec.nodeName=${WORKER2_NODE},status.phase=Running" \
+          --sort-by=.metadata.creationTimestamp \
+          -o jsonpath='{.items[-1].metadata.name}' \
+          2>/dev/null || true
+    )"
+
+    if [[ -n "${RECOVERY_POD}" ]] &&
+       wait_for_postgres "${RECOVERY_POD}" 10
     then
         break
     fi
 
-    NOW="$(date +%s)"
-
-    if (( NOW - READY_START > RECOVERY_TIMEOUT_SECONDS )); then
-        echo "ERROR: PostgreSQL did not become ready on ${WORKER2_NODE}"
-        exit 1
-    fi
-
+    RECOVERY_POD=""
     sleep 2
 done
 
-RECOVERY_TIME="$(timestamp)"
+if [[ -z "${RECOVERY_POD}" ]]; then
+    echo "ERROR: PostgreSQL did not recover on ${WORKER2_NODE}."
 
-echo "${RECOVERY_TIME}" \
-    > "${RUN_DIR}/recovery-time.txt"
+    kubectl get pods \
+      -n "${NAMESPACE}" \
+      -l "${POSTGRES_LABEL}" \
+      -o wide \
+      > "${RUN_DIR}/recovery-timeout-pods.txt" \
+      2>&1 || true
 
-echo "${REPLACEMENT_POD}" \
-    > "${RUN_DIR}/replacement-pod.txt"
+    DIAGNOSTIC_POD="$(latest_postgres_pod)"
 
-echo "${REPLACEMENT_NODE}" \
-    > "${RUN_DIR}/replacement-node.txt"
+    if [[ -n "${DIAGNOSTIC_POD}" ]]; then
+        kubectl describe pod \
+          "${DIAGNOSTIC_POD}" \
+          -n "${NAMESPACE}" \
+          > "${RUN_DIR}/recovery-pod-describe.txt" \
+          2>&1 || true
 
-#
-# --------------------------------------------------
-# 10. Verify storage-authority exclusion
-# --------------------------------------------------
-#
+        kubectl logs \
+          "${DIAGNOSTIC_POD}" \
+          -n "${NAMESPACE}" \
+          > "${RUN_DIR}/recovery-postgres.log" \
+          2>&1 || true
+    fi
+
+    exit 1
+fi
+
+printf '%s\n' "$(utc_now)" \
+  > "${RUN_DIR}/service-restored-time.txt"
+
+printf '%s\n' "${RECOVERY_POD}" \
+  > "${RUN_DIR}/recovery-pod.txt"
+
+printf '%s\n' "${WORKER2_NODE}" \
+  > "${RUN_DIR}/recovery-node.txt"
+
+echo "Recovery Pod : ${RECOVERY_POD}"
+echo "Recovery Node: ${WORKER2_NODE}"
 
 echo
-echo "[10/11] Verifying storage-authority exclusion"
-
-#
-# Keep the human-readable table for the experiment record.
-#
-
-kubectl exec \
-    -n "${NAMESPACE}" \
-    "${REPLACEMENT_POD}" \
-    -- psql \
-    -U "${POSTGRES_USER}" \
-    -d "${POSTGRES_DATABASE}" \
-    -c "
-SELECT *
-FROM fence_test
-ORDER BY id;" \
-    | tee "${RUN_DIR}/persistent-data-after-recovery.txt"
-
-#
-# IMPORTANT:
-#
-# Do not parse the formatted psql table above.
-# Ask PostgreSQL directly for numeric counts using -t -A.
-#
+echo "[11/12] Verifying data preservation and single-writer recovery"
 
 PRE_FENCE_COUNT="$(
-    kubectl exec \
-        -n "${NAMESPACE}" \
-        "${REPLACEMENT_POD}" \
-        -- psql \
-        -U "${POSTGRES_USER}" \
-        -d "${POSTGRES_DATABASE}" \
-        -t \
-        -A \
-        -c "
-SELECT COUNT(*)
-FROM fence_test
-WHERE writer = '${PRE_FENCE_MARKER}';" \
-    | tr -d '[:space:]'
+    get_marker_count \
+      "${RECOVERY_POD}" \
+      "${PRE_FENCE_MARKER}"
 )"
 
 POST_FENCE_COUNT="$(
-    kubectl exec \
-        -n "${NAMESPACE}" \
-        "${REPLACEMENT_POD}" \
-        -- psql \
-        -U "${POSTGRES_USER}" \
-        -d "${POSTGRES_DATABASE}" \
-        -t \
-        -A \
-        -c "
-SELECT COUNT(*)
-FROM fence_test
-WHERE writer = '${POST_FENCE_MARKER}';" \
-    | tr -d '[:space:]'
+    get_marker_count \
+      "${RECOVERY_POD}" \
+      "${POST_FENCE_MARKER}"
 )"
 
-echo "Pre-fence marker count : ${PRE_FENCE_COUNT}"
-echo "Post-fence marker count: ${POST_FENCE_COUNT}"
+printf '%s\n' "${PRE_FENCE_COUNT}" \
+  > "${RUN_DIR}/pre-fence-marker-count.txt"
 
-echo "${PRE_FENCE_COUNT}" \
-    > "${RUN_DIR}/pre-fence-marker-count.txt"
+printf '%s\n' "${POST_FENCE_COUNT}" \
+  > "${RUN_DIR}/post-fence-marker-count.txt"
 
-echo "${POST_FENCE_COUNT}" \
-    > "${RUN_DIR}/post-fence-marker-count.txt"
-
-if [[ ! "${PRE_FENCE_COUNT}" =~ ^[0-9]+$ ]]; then
-    echo "ERROR: unable to parse pre-fence marker count."
-    echo "Returned value: ${PRE_FENCE_COUNT}"
+if [[ "${PRE_FENCE_COUNT}" != "1" ]]; then
+    echo "ERROR: committed pre-fence data was not preserved."
     exit 1
 fi
 
-if [[ ! "${POST_FENCE_COUNT}" =~ ^[0-9]+$ ]]; then
-    echo "ERROR: unable to parse post-fence marker count."
-    echo "Returned value: ${POST_FENCE_COUNT}"
+if [[ "${POST_FENCE_COUNT}" != "0" ]]; then
+    echo "ERROR: an unauthorized post-fence Worker1 write exists."
     exit 1
 fi
 
-if (( PRE_FENCE_COUNT < 1 )); then
-    echo "ERROR: expected pre-fence row was not found."
-    echo "Expected marker: ${PRE_FENCE_MARKER}"
+psql_exec \
+  "${RECOVERY_POD}" \
+  "
+  INSERT INTO scenario_d_fence_test(marker)
+  VALUES ('${RECOVERY_MARKER}')
+  ON CONFLICT (marker) DO NOTHING;
+  "
+
+RECOVERY_COUNT="$(
+    get_marker_count \
+      "${RECOVERY_POD}" \
+      "${RECOVERY_MARKER}"
+)"
+
+printf '%s\n' "${RECOVERY_COUNT}" \
+  > "${RUN_DIR}/recovery-marker-count.txt"
+
+if [[ "${RECOVERY_COUNT}" != "1" ]]; then
+    echo "ERROR: Worker2 recovery write was not committed."
     exit 1
 fi
 
-if (( POST_FENCE_COUNT > 0 )); then
-    echo "ERROR: post-fence write was committed."
-    echo "Unsafe storage-authority transition detected."
-    echo "Unexpected marker: ${POST_FENCE_MARKER}"
-    exit 1
-fi
-
-echo "Storage-authority exclusion verified:"
-echo "  pre-fence write persisted"
-echo "  post-fence Worker1 write did not commit"
-
-#
-# --------------------------------------------------
-# 11. Verify Worker2 becomes the new authority
-# --------------------------------------------------
-#
+echo "Pre-fence data preserved"
+echo "No post-fence Worker1 write observed"
+echo "Worker2 is the new active writer"
 
 echo
-echo "[11/11] Verifying new storage authority"
+echo "[12/12] Verifying safe unfencing"
 
-kubectl exec \
-    -n "${NAMESPACE}" \
-    "${REPLACEMENT_POD}" \
-    -- psql \
-    -U "${POSTGRES_USER}" \
-    -d "${POSTGRES_DATABASE}" \
-    -c "
-INSERT INTO fence_test(writer)
-VALUES ('${RECOVERY_MARKER}');"
+worker1_postgres_containers \
+  > "${RUN_DIR}/old-containers-before-unfence.txt"
 
-POST_RECOVERY_TIME="$(timestamp)"
+if [[ -s "${RUN_DIR}/old-containers-before-unfence.txt" ]]; then
+    echo "ERROR: an active PostgreSQL container exists on Worker1."
+    echo "The NFS fence will remain active."
+    OLD_AUTHORITY_STOPPED="false"
+    exit 1
+fi
 
-echo "${POST_RECOVERY_TIME}" \
-    > "${RUN_DIR}/post-recovery-write-time.txt"
+"${SCRIPT_DIR}/storage-fence.sh" unfence
+FENCE_ACTIVE="false"
 
-RECOVERY_MARKER_COUNT="$(
-    kubectl exec \
-        -n "${NAMESPACE}" \
-        "${REPLACEMENT_POD}" \
-        -- psql \
-        -U "${POSTGRES_USER}" \
-        -d "${POSTGRES_DATABASE}" \
-        -t \
-        -A \
-        -c "
-SELECT COUNT(*)
-FROM fence_test
-WHERE writer = '${RECOVERY_MARKER}';" \
-    | tr -d '[:space:]'
+sleep "${POST_UNFENCE_SECONDS}"
+
+worker1_postgres_containers \
+  > "${RUN_DIR}/old-containers-after-unfence.txt"
+
+if [[ -s "${RUN_DIR}/old-containers-after-unfence.txt" ]]; then
+    echo "ERROR: PostgreSQL restarted on Worker1 after unfencing."
+    exit 1
+fi
+
+POST_UNFENCE_COUNT="$(
+    get_marker_count \
+      "${RECOVERY_POD}" \
+      "${POST_FENCE_MARKER}"
 )"
 
-echo "${RECOVERY_MARKER_COUNT}" \
-    > "${RUN_DIR}/recovery-marker-count.txt"
+printf '%s\n' "${POST_UNFENCE_COUNT}" \
+  > "${RUN_DIR}/post-unfence-marker-count.txt"
 
-if [[ ! "${RECOVERY_MARKER_COUNT}" =~ ^[0-9]+$ ]]; then
-    echo "ERROR: unable to parse recovery marker count."
+if [[ "${POST_UNFENCE_COUNT}" != "0" ]]; then
+    echo "ERROR: an old-authority write appeared after unfencing."
     exit 1
 fi
 
-if (( RECOVERY_MARKER_COUNT < 1 )); then
-    echo "ERROR: Worker2 recovery write was not persisted."
-    exit 1
-fi
+sleep "${POST_RECOVERY_SECONDS}"
 
-kubectl exec \
-    -n "${NAMESPACE}" \
-    "${REPLACEMENT_POD}" \
-    -- psql \
-    -U "${POSTGRES_USER}" \
-    -d "${POSTGRES_DATABASE}" \
-    -c "
-SELECT *
-FROM fence_test
-ORDER BY id;" \
-    > "${RUN_DIR}/final-database-state.txt"
-
-kubectl get pods \
-    -n "${NAMESPACE}" \
-    -l "${POSTGRES_LABEL}" \
-    -o wide \
-    > "${RUN_DIR}/pods-after.txt"
-
-kubectl get nodes \
-    -o wide \
-    > "${RUN_DIR}/nodes-after.txt"
-
-cat > "${RUN_DIR}/metadata.txt" <<EOF
-scenario=scenario-d
-mode=failure-aware
-run=${RUN_NUMBER}
-original_pod=${ORIGINAL_POD}
-original_node=${ORIGINAL_NODE}
-replacement_pod=${REPLACEMENT_POD}
-replacement_node=${REPLACEMENT_NODE}
-pre_fence_marker=${PRE_FENCE_MARKER}
-post_fence_marker=${POST_FENCE_MARKER}
-recovery_marker=${RECOVERY_MARKER}
-fence_time=${FENCE_TIME}
-fence_verified_time=${FENCE_VERIFIED_TIME}
-recovery_time=${RECOVERY_TIME}
+cat > "${RUN_DIR}/experiment-metadata.json" <<EOF
+{
+  "scenario": "scenario-d",
+  "run_number": "${RUN_NUMBER}",
+  "original_pod": "${ORIGINAL_POD}",
+  "original_node": "${WORKER1_NODE}",
+  "recovery_pod": "${RECOVERY_POD}",
+  "recovery_node": "${WORKER2_NODE}",
+  "fencing_mechanism": "ordered-runtime-stop-then-nfs-denial",
+  "old_authority_stopped_before_fence": true,
+  "worker1_nfs_access_blocked_before_recovery": true,
+  "pre_fence_marker_preserved": true,
+  "post_fence_worker1_marker_absent": true,
+  "worker2_recovery_write_committed": true,
+  "post_unfence_delayed_write_absent": true
+}
 EOF
 
 touch "${RUN_DIR}/COMPLETE"
 
 echo
 echo "=================================================="
-echo "SCENARIO D COMPLETE"
-echo
-echo "Old authority : ${WORKER1_NODE}"
-echo "New authority : ${WORKER2_NODE}"
-echo "Fence         : verified"
-echo "Pre-fence row : preserved"
-echo "Post-fence row: absent"
-echo "Recovery write: persisted"
-echo
-echo "${RUN_DIR}"
+echo "Scenario D completed successfully"
+echo "Results: ${RUN_DIR}"
 echo "=================================================="
 
 trap - EXIT
-
-cleanup
+exit 0

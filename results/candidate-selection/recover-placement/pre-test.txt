@@ -1,0 +1,23 @@
+=== TEST ===
+recover-placement
+
+=== TIME ===
+2026-10-04T00:40:24+03:00
+
+=== ORIGINAL POD ===
+baseline-web-5f5bbfb459-6sfkw
+
+=== ORIGINAL POD IP ===
+10.42.1.121
+
+=== PODS BEFORE ===
+NAME                            READY   STATUS    RESTARTS   AGE   IP            NODE          NOMINATED NODE   READINESS GATES
+baseline-web-5f5bbfb459-6sfkw   1/1     Running   0          11d   10.42.1.121   k3s-worker1   <none>           <none>
+
+=== NODES ===
+NAME          STATUS   ROLES           AGE    VERSION        EXPERIMENT-ROLE   ROLE
+k3s-server    Ready    control-plane   17d    v1.36.4+k3s1                     
+k3s-worker1   Ready    <none>          17d    v1.36.4+k3s1   fault-target      fault-target
+k3s-worker2   Ready    <none>          17d    v1.36.4+k3s1   recovery-target   recovery-candidate
+k3s-worker3   Ready    <none>          166m   v1.36.4+k3s1                     recovery-candidate
+k3s-worker4   Ready    <none>          166m   v1.36.4+k3s1                     recovery-candidate

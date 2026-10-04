@@ -26,12 +26,9 @@ pub fn evaluate_recovery_safety(
         };
     }
 
-    if workload.duplication_sensitive
-        && fencing_supported
-    {
+    if workload.duplication_sensitive && fencing_supported {
         return RecoverySafetyAwareness {
-            state:
-                RecoverySafetyState::FencingRequired,
+            state: RecoverySafetyState::FencingRequired,
             fencing_required: true,
             fencing_supported: true,
         };

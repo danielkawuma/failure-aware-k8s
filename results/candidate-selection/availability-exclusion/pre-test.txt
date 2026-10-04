@@ -1,0 +1,16 @@
+=== TEST ===
+availability-exclusion
+
+=== TIME ===
+2026-10-04T00:33:21+03:00
+
+=== NODES ===
+NAME          STATUS                     ROLES           AGE    VERSION        EXPERIMENT-ROLE   ROLE
+k3s-server    Ready                      control-plane   17d    v1.36.4+k3s1                     
+k3s-worker1   Ready                      <none>          17d    v1.36.4+k3s1   fault-target      fault-target
+k3s-worker2   Ready                      <none>          17d    v1.36.4+k3s1   recovery-target   recovery-candidate
+k3s-worker3   Ready,SchedulingDisabled   <none>          159m   v1.36.4+k3s1                     recovery-candidate
+k3s-worker4   Ready                      <none>          159m   v1.36.4+k3s1                     recovery-candidate
+
+=== WORKER3 UNSCHEDULABLE ===
+true
