@@ -491,6 +491,15 @@ def main():
         ],
     )
 
+    stages["nginx_scenarios_b_c"] = execute_stage(
+        "Nginx Scenario B/C historical and manuscript reproduction",
+        ROOT / "analysis/scenarios/nginx.py",
+        [
+            "--output",
+            str(output),
+        ],
+    )
+
     passed = all(
         stage["status"] == "PASS"
         for stage in stages.values()

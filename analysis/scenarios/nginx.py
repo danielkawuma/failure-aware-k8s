@@ -1,24 +1,22 @@
 #!/usr/bin/env python3
 """
-Failure-Aware Kubernetes: isolated Nginx B/C reproduction.
+Failure-Aware Kubernetes: Nginx B/C results reproduction.
 
-Uses unchanged legacy extraction and summarization algorithms
-inside a temporary workspace containing only Scenario B/C evidence.
+Reuses the original extraction and summarization algorithms
+inside an isolated temporary workspace.
 
-Original evidence and historical results remain read-only.
+Populations:
+  manuscript: historical Scenario B FA1 cohort from 2120ac4
+  historical: runs present in preserved October metrics
+  current: all currently discovered B/C runs
 
-Outputs:
-  nginx-bc-run-metrics.csv
-  nginx-bc-summary.csv
-  nginx-bc-validation.csv
-  nginx-scenario-b-population.csv
+No experiment execution or raw evidence modification.
 """
 
 from __future__ import annotations
 
 import argparse
 import csv
-import json
 import shutil
 import subprocess
 import sys
@@ -27,40 +25,36 @@ from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-
-SOURCE = ROOT / "experiments/evaluation"
 ANALYSIS = ROOT / "analysis"
+EVALUATION = ROOT / "experiments/evaluation"
 
-DEFAULT_OUTPUT = (
-    ROOT / "analysis/results/reproduced"
+OUTPUT = ANALYSIS / "results/reproduced"
+
+MANUSCRIPT_REFERENCE = (
+    ANALYSIS / "reference/nginx-historical-run-metrics.csv"
 )
 
-REFERENCE = (
-    ROOT / "analysis/results/run-metrics.csv"
+MANUSCRIPT_COHORT = (
+    ANALYSIS / "reference/nginx-scenario-b-manuscript-cohort.csv"
 )
 
-SCRIPTS = (
-    "extract_metrics.py",
-    "summarize_results.py",
+HISTORICAL_REFERENCE = (
+    ANALYSIS / "results/run-metrics.csv"
 )
 
-SCENARIOS = (
-    "scenario-b",
-    "scenario-c",
-)
+SCENARIOS = ("scenario-b", "scenario-c")
+MODES = ("native", "failure-aware")
 
-MODES = (
-    "native",
-    "failure-aware",
-)
+KEY_FIELDS = ("scenario", "mode", "run")
 
 VALIDATION_FIELDS = [
+    "population",
     "scenario",
     "mode",
     "run",
     "field",
-    "historical_value",
-    "reproduced_value",
+    "expected",
+    "actual",
     "status",
 ]
 
@@ -71,8 +65,9 @@ POPULATION_FIELDS = [
     "valid",
     "decision",
     "replacement_occurred",
-    "historical_metric_present",
-    "manuscript_cohort",
+    "manuscript_member",
+    "historical_member",
+    "population_class",
 ]
 
 
@@ -85,10 +80,7 @@ def read_csv(path):
 
 
 def write_csv(path, rows, fields):
-    path.parent.mkdir(
-        parents=True,
-        exist_ok=True,
-    )
+    path.parent.mkdir(parents=True, exist_ok=True)
 
     with path.open(
         "w",
@@ -98,138 +90,70 @@ def write_csv(path, rows, fields):
         writer = csv.DictWriter(
             handle,
             fieldnames=fields,
+            extrasaction="ignore",
         )
-
         writer.writeheader()
         writer.writerows(rows)
 
 
-def run_key(row):
+def key(row):
+    return tuple(row[field] for field in KEY_FIELDS)
+
+
+def is_bc(row):
     return (
-        row["scenario"],
-        row["mode"],
-        row["run"],
+        row.get("scenario") in SCENARIOS
+        and row.get("mode") in MODES
     )
 
 
-def compare_metrics(historical, reproduced):
-    old = {
-        run_key(row): row
-        for row in historical
-        if row.get("scenario") in SCENARIOS
-        and row.get("mode") in MODES
-    }
-
-    new = {
-        run_key(row): row
-        for row in reproduced
-    }
-
-    fields = sorted(
-        set().union(
-            *(row.keys() for row in old.values()),
-            *(row.keys() for row in new.values()),
-        )
-    ) if old or new else []
-
-    results = []
-
-    for key in sorted(set(old) | set(new)):
-        left = old.get(key)
-        right = new.get(key)
-
-        if left is None:
-            results.append({
-                "scenario": key[0],
-                "mode": key[1],
-                "run": key[2],
-                "field": "*",
-                "historical_value": "",
-                "reproduced_value": "PRESENT",
-                "status": "NEW_RUN",
-            })
-            continue
-
-        if right is None:
-            results.append({
-                "scenario": key[0],
-                "mode": key[1],
-                "run": key[2],
-                "field": "*",
-                "historical_value": "PRESENT",
-                "reproduced_value": "",
-                "status": "MISSING_RUN",
-            })
-            continue
-
-        for field in fields:
-            a = (left.get(field) or "").strip()
-            b = (right.get(field) or "").strip()
-
-            if a == b:
-                continue
-
-            results.append({
-                "scenario": key[0],
-                "mode": key[1],
-                "run": key[2],
-                "field": field,
-                "historical_value": a,
-                "reproduced_value": b,
-                "status": "VALUE_DIFFERENCE",
-            })
-
-    return results
-
-
-def create_population(rows, historical):
-    historical_keys = {
-        run_key(row)
-        for row in historical
-    }
-
-    population = []
+def index_rows(rows, label):
+    indexed = {}
 
     for row in rows:
-        if (
-            row.get("scenario") != "scenario-b"
-            or row.get("mode") != "failure-aware"
-        ):
+        identifier = key(row)
+
+        if identifier in indexed:
+            raise ValueError(
+                f"Duplicate {label} run: {identifier}"
+            )
+
+        indexed[identifier] = row
+
+    return indexed
+
+
+def load_manuscript_cohort():
+    rows = read_csv(MANUSCRIPT_COHORT)
+    members = set()
+
+    for row in rows:
+        if row["include"].lower() != "true":
             continue
 
-        population.append({
-            "scenario": row["scenario"],
-            "mode": row["mode"],
-            "run": row["run"],
-            "valid": row.get("valid", ""),
-            "decision": row.get("decision", ""),
-            "replacement_occurred":
-                row.get("replacement_occurred", ""),
-            "historical_metric_present": (
-                "YES"
-                if run_key(row) in historical_keys
-                else "NO"
-            ),
-            "manuscript_cohort":
-                "NOT_DETERMINED",
-        })
+        identifier = key(row)
 
-    return sorted(
-        population,
-        key=lambda row: row["run"],
-    )
+        if identifier in members:
+            raise ValueError(
+                f"Duplicate manuscript member: {identifier}"
+            )
+
+        members.add(identifier)
+
+    if len(members) != 33:
+        raise ValueError(
+            f"Expected 33 manuscript FA1 runs; got {len(members)}"
+        )
+
+    return members
 
 
-def run_legacy(script, workspace):
-    command = [
-        sys.executable,
-        str(
-            workspace / "analysis" / script
-        ),
-    ]
-
+def execute_legacy(script, workspace):
     result = subprocess.run(
-        command,
+        [
+            sys.executable,
+            str(workspace / "analysis" / script),
+        ],
         cwd=workspace,
         stdin=subprocess.DEVNULL,
         capture_output=True,
@@ -244,7 +168,126 @@ def run_legacy(script, workspace):
             f"{result.stderr}"
         )
 
-    return result.stdout
+
+def extract_current():
+    with tempfile.TemporaryDirectory(
+        prefix="failure-aware-nginx-"
+    ) as temporary:
+        workspace = Path(temporary)
+        analysis = workspace / "analysis"
+        evaluation = workspace / "experiments/evaluation"
+
+        analysis.mkdir(parents=True)
+        evaluation.mkdir(parents=True)
+
+        for script in (
+            "extract_metrics.py",
+            "summarize_results.py",
+        ):
+            shutil.copy2(
+                ANALYSIS / script,
+                analysis / script,
+            )
+
+        for scenario in SCENARIOS:
+            source = EVALUATION / scenario
+
+            if not source.is_dir():
+                raise FileNotFoundError(source)
+
+            (evaluation / scenario).symlink_to(
+                source,
+                target_is_directory=True,
+            )
+
+        execute_legacy("extract_metrics.py", workspace)
+        execute_legacy("summarize_results.py", workspace)
+
+        generated = workspace / "analysis/results"
+
+        return (
+            read_csv(generated / "run-metrics.csv"),
+            read_csv(generated / "summary.csv"),
+        )
+
+
+def compare(reference, current, population):
+    expected = index_rows(reference, population + " reference")
+    actual = index_rows(current, population + " reproduced")
+
+    differences = []
+
+    for identifier in sorted(expected):
+        old = expected[identifier]
+        new = actual.get(identifier)
+
+        if new is None:
+            differences.append({
+                "population": population,
+                "scenario": identifier[0],
+                "mode": identifier[1],
+                "run": identifier[2],
+                "field": "*",
+                "expected": "PRESENT",
+                "actual": "MISSING",
+                "status": "MISSING_RUN",
+            })
+            continue
+
+        for field in old:
+            a = (old.get(field) or "").strip()
+            b = (new.get(field) or "").strip()
+
+            if a != b:
+                differences.append({
+                    "population": population,
+                    "scenario": identifier[0],
+                    "mode": identifier[1],
+                    "run": identifier[2],
+                    "field": field,
+                    "expected": a,
+                    "actual": b,
+                    "status": "VALUE_DIFFERENCE",
+                })
+
+    return differences
+
+
+def summarize_population(rows):
+    """
+    Execute the original summary algorithm on an explicitly
+    selected population, without modifying historical outputs.
+    """
+    with tempfile.TemporaryDirectory(
+        prefix="failure-aware-nginx-summary-"
+    ) as temporary:
+        workspace = Path(temporary)
+        analysis = workspace / "analysis"
+        results = analysis / "results"
+
+        results.mkdir(parents=True)
+
+        shutil.copy2(
+            ANALYSIS / "summarize_results.py",
+            analysis / "summarize_results.py",
+        )
+
+        source_fields = list(
+            read_csv(HISTORICAL_REFERENCE)[0]
+        )
+
+        write_csv(
+            results / "run-metrics.csv",
+            rows,
+            source_fields,
+        )
+
+        execute_legacy(
+            "summarize_results.py",
+            workspace,
+        )
+
+        return read_csv(results / "summary.csv")
 
 
 def main():
@@ -253,150 +296,200 @@ def main():
     parser.add_argument(
         "--output",
         type=Path,
-        default=DEFAULT_OUTPUT,
+        default=OUTPUT,
     )
 
     args = parser.parse_args()
+
     output = args.output.resolve()
 
-    if output != DEFAULT_OUTPUT.resolve():
+    if output != OUTPUT.resolve():
         parser.error(
             "Output must be analysis/results/reproduced"
         )
 
-    if not REFERENCE.is_file():
-        parser.error(
-            f"Historical metrics missing: {REFERENCE}"
+    for path in (
+        MANUSCRIPT_REFERENCE,
+        MANUSCRIPT_COHORT,
+        HISTORICAL_REFERENCE,
+    ):
+        if not path.is_file():
+            parser.error(f"Missing reference: {path}")
+
+    manuscript_members = load_manuscript_cohort()
+
+    historical_all = [
+        row for row in read_csv(HISTORICAL_REFERENCE)
+        if is_bc(row)
+    ]
+
+    manuscript_reference = [
+        row for row in read_csv(MANUSCRIPT_REFERENCE)
+        if key(row) in manuscript_members
+    ]
+
+    if len(manuscript_reference) != 33:
+        raise ValueError(
+            "Historical manuscript reference is incomplete"
         )
 
-    with tempfile.TemporaryDirectory(
-        prefix="failure-aware-nginx-"
-    ) as temporary:
-        workspace = Path(temporary)
+    current, _ = extract_current()
 
-        work_analysis = workspace / "analysis"
-        work_evaluation = (
-            workspace / "experiments/evaluation"
+    current = [
+        row for row in current
+        if is_bc(row)
+    ]
+
+    current_index = index_rows(current, "current")
+    historical_index = index_rows(
+        historical_all, "historical"
+    )
+
+    manuscript_rows = [
+        current_index[identifier]
+        for identifier in sorted(manuscript_members)
+        if identifier in current_index
+    ]
+
+    historical_rows = [
+        current_index[identifier]
+        for identifier in sorted(historical_index)
+        if identifier in current_index
+    ]
+
+    differences = []
+
+    differences.extend(
+        compare(
+            manuscript_reference,
+            manuscript_rows,
+            "manuscript",
         )
+    )
 
-        work_analysis.mkdir(
-            parents=True,
-            exist_ok=True,
+    differences.extend(
+        compare(
+            historical_all,
+            historical_rows,
+            "historical",
         )
+    )
 
-        work_evaluation.mkdir(
-            parents=True,
-            exist_ok=True,
-        )
+    population = []
 
-        for script in SCRIPTS:
-            shutil.copy2(
-                ANALYSIS / script,
-                work_analysis / script,
-            )
+    for row in current:
+        identifier = key(row)
 
-        for scenario in SCENARIOS:
-            source = SOURCE / scenario
-            target = work_evaluation / scenario
+        if identifier in manuscript_members:
+            classification = "MANUSCRIPT"
+        elif identifier in historical_index:
+            classification = "HISTORICAL_SUPPLEMENTARY"
+        else:
+            classification = "ADDITIONAL"
 
-            if not source.is_dir():
-                raise RuntimeError(
-                    f"Missing scenario evidence: {source}"
-                )
+        population.append({
+            "scenario": row["scenario"],
+            "mode": row["mode"],
+            "run": row["run"],
+            "valid": row.get("valid", ""),
+            "decision": row.get("decision", ""),
+            "replacement_occurred":
+                row.get("replacement_occurred", ""),
+            "manuscript_member":
+                "YES" if identifier in manuscript_members else "NO",
+            "historical_member":
+                "YES" if identifier in historical_index else "NO",
+            "population_class": classification,
+        })
 
-            # Links raw evidence without copying or changing it.
-            target.symlink_to(
-                source,
-                target_is_directory=True,
-            )
+    manuscript_summary = summarize_population(
+        manuscript_rows
+    )
 
-        print("Running original Nginx metric extractor")
-        run_legacy(
-            "extract_metrics.py",
-            workspace,
-        )
+    historical_summary = summarize_population(
+        historical_rows
+    )
 
-        print("Running original Nginx summarizer")
-        run_legacy(
-            "summarize_results.py",
-            workspace,
-        )
+    current_summary = summarize_population(current)
 
-        generated = (
-            workspace / "analysis/results"
-        )
+    output.mkdir(parents=True, exist_ok=True)
 
-        metrics_path = generated / "run-metrics.csv"
-        summary_path = generated / "summary.csv"
+    metric_fields = list(
+        read_csv(HISTORICAL_REFERENCE)[0]
+    )
 
-        reproduced = read_csv(metrics_path)
-        historical = read_csv(REFERENCE)
+    write_csv(
+        output / "nginx-bc-current-metrics.csv",
+        current,
+        metric_fields,
+    )
 
-        differences = compare_metrics(
-            historical,
-            reproduced,
-        )
+    write_csv(
+        output / "nginx-bc-historical-metrics.csv",
+        historical_rows,
+        metric_fields,
+    )
 
-        population = create_population(
-            reproduced,
-            historical,
-        )
+    write_csv(
+        output / "nginx-scenario-b-manuscript-metrics.csv",
+        manuscript_rows,
+        metric_fields,
+    )
 
-        output.mkdir(
-            parents=True,
-            exist_ok=True,
-        )
+    summary_fields = list(current_summary[0])
 
-        shutil.copy2(
-            metrics_path,
-            output / "nginx-bc-run-metrics.csv",
-        )
-
-        shutil.copy2(
-            summary_path,
-            output / "nginx-bc-summary.csv",
-        )
-
+    for name, rows in (
+        ("nginx-bc-current-summary.csv", current_summary),
+        ("nginx-bc-historical-summary.csv", historical_summary),
+        ("nginx-scenario-b-manuscript-summary.csv", manuscript_summary),
+    ):
         write_csv(
-            output / "nginx-bc-validation.csv",
-            differences,
-            VALIDATION_FIELDS,
+            output / name,
+            rows,
+            summary_fields,
         )
 
-        write_csv(
-            output / "nginx-scenario-b-population.csv",
-            population,
-            POPULATION_FIELDS,
+    write_csv(
+        output / "nginx-bc-validation.csv",
+        differences,
+        VALIDATION_FIELDS,
+    )
+
+    write_csv(
+        output / "nginx-bc-population.csv",
+        population,
+        POPULATION_FIELDS,
+    )
+
+    fa1_current = [
+        row for row in current
+        if row["scenario"] == "scenario-b"
+        and row["mode"] == "failure-aware"
+    ]
+
+    fa1_historical = [
+        row for row in historical_rows
+        if row["scenario"] == "scenario-b"
+        and row["mode"] == "failure-aware"
+    ]
+
+    print("NGINX_BC_REPRODUCTION_COMPLETE")
+    print("Manuscript FA1 runs:", len(manuscript_rows))
+    print("Historical FA1 runs:", len(fa1_historical))
+    print("Current FA1 runs:", len(fa1_current))
+    print("Historical metric differences:", len(differences))
+    print("Output:", output)
+
+    if differences:
+        counts = Counter(
+            row["status"] for row in differences
         )
 
-        print("NGINX_BC_REPRODUCTION_COMPLETE")
-        print("Reproduced rows:", len(reproduced))
-        print("Historical differences:", len(differences))
-        print(
-            "Scenario B FA1 entries:",
-            len(population),
-        )
+        print("VALIDATION_FAILED:", dict(counts))
+        return 1
 
-        if differences:
-            counts = Counter(
-                row["status"]
-                for row in differences
-            )
-
-            print(
-                "Validation differences:",
-                dict(counts),
-            )
-
-            print(
-                "Inspect:",
-                output / "nginx-bc-validation.csv",
-            )
-
-            return 1
-
-        print("NGINX_BC_REFERENCE_COMPARISON_PASSED")
-        return 0
+    print("NGINX_BC_HISTORICAL_VALIDATION_PASSED")
+    return 0
 
 
 if __name__ == "__main__":
