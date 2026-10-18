@@ -500,6 +500,15 @@ def main():
         ],
     )
 
+    stages["remaining_manuscript_analyses"] = execute_stage(
+        "Scenario D/E, OpenMRS, overhead and HTTP latency",
+        ROOT / "analysis/scenarios/remaining.py",
+        [
+            "--output",
+            str(output),
+        ],
+    )
+
     passed = all(
         stage["status"] == "PASS"
         for stage in stages.values()
