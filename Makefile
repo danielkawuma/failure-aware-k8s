@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-REPO_ROOT := $(shell pwd)
+REPO_ROOT := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 HARNESS_DIR := $(REPO_ROOT)/harness
 CONTROLLER_DIR := $(REPO_ROOT)/controller
 SCRIPTS_DIR := $(REPO_ROOT)/scripts
@@ -13,6 +13,8 @@ SCENARIO_D_RUNS ?= 30
 SCENARIO_E_RUNS_PER_PROFILE ?= 10
 SCENARIO_E_START_RUN ?= 1
 CANDIDATE_SELECTION_RUNS ?= 1
+
+CONFIRM_EXPERIMENTS ?= NO
 
 .PHONY: \
 	build \
@@ -37,6 +39,8 @@ CANDIDATE_SELECTION_RUNS ?= 1
 	campaign \
 	analyze \
 	reproduce \
+	run \
+	reproduce-run \
 	clean-evaluation
 
 build: build-harness build-controller
@@ -56,24 +60,20 @@ validate: validate-ssh validate-k8s validate-binaries
 validate-ssh:
 	@echo "Validating SSH and passwordless sudo..."
 	@test -n "$$SSH_KEY" || \
-		(echo "ERROR: SSH_KEY is not set."; \
-		 echo 'Set it using: export SSH_KEY="$$HOME/.ssh/<your-private-key>"'; \
-		 exit 1)
+		(echo "ERROR: SSH_KEY is not set."; exit 1)
 	@test -f "$$SSH_KEY" || \
-		(echo "ERROR: SSH key not found: $$SSH_KEY"; exit 1)
+		(echo "ERROR: SSH key not found."; exit 1)
 	ssh \
 		-i "$$SSH_KEY" \
 		-o BatchMode=yes \
 		-o ConnectTimeout=5 \
 		ubuntu@102.34.160.87 \
-		'sudo -n true && echo "SSH and passwordless sudo: OK"'
+		'sudo -n true && echo "SSH validation OK"'
 
 validate-k8s:
 	@echo "Validating Kubernetes access..."
 	kubectl get nodes
-	@echo
 	kubectl get deployment baseline-web -n failure-aware
-	@echo
 	kubectl get service baseline-web -n failure-aware
 
 validate-binaries:
@@ -133,19 +133,31 @@ campaign:
 	$(MAKE) campaign-candidate-selection
 
 analyze:
-	@echo "Running analysis pipeline..."
-	@test -f "$(ANALYSIS_DIR)/extract_metrics.py" || \
-		(echo "Missing analysis/extract_metrics.py"; exit 1)
-	@test -f "$(ANALYSIS_DIR)/summarize_results.py" || \
-		(echo "Missing analysis/summarize_results.py"; exit 1)
-	python3 $(ANALYSIS_DIR)/extract_metrics.py
-	python3 $(ANALYSIS_DIR)/summarize_results.py
+	@echo "Reproducing research results from recorded evidence..."
+	python3 $(ANALYSIS_DIR)/reproduce.py
 
 reproduce:
+	@echo "Failure-Aware Kubernetes: offline results reproduction"
+	@echo "No experiments will be executed."
+	python3 $(ANALYSIS_DIR)/reproduce.py
+
+# In 'make reproduce run', Make executes reproduce first,
+# followed by this explicitly guarded live experiment target.
+run:
+	@if [[ "$(CONFIRM_EXPERIMENTS)" != "YES" ]]; then \
+		echo "LIVE EXPERIMENTS BLOCKED"; \
+		echo "This target starts real experimental campaigns."; \
+		echo "Use: make reproduce run CONFIRM_EXPERIMENTS=YES"; \
+		exit 1; \
+	fi
+	@echo "Starting explicitly authorized experimental campaigns..."
 	$(MAKE) build
 	$(MAKE) validate
 	$(MAKE) campaign
-	$(MAKE) analyze
+
+reproduce-run:
+	@echo "Live experiment workflow requires explicit authorization."
+	$(MAKE) run CONFIRM_EXPERIMENTS=$(CONFIRM_EXPERIMENTS)
 
 clean-evaluation:
 	@echo "WARNING: this removes formal evaluation runs for Scenarios B, C and E."
