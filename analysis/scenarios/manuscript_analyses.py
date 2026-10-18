@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Failure-Aware Kubernetes: remaining manuscript analyses.
+Failure-Aware Kubernetes: manuscript analysis components.
 
 Reproduces:
 - Scenario D/E outcomes
@@ -359,19 +359,68 @@ def http_latency(destination):
         prefix="fa-http-latency-"
     ) as tmp:
         workspace = Path(tmp)
+
         script = workspace_script(
             workspace,
             "analyze-http-latency.py"
         )
 
-        link_evidence(workspace)
+        evaluation = (
+            workspace / "experiments/evaluation"
+        )
+
+        evaluation.mkdir(
+            parents=True,
+            exist_ok=True
+        )
+
+        source_files = sorted(
+            EVALUATION.rglob("http-observations.csv")
+        )
+
+        if not source_files:
+            raise RuntimeError(
+                "No HTTP observation files found"
+            )
+
+        # Recreate actual directory structure.
+        # Link all three files required for phase classification.
+        required_files = (
+            "http-observations.csv",
+            "fault-time.txt",
+            "fault-clear-time.txt",
+        )
+
+        for source in source_files:
+            relative = source.parent.relative_to(
+                EVALUATION
+            )
+
+            target_directory = evaluation / relative
+
+            target_directory.mkdir(
+                parents=True,
+                exist_ok=True
+            )
+
+            for filename in required_files:
+                original = source.parent / filename
+                target = target_directory / filename
+
+                if original.is_file():
+                    target.symlink_to(original)
 
         results = workspace / "analysis/results"
-        results.mkdir(parents=True, exist_ok=True)
+        results.mkdir(
+            parents=True,
+            exist_ok=True
+        )
 
-        # The HTTP latency analyzer requires run-metrics.csv.
-        # Use the preserved input schema and values.
-        source_metrics = HISTORICAL / "run-metrics.csv"
+        # Preserve the historical run population for
+        # comparison with historical latency statistics.
+        source_metrics = (
+            HISTORICAL / "run-metrics.csv"
+        )
 
         if not source_metrics.is_file():
             raise FileNotFoundError(source_metrics)
@@ -383,24 +432,49 @@ def http_latency(destination):
 
         execute(script, [], workspace)
 
-        for source_name, destination_name in [
+        outputs = [
             (
                 "http_latency_observations.csv",
-                "http-latency-observations.csv"
+                "http-latency-observations.csv",
             ),
             (
                 "http_latency_by_run.csv",
-                "http-latency-by-run.csv"
+                "http-latency-by-run.csv",
             ),
             (
                 "http_latency_summary.csv",
-                "http-latency-summary.csv"
+                "http-latency-summary.csv",
             ),
-        ]:
+        ]
+
+        for source_name, destination_name in outputs:
+            generated = results / source_name
+
+            if not generated.is_file():
+                raise RuntimeError(
+                    f"HTTP output missing: {generated}"
+                )
+
+            rows = read_csv(generated)
+
+            if not rows:
+                raise RuntimeError(
+                    f"HTTP output empty: {source_name}"
+                )
+
             copy_output(
-                results / source_name,
+                generated,
                 destination / destination_name
             )
+
+        print(
+            "HTTP_LATENCY_SOURCE_FILES:",
+            len(source_files)
+        )
+
+        print(
+            "HTTP_LATENCY_PHASE_INPUTS_RESTORED"
+        )
 
 
 def compare_historical(current, historical):
@@ -517,7 +591,7 @@ def main():
             print(name, "FAIL:", exc)
 
     write_csv(
-        destination / "remaining-analysis-manifest.csv",
+        destination / "manuscript-analysis-manifest.csv",
         results,
         MANIFEST_FIELDS,
     )
@@ -539,7 +613,7 @@ def main():
     }
 
     with (
-        destination / "remaining-analysis-report.json"
+        destination / "manuscript-analysis-report.json"
     ).open("w", encoding="utf-8") as f:
         json.dump(report, f, indent=2)
         f.write("\n")
@@ -549,7 +623,7 @@ def main():
     # failed stages can be investigated.
 
     print()
-    print("REMAINING_ANALYSIS_STATUS:", report["status"])
+    print("MANUSCRIPT_ANALYSIS_STATUS:", report["status"])
     print("Completed:", len(report["completed_stages"]))
     print("Failed:", len(failures))
     print("No experiments executed.")
@@ -557,7 +631,7 @@ def main():
     if failures:
         return 1
 
-    print("REMAINING_ANALYSIS_REPRODUCED")
+    print("MANUSCRIPT_ANALYSES_EXECUTED")
     return 0
 
 

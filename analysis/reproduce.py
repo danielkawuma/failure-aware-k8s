@@ -502,7 +502,7 @@ def main():
 
     stages["remaining_manuscript_analyses"] = execute_stage(
         "Scenario D/E, OpenMRS, overhead and HTTP latency",
-        ROOT / "analysis/scenarios/remaining.py",
+        ROOT / "analysis/scenarios/manuscript_analyses.py",
         [
             "--output",
             str(output),
