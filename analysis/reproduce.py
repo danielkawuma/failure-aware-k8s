@@ -482,6 +482,15 @@ def main():
         ],
     )
 
+    stages["scenario_a"] = execute_stage(
+        "Scenario A genuine node-loss analysis",
+        ROOT / "analysis/scenarios/scenario_a.py",
+        [
+            "--output",
+            str(output),
+        ],
+    )
+
     passed = all(
         stage["status"] == "PASS"
         for stage in stages.values()
