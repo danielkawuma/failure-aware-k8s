@@ -1,12 +1,16 @@
-use anyhow::{Result, anyhow};
+use anyhow::{Context, Result, anyhow};
+use chrono::{DateTime, Utc};
 use k8s_openapi::api::core::v1::{Node, Pod};
 use kube::{Api, Client};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::env;
 use std::fs;
-use std::path::Path;
+use std::io::{BufRead, BufReader, Write};
+use std::path::PathBuf;
+use std::time::Duration;
+use tokio::time::{sleep, timeout};
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum ResourceState {
@@ -57,7 +61,7 @@ struct CandidateEvaluation {
     eligible: bool,
 }
 
-#[derive(Debug, Clone, Deserialize, Default)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 struct NodeHistory {
     #[serde(default = "default_uptime_ratio")]
     uptime_ratio: f64,
@@ -76,7 +80,30 @@ fn default_uptime_ratio() -> f64 {
     0.5
 }
 
-fn node_ready(node: &Node) -> bool {
+impl Default for NodeHistory {
+    fn default() -> Self {
+        Self {
+            uptime_ratio: default_uptime_ratio(),
+            recent_failures: 0,
+            successful_recoveries: 0,
+            failed_recoveries: 0,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+struct NodeObservation {
+    timestamp_utc: DateTime<Utc>,
+    node: String,
+    ready_status: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+struct ObservationState {
+    nodes: HashMap<String, NodeObservation>,
+}
+
+fn ready_status(node: &Node) -> String {
     node.status
         .as_ref()
         .and_then(|status| status.conditions.as_ref())
@@ -85,8 +112,12 @@ fn node_ready(node: &Node) -> bool {
                 .iter()
                 .find(|condition| condition.type_ == "Ready")
         })
-        .map(|condition| condition.status == "True")
-        .unwrap_or(false)
+        .map(|condition| condition.status.clone())
+        .unwrap_or_else(|| "Unknown".to_string())
+}
+
+fn node_ready(node: &Node) -> bool {
+    ready_status(node) == "True"
 }
 
 fn node_schedulable(node: &Node) -> bool {
@@ -98,24 +129,44 @@ fn node_schedulable(node: &Node) -> bool {
 }
 
 fn labels_match(node: &Node, required_labels: &HashMap<String, String>) -> bool {
-    required_labels.iter().all(|(key, expected_value)| {
+    required_labels.iter().all(|(key, expected)| {
         node.metadata
             .labels
             .as_ref()
             .and_then(|labels| labels.get(key))
-            == Some(expected_value)
+            == Some(expected)
     })
+}
+
+fn api_timeout_ms() -> u64 {
+    env::var("FAILURE_AWARE_API_TIMEOUT_MS")
+        .ok()
+        .and_then(|value| value.parse::<u64>().ok())
+        .filter(|value| *value > 0)
+        .unwrap_or(3000)
+}
+
+async fn bounded_api<T, F>(operation: &str, future: F) -> Result<T>
+where
+    F: std::future::Future<Output = Result<T>>,
+{
+    let timeout_ms = api_timeout_ms();
+
+    timeout(Duration::from_millis(timeout_ms), future)
+        .await
+        .map_err(|_| anyhow!("{} timed out after {} ms", operation, timeout_ms))?
+        .with_context(|| format!("Kubernetes API operation failed: {}", operation))
 }
 
 fn parse_cpu_millicores(value: &str) -> Result<u64> {
     if let Some(nano) = value.strip_suffix('n') {
         let nano: u64 = nano.parse()?;
-        return Ok((nano + 999_999) / 1_000_000);
+        return Ok(nano.saturating_add(999_999) / 1_000_000);
     }
 
     if let Some(micro) = value.strip_suffix('u') {
         let micro: u64 = micro.parse()?;
-        return Ok((micro + 999) / 1_000);
+        return Ok(micro.saturating_add(999) / 1_000);
     }
 
     if let Some(milli) = value.strip_suffix('m') {
@@ -123,95 +174,91 @@ fn parse_cpu_millicores(value: &str) -> Result<u64> {
     }
 
     let cores: f64 = value.parse()?;
+
+    if !cores.is_finite() || cores < 0.0 {
+        return Err(anyhow!("Invalid CPU quantity: {}", value));
+    }
+
     Ok((cores * 1000.0).ceil() as u64)
 }
 
 fn parse_memory_mib(value: &str) -> Result<u64> {
-    if let Some(kib) = value.strip_suffix("Ki") {
-        let kib: f64 = kib.parse()?;
-        return Ok((kib / 1024.0).ceil() as u64);
+    let units = [
+        ("Ki", 1024.0),
+        ("Mi", 1024.0_f64.powi(2)),
+        ("Gi", 1024.0_f64.powi(3)),
+        ("Ti", 1024.0_f64.powi(4)),
+        ("Pi", 1024.0_f64.powi(5)),
+        ("Ei", 1024.0_f64.powi(6)),
+        ("K", 1000.0),
+        ("M", 1000.0_f64.powi(2)),
+        ("G", 1000.0_f64.powi(3)),
+        ("T", 1000.0_f64.powi(4)),
+        ("P", 1000.0_f64.powi(5)),
+        ("E", 1000.0_f64.powi(6)),
+    ];
+
+    for (suffix, multiplier) in units {
+        if let Some(number) = value.strip_suffix(suffix) {
+            let amount: f64 = number.parse()?;
+
+            if !amount.is_finite() || amount < 0.0 {
+                return Err(anyhow!("Invalid memory quantity: {}", value));
+            }
+
+            return Ok((amount * multiplier / 1024.0 / 1024.0).ceil() as u64);
+        }
     }
 
-    if let Some(mib) = value.strip_suffix("Mi") {
-        let mib: f64 = mib.parse()?;
-        return Ok(mib.ceil() as u64);
+    let bytes: f64 = value.parse()?;
+
+    if !bytes.is_finite() || bytes < 0.0 {
+        return Err(anyhow!("Invalid memory quantity: {}", value));
     }
 
-    if let Some(gib) = value.strip_suffix("Gi") {
-        let gib: f64 = gib.parse()?;
-        return Ok((gib * 1024.0).ceil() as u64);
-    }
-
-    if let Some(tib) = value.strip_suffix("Ti") {
-        let tib: f64 = tib.parse()?;
-        return Ok((tib * 1024.0 * 1024.0).ceil() as u64);
-    }
-
-    if let Some(kb) = value.strip_suffix('K') {
-        let kb: f64 = kb.parse()?;
-        return Ok((kb * 1000.0 / 1024.0 / 1024.0).ceil() as u64);
-    }
-
-    if let Some(mb) = value.strip_suffix('M') {
-        let mb: f64 = mb.parse()?;
-        return Ok((mb * 1000.0 * 1000.0 / 1024.0 / 1024.0).ceil() as u64);
-    }
-
-    if let Some(gb) = value.strip_suffix('G') {
-        let gb: f64 = gb.parse()?;
-        return Ok((gb * 1000.0 * 1000.0 * 1000.0 / 1024.0 / 1024.0).ceil() as u64);
-    }
-
-    if value.chars().all(|c| c.is_ascii_digit()) {
-        let bytes: f64 = value.parse()?;
-        return Ok((bytes / 1024.0 / 1024.0).ceil() as u64);
-    }
-
-    Err(anyhow!("Unsupported Kubernetes memory quantity: {}", value))
+    Ok((bytes / 1024.0 / 1024.0).ceil() as u64)
 }
 
 fn node_allocatable(node: &Node) -> Result<(u64, u64)> {
-    let node_name = node.metadata.name.as_deref().unwrap_or("<unknown>");
+    let name = node.metadata.name.as_deref().unwrap_or("<unknown>");
 
     let allocatable = node
         .status
         .as_ref()
         .and_then(|status| status.allocatable.as_ref())
-        .ok_or_else(|| anyhow!("Node {} has no allocatable resource data", node_name))?;
+        .ok_or_else(|| anyhow!("Node {} has no allocatable resources", name))?;
 
-    let cpu_quantity = allocatable
+    let cpu = allocatable
         .get("cpu")
-        .ok_or_else(|| anyhow!("Node {} has no allocatable CPU value", node_name))?;
+        .ok_or_else(|| anyhow!("Missing allocatable CPU"))?;
 
-    let memory_quantity = allocatable
+    let memory = allocatable
         .get("memory")
-        .ok_or_else(|| anyhow!("Node {} has no allocatable memory value", node_name))?;
+        .ok_or_else(|| anyhow!("Missing allocatable memory"))?;
 
-    Ok((
-        parse_cpu_millicores(&cpu_quantity.0)?,
-        parse_memory_mib(&memory_quantity.0)?,
-    ))
+    Ok((parse_cpu_millicores(&cpu.0)?, parse_memory_mib(&memory.0)?))
 }
 
 fn container_requests(pod: &Pod) -> Result<(u64, u64)> {
-    let spec = match pod.spec.as_ref() {
-        Some(spec) => spec,
-        None => return Ok((0, 0)),
+    let Some(spec) = pod.spec.as_ref() else {
+        return Ok((0, 0));
     };
 
     let mut app_cpu = 0u64;
     let mut app_memory = 0u64;
 
     for container in &spec.containers {
-        if let Some(resources) = container.resources.as_ref() {
-            if let Some(requests) = resources.requests.as_ref() {
-                if let Some(cpu) = requests.get("cpu") {
-                    app_cpu = app_cpu.saturating_add(parse_cpu_millicores(&cpu.0)?);
-                }
+        if let Some(requests) = container
+            .resources
+            .as_ref()
+            .and_then(|resources| resources.requests.as_ref())
+        {
+            if let Some(cpu) = requests.get("cpu") {
+                app_cpu = app_cpu.saturating_add(parse_cpu_millicores(&cpu.0)?);
+            }
 
-                if let Some(memory) = requests.get("memory") {
-                    app_memory = app_memory.saturating_add(parse_memory_mib(&memory.0)?);
-                }
+            if let Some(memory) = requests.get("memory") {
+                app_memory = app_memory.saturating_add(parse_memory_mib(&memory.0)?);
             }
         }
     }
@@ -221,48 +268,53 @@ fn container_requests(pod: &Pod) -> Result<(u64, u64)> {
 
     if let Some(init_containers) = spec.init_containers.as_ref() {
         for container in init_containers {
-            let mut init_cpu = 0u64;
-            let mut init_memory = 0u64;
+            let mut cpu = 0u64;
+            let mut memory = 0u64;
 
-            if let Some(resources) = container.resources.as_ref() {
-                if let Some(requests) = resources.requests.as_ref() {
-                    if let Some(cpu) = requests.get("cpu") {
-                        init_cpu = parse_cpu_millicores(&cpu.0)?;
-                    }
+            if let Some(requests) = container
+                .resources
+                .as_ref()
+                .and_then(|resources| resources.requests.as_ref())
+            {
+                if let Some(value) = requests.get("cpu") {
+                    cpu = parse_cpu_millicores(&value.0)?;
+                }
 
-                    if let Some(memory) = requests.get("memory") {
-                        init_memory = parse_memory_mib(&memory.0)?;
-                    }
+                if let Some(value) = requests.get("memory") {
+                    memory = parse_memory_mib(&value.0)?;
                 }
             }
 
-            max_init_cpu = max_init_cpu.max(init_cpu);
-            max_init_memory = max_init_memory.max(init_memory);
+            max_init_cpu = max_init_cpu.max(cpu);
+            max_init_memory = max_init_memory.max(memory);
         }
     }
 
-    let mut effective_cpu = app_cpu.max(max_init_cpu);
-    let mut effective_memory = app_memory.max(max_init_memory);
+    let mut cpu = app_cpu.max(max_init_cpu);
+    let mut memory = app_memory.max(max_init_memory);
 
     if let Some(overhead) = spec.overhead.as_ref() {
-        if let Some(cpu) = overhead.get("cpu") {
-            effective_cpu = effective_cpu.saturating_add(parse_cpu_millicores(&cpu.0)?);
+        if let Some(value) = overhead.get("cpu") {
+            cpu = cpu.saturating_add(parse_cpu_millicores(&value.0)?);
         }
 
-        if let Some(memory) = overhead.get("memory") {
-            effective_memory = effective_memory.saturating_add(parse_memory_mib(&memory.0)?);
+        if let Some(value) = overhead.get("memory") {
+            memory = memory.saturating_add(parse_memory_mib(&value.0)?);
         }
     }
 
-    Ok((effective_cpu, effective_memory))
+    Ok((cpu, memory))
 }
 
-async fn requested_resources_on_node(client: Client, node_name: &str) -> Result<(u64, u64)> {
+async fn requested_resources_by_node(client: Client) -> Result<HashMap<String, (u64, u64)>> {
     let pods: Api<Pod> = Api::all(client);
-    let pod_list = pods.list(&Default::default()).await?;
 
-    let mut requested_cpu = 0u64;
-    let mut requested_memory = 0u64;
+    let pod_list = bounded_api("list all Pods", async {
+        Ok(pods.list(&Default::default()).await?)
+    })
+    .await?;
+
+    let mut usage: HashMap<String, (u64, u64)> = HashMap::new();
 
     for pod in pod_list.items {
         let phase = pod
@@ -275,18 +327,19 @@ async fn requested_resources_on_node(client: Client, node_name: &str) -> Result<
             continue;
         }
 
-        let assigned_node = pod.spec.as_ref().and_then(|spec| spec.node_name.as_deref());
-
-        if assigned_node != Some(node_name) {
+        let Some(node_name) = pod.spec.as_ref().and_then(|spec| spec.node_name.as_ref()) else {
             continue;
-        }
+        };
 
         let (cpu, memory) = container_requests(&pod)?;
-        requested_cpu = requested_cpu.saturating_add(cpu);
-        requested_memory = requested_memory.saturating_add(memory);
+
+        let entry = usage.entry(node_name.clone()).or_insert((0, 0));
+
+        entry.0 = entry.0.saturating_add(cpu);
+        entry.1 = entry.1.saturating_add(memory);
     }
 
-    Ok((requested_cpu, requested_memory))
+    Ok(usage)
 }
 
 fn reliability_score(history: &NodeHistory) -> f64 {
@@ -305,42 +358,273 @@ fn reliability_score(history: &NodeHistory) -> f64 {
     0.60 * uptime + 0.25 * recent_failure_health + 0.15 * recovery_stability
 }
 
-fn load_history() -> Result<HashMap<String, NodeHistory>> {
-    let configured_path = env::var("FAILURE_AWARE_NODE_HISTORY")
-        .unwrap_or_else(|_| "controller/config/node-history.json".to_string());
+fn history_path() -> PathBuf {
+    if let Ok(configured) = env::var("FAILURE_AWARE_NODE_HISTORY") {
+        return PathBuf::from(configured);
+    }
 
-    let fallback_path = "config/node-history.json";
+    let primary = PathBuf::from("controller/config/node-history.json");
 
-    let chosen_path = if Path::new(&configured_path).exists() {
-        configured_path
-    } else if Path::new(fallback_path).exists() {
-        fallback_path.to_string()
+    if primary.exists() {
+        primary
     } else {
-        println!("[RELIABILITY] history file not found; using neutral reliability values");
+        PathBuf::from("config/node-history.json")
+    }
+}
+
+fn load_history() -> Result<HashMap<String, NodeHistory>> {
+    let path = history_path();
+
+    if !path.exists() {
+        println!("[RELIABILITY] history file not found; using neutral defaults");
         return Ok(HashMap::new());
-    };
+    }
 
-    let contents = fs::read_to_string(&chosen_path)?;
-    let history: HashMap<String, NodeHistory> = serde_json::from_str(&contents)?;
-
-    println!("[RELIABILITY] loaded node history from {}", chosen_path);
+    let contents = fs::read_to_string(&path)?;
+    let history = serde_json::from_str(&contents)?;
 
     Ok(history)
 }
 
-async fn evaluate_one_candidate(
-    client: Client,
+fn save_history(history: &HashMap<String, NodeHistory>) -> Result<()> {
+    let path = history_path();
+
+    if let Some(parent) = path.parent() {
+        fs::create_dir_all(parent)?;
+    }
+
+    let temporary = path.with_extension("json.tmp");
+
+    fs::write(&temporary, serde_json::to_string_pretty(history)?)?;
+
+    fs::rename(temporary, path)?;
+
+    Ok(())
+}
+
+fn observations_path() -> PathBuf {
+    history_path().with_file_name("node-observations.jsonl")
+}
+
+fn observation_state_path() -> PathBuf {
+    history_path().with_file_name("node-observation-state.json")
+}
+
+fn append_observation(observation: &NodeObservation) -> Result<()> {
+    let path = observations_path();
+
+    if let Some(parent) = path.parent() {
+        fs::create_dir_all(parent)?;
+    }
+
+    let mut file = fs::OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(path)?;
+
+    writeln!(file, "{}", serde_json::to_string(observation)?)?;
+
+    Ok(())
+}
+
+fn load_observation_state() -> Result<ObservationState> {
+    let path = observation_state_path();
+
+    if !path.exists() {
+        return Ok(ObservationState::default());
+    }
+
+    Ok(serde_json::from_str(&fs::read_to_string(path)?)?)
+}
+
+fn save_observation_state(state: &ObservationState) -> Result<()> {
+    let path = observation_state_path();
+
+    if let Some(parent) = path.parent() {
+        fs::create_dir_all(parent)?;
+    }
+
+    let temporary = path.with_extension("json.tmp");
+
+    fs::write(&temporary, serde_json::to_string_pretty(state)?)?;
+
+    fs::rename(temporary, path)?;
+
+    Ok(())
+}
+
+fn update_history_from_observations(
+    nodes: &[Node],
+    history: &mut HashMap<String, NodeHistory>,
+    state: &mut ObservationState,
+) -> Result<()> {
+    let now = Utc::now();
+
+    for node in nodes {
+        let Some(name) = node.metadata.name.as_ref() else {
+            continue;
+        };
+
+        let status = ready_status(node);
+        let previous = state.nodes.get(name).cloned();
+
+        if let Some(previous) = previous.as_ref() {
+            if previous.ready_status == "True" && status == "False" {
+                let entry = history.entry(name.clone()).or_default();
+
+                entry.recent_failures = entry.recent_failures.saturating_add(1);
+            }
+        }
+
+        let observation = NodeObservation {
+            timestamp_utc: now,
+            node: name.clone(),
+            ready_status: status,
+        };
+
+        append_observation(&observation)?;
+        state.nodes.insert(name.clone(), observation);
+    }
+
+    Ok(())
+}
+
+fn recompute_uptime_ratios(history: &mut HashMap<String, NodeHistory>) -> Result<()> {
+    let path = observations_path();
+
+    if !path.exists() {
+        return Ok(());
+    }
+
+    let file = fs::File::open(path)?;
+    let reader = BufReader::new(file);
+
+    let mut by_node: HashMap<String, Vec<NodeObservation>> = HashMap::new();
+
+    for line in reader.lines() {
+        let line = line?;
+
+        if line.trim().is_empty() {
+            continue;
+        }
+
+        let observation: NodeObservation = serde_json::from_str(&line)?;
+
+        by_node
+            .entry(observation.node.clone())
+            .or_default()
+            .push(observation);
+    }
+
+    for (node, mut observations) in by_node {
+        observations.sort_by_key(|o| o.timestamp_utc);
+
+        let mut ready_ms: i64 = 0;
+        let mut known_ms: i64 = 0;
+
+        for pair in observations.windows(2) {
+            let first = &pair[0];
+            let second = &pair[1];
+
+            let elapsed = (second.timestamp_utc - first.timestamp_utc).num_milliseconds();
+
+            if elapsed <= 0 || elapsed > 60_000 {
+                continue;
+            }
+
+            match first.ready_status.as_str() {
+                "True" => {
+                    ready_ms += elapsed;
+                    known_ms += elapsed;
+                }
+
+                "False" => {
+                    known_ms += elapsed;
+                }
+
+                _ => {}
+            }
+        }
+
+        if known_ms > 0 {
+            let entry = history.entry(node).or_default();
+
+            entry.uptime_ratio = ready_ms as f64 / known_ms as f64;
+        }
+    }
+
+    Ok(())
+}
+
+pub async fn run_node_history_collector(client: Client) -> Result<()> {
+    let nodes: Api<Node> = Api::all(client);
+
+    println!("[HISTORY] Dynamic node-history collector started");
+
+    loop {
+        let result: Result<()> = async {
+            let node_list = bounded_api("node-history Node listing", async {
+                Ok(nodes.list(&Default::default()).await?)
+            })
+            .await?;
+
+            let mut history = load_history()?;
+            let mut state = load_observation_state()?;
+
+            update_history_from_observations(&node_list.items, &mut history, &mut state)?;
+
+            recompute_uptime_ratios(&mut history)?;
+
+            save_history(&history)?;
+            save_observation_state(&state)?;
+
+            println!(
+                "[HISTORY] {} | nodes={} | history_updated=true",
+                Utc::now().to_rfc3339(),
+                node_list.items.len()
+            );
+
+            Ok(())
+        }
+        .await;
+
+        if let Err(error) = result {
+            println!("[HISTORY ERROR] {} | {}", Utc::now().to_rfc3339(), error);
+        }
+
+        sleep(Duration::from_secs(30)).await;
+    }
+}
+
+pub fn record_recovery_outcome(node_name: &str, successful: bool) -> Result<()> {
+    let mut history = load_history()?;
+
+    let entry = history.entry(node_name.to_string()).or_default();
+
+    if successful {
+        entry.successful_recoveries = entry.successful_recoveries.saturating_add(1);
+    } else {
+        entry.failed_recoveries = entry.failed_recoveries.saturating_add(1);
+    }
+
+    save_history(&history)?;
+
+    Ok(())
+}
+
+fn evaluate_one_candidate(
     node: &Node,
     required_cpu_millicores: u64,
     required_memory_mib: u64,
     required_labels: &HashMap<String, String>,
     history: &HashMap<String, NodeHistory>,
+    usage: &HashMap<String, (u64, u64)>,
 ) -> Result<CandidateEvaluation> {
     let node_name = node
         .metadata
         .name
         .clone()
-        .ok_or_else(|| anyhow!("Candidate node has no metadata.name"))?;
+        .ok_or_else(|| anyhow!("Candidate node has no name"))?;
 
     let ready = node_ready(node);
     let schedulable = node_schedulable(node);
@@ -348,7 +632,7 @@ async fn evaluate_one_candidate(
 
     let (allocatable_cpu, allocatable_memory) = node_allocatable(node)?;
 
-    let (requested_cpu, requested_memory) = requested_resources_on_node(client, &node_name).await?;
+    let (requested_cpu, requested_memory) = usage.get(&node_name).copied().unwrap_or((0, 0));
 
     let remaining_cpu = allocatable_cpu.saturating_sub(requested_cpu);
 
@@ -388,20 +672,23 @@ async fn evaluate_legacy_candidate(
     required_labels: &HashMap<String, String>,
 ) -> Result<ResourceAwareness> {
     let nodes: Api<Node> = Api::all(client);
-    let node = nodes.get(candidate_node).await?;
+
+    let node = bounded_api("legacy candidate Node GET", async {
+        Ok(nodes.get(candidate_node).await?)
+    })
+    .await?;
 
     let ready = node_ready(&node);
     let schedulable = node_schedulable(&node);
     let labels_ok = labels_match(&node, required_labels);
 
-    let (cpu_millicores, memory_mib) = node_allocatable(&node)?;
+    let (cpu, memory) = node_allocatable(&node)?;
 
-    let resources_sufficient =
-        cpu_millicores >= required_cpu_millicores && memory_mib >= required_memory_mib;
+    let sufficient = cpu >= required_cpu_millicores && memory >= required_memory_mib;
 
     let state = if !ready || !schedulable || !labels_ok {
         ResourceState::Unavailable
-    } else if !resources_sufficient {
+    } else if !sufficient {
         ResourceState::Insufficient
     } else {
         ResourceState::Available
@@ -415,14 +702,14 @@ async fn evaluate_legacy_candidate(
         node_schedulable: schedulable,
         labels_match: labels_ok,
 
-        allocatable_cpu_millicores: cpu_millicores,
+        allocatable_cpu_millicores: cpu,
         requested_cpu_millicores: 0,
-        remaining_cpu_millicores: cpu_millicores,
+        remaining_cpu_millicores: cpu,
         required_cpu_millicores,
 
-        allocatable_memory_mib: memory_mib,
+        allocatable_memory_mib: memory,
         requested_memory_mib: 0,
-        remaining_memory_mib: memory_mib,
+        remaining_memory_mib: memory,
         required_memory_mib,
 
         reliability_score: 0.0,
@@ -442,13 +729,6 @@ pub async fn evaluate_resources(
         .map(|value| value == "recovery-candidate")
         .unwrap_or(false);
 
-    /*
-     * Backward-compatible path.
-     *
-     * Old controller.json files had required_node_labels={}.
-     * Those configurations continue to evaluate only
-     * recovery_candidate_node exactly as before.
-     */
     if !multi_candidate_selection {
         return evaluate_legacy_candidate(
             client,
@@ -461,8 +741,14 @@ pub async fn evaluate_resources(
     }
 
     let nodes: Api<Node> = Api::all(client.clone());
-    let node_list = nodes.list(&Default::default()).await?;
+
+    let node_list = bounded_api("recovery candidate Node listing", async {
+        Ok(nodes.list(&Default::default()).await?)
+    })
+    .await?;
+
     let history = load_history()?;
+    let usage = requested_resources_by_node(client).await?;
 
     let mut evaluations = Vec::new();
 
@@ -472,14 +758,13 @@ pub async fn evaluate_resources(
         }
 
         let evaluation = evaluate_one_candidate(
-            client.clone(),
             &node,
             required_cpu_millicores,
             required_memory_mib,
             required_labels,
             &history,
-        )
-        .await?;
+            &usage,
+        )?;
 
         println!(
             "[CANDIDATE] node={} | eligible={} | Ready={} | schedulable={} | labels_match={} | alloc_cpu={}m | requested_cpu={}m | remaining_cpu={}m | required_cpu={}m | alloc_memory={}Mi | requested_memory={}Mi | remaining_memory={}Mi | required_memory={}Mi | reliability={:.6}",
@@ -496,14 +781,14 @@ pub async fn evaluate_resources(
             evaluation.requested_memory_mib,
             evaluation.remaining_memory_mib,
             required_memory_mib,
-            evaluation.reliability_score,
+            evaluation.reliability_score
         );
 
         evaluations.push(evaluation);
     }
 
     if evaluations.is_empty() {
-        println!("[SELECTION] no nodes matched the recovery-candidate labels");
+        println!("[SELECTION] no nodes matched recovery-candidate labels");
 
         return Ok(ResourceAwareness {
             candidate_node: String::new(),
@@ -549,7 +834,7 @@ pub async fn evaluate_resources(
             selected.node_name,
             selected.reliability_score,
             selected.remaining_cpu_millicores,
-            selected.remaining_memory_mib,
+            selected.remaining_memory_mib
         );
 
         return Ok(ResourceAwareness {
@@ -571,7 +856,6 @@ pub async fn evaluate_resources(
             required_memory_mib,
 
             reliability_score: selected.reliability_score,
-
             multi_candidate_selection: true,
         });
     }

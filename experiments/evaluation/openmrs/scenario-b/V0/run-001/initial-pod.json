@@ -1,0 +1,334 @@
+{
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+        "creationTimestamp": "2026-10-10T11:43:35Z",
+        "generateName": "openmrs-backend-fc88b87bd-",
+        "generation": 1,
+        "labels": {
+            "app": "openmrs-backend",
+            "pod-template-hash": "fc88b87bd"
+        },
+        "name": "openmrs-backend-fc88b87bd-bdpff",
+        "namespace": "openmrs37",
+        "ownerReferences": [
+            {
+                "apiVersion": "apps/v1",
+                "blockOwnerDeletion": true,
+                "controller": true,
+                "kind": "ReplicaSet",
+                "name": "openmrs-backend-fc88b87bd",
+                "uid": "5e137baf-2b4b-4ac3-893a-7b0253b68f5a"
+            }
+        ],
+        "resourceVersion": "1441057",
+        "uid": "a38ff50c-0cd9-4550-b544-b8fc929b1c00"
+    },
+    "spec": {
+        "containers": [
+            {
+                "env": [
+                    {
+                        "name": "OMRS_CONFIG_MODULE_WEB_ADMIN",
+                        "value": "true"
+                    },
+                    {
+                        "name": "OMRS_CONFIG_AUTO_UPDATE_DATABASE",
+                        "value": "true"
+                    },
+                    {
+                        "name": "OMRS_CONFIG_CREATE_TABLES",
+                        "value": "true"
+                    },
+                    {
+                        "name": "OMRS_CONFIG_CONNECTION_SERVER",
+                        "value": "openmrs-mariadb.openmrs37.svc.cluster.local"
+                    },
+                    {
+                        "name": "OMRS_CONFIG_CONNECTION_DATABASE",
+                        "valueFrom": {
+                            "secretKeyRef": {
+                                "key": "MYSQL_DATABASE",
+                                "name": "openmrs-db-secret"
+                            }
+                        }
+                    },
+                    {
+                        "name": "OMRS_CONFIG_CONNECTION_USERNAME",
+                        "valueFrom": {
+                            "secretKeyRef": {
+                                "key": "MYSQL_USER",
+                                "name": "openmrs-db-secret"
+                            }
+                        }
+                    },
+                    {
+                        "name": "OMRS_CONFIG_CONNECTION_PASSWORD",
+                        "valueFrom": {
+                            "secretKeyRef": {
+                                "key": "MYSQL_PASSWORD",
+                                "name": "openmrs-db-secret"
+                            }
+                        }
+                    }
+                ],
+                "image": "openmrs/openmrs-reference-application-3-backend:3.7.1",
+                "imagePullPolicy": "IfNotPresent",
+                "name": "backend",
+                "ports": [
+                    {
+                        "containerPort": 8080,
+                        "name": "http",
+                        "protocol": "TCP"
+                    }
+                ],
+                "readinessProbe": {
+                    "failureThreshold": 12,
+                    "httpGet": {
+                        "path": "/openmrs",
+                        "port": 8080,
+                        "scheme": "HTTP"
+                    },
+                    "periodSeconds": 10,
+                    "successThreshold": 1,
+                    "timeoutSeconds": 10
+                },
+                "resources": {
+                    "limits": {
+                        "cpu": "2",
+                        "memory": "2200Mi"
+                    },
+                    "requests": {
+                        "cpu": "750m",
+                        "memory": "1400Mi"
+                    }
+                },
+                "startupProbe": {
+                    "failureThreshold": 180,
+                    "httpGet": {
+                        "path": "/openmrs",
+                        "port": 8080,
+                        "scheme": "HTTP"
+                    },
+                    "periodSeconds": 10,
+                    "successThreshold": 1,
+                    "timeoutSeconds": 10
+                },
+                "terminationMessagePath": "/dev/termination-log",
+                "terminationMessagePolicy": "File",
+                "volumeMounts": [
+                    {
+                        "mountPath": "/openmrs/data",
+                        "name": "backend-data"
+                    },
+                    {
+                        "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                        "name": "kube-api-access-zl4ng",
+                        "readOnly": true
+                    }
+                ]
+            }
+        ],
+        "dnsPolicy": "ClusterFirst",
+        "enableServiceLinks": true,
+        "nodeName": "k3s-worker1",
+        "nodeSelector": {
+            "kubernetes.io/hostname": "k3s-worker1"
+        },
+        "preemptionPolicy": "PreemptLowerPriority",
+        "priority": 0,
+        "restartPolicy": "Always",
+        "schedulerName": "default-scheduler",
+        "securityContext": {
+            "runAsGroup": 0,
+            "runAsUser": 1001,
+            "supplementalGroups": [
+                0
+            ]
+        },
+        "serviceAccount": "default",
+        "serviceAccountName": "default",
+        "terminationGracePeriodSeconds": 30,
+        "tolerations": [
+            {
+                "effect": "NoExecute",
+                "key": "node.kubernetes.io/not-ready",
+                "operator": "Exists",
+                "tolerationSeconds": 300
+            },
+            {
+                "effect": "NoExecute",
+                "key": "node.kubernetes.io/unreachable",
+                "operator": "Exists",
+                "tolerationSeconds": 300
+            }
+        ],
+        "volumes": [
+            {
+                "name": "backend-data",
+                "persistentVolumeClaim": {
+                    "claimName": "openmrs-backend-data-nfs"
+                }
+            },
+            {
+                "name": "kube-api-access-zl4ng",
+                "projected": {
+                    "defaultMode": 420,
+                    "sources": [
+                        {
+                            "serviceAccountToken": {
+                                "expirationSeconds": 3607,
+                                "path": "token"
+                            }
+                        },
+                        {
+                            "configMap": {
+                                "items": [
+                                    {
+                                        "key": "ca.crt",
+                                        "path": "ca.crt"
+                                    }
+                                ],
+                                "name": "kube-root-ca.crt"
+                            }
+                        },
+                        {
+                            "downwardAPI": {
+                                "items": [
+                                    {
+                                        "fieldRef": {
+                                            "apiVersion": "v1",
+                                            "fieldPath": "metadata.namespace"
+                                        },
+                                        "path": "namespace"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "status": {
+        "allocatedResources": {
+            "cpu": "750m",
+            "memory": "1400Mi"
+        },
+        "conditions": [
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-10-10T11:43:36Z",
+                "observedGeneration": 1,
+                "status": "True",
+                "type": "PodReadyToStartContainers"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-10-10T11:43:35Z",
+                "observedGeneration": 1,
+                "status": "True",
+                "type": "Initialized"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-10-10T11:52:31Z",
+                "observedGeneration": 1,
+                "status": "True",
+                "type": "Ready"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-10-10T11:52:31Z",
+                "observedGeneration": 1,
+                "status": "True",
+                "type": "ContainersReady"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-10-10T11:43:35Z",
+                "observedGeneration": 1,
+                "status": "True",
+                "type": "PodScheduled"
+            }
+        ],
+        "containerStatuses": [
+            {
+                "allocatedResources": {
+                    "cpu": "750m",
+                    "memory": "1400Mi"
+                },
+                "containerID": "containerd://b76d078b017e5960861ee917bef277f7c3f4097b28539635bc6f61f9146efc48",
+                "image": "docker.io/openmrs/openmrs-reference-application-3-backend:3.7.1",
+                "imageID": "docker.io/openmrs/openmrs-reference-application-3-backend@sha256:929cfe5dca5f221460e0f4a57abb9294614df5f74fbb3bb865e01b8dfe7a985b",
+                "lastState": {},
+                "name": "backend",
+                "ready": true,
+                "resources": {
+                    "limits": {
+                        "cpu": "2",
+                        "memory": "2200Mi"
+                    },
+                    "requests": {
+                        "cpu": "750m",
+                        "memory": "1400Mi"
+                    }
+                },
+                "restartCount": 0,
+                "started": true,
+                "state": {
+                    "running": {
+                        "startedAt": "2026-10-10T11:43:37Z"
+                    }
+                },
+                "user": {
+                    "linux": {
+                        "gid": 0,
+                        "supplementalGroups": [
+                            0
+                        ],
+                        "uid": 1001
+                    }
+                },
+                "volumeMounts": [
+                    {
+                        "mountPath": "/openmrs/data",
+                        "name": "backend-data"
+                    },
+                    {
+                        "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                        "name": "kube-api-access-zl4ng",
+                        "readOnly": true,
+                        "recursiveReadOnly": "Disabled"
+                    }
+                ]
+            }
+        ],
+        "hostIP": "102.34.160.87",
+        "hostIPs": [
+            {
+                "ip": "102.34.160.87"
+            }
+        ],
+        "observedGeneration": 1,
+        "phase": "Running",
+        "podIP": "10.42.1.227",
+        "podIPs": [
+            {
+                "ip": "10.42.1.227"
+            }
+        ],
+        "qosClass": "Burstable",
+        "resources": {
+            "limits": {
+                "cpu": "2",
+                "memory": "2200Mi"
+            },
+            "requests": {
+                "cpu": "745m",
+                "memory": "1400Mi"
+            }
+        },
+        "startTime": "2026-10-10T11:43:35Z"
+    }
+}

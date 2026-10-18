@@ -1,0 +1,52 @@
+=== TIME ===
+2026-10-04T20:30:12.540Z
+
+=== NODES ===
+NAME          STATUS   ROLES           AGE   VERSION        EXPERIMENT-ROLE   ROLE
+k3s-server    Ready    control-plane   18d   v1.36.4+k3s1                     
+k3s-worker1   Ready    <none>          18d   v1.36.4+k3s1   fault-target      fault-target
+k3s-worker2   Ready    <none>          17d   v1.36.4+k3s1   recovery-target   recovery-candidate
+k3s-worker3   Ready    <none>          25h   v1.36.4+k3s1                     recovery-candidate
+k3s-worker4   Ready    <none>          25h   v1.36.4+k3s1                     recovery-candidate
+
+=== BASELINE PODS ===
+NAME                            READY   STATUS    RESTARTS   AGE   IP            NODE          NOMINATED NODE   READINESS GATES
+baseline-web-75c79699bc-88x2c   1/1     Running   0          4s    10.42.1.201   k3s-worker1   <none>           <none>
+
+=== DEPLOYMENT NODESELECTOR ===
+{"kubernetes.io/hostname":"k3s-worker1"}
+
+=== CANDIDATE ALLOCATED RESOURCES ===
+--- k3s-worker2 ---
+Allocated resources:
+  (Total limits may be over 100 percent, i.e., overcommitted.)
+  Resource           Requests  Limits
+  --------           --------  ------
+  cpu                0 (0%)    0 (0%)
+  memory             0 (0%)    0 (0%)
+  ephemeral-storage  0 (0%)    0 (0%)
+  hugepages-1Gi      0 (0%)    0 (0%)
+  hugepages-2Mi      0 (0%)    0 (0%)
+Events:              <none>
+--- k3s-worker3 ---
+Allocated resources:
+  (Total limits may be over 100 percent, i.e., overcommitted.)
+  Resource           Requests  Limits
+  --------           --------  ------
+  cpu                0 (0%)    0 (0%)
+  memory             0 (0%)    0 (0%)
+  ephemeral-storage  0 (0%)    0 (0%)
+  hugepages-1Gi      0 (0%)    0 (0%)
+  hugepages-2Mi      0 (0%)    0 (0%)
+Events:              <none>
+--- k3s-worker4 ---
+Allocated resources:
+  (Total limits may be over 100 percent, i.e., overcommitted.)
+  Resource           Requests  Limits
+  --------           --------  ------
+  cpu                0 (0%)    0 (0%)
+  memory             0 (0%)    0 (0%)
+  ephemeral-storage  0 (0%)    0 (0%)
+  hugepages-1Gi      0 (0%)    0 (0%)
+  hugepages-2Mi      0 (0%)    0 (0%)
+Events:              <none>

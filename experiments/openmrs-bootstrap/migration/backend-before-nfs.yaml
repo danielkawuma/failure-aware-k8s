@@ -1,0 +1,136 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"openmrs-backend","namespace":"openmrs37"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"openmrs-backend"}},"strategy":{"type":"Recreate"},"template":{"metadata":{"labels":{"app":"openmrs-backend"}},"spec":{"containers":[{"env":[{"name":"OMRS_CONFIG_MODULE_WEB_ADMIN","value":"true"},{"name":"OMRS_CONFIG_AUTO_UPDATE_DATABASE","value":"true"},{"name":"OMRS_CONFIG_CREATE_TABLES","value":"true"},{"name":"OMRS_CONFIG_CONNECTION_SERVER","value":"openmrs-mariadb.openmrs37.svc.cluster.local"},{"name":"OMRS_CONFIG_CONNECTION_DATABASE","valueFrom":{"secretKeyRef":{"key":"MYSQL_DATABASE","name":"openmrs-db-secret"}}},{"name":"OMRS_CONFIG_CONNECTION_USERNAME","valueFrom":{"secretKeyRef":{"key":"MYSQL_USER","name":"openmrs-db-secret"}}},{"name":"OMRS_CONFIG_CONNECTION_PASSWORD","valueFrom":{"secretKeyRef":{"key":"MYSQL_PASSWORD","name":"openmrs-db-secret"}}}],"image":"openmrs/openmrs-reference-application-3-backend:3.7.1","imagePullPolicy":"IfNotPresent","name":"backend","ports":[{"containerPort":8080,"name":"http"}],"readinessProbe":{"failureThreshold":12,"httpGet":{"path":"/openmrs","port":8080},"periodSeconds":10,"timeoutSeconds":10},"resources":{"limits":{"cpu":"2","memory":"2200Mi"},"requests":{"cpu":"750m","memory":"1400Mi"}},"startupProbe":{"failureThreshold":180,"httpGet":{"path":"/openmrs","port":8080},"periodSeconds":10,"timeoutSeconds":10},"volumeMounts":[{"mountPath":"/openmrs/data","name":"backend-data"}]}],"initContainers":[{"command":["sh","-c","chown -R 1001:0 /openmrs/data\nchmod 0775 /openmrs/data\n"],"image":"busybox:1.36","name":"prepare-openmrs-data","volumeMounts":[{"mountPath":"/openmrs/data","name":"backend-data"}]}],"nodeSelector":{"kubernetes.io/hostname":"k3s-worker1"},"volumes":[{"name":"backend-data","persistentVolumeClaim":{"claimName":"openmrs-backend-data"}}]}}}}
+  creationTimestamp: "2026-10-07T20:46:24Z"
+  generation: 1
+  name: openmrs-backend
+  namespace: openmrs37
+  resourceVersion: "1183816"
+  uid: 179bd17e-5c11-444a-b786-2619f9401996
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: openmrs-backend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: openmrs-backend
+    spec:
+      containers:
+      - env:
+        - name: OMRS_CONFIG_MODULE_WEB_ADMIN
+          value: "true"
+        - name: OMRS_CONFIG_AUTO_UPDATE_DATABASE
+          value: "true"
+        - name: OMRS_CONFIG_CREATE_TABLES
+          value: "true"
+        - name: OMRS_CONFIG_CONNECTION_SERVER
+          value: openmrs-mariadb.openmrs37.svc.cluster.local
+        - name: OMRS_CONFIG_CONNECTION_DATABASE
+          valueFrom:
+            secretKeyRef:
+              key: MYSQL_DATABASE
+              name: openmrs-db-secret
+        - name: OMRS_CONFIG_CONNECTION_USERNAME
+          valueFrom:
+            secretKeyRef:
+              key: MYSQL_USER
+              name: openmrs-db-secret
+        - name: OMRS_CONFIG_CONNECTION_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: MYSQL_PASSWORD
+              name: openmrs-db-secret
+        image: openmrs/openmrs-reference-application-3-backend:3.7.1
+        imagePullPolicy: IfNotPresent
+        name: backend
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 12
+          httpGet:
+            path: /openmrs
+            port: 8080
+            scheme: HTTP
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 10
+        resources:
+          limits:
+            cpu: "2"
+            memory: 2200Mi
+          requests:
+            cpu: 750m
+            memory: 1400Mi
+        startupProbe:
+          failureThreshold: 180
+          httpGet:
+            path: /openmrs
+            port: 8080
+            scheme: HTTP
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 10
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /openmrs/data
+          name: backend-data
+      dnsPolicy: ClusterFirst
+      initContainers:
+      - command:
+        - sh
+        - -c
+        - |
+          chown -R 1001:0 /openmrs/data
+          chmod 0775 /openmrs/data
+        image: busybox:1.36
+        imagePullPolicy: IfNotPresent
+        name: prepare-openmrs-data
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /openmrs/data
+          name: backend-data
+      nodeSelector:
+        kubernetes.io/hostname: k3s-worker1
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: backend-data
+        persistentVolumeClaim:
+          claimName: openmrs-backend-data
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: "2026-10-07T20:46:59Z"
+    lastUpdateTime: "2026-10-07T20:46:59Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  - lastTransitionTime: "2026-10-07T20:46:24Z"
+    lastUpdateTime: "2026-10-07T20:46:59Z"
+    message: ReplicaSet "openmrs-backend-7c9fd8d9c9" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  observedGeneration: 1
+  readyReplicas: 1
+  replicas: 1
+  terminatingReplicas: 0
+  updatedReplicas: 1

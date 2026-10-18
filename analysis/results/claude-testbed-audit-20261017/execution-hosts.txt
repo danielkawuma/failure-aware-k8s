@@ -1,0 +1,53 @@
+=== CONTROLLER EXECUTION REFERENCES ===
+Makefile:4:HARNESS_DIR := $(REPO_ROOT)/harness
+Makefile:19:	build-harness \
+Makefile:42:build: build-harness build-controller
+Makefile:44:build-harness:
+Makefile:45:	@echo "Building Rust harness..."
+Makefile:81:	@test -x $(HARNESS_DIR)/target/debug/failure-aware-harness
+Makefile:82:	@test -x $(CONTROLLER_DIR)/target/debug/failure-aware-controller
+scripts/experiment-config.sh:46:HARNESS_BINARY="${REPO_ROOT}/harness/target/debug/failure-aware-harness"
+scripts/experiment-config.sh:47:CONTROLLER_BINARY="${REPO_ROOT}/controller/target/debug/failure-aware-controller"
+scripts/experiment-config.sh:52:SCENARIO_B_CONFIG="${REPO_ROOT}/harness/config/scenario-b.json"
+scripts/experiment-config.sh:53:SCENARIO_C_CONFIG="${REPO_ROOT}/harness/config/scenario-c.json"
+scripts/experiment-config.sh:54:SCENARIO_E_CONFIG="${REPO_ROOT}/harness/config/scenario-e.json"
+scripts/run-openmrs-overnight.sh:120:    [[ -f "$dir/harness.log" ]] || return 1
+scripts/run-overhead-campaign.sh:19:CONTROLLER_BINARY="${REPO_ROOT}/controller/target/debug/failure-aware-controller"
+scripts/run-experiment.sh:470:echo "[5/9] Starting harness"
+scripts/run-experiment.sh:474:  > "${RUN_DIR}/harness.log" \
+scripts/run-experiment.sh:722:    echo "Copying harness results from:"
+scripts/run-experiment.sh:730:    echo "WARNING: no harness run directory found"
+scripts/run-scenario-e.sh:65:HARNESS_CONFIG_PATH="${REPO_ROOT}/harness/config/scenario-e.json"
+scripts/run-scenario-e.sh:411:echo "[5/9] Starting harness, controller and observers"
+scripts/run-scenario-e.sh:415:  > "${RUN_DIR}/harness.log" \
+scripts/run-scenario-e.sh:542:    echo "WARNING: no Scenario E harness run directory found"
+scripts/check-openmrs-e.sh:8:[[ -f harness/config/openmrs-scenario-e.json ]] || { echo 'Harness config missing' >&2; exit 1; }
+scripts/run-openmrs-cd-live-pilot.sh:31:CONTROLLER="$ROOT/controller/target/debug/failure-aware-controller"
+scripts/run-openmrs-experiment.sh.backup:15:HARNESS_BINARY="$REPO_ROOT/harness/target/debug/failure-aware-harness"
+scripts/run-openmrs-experiment.sh.backup:16:CONTROLLER_BINARY="$REPO_ROOT/controller/target/debug/failure-aware-controller"
+scripts/run-openmrs-experiment.sh.backup:413:        HARNESS_CONFIG="$REPO_ROOT/harness/config/openmrs-scenario-b.json"
+scripts/run-openmrs-experiment.sh.backup:416:        HARNESS_CONFIG="$REPO_ROOT/harness/config/openmrs-scenario-c.json"
+scripts/run-openmrs-experiment.sh.backup:423:    > "$RUN_DIR/harness.log" 2>&1 &
+scripts/run-openmrs-cd-live-pilot.sh.backup:15:[[ -x "$ROOT/controller/target/debug/failure-aware-controller" ]] || fail 'Controller binary missing'
+scripts/run-openmrs-cd-live-pilot.sh.backup:88:FAILURE_AWARE_RECOVERY_TIMEOUT_MS=1200000 FAILURE_AWARE_FENCING_TIMEOUT_MS=120000 FAILURE_AWARE_CONTROLLER_CONFIG="$RUN/controller.json" "$ROOT/controller/target/debug/failure-aware-controller" >"$RUN/controller.log" 2>&1 & CONTROLLER_PID=$!
+scripts/candidate-selection/common.sh:18:CONTROLLER_BIN="${CONTROLLER_BIN:-$REPO_ROOT/controller/target/debug/failure-aware-controller}"
+scripts/candidate-selection/common.sh:81:    die "a failure-aware-controller process is already running; stop it before starting the campaign"
+scripts/candidate-selection/README.md:49:    controller/target/debug/failure-aware-controller
+scripts/candidate-selection/README.md:67:failure-aware-controller process is already running.
+scripts/run-openmrs-integrated.sh:106:HARNESS="$ROOT/harness/target/debug/failure-aware-harness"
+scripts/run-openmrs-integrated.sh:107:CONTROLLER="$ROOT/controller/target/debug/failure-aware-controller"
+scripts/run-openmrs-integrated.sh:110:HARNESS_CONFIG="$ROOT/harness/config/openmrs-$SCENARIO.json"
+scripts/run-openmrs-integrated.sh:445:    "$HARNESS" > "$RUN/harness.log" 2>&1 &
+scripts/run-openmrs-experiment.sh:15:HARNESS_BINARY="$REPO_ROOT/harness/target/debug/failure-aware-harness"
+scripts/run-openmrs-experiment.sh:16:CONTROLLER_BINARY="$REPO_ROOT/controller/target/debug/failure-aware-controller"
+scripts/run-openmrs-experiment.sh:424:        HARNESS_CONFIG="$REPO_ROOT/harness/config/openmrs-scenario-b.json"
+scripts/run-openmrs-experiment.sh:427:        HARNESS_CONFIG="$REPO_ROOT/harness/config/openmrs-scenario-c.json"
+scripts/run-openmrs-experiment.sh:434:    > "$RUN_DIR/harness.log" 2>&1 &
+controller/config/openmrs-backend.json:4:  "verification_url": "ssh-pod://102.34.160.104/openmrs37/k3s-worker1/app=openmrs-backend",
+
+=== RUN METADATA HOST FIELDS ===
+
+=== CURRENT LOCAL HOST ===
+DANIEL
+172.19.164.251 172.17.0.1 
+Linux DANIEL 5.15.167.4-microsoft-standard-WSL2 #1 SMP Tue Nov 5 00:21:55 UTC 2024 x86_64 x86_64 x86_64 GNU/Linux

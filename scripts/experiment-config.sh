@@ -14,7 +14,7 @@ WORKER2_NODE="k3s-worker2"
 WORKER1_IP="102.34.160.87"
 WORKER2_IP="102.34.160.103"
 
-WORKER1_SSH="ubuntu@102.34.160.87"
+WORKER1_SSH="ubuntu@${WORKER1_IP}"
 
 SSH_KEY="${SSH_KEY:-}"
 
@@ -31,40 +31,24 @@ fi
 
 API_SERVER_IP="102.34.160.89"
 API_SERVER_PORT="6443"
-
 NODEPORT="30364"
 
-#
-# Allow the experiment to establish a healthy observation
-# period before fault injection.
-#
-BASELINE_SECONDS="10"
+BASELINE_SECONDS="${BASELINE_SECONDS:-10}"
+SCENARIO_B_FAULT_SECONDS="${SCENARIO_B_FAULT_SECONDS:-360}"
+SCENARIO_C_TIMEOUT_SECONDS="${SCENARIO_C_TIMEOUT_SECONDS:-420}"
+POST_CLEAR_SECONDS="${POST_CLEAR_SECONDS:-20}"
 
-#
-# Scenario B must be held beyond the normal native
-# Kubernetes eviction period.
-#
-# SCENARIO_B_FAULT_SECONDS="360"
-SCENARIO_B_FAULT_SECONDS="90"
-
-#
-# Scenario C waits for service recovery on Worker2.
-#
-SCENARIO_C_TIMEOUT_SECONDS="420"
-
-#
-# Continue observing after fault clearance.
-#
-POST_CLEAR_SECONDS="20"
+SCENARIO_E_FAULT_SECONDS="${SCENARIO_E_FAULT_SECONDS:-75}"
+SCENARIO_E_SEVERE_FAULT_SECONDS="${SCENARIO_E_SEVERE_FAULT_SECONDS:-120}"
+SCENARIO_E_POST_CLEAR_SECONDS="${SCENARIO_E_POST_CLEAR_SECONDS:-20}"
+SCENARIO_E_BASELINE_SECONDS="${SCENARIO_E_BASELINE_SECONDS:-10}"
 
 HARNESS_BINARY="${REPO_ROOT}/harness/target/debug/failure-aware-harness"
-
 CONTROLLER_BINARY="${REPO_ROOT}/controller/target/debug/failure-aware-controller"
 
 FA_MANIFEST="${REPO_ROOT}/workloads/test-workload/nginx.yaml"
-
 NATIVE_MANIFEST="${REPO_ROOT}/workloads/test-workload/nginx-native.yaml"
 
 SCENARIO_B_CONFIG="${REPO_ROOT}/harness/config/scenario-b.json"
-
 SCENARIO_C_CONFIG="${REPO_ROOT}/harness/config/scenario-c.json"
+SCENARIO_E_CONFIG="${REPO_ROOT}/harness/config/scenario-e.json"

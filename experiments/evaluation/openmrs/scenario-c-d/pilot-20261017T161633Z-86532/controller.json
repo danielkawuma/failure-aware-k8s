@@ -1,0 +1,23 @@
+{
+  "target_node": "k3s-worker3",
+  "trigger_ready_status": "Unknown",
+  "verification_url": "http://127.0.0.1:18086/health",
+  "verification_timeout_ms": 2000,
+  "verification_attempts": 3,
+  "verification_interval_ms": 500,
+  "workload_name": "openmrs-mariadb",
+  "workload_type": "database",
+  "duplication_sensitive": true,
+  "service_criticality": "high",
+  "namespace": "openmrs37",
+  "pod_label_selector": "app=openmrs-mariadb",
+  "recovery_candidate_node": "k3s-worker2",
+  "required_cpu_millicores": 300,
+  "required_memory_mib": 512,
+  "required_node_labels": {
+    "failure-aware.io/role": "recovery-candidate"
+  },
+  "fencing_supported": true,
+  "fencing_timeout_ms": 120000,
+  "fencing_command": "env SSH_KEY=/home/daniel/.ssh/k8s-aware OPENMRS_CD_ORIGINAL_NODE=k3s-worker3 OPENMRS_CD_ORIGINAL_IP=102.34.160.36 /home/daniel/failure-aware-k8s/scripts/openmrs-cd-fence-original.sh fence"
+}

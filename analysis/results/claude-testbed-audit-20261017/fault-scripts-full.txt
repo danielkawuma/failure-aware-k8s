@@ -1,0 +1,753 @@
+
+========================================
+FILE: scripts/fault.sh
+========================================
+     1	#!/usr/bin/env bash
+     2	set -Eeuo pipefail
+     3	
+     4	# ============================================================
+     5	# Failure-Aware Kubernetes Fault Orchestrator
+     6	#
+     7	# Executes the existing remote fault helper on Worker1.
+     8	#
+     9	# Supported commands:
+    10	#   scenario-b apply
+    11	#   scenario-b clear
+    12	#   scenario-c apply POD_IP
+    13	#   scenario-c clear
+    14	#   scenario-e apply PROFILE
+    15	#   scenario-e clear
+    16	#   scenario-e show
+    17	#   clear-all
+    18	#
+    19	# This script does not change the remote fault rules.
+    20	# ============================================================
+    21	
+    22	SCRIPT_DIR="$(
+    23	    cd "$(dirname "${BASH_SOURCE[0]}")"
+    24	    pwd
+    25	)"
+    26	
+    27	source "${SCRIPT_DIR}/experiment-config.sh"
+    28	
+    29	# ============================================================
+    30	# Timeout configuration
+    31	# ============================================================
+    32	
+    33	SSH_CONNECT_TIMEOUT_SECONDS="${FAILURE_AWARE_SSH_CONNECT_TIMEOUT_SECONDS:-5}"
+    34	
+    35	SSH_COMMAND_TIMEOUT_SECONDS="${FAILURE_AWARE_SSH_COMMAND_TIMEOUT_SECONDS:-30}"
+    36	
+    37	SSH_CLEANUP_TIMEOUT_SECONDS="${FAILURE_AWARE_SSH_CLEANUP_TIMEOUT_SECONDS:-45}"
+    38	
+    39	SSH_KEEPALIVE_INTERVAL_SECONDS="${FAILURE_AWARE_SSH_KEEPALIVE_INTERVAL_SECONDS:-5}"
+    40	
+    41	SSH_KEEPALIVE_COUNT="${FAILURE_AWARE_SSH_KEEPALIVE_COUNT:-2}"
+    42	
+    43	# ============================================================
+    44	# Helpers
+    45	# ============================================================
+    46	
+    47	log() {
+    48	    printf '[FAULT ORCHESTRATOR] %s\n' "$*" >&2
+    49	}
+    50	
+    51	fail() {
+    52	    log "ERROR: $*" >&2
+    53	    exit 1
+    54	}
+    55	
+    56	valid_positive_integer() {
+    57	    [[ "$1" =~ ^[0-9]+$ ]] && (( 10#$1 > 0 ))
+    58	}
+    59	
+    60	# ============================================================
+    61	# Validate configuration
+    62	# ============================================================
+    63	
+    64	for value in \
+    65	    "$SSH_CONNECT_TIMEOUT_SECONDS" \
+    66	    "$SSH_COMMAND_TIMEOUT_SECONDS" \
+    67	    "$SSH_CLEANUP_TIMEOUT_SECONDS" \
+    68	    "$SSH_KEEPALIVE_INTERVAL_SECONDS" \
+    69	    "$SSH_KEEPALIVE_COUNT"
+    70	do
+    71	    valid_positive_integer "$value" ||
+    72	        fail "Invalid positive integer setting: $value"
+    73	done
+    74	
+    75	[[ -f "$SSH_KEY" ]] ||
+    76	    fail "SSH private key missing: $SSH_KEY"
+    77	
+    78	[[ -n "$WORKER1_SSH" ]] ||
+    79	    fail "WORKER1_SSH is not configured"
+    80	
+    81	command -v ssh >/dev/null ||
+    82	    fail "ssh command unavailable"
+    83	
+    84	command -v timeout >/dev/null ||
+    85	    fail "timeout command unavailable"
+    86	
+    87	# ============================================================
+    88	# Validate requested fault operation
+    89	# ============================================================
+    90	
+    91	SCENARIO="${1:-}"
+    92	ACTION="${2:-}"
+    93	
+    94	case "$SCENARIO:$ACTION" in
+    95	    scenario-b:apply|scenario-b:clear)
+    96	        [[ $# -eq 2 ]] ||
+    97	            fail "Usage: $0 scenario-b apply|clear"
+    98	        ;;
+    99	
+   100	    scenario-c:apply)
+   101	        [[ $# -eq 3 ]] ||
+   102	            fail "Usage: $0 scenario-c apply POD_IP"
+   103	
+   104	        [[ "$3" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]] ||
+   105	            fail "Invalid Pod IP: $3"
+   106	        ;;
+   107	
+   108	    scenario-c:clear)
+   109	        [[ $# -eq 2 ]] ||
+   110	            fail "Usage: $0 scenario-c clear"
+   111	        ;;
+   112	
+   113	    scenario-e:apply)
+   114	        [[ $# -eq 3 ]] ||
+   115	            fail "Usage: $0 scenario-e apply mild|moderate|severe"
+   116	
+   117	        case "$3" in
+   118	            mild|moderate|severe)
+   119	                ;;
+   120	            *)
+   121	                fail "Invalid Scenario E profile: $3"
+   122	                ;;
+   123	        esac
+   124	        ;;
+   125	
+   126	    scenario-e:clear|scenario-e:show)
+   127	        [[ $# -eq 2 ]] ||
+   128	            fail "Usage: $0 scenario-e clear|show"
+   129	        ;;
+   130	
+   131	    clear-all:)
+   132	        [[ $# -eq 1 ]] ||
+   133	            fail "Usage: $0 clear-all"
+   134	        ;;
+   135	
+   136	    *)
+   137	        fail "Unsupported fault operation: $*"
+   138	        ;;
+   139	esac
+   140	
+   141	# ============================================================
+   142	# Select remote-execution timeout
+   143	# ============================================================
+   144	
+   145	COMMAND_TIMEOUT="$SSH_COMMAND_TIMEOUT_SECONDS"
+   146	
+   147	case "$SCENARIO:$ACTION" in
+   148	    scenario-b:clear|scenario-c:clear|scenario-e:clear|clear-all:)
+   149	        COMMAND_TIMEOUT="$SSH_CLEANUP_TIMEOUT_SECONDS"
+   150	        ;;
+   151	esac
+   152	
+   153	# ============================================================
+   154	# Execute remote fault operation
+   155	#
+   156	# The outer timeout limits the complete SSH operation.
+   157	#
+   158	# Exit 124 indicates a timeout.
+   159	# Exit 255 commonly indicates an SSH connection failure.
+   160	#
+   161	# A timeout during apply may leave a partially applied fault.
+   162	# The caller must verify and clear the fault before retrying.
+   163	# ============================================================
+   164	
+   165	log "action=${ACTION:-$SCENARIO}"
+   166	log "remote=$WORKER1_SSH"
+   167	log "timeout=${COMMAND_TIMEOUT}s"
+   168	
+   169	RC=0
+   170	
+   171	timeout \
+   172	    --signal=TERM \
+   173	    --kill-after=5s \
+   174	    "${COMMAND_TIMEOUT}s" \
+   175	    ssh \
+   176	        -i "$SSH_KEY" \
+   177	        -o BatchMode=yes \
+   178	        -o StrictHostKeyChecking=yes \
+   179	        -o "ConnectTimeout=$SSH_CONNECT_TIMEOUT_SECONDS" \
+   180	        -o "ServerAliveInterval=$SSH_KEEPALIVE_INTERVAL_SECONDS" \
+   181	        -o "ServerAliveCountMax=$SSH_KEEPALIVE_COUNT" \
+   182	        "$WORKER1_SSH" \
+   183	        sudo -n \
+   184	        /usr/local/sbin/failure-aware-fault \
+   185	        "$@" || RC=$?
+   186	
+   187	if (( RC == 0 )); then
+   188	    log "action completed successfully"
+   189	    exit 0
+   190	fi
+   191	
+   192	case "$RC" in
+   193	    124|137)
+   194	        fail "Remote fault operation timed out (exit=$RC). Fault state may be ambiguous; verify and clear before retrying."
+   195	        ;;
+   196	
+   197	    255)
+   198	        fail "SSH connection or remote session failed (exit=$RC). Fault state may be ambiguous."
+   199	        ;;
+   200	
+   201	    *)
+   202	        fail "Remote fault operation failed (exit=$RC). Inspect remote fault state before retrying."
+   203	        ;;
+   204	esac
+
+========================================
+FILE: scripts/openmrs-backend-fault.remote
+========================================
+     1	#!/usr/bin/env bash
+     2	set -Eeuo pipefail
+     3	ACTION=${1:?}; POD_IP=${2:-}
+     4	STATE=/run/openmrs-backend-fault-ip
+     5	API_IP=${OPENMRS_API_IP:-102.34.160.89}
+     6	IPT=/usr/sbin/iptables
+     7	api() { "$IPT" "$1" OUTPUT -p tcp -d "$API_IP" --dport 6443 -j DROP; }
+     8	backend() { "$IPT" "$1" FORWARD -p tcp -d "$POD_IP" --dport 8080 -j DROP; }
+     9	case "$ACTION" in
+    10	  apply)
+    11	    [[ "$POD_IP" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]] || exit 2
+    12	    [[ ! -e "$STATE" ]] || { echo 'Existing fault state' >&2; exit 1; }
+    13	    echo "$POD_IP" > "$STATE"
+    14	    api -C 2>/dev/null || api -I
+    15	    backend -C 2>/dev/null || backend -I
+    16	    api -C && backend -C
+    17	    ;;
+    18	  status)
+    19	    [[ -f "$STATE" ]] || exit 1
+    20	    POD_IP=$(cat "$STATE")
+    21	    api -C && backend -C
+    22	    ;;
+    23	  clear)
+    24	    [[ -f "$STATE" ]] || { echo 'No state file: cannot verify cleanup' >&2; exit 1; }
+    25	    POD_IP=$(cat "$STATE")
+    26	    while api -C 2>/dev/null; do api -D; done
+    27	    while backend -C 2>/dev/null; do backend -D; done
+    28	    rm -f "$STATE"
+    29	    ;;
+    30	  *) exit 2;;
+    31	esac
+
+========================================
+FILE: scripts/openmrs-c-fault.sh
+========================================
+     1	#!/usr/bin/env bash
+     2	set -Eeuo pipefail
+     3	# Separate OpenMRS backend fault, leaving the legacy Nginx fault script unchanged.
+     4	ACTION=${1:?Usage: openmrs-c-fault.sh apply|status|clear|absent [pod-ip]}
+     5	POD_IP=${2:-}
+     6	SSH_KEY=${SSH_KEY:-$HOME/.ssh/k8s-aware}
+     7	HOST=${OPENMRS_FAULT_HOST:-ubuntu@102.34.160.87}
+     8	REMOTE=${OPENMRS_REMOTE_FAULT:-/usr/local/sbin/openmrs-backend-fault}
+     9	case "$ACTION" in apply|status|clear|absent) ;; *) exit 2;; esac
+    10	if [[ "$ACTION" == apply ]]; then
+    11	  [[ "$POD_IP" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]] || exit 2
+    12	fi
+    13	if [[ "$ACTION" == absent ]]; then
+    14	  ssh -i "$SSH_KEY" -o BatchMode=yes -o ConnectTimeout=5 "$HOST" \
+    15	    "sudo -n test ! -e /run/openmrs-backend-fault-ip && ! sudo -n iptables -C OUTPUT -p tcp -d 102.34.160.89 --dport 6443 -j DROP 2>/dev/null"
+    16	  exit $?
+    17	fi
+    18	ssh -i "$SSH_KEY" -o BatchMode=yes -o ConnectTimeout=5 "$HOST" \
+    19	  sudo -n "$REMOTE" "$ACTION" "$POD_IP"
+
+========================================
+FILE: scripts/openmrs-cd-fault.remote
+========================================
+     1	#!/usr/bin/env bash
+     2	set -Eeuo pipefail
+     3	
+     4	ACTION="${1:-}"
+     5	POD_IP="${2:-}"
+     6	
+     7	API_IP="${OPENMRS_CD_API_IP:-102.34.160.89}"
+     8	STATE="/run/openmrs-cd-api-partition"
+     9	TAG="failure-aware-openmrs-cd"
+    10	
+    11	log() {
+    12	    echo "[CD FAULT] $*" >&2
+    13	}
+    14	
+    15	fail() {
+    16	    log "ERROR: $*"
+    17	    exit 2
+    18	}
+    19	
+    20	valid_ip() {
+    21	    local ip="$1"
+    22	    local a b c d extra
+    23	
+    24	    [[ "$ip" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]] ||
+    25	        return 1
+    26	
+    27	    IFS='.' read -r a b c d extra <<< "$ip"
+    28	
+    29	    [[ -z "${extra:-}" ]] || return 1
+    30	
+    31	    for octet in "$a" "$b" "$c" "$d"; do
+    32	        [[ "$octet" =~ ^[0-9]{1,3}$ ]] || return 1
+    33	        (( 10#$octet <= 255 )) || return 1
+    34	    done
+    35	}
+    36	
+    37	api_rule() {
+    38	    iptables -w 5 "$1" OUTPUT \
+    39	        -p tcp \
+    40	        -d "$API_IP" \
+    41	        --dport 6443 \
+    42	        -m comment --comment "$TAG-api" \
+    43	        -j DROP
+    44	}
+    45	
+    46	db_rule() {
+    47	    iptables -w 5 "$1" FORWARD \
+    48	        -p tcp \
+    49	        -d "$POD_IP" \
+    50	        --dport 3306 \
+    51	        -m comment --comment "$TAG-db" \
+    52	        -j DROP
+    53	}
+    54	
+    55	load_state() {
+    56	    [[ -f "$STATE" ]] || return 1
+    57	
+    58	    local saved_api saved_pod extra
+    59	
+    60	    read -r saved_api saved_pod extra < "$STATE" ||
+    61	        fail "Unreadable state"
+    62	
+    63	    [[ -z "${extra:-}" ]] ||
+    64	        fail "Malformed state"
+    65	
+    66	    [[ "$saved_api" == "$API_IP" ]] ||
+    67	        fail "API mismatch"
+    68	
+    69	    valid_ip "$saved_pod" ||
+    70	        fail "Invalid stored Pod IP"
+    71	
+    72	    if [[ -n "$POD_IP" && "$POD_IP" != "$saved_pod" ]]; then
+    73	        fail "Pod IP mismatch"
+    74	    fi
+    75	
+    76	    POD_IP="$saved_pod"
+    77	}
+    78	
+    79	status_fault() {
+    80	    local output forward
+    81	
+    82	    output="$(iptables -w 5 -S OUTPUT)" || {
+    83	        echo UNKNOWN
+    84	        return 2
+    85	    }
+    86	
+    87	    forward="$(iptables -w 5 -S FORWARD)" || {
+    88	        echo UNKNOWN
+    89	        return 2
+    90	    }
+    91	
+    92	    if [[ -f "$STATE" ]]; then
+    93	        load_state
+    94	
+    95	        if api_rule -C 2>/dev/null &&
+    96	           db_rule -C 2>/dev/null; then
+    97	            echo ACTIVE
+    98	            return 0
+    99	        fi
+   100	
+   101	        echo UNKNOWN
+   102	        return 2
+   103	    fi
+   104	
+   105	    # Any tagged rule without its state file is ambiguous.
+   106	    if grep -Fq "$TAG" <<< "$output" ||
+   107	       grep -Fq "$TAG" <<< "$forward"; then
+   108	        echo UNKNOWN
+   109	        return 2
+   110	    fi
+   111	
+   112	    # Detect legacy untagged rules from earlier experiments.
+   113	    if grep -E -- '-A OUTPUT .*--dport 6443 .* -j DROP' \
+   114	        <<< "$output" |
+   115	        grep -Fq -- "-d $API_IP/32"; then
+   116	        echo UNKNOWN
+   117	        return 2
+   118	    fi
+   119	
+   120	    if grep -E -- '-A FORWARD .*--dport 3306 .* -j DROP' \
+   121	        <<< "$forward" | grep -q .; then
+   122	        echo UNKNOWN
+   123	        return 2
+   124	    fi
+   125	
+   126	    echo INACTIVE
+   127	    return 1
+   128	}
+   129	
+   130	apply_fault() {
+   131	    valid_ip "$API_IP" || fail "Invalid API IP"
+   132	    valid_ip "$POD_IP" || fail "Invalid Pod IP"
+   133	
+   134	    local result rc=0
+   135	
+   136	    result="$(status_fault)" || rc=$?
+   137	
+   138	    [[ "$rc" -eq 1 && "$result" == INACTIVE ]] ||
+   139	        fail "Fault state is not positively INACTIVE: $result"
+   140	
+   141	    api_rule -I || fail "API rule installation failed"
+   142	
+   143	    if ! db_rule -I; then
+   144	        api_rule -D || true
+   145	        fail "Database rule installation failed"
+   146	    fi
+   147	
+   148	    if ! printf '%s %s\n' "$API_IP" "$POD_IP" > "$STATE"; then
+   149	        db_rule -D || true
+   150	        api_rule -D || true
+   151	        fail "State persistence failed"
+   152	    fi
+   153	
+   154	    result="$(status_fault)" || fail "Fault verification failed"
+   155	
+   156	    [[ "$result" == ACTIVE ]] ||
+   157	        fail "Fault state inconsistent after apply"
+   158	
+   159	    echo ACTIVE
+   160	}
+   161	
+   162	clear_fault() {
+   163	    [[ -f "$STATE" ]] ||
+   164	        fail "Missing state file; refusing ambiguous cleanup"
+   165	
+   166	    load_state
+   167	
+   168	    db_rule -C 2>/dev/null ||
+   169	        fail "Database rule missing; manual inspection required"
+   170	
+   171	    api_rule -C 2>/dev/null ||
+   172	        fail "API rule missing; manual inspection required"
+   173	
+   174	    db_rule -D || fail "Database rule removal failed"
+   175	    api_rule -D || fail "API rule removal failed"
+   176	
+   177	    rm -f "$STATE"
+   178	
+   179	    local result rc=0
+   180	
+   181	    result="$(status_fault)" || rc=$?
+   182	
+   183	    [[ "$rc" -eq 1 && "$result" == INACTIVE ]] ||
+   184	        fail "Fault cleanup could not be verified"
+   185	
+   186	    echo INACTIVE
+   187	}
+   188	
+   189	case "$ACTION" in
+   190	    apply)
+   191	        apply_fault
+   192	        ;;
+   193	    status)
+   194	        status_fault
+   195	        ;;
+   196	    clear)
+   197	        clear_fault
+   198	        ;;
+   199	    *)
+   200	        echo "Usage: $0 apply|status|clear POD_IP" >&2
+   201	        exit 2
+   202	        ;;
+   203	esac
+
+========================================
+FILE: scripts/remote/failure-aware-fault.sh
+========================================
+     1	#!/usr/bin/env bash
+     2	set -Eeuo pipefail
+     3	
+     4	API_SERVER_IP="102.34.160.89"
+     5	API_SERVER_PORT="6443"
+     6	NETWORK_INTERFACE="ens3"
+     7	WORKLOAD_STATE_FILE="/run/failure-aware-fault-pod-ip"
+     8	NETEM_STATE_FILE="/run/failure-aware-netem-profile"
+     9	TC="/usr/sbin/tc"
+    10	IPT="/usr/sbin/iptables"
+    11	
+    12	add_api_fault() {
+    13	    if ! "$IPT" -C OUTPUT -p tcp -d "$API_SERVER_IP" --dport "$API_SERVER_PORT" -j DROP 2>/dev/null; then
+    14	        "$IPT" -I OUTPUT 1 -p tcp -d "$API_SERVER_IP" --dport "$API_SERVER_PORT" -j DROP
+    15	    fi
+    16	}
+    17	
+    18	clear_api_fault() {
+    19	    while "$IPT" -C OUTPUT -p tcp -d "$API_SERVER_IP" --dport "$API_SERVER_PORT" -j DROP 2>/dev/null; do
+    20	        "$IPT" -D OUTPUT -p tcp -d "$API_SERVER_IP" --dport "$API_SERVER_PORT" -j DROP
+    21	    done
+    22	}
+    23	
+    24	add_workload_fault() {
+    25	    local pod_ip="$1"
+    26	    [[ "$pod_ip" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo 'Invalid Pod IP' >&2; return 2; }
+    27	    if ! "$IPT" -C FORWARD -p tcp -d "$pod_ip" --dport 80 -j DROP 2>/dev/null; then
+    28	        "$IPT" -I FORWARD 1 -p tcp -d "$pod_ip" --dport 80 -j DROP
+    29	    fi
+    30	    printf '%s\n' "$pod_ip" > "$WORKLOAD_STATE_FILE"
+    31	}
+    32	
+    33	clear_workload_fault() {
+    34	    [[ -f "$WORKLOAD_STATE_FILE" ]] || return 0
+    35	    local pod_ip
+    36	    pod_ip="$(cat "$WORKLOAD_STATE_FILE")"
+    37	    while "$IPT" -C FORWARD -p tcp -d "$pod_ip" --dport 80 -j DROP 2>/dev/null; do
+    38	        "$IPT" -D FORWARD -p tcp -d "$pod_ip" --dport 80 -j DROP
+    39	    done
+    40	    rm -f "$WORKLOAD_STATE_FILE"
+    41	}
+    42	
+    43	clear_network_degradation() {
+    44	    "$TC" qdisc del dev "$NETWORK_INTERFACE" root 2>/dev/null || true
+    45	    "$TC" qdisc replace dev "$NETWORK_INTERFACE" root fq_codel
+    46	    rm -f "$NETEM_STATE_FILE"
+    47	}
+    48	
+    49	verify_network_degradation() {
+    50	    local qdisc filters
+    51	    qdisc="$("$TC" qdisc show dev "$NETWORK_INTERFACE")" || return 1
+    52	    filters="$("$TC" filter show dev "$NETWORK_INTERFACE" parent 1:0)" || return 1
+    53	    grep -Eq 'qdisc prio 1:' <<< "$qdisc" || return 1
+    54	    grep -Eq 'qdisc netem 30:' <<< "$qdisc" || return 1
+    55	    grep -Eq 'flowid 1:3' <<< "$filters" || return 1
+    56	    grep -Eq 'flowid 1:1' <<< "$filters" || return 1
+    57	}
+    58	
+    59	apply_network_degradation() {
+    60	    local profile="$1" delay jitter loss rate
+    61	    case "$profile" in
+    62	        mild) delay=50ms; jitter=10ms; loss='1%'; rate=10mbit ;;
+    63	        moderate) delay=150ms; jitter=30ms; loss='3%'; rate=5mbit ;;
+    64	        severe) delay=300ms; jitter=75ms; loss='90%'; rate=1mbit ;;
+    65	        *) echo "Unknown network-degradation profile: $profile" >&2; return 2 ;;
+    66	    esac
+    67	
+    68	    clear_network_degradation
+    69	
+    70	    # Establish the priority root before activating impairment.
+    71	    "$TC" qdisc replace dev "$NETWORK_INTERFACE" root handle 1: prio bands 3
+    72	
+    73	    # Explicitly route SSH server replies to an unaffected band.
+    74	    "$TC" filter replace dev "$NETWORK_INTERFACE" protocol ip \
+    75	        parent 1:0 priority 2 u32 \
+    76	        match ip protocol 6 0xff \
+    77	        match ip sport 22 0xffff \
+    78	        flowid 1:1
+    79	
+    80	    # Route only Kubernetes API-server traffic to the impaired band.
+    81	    "$TC" filter replace dev "$NETWORK_INTERFACE" protocol ip \
+    82	        parent 1:0 priority 1 u32 \
+    83	        match ip dst "$API_SERVER_IP/32" \
+    84	        match ip protocol 6 0xff \
+    85	        match ip dport "$API_SERVER_PORT" 0xffff \
+    86	        flowid 1:3
+    87	
+    88	    # Attach netem after both traffic classifiers exist.
+    89	    "$TC" qdisc replace dev "$NETWORK_INTERFACE" parent 1:3 \
+    90	        handle 30: netem delay "$delay" "$jitter" \
+    91	        distribution normal loss "$loss" rate "$rate"
+    92	
+    93	    if ! verify_network_degradation; then
+    94	        echo 'ERROR: Scenario E traffic-control verification failed' >&2
+    95	        clear_network_degradation || true
+    96	        return 1
+    97	    fi
+    98	
+    99	    printf '%s\n' "$profile" > "$NETEM_STATE_FILE"
+   100	    echo "Applied $profile API-server network degradation"
+   101	    echo "Delay : $delay"
+   102	    echo "Jitter: $jitter"
+   103	    echo "Loss  : $loss"
+   104	    echo "Rate  : $rate"
+   105	    echo 'Scope : outgoing API-server TCP/6443; SSH replies explicitly bypass netem'
+   106	}
+   107	
+   108	show_network_degradation() {
+   109	    echo 'Active profile:'
+   110	    if [[ -f "$NETEM_STATE_FILE" ]]; then
+   111	        cat "$NETEM_STATE_FILE"
+   112	    else
+   113	        echo none
+   114	    fi
+   115	    echo
+   116	    echo 'Queueing disciplines:'
+   117	    "$TC" -s qdisc show dev "$NETWORK_INTERFACE"
+   118	    echo
+   119	    echo 'Traffic-control filters:'
+   120	    "$TC" -s filter show dev "$NETWORK_INTERFACE" parent 1:0 2>/dev/null || true
+   121	}
+   122	
+   123	usage() {
+   124	    echo 'Usage:' >&2
+   125	    echo '  failure-aware-fault scenario-b apply|clear' >&2
+   126	    echo '  failure-aware-fault scenario-c apply POD_IP|clear' >&2
+   127	    echo '  failure-aware-fault scenario-e apply mild|moderate|severe' >&2
+   128	    echo '  failure-aware-fault scenario-e clear|show' >&2
+   129	    echo '  failure-aware-fault clear-all' >&2
+   130	    exit 2
+   131	}
+   132	
+   133	scenario="${1:-}"
+   134	action="${2:-}"
+   135	argument="${3:-}"
+   136	case "$scenario:$action" in
+   137	    scenario-b:apply) [[ $# -eq 2 ]] || usage; add_api_fault ;;
+   138	    scenario-b:clear) [[ $# -eq 2 ]] || usage; clear_api_fault ;;
+   139	    scenario-c:apply) [[ $# -eq 3 ]] || usage; add_workload_fault "$argument"; add_api_fault ;;
+   140	    scenario-c:clear) [[ $# -eq 2 ]] || usage; clear_workload_fault; clear_api_fault ;;
+   141	    scenario-e:apply) [[ $# -eq 3 ]] || usage; apply_network_degradation "$argument" ;;
+   142	    scenario-e:clear) [[ $# -eq 2 ]] || usage; clear_network_degradation ;;
+   143	    scenario-e:show) [[ $# -eq 2 ]] || usage; show_network_degradation ;;
+   144	    clear-all:) [[ $# -eq 1 ]] || usage; clear_workload_fault; clear_api_fault; clear_network_degradation ;;
+   145	    *) usage ;;
+   146	esac
+
+========================================
+FILE: scripts/remote/openmrs-backend-fault
+========================================
+     1	#!/usr/bin/env bash
+     2	set -Eeuo pipefail
+     3	ACTION=${1:?}; POD_IP=${2:-}
+     4	STATE=/run/openmrs-backend-fault-ip
+     5	API_IP=${OPENMRS_API_IP:-102.34.160.89}
+     6	IPT=/usr/sbin/iptables
+     7	api() { "$IPT" "$1" OUTPUT -p tcp -d "$API_IP" --dport 6443 -j DROP; }
+     8	backend() { "$IPT" "$1" FORWARD -p tcp -d "$POD_IP" --dport 8080 -j DROP; }
+     9	case "$ACTION" in
+    10	  apply)
+    11	    [[ "$POD_IP" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]] || exit 2
+    12	    [[ ! -e "$STATE" ]] || { echo 'Existing fault state' >&2; exit 1; }
+    13	    echo "$POD_IP" > "$STATE"
+    14	    api -C 2>/dev/null || api -I
+    15	    backend -C 2>/dev/null || backend -I
+    16	    api -C && backend -C
+    17	    ;;
+    18	  status)
+    19	    [[ -f "$STATE" ]] || exit 1
+    20	    POD_IP=$(cat "$STATE")
+    21	    api -C && backend -C
+    22	    ;;
+    23	  clear)
+    24	    [[ -f "$STATE" ]] || { echo 'No state file: cannot verify cleanup' >&2; exit 1; }
+    25	    POD_IP=$(cat "$STATE")
+    26	    while api -C 2>/dev/null; do api -D; done
+    27	    while backend -C 2>/dev/null; do backend -D; done
+    28	    rm -f "$STATE"
+    29	    ;;
+    30	  *) exit 2;;
+    31	esac
+
+========================================
+FILE: scripts/remote/openmrs-fault.sh
+========================================
+     1	#!/usr/bin/env bash
+     2	set -Eeuo pipefail
+     3	
+     4	ACTION="${1:-}"
+     5	POD_IP="${2:-}"
+     6	
+     7	API_IP="102.34.160.89"
+     8	API_PORT="6443"
+     9	BACKEND_PORT="8080"
+    10	
+    11	STATE_FILE="/run/failure-aware-openmrs-fault"
+    12	
+    13	fail() {
+    14	    echo "[OPENMRS FAULT] ERROR: $*" >&2
+    15	    exit 1
+    16	}
+    17	
+    18	api_rule() {
+    19	    iptables "$1" OUTPUT \
+    20	        -p tcp \
+    21	        -d "$API_IP" \
+    22	        --dport "$API_PORT" \
+    23	        -j DROP
+    24	}
+    25	
+    26	backend_rule() {
+    27	    iptables "$1" FORWARD \
+    28	        -p tcp \
+    29	        -d "$POD_IP" \
+    30	        --dport "$BACKEND_PORT" \
+    31	        -j DROP
+    32	}
+    33	
+    34	case "$ACTION" in
+    35	    apply)
+    36	        [[ "$POD_IP" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]] ||
+    37	            fail "Valid Pod IP required"
+    38	
+    39	        [[ ! -e "$STATE_FILE" ]] ||
+    40	            fail "Existing fault must be cleared first"
+    41	
+    42	        printf '%s\n' "$POD_IP" > "$STATE_FILE"
+    43	
+    44	        api_rule -C 2>/dev/null ||
+    45	            api_rule -I
+    46	
+    47	        backend_rule -C 2>/dev/null ||
+    48	            backend_rule -I
+    49	
+    50	        echo "Scenario C fault applied"
+    51	        ;;
+    52	
+    53	    status)
+    54	        [[ -f "$STATE_FILE" ]] ||
+    55	            fail "No recorded active fault"
+    56	
+    57	        POD_IP="$(cat "$STATE_FILE")"
+    58	
+    59	        api_rule -C ||
+    60	            fail "API fault missing"
+    61	
+    62	        backend_rule -C ||
+    63	            fail "Backend fault missing"
+    64	
+    65	        echo "FENCED_NETWORK_PATHS"
+    66	        ;;
+    67	
+    68	    clear)
+    69	        [[ -f "$STATE_FILE" ]] ||
+    70	            fail "No recorded fault; refusing unverified cleanup"
+    71	
+    72	        POD_IP="$(cat "$STATE_FILE")"
+    73	
+    74	        while api_rule -C 2>/dev/null; do
+    75	            api_rule -D
+    76	        done
+    77	
+    78	        while backend_rule -C 2>/dev/null; do
+    79	            backend_rule -D
+    80	        done
+    81	
+    82	        rm -f "$STATE_FILE"
+    83	
+    84	        echo "Scenario C fault cleared"
+    85	        ;;
+    86	
+    87	    *)
+    88	        echo "Usage: $0 apply POD_IP | status | clear"
+    89	        exit 2
+    90	        ;;
+    91	esac

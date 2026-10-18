@@ -1,0 +1,105 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: openmrs-db-secret
+  namespace: openmrs
+type: Opaque
+stringData:
+  MYSQL_DATABASE: openmrs
+  MYSQL_USER: openmrs
+  MYSQL_PASSWORD: openmrs
+  MYSQL_ROOT_PASSWORD: openmrs-root
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: openmrs-mariadb-data
+  namespace: openmrs
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 8Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openmrs-mariadb
+  namespace: openmrs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openmrs-mariadb
+  template:
+    metadata:
+      labels:
+        app: openmrs-mariadb
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: k3s-worker2
+
+      containers:
+        - name: mariadb
+          image: mariadb:10.11
+          imagePullPolicy: IfNotPresent
+
+          args:
+            - --character-set-server=utf8mb4
+            - --collation-server=utf8mb4_general_ci
+
+          envFrom:
+            - secretRef:
+                name: openmrs-db-secret
+
+          ports:
+            - name: mysql
+              containerPort: 3306
+
+          resources:
+            requests:
+              cpu: 300m
+              memory: 512Mi
+            limits:
+              cpu: "1"
+              memory: 1024Mi
+
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/mysql
+
+          readinessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - >
+                  mariadb-admin
+                  ping
+                  -h 127.0.0.1
+                  -uroot
+                  -p"${MYSQL_ROOT_PASSWORD}"
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 12
+
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: openmrs-mariadb-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: openmrs-mariadb
+  namespace: openmrs
+spec:
+  selector:
+    app: openmrs-mariadb
+  ports:
+    - name: mysql
+      port: 3306
+      targetPort: 3306

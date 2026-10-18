@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: openmrs-mariadb-data-nfs
+  namespace: openmrs37
+  labels:
+    app: openmrs-mariadb
+    failure-aware.io/purpose: database-storage
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: nfs-client
+  resources:
+    requests:
+      storage: 8Gi

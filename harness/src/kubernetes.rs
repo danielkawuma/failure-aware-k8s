@@ -50,9 +50,7 @@ struct EventObservation {
 }
 
 fn kubectl(args: &[&str]) -> Result<String> {
-    let output = Command::new("kubectl")
-        .args(args)
-        .output()?;
+    let output = Command::new("kubectl").args(args).output()?;
 
     if !output.status.success() {
         return Err(anyhow::anyhow!(
@@ -61,15 +59,10 @@ fn kubectl(args: &[&str]) -> Result<String> {
         ));
     }
 
-    Ok(String::from_utf8_lossy(&output.stdout)
-        .trim()
-        .to_string())
+    Ok(String::from_utf8_lossy(&output.stdout).trim().to_string())
 }
 
-pub async fn observe_node(
-    node: &str,
-    output_path: String,
-) -> Result<()> {
+pub async fn observe_node(node: &str, output_path: String) -> Result<()> {
     let file = OpenOptions::new()
         .create(true)
         .append(true)
@@ -80,16 +73,9 @@ pub async fn observe_node(
     loop {
         let timestamp = Utc::now();
 
-        let jsonpath =
-            "{.status.conditions[?(@.type==\"Ready\")].status}";
+        let jsonpath = "{.status.conditions[?(@.type==\"Ready\")].status}";
 
-        let result = kubectl(&[
-            "get",
-            "node",
-            node,
-            "-o",
-            &format!("jsonpath={}", jsonpath),
-        ]);
+        let result = kubectl(&["get", "node", node, "-o", &format!("jsonpath={}", jsonpath)]);
 
         let ready_status = match result {
             Ok(value) => value,
@@ -116,10 +102,7 @@ pub async fn observe_node(
     }
 }
 
-pub async fn observe_lease(
-    node: &str,
-    output_path: String,
-) -> Result<()> {
+pub async fn observe_lease(node: &str, output_path: String) -> Result<()> {
     let file = OpenOptions::new()
         .create(true)
         .append(true)
@@ -165,11 +148,7 @@ pub async fn observe_lease(
     }
 }
 
-pub async fn observe_pod(
-    namespace: &str,
-    label_selector: &str,
-    output_path: String,
-) -> Result<()> {
+pub async fn observe_pod(namespace: &str, label_selector: &str, output_path: String) -> Result<()> {
     let file = OpenOptions::new()
         .create(true)
         .append(true)
@@ -194,20 +173,17 @@ pub async fn observe_pod(
         match output {
             Ok(pods) => {
                 for line in pods.lines() {
-                    let parts: Vec<&str> =
-                        line.split('|').collect();
+                    let parts: Vec<&str> = line.split('|').collect();
 
                     if parts.len() != 4 {
                         continue;
                     }
 
                     let observation = PodObservation {
-                        timestamp_utc:
-                            timestamp.to_rfc3339(),
+                        timestamp_utc: timestamp.to_rfc3339(),
                         pod: parts[0].to_string(),
                         phase: parts[1].to_string(),
-                        deletion_timestamp:
-                            parts[2].to_string(),
+                        deletion_timestamp: parts[2].to_string(),
                         node: parts[3].to_string(),
                     };
 
@@ -226,11 +202,7 @@ pub async fn observe_pod(
             }
 
             Err(error) => {
-                println!(
-                    "[POD] {} | ERROR: {}",
-                    timestamp.to_rfc3339(),
-                    error
-                );
+                println!("[POD] {} | ERROR: {}", timestamp.to_rfc3339(), error);
             }
         }
 
@@ -238,10 +210,7 @@ pub async fn observe_pod(
     }
 }
 
-pub async fn observe_taint(
-    node: &str,
-    output_path: String,
-) -> Result<()> {
+pub async fn observe_taint(node: &str, output_path: String) -> Result<()> {
     let file = OpenOptions::new()
         .create(true)
         .append(true)
@@ -278,21 +247,14 @@ pub async fn observe_taint(
             "[TAINT] {} | {} | taints={}",
             timestamp.to_rfc3339(),
             node,
-            if taints.is_empty() {
-                "<none>"
-            } else {
-                &taints
-            }
+            if taints.is_empty() { "<none>" } else { &taints }
         );
 
         sleep(Duration::from_secs(1)).await;
     }
 }
 
-pub async fn observe_events(
-    node: &str,
-    output_path: String,
-) -> Result<()> {
+pub async fn observe_events(node: &str, output_path: String) -> Result<()> {
     let file = OpenOptions::new()
         .create(true)
         .append(true)
@@ -300,16 +262,12 @@ pub async fn observe_events(
 
     let mut writer = Writer::from_writer(file);
 
-    let mut seen_events =
-        std::collections::HashSet::<String>::new();
+    let mut seen_events = std::collections::HashSet::<String>::new();
 
     loop {
         let timestamp = Utc::now();
 
-        let field_selector = format!(
-            "involvedObject.kind=Node,involvedObject.name={}",
-            node
-        );
+        let field_selector = format!("involvedObject.kind=Node,involvedObject.name={}", node);
 
         let output = kubectl(&[
             "get",
@@ -324,18 +282,13 @@ pub async fn observe_events(
         match output {
             Ok(events) => {
                 for line in events.lines() {
-                    let parts: Vec<&str> =
-                        line.split('|').collect();
+                    let parts: Vec<&str> = line.split('|').collect();
 
                     if parts.len() != 9 {
                         continue;
                     }
 
-                    let event_id = format!(
-                        "{}:{}",
-                        parts[0],
-                        parts[1]
-                    );
+                    let event_id = format!("{}:{}", parts[0], parts[1]);
 
                     if seen_events.contains(&event_id) {
                         continue;
@@ -344,22 +297,14 @@ pub async fn observe_events(
                     seen_events.insert(event_id);
 
                     let observation = EventObservation {
-                        timestamp_utc:
-                            timestamp.to_rfc3339(),
-                        namespace:
-                            parts[2].to_string(),
-                        event_type:
-                            parts[3].to_string(),
-                        reason:
-                            parts[4].to_string(),
-                        message:
-                            parts[5].to_string(),
-                        event_time:
-                            parts[6].to_string(),
-                        involved_kind:
-                            parts[7].to_string(),
-                        involved_name:
-                            parts[8].to_string(),
+                        timestamp_utc: timestamp.to_rfc3339(),
+                        namespace: parts[2].to_string(),
+                        event_type: parts[3].to_string(),
+                        reason: parts[4].to_string(),
+                        message: parts[5].to_string(),
+                        event_time: parts[6].to_string(),
+                        involved_kind: parts[7].to_string(),
+                        involved_name: parts[8].to_string(),
                     };
 
                     writer.serialize(&observation)?;
@@ -378,11 +323,7 @@ pub async fn observe_events(
             }
 
             Err(error) => {
-                println!(
-                    "[EVENT] {} | ERROR: {}",
-                    timestamp.to_rfc3339(),
-                    error
-                );
+                println!("[EVENT] {} | ERROR: {}", timestamp.to_rfc3339(), error);
             }
         }
 

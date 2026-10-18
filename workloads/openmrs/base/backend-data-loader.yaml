@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: openmrs-backend-data-loader
+  namespace: openmrs
+spec:
+  restartPolicy: Never
+
+  nodeSelector:
+    kubernetes.io/hostname: k3s-worker1
+
+  containers:
+    - name: loader
+      image: python:3.12-alpine
+      command:
+        - sh
+        - -c
+        - |
+          echo "PVC mounted at /openmrs-data"
+          sleep 3600
+
+      volumeMounts:
+        - name: openmrs-data
+          mountPath: /openmrs-data
+
+  volumes:
+    - name: openmrs-data
+      persistentVolumeClaim:
+        claimName: openmrs-backend-data

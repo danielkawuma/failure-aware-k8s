@@ -18,10 +18,23 @@ pub struct AwarenessContext {
     pub recovery_safety: RecoverySafetyAwareness,
 }
 
-pub fn classify_operational_state(evidence: &VerificationEvidence) -> OperationalState {
+pub fn classify_operational_state(
+    evidence: &VerificationEvidence,
+) -> OperationalState {
+    // Failure of the independent verification mechanism
+    // is not evidence that the original workload failed.
+    //
+    // Do not authorize recovery on incomplete or
+    // unverifiable evidence.
+    if evidence.indeterminate || evidence.attempts == 0 {
+        return OperationalState::Indeterminate;
+    }
+
     if evidence.successes > evidence.failures {
         OperationalState::ReachableOutsideControlPlane
-    } else if evidence.successes == 0 && evidence.failures > 0 {
+    } else if evidence.successes == 0
+        && evidence.failures > 0
+    {
         OperationalState::Unreachable
     } else {
         OperationalState::Indeterminate

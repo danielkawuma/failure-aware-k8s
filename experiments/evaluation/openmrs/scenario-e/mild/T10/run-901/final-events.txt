@@ -1,0 +1,30 @@
+LAST SEEN   TYPE      REASON              OBJECT                                  MESSAGE
+51m         Normal    ScalingReplicaSet   deployment/openmrs-mariadb              Scaled down replica set openmrs-mariadb-7555dd4cc from 1 to 0
+51m         Normal    SuccessfulDelete    replicaset/openmrs-mariadb-7555dd4cc    Deleted pod: openmrs-mariadb-7555dd4cc-mn5l4
+51m         Normal    Killing             pod/openmrs-mariadb-7555dd4cc-mn5l4     Stopping container mariadb
+51m         Normal    Scheduled           pod/openmrs-mariadb-6d54dc7dcd-vjvzj    Successfully assigned openmrs37/openmrs-mariadb-6d54dc7dcd-vjvzj to k3s-worker3
+51m         Normal    ScalingReplicaSet   deployment/openmrs-mariadb              Scaled up replica set openmrs-mariadb-6d54dc7dcd from 0 to 1
+51m         Normal    SuccessfulCreate    replicaset/openmrs-mariadb-6d54dc7dcd   Created pod: openmrs-mariadb-6d54dc7dcd-vjvzj
+51m         Normal    Started             pod/openmrs-mariadb-6d54dc7dcd-vjvzj    Container started
+51m         Normal    Created             pod/openmrs-mariadb-6d54dc7dcd-vjvzj    Container created
+51m         Normal    Pulled              pod/openmrs-mariadb-6d54dc7dcd-vjvzj    Container image "mariadb:10.11.19" already present on machine and can be accessed by the pod
+25m         Normal    Killing             pod/openmrs-backend-8479b4b5b6-6f8bn    Stopping container backend
+25m         Normal    SuccessfulDelete    replicaset/openmrs-backend-8479b4b5b6   Deleted pod: openmrs-backend-8479b4b5b6-6f8bn
+25m         Normal    ScalingReplicaSet   deployment/openmrs-backend              Scaled up replica set openmrs-backend-56dddbbdb9 from 0 to 1
+25m         Normal    ScalingReplicaSet   deployment/openmrs-backend              Scaled down replica set openmrs-backend-8479b4b5b6 from 1 to 0
+25m         Normal    Scheduled           pod/openmrs-backend-56dddbbdb9-76t64    Successfully assigned openmrs37/openmrs-backend-56dddbbdb9-76t64 to k3s-worker1
+25m         Normal    Pulled              pod/openmrs-backend-56dddbbdb9-76t64    Container image "openmrs/openmrs-reference-application-3-backend:3.7.1" already present on machine and can be accessed by the pod
+25m         Normal    Created             pod/openmrs-backend-56dddbbdb9-76t64    Container created
+25m         Normal    Started             pod/openmrs-backend-56dddbbdb9-76t64    Container started
+25m         Normal    SuccessfulCreate    replicaset/openmrs-backend-56dddbbdb9   Created pod: openmrs-backend-56dddbbdb9-76t64
+20m         Warning   Unhealthy           pod/openmrs-backend-56dddbbdb9-76t64    Startup probe failed: Get "http://10.42.1.17:8080/openmrs": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+9m9s        Normal    SuccessfulCreate    replicaset/openmrs-backend-74675bdd77   Created pod: openmrs-backend-74675bdd77-nwpfg
+9m9s        Normal    ScalingReplicaSet   deployment/openmrs-backend              Scaled up replica set openmrs-backend-74675bdd77 from 0 to 1
+9m9s        Normal    ScalingReplicaSet   deployment/openmrs-backend              Scaled down replica set openmrs-backend-56dddbbdb9 from 1 to 0
+9m8s        Normal    Scheduled           pod/openmrs-backend-74675bdd77-nwpfg    Successfully assigned openmrs37/openmrs-backend-74675bdd77-nwpfg to k3s-worker1
+9m9s        Normal    SuccessfulDelete    replicaset/openmrs-backend-56dddbbdb9   Deleted pod: openmrs-backend-56dddbbdb9-76t64
+9m9s        Normal    Killing             pod/openmrs-backend-56dddbbdb9-76t64    Stopping container backend
+9m8s        Normal    Pulled              pod/openmrs-backend-74675bdd77-nwpfg    Container image "openmrs/openmrs-reference-application-3-backend:3.7.1" already present on machine and can be accessed by the pod
+9m8s        Normal    Created             pod/openmrs-backend-74675bdd77-nwpfg    Container created
+9m8s        Normal    Started             pod/openmrs-backend-74675bdd77-nwpfg    Container started
+3m47s       Warning   Unhealthy           pod/openmrs-backend-74675bdd77-nwpfg    Startup probe failed: Get "http://10.42.1.18:8080/openmrs": context deadline exceeded (Client.Timeout exceeded while awaiting headers)

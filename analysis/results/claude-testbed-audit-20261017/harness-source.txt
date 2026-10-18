@@ -1,0 +1,1200 @@
+=== HARNESS CONFIGURATIONS ===
+
+FILE: harness/Cargo.toml
+     1	[package]
+     2	name = "failure-aware-harness"
+     3	version = "0.1.0"
+     4	edition = "2024"
+     5	
+     6	[dependencies]
+     7	tokio = { version = "1", features = ["full"] }
+     8	reqwest = { version = "0.12", features = ["json"] }
+     9	chrono = { version = "0.4", features = ["serde"] }
+    10	serde = { version = "1", features = ["derive"] }
+    11	serde_json = "1"
+    12	csv = "1"
+    13	anyhow = "1"
+
+FILE: harness/config/openmrs-pilot.json
+     1	{
+     2	  "scenario": "openmrs-pilot",
+     3	  "target_node": "k3s-worker1",
+     4	  "namespace": "openmrs37",
+     5	  "pod_label_selector": "app=openmrs-backend",
+     6	  "request_interval_ms": 2000,
+     7	  "request_timeout_ms": 10000,
+     8	  "service_targets": [
+     9	    {
+    10	      "node": "k3s-worker1",
+    11	      "url": "http://102.34.160.87:30366/openmrs/health/started"
+    12	    },
+    13	    {
+    14	      "node": "k3s-worker2",
+    15	      "url": "http://102.34.160.87:30366/openmrs/health/started"
+    16	    },
+    17	    {
+    18	      "node": "k3s-worker3",
+    19	      "url": "http://102.34.160.87:30366/openmrs/health/started"
+    20	    },
+    21	    {
+    22	      "node": "k3s-worker4",
+    23	      "url": "http://102.34.160.87:30366/openmrs/health/started"
+    24	    }
+    25	  ]
+    26	}
+
+FILE: harness/config/openmrs-scenario-b.json
+     1	{
+     2	  "scenario": "openmrs-scenario-b",
+     3	  "target_node": "k3s-worker1",
+     4	  "namespace": "openmrs37",
+     5	  "pod_label_selector": "app=openmrs-backend",
+     6	  "request_interval_ms": 1000,
+     7	  "request_timeout_ms": 10000,
+     8	  "service_targets": [
+     9	    {
+    10	      "node": "k3s-worker1",
+    11	      "url": "http://102.34.160.87:30366/openmrs/health/started"
+    12	    },
+    13	    {
+    14	      "node": "k3s-worker2",
+    15	      "url": "http://102.34.160.103:30366/openmrs/health/started"
+    16	    },
+    17	    {
+    18	      "node": "k3s-worker3",
+    19	      "url": "http://102.34.160.36:30366/openmrs/health/started"
+    20	    },
+    21	    {
+    22	      "node": "k3s-worker4",
+    23	      "url": "http://102.34.160.104:30366/openmrs/health/started"
+    24	    }
+    25	  ]
+    26	}
+
+FILE: harness/config/openmrs-scenario-c.json
+     1	{
+     2	  "scenario": "openmrs-scenario-c",
+     3	  "target_node": "k3s-worker1",
+     4	  "namespace": "openmrs37",
+     5	  "pod_label_selector": "app=openmrs-backend",
+     6	  "request_interval_ms": 1000,
+     7	  "request_timeout_ms": 10000,
+     8	  "service_targets": [
+     9	    {
+    10	      "node": "k3s-worker1",
+    11	      "url": "http://102.34.160.87:30366/openmrs/health/started"
+    12	    },
+    13	    {
+    14	      "node": "k3s-worker2",
+    15	      "url": "http://102.34.160.103:30366/openmrs/health/started"
+    16	    },
+    17	    {
+    18	      "node": "k3s-worker3",
+    19	      "url": "http://102.34.160.36:30366/openmrs/health/started"
+    20	    },
+    21	    {
+    22	      "node": "k3s-worker4",
+    23	      "url": "http://102.34.160.104:30366/openmrs/health/started"
+    24	    }
+    25	  ]
+    26	}
+
+FILE: harness/config/openmrs-scenario-e.json
+     1	{
+     2	  "scenario": "openmrs-scenario-e",
+     3	  "target_node": "k3s-worker1",
+     4	  "namespace": "openmrs37",
+     5	  "pod_label_selector": "app=openmrs-backend",
+     6	  "request_interval_ms": 1000,
+     7	  "request_timeout_ms": 10000,
+     8	  "measurement_url": "http://102.34.160.104:30366/openmrs/health/started",
+     9	  "service_targets": [
+    10	    {"node": "k3s-worker1", "url": "http://102.34.160.87:30366/openmrs/health/started"},
+    11	    {"node": "k3s-worker2", "url": "http://102.34.160.103:30366/openmrs/health/started"},
+    12	    {"node": "k3s-worker3", "url": "http://102.34.160.36:30366/openmrs/health/started"},
+    13	    {"node": "k3s-worker4", "url": "http://102.34.160.104:30366/openmrs/health/started"}
+    14	  ]
+    15	}
+
+FILE: harness/config/scenario-b.json
+     1	{
+     2	  "scenario": "scenario-b",
+     3	
+     4	  "target_node": "k3s-worker1",
+     5	  "namespace": "failure-aware",
+     6	  "pod_label_selector": "app=baseline-web",
+     7	
+     8	  "request_interval_ms": 1000,
+     9	  "request_timeout_ms": 3000,
+    10	
+    11	  "service_targets": [
+    12	    {
+    13	      "node": "k3s-worker1",
+    14	      "url": "http://102.34.160.87:30364"
+    15	    },
+    16	    {
+    17	      "node": "k3s-worker2",
+    18	      "url": "http://102.34.160.103:30364"
+    19	    }
+    20	  ]
+    21	}
+
+FILE: harness/config/scenario-c.json
+     1	{
+     2	  "scenario": "scenario-c",
+     3	
+     4	  "target_node": "k3s-worker1",
+     5	  "namespace": "failure-aware",
+     6	  "pod_label_selector": "app=baseline-web",
+     7	
+     8	  "request_interval_ms": 1000,
+     9	  "request_timeout_ms": 3000,
+    10	
+    11	  "service_targets": [
+    12	    {
+    13	      "node": "k3s-worker1",
+    14	      "url": "http://102.34.160.87:30364"
+    15	    },
+    16	    {
+    17	      "node": "k3s-worker2",
+    18	      "url": "http://102.34.160.103:30364"
+    19	    }
+    20	  ]
+    21	}
+
+FILE: harness/config/scenario-e.json
+     1	{
+     2	  "scenario": "scenario-e",
+     3	
+     4	  "target_node": "k3s-worker1",
+     5	  "namespace": "failure-aware",
+     6	  "pod_label_selector": "app=baseline-web",
+     7	
+     8	  "request_interval_ms": 1000,
+     9	  "request_timeout_ms": 3000,
+    10	
+    11	  "service_targets": [
+    12	    {
+    13	      "node": "k3s-worker1",
+    14	      "url": "http://102.34.160.87:30364"
+    15	    },
+    16	    {
+    17	      "node": "k3s-worker2",
+    18	      "url": "http://102.34.160.103:30364"
+    19	    }
+    20	  ]
+    21	}
+
+=== HARNESS SOURCE ===
+
+FILE: harness/src/config.rs
+     1	use anyhow::Result;
+     2	use serde::{Deserialize, Serialize};
+     3	use std::fs;
+     4	
+     5	#[derive(Debug, Deserialize, Serialize, Clone)]
+     6	pub struct ServiceTarget {
+     7	    pub node: String,
+     8	    pub url: String,
+     9	}
+    10	
+    11	#[derive(Debug, Deserialize, Clone)]
+    12	pub struct HarnessConfig {
+    13	    pub scenario: String,
+    14	    pub target_node: String,
+    15	    pub namespace: String,
+    16	    pub pod_label_selector: String,
+    17	    pub request_interval_ms: u64,
+    18	    pub request_timeout_ms: u64,
+    19	    pub service_targets: Vec<ServiceTarget>,
+    20	    #[serde(default)]
+    21	    pub measurement_url: Option<String>,
+    22	}
+    23	
+    24	impl HarnessConfig {
+    25	    pub fn load(path: &str) -> Result<Self> {
+    26	        let contents = fs::read_to_string(path)?;
+    27	        let config: HarnessConfig = serde_json::from_str(&contents)?;
+    28	        Ok(config)
+    29	    }
+    30	
+    31	    pub fn service_url_for_node(&self, node: &str) -> Option<String> {
+    32	        self.service_targets
+    33	            .iter()
+    34	            .find(|target| target.node == node)
+    35	            .map(|target| target.url.clone())
+    36	    }
+    37	}
+
+FILE: harness/src/http_probe.rs
+     1	use anyhow::{Result, anyhow};
+     2	use chrono::Utc;
+     3	use csv::Writer;
+     4	use reqwest::Client;
+     5	use serde::Serialize;
+     6	use serde_json::Value;
+     7	use std::env;
+     8	use std::fs::OpenOptions;
+     9	use std::path::Path;
+    10	use std::process::Stdio;
+    11	use std::time::{Duration, Instant};
+    12	use tokio::process::Command;
+    13	use tokio::time::{sleep, timeout};
+    14	
+    15	use crate::config::HarnessConfig;
+    16	
+    17	#[derive(Debug, Serialize)]
+    18	struct HttpObservation {
+    19	    timestamp_utc: String,
+    20	    node: String,
+    21	    target_url: String,
+    22	    status: u16,
+    23	    latency_ms: f64,
+    24	    success: bool,
+    25	    error: String,
+    26	    placement_status: String,
+    27	    placement_error: String,
+    28	}
+    29	
+    30	#[derive(Debug, Serialize)]
+    31	struct ClinicalObservation {
+    32	    timestamp_utc: String,
+    33	    patient_uuid: String,
+    34	    encounter_uuid: String,
+    35	    status: u16,
+    36	    latency_ms: f64,
+    37	    success: bool,
+    38	    error: String,
+    39	}
+    40	
+    41	#[derive(Debug, Clone)]
+    42	struct ClinicalConfig {
+    43	    base_url: String,
+    44	    username: String,
+    45	    password: String,
+    46	    patient_uuid: String,
+    47	    encounter_uuid: String,
+    48	    observation_uuid: String,
+    49	    concept_uuid: String,
+    50	    expected_temperature: f64,
+    51	}
+    52	
+    53	fn required_env(name: &str) -> Result<String> {
+    54	    let value = env::var(name).map_err(|_| anyhow!("Missing environment variable: {}", name))?;
+    55	
+    56	    if value.trim().is_empty() {
+    57	        return Err(anyhow!("Environment variable {} is empty", name));
+    58	    }
+    59	
+    60	    Ok(value)
+    61	}
+    62	
+    63	fn clinical_config() -> Result<Option<ClinicalConfig>> {
+    64	    let profile =
+    65	        env::var("FAILURE_AWARE_WORKLOAD_PROFILE").unwrap_or_else(|_| "nginx".to_string());
+    66	
+    67	    match profile.as_str() {
+    68	        "nginx" => Ok(None),
+    69	        "openmrs" => Ok(Some(ClinicalConfig {
+    70	            base_url: required_env("OPENMRS_BASE_URL")?,
+    71	            username: required_env("OPENMRS_USERNAME")?,
+    72	            password: required_env("OPENMRS_PASSWORD")?,
+    73	            patient_uuid: required_env("OPENMRS_PATIENT_UUID")?,
+    74	            encounter_uuid: required_env("OPENMRS_ENCOUNTER_UUID")?,
+    75	            observation_uuid: required_env("OPENMRS_OBSERVATION_UUID")?,
+    76	            concept_uuid: required_env("OPENMRS_CONCEPT_UUID")?,
+    77	            expected_temperature: required_env("OPENMRS_EXPECTED_TEMPERATURE")?.parse()?,
+    78	        })),
+    79	        other => Err(anyhow!("Unsupported workload profile: {}", other)),
+    80	    }
+    81	}
+    82	
+    83	fn discovery_timeout_ms() -> u64 {
+    84	    env::var("FAILURE_AWARE_DISCOVERY_TIMEOUT_MS")
+    85	        .ok()
+    86	        .and_then(|value| value.parse::<u64>().ok())
+    87	        .filter(|value| *value > 0)
+    88	        .unwrap_or(3000)
+    89	}
+    90	
+    91	async fn kubectl(args: &[&str]) -> Result<String> {
+    92	    let mut command = Command::new("kubectl");
+    93	
+    94	    command.args(args).stdin(Stdio::null()).kill_on_drop(true);
+    95	
+    96	    let output = timeout(
+    97	        Duration::from_millis(discovery_timeout_ms()),
+    98	        command.output(),
+    99	    )
+   100	    .await
+   101	    .map_err(|_| anyhow!("kubectl discovery timed out"))??;
+   102	
+   103	    if !output.status.success() {
+   104	        return Err(anyhow!(
+   105	            "kubectl failed: {}",
+   106	            String::from_utf8_lossy(&output.stderr)
+   107	        ));
+   108	    }
+   109	
+   110	    Ok(String::from_utf8_lossy(&output.stdout).trim().to_string())
+   111	}
+   112	
+   113	async fn discover_active_node(namespace: &str, selector: &str) -> Result<Option<String>> {
+   114	    let output = kubectl(&[
+   115	        "get",
+   116	        "pods",
+   117	        "-n",
+   118	        namespace,
+   119	        "-l",
+   120	        selector,
+   121	        "-o",
+   122	        "jsonpath={range .items[?(@.status.phase==\"Running\")]}{.spec.nodeName}{\"\\n\"}{end}",
+   123	    ])
+   124	    .await?;
+   125	
+   126	    Ok(output
+   127	        .lines()
+   128	        .find(|line| !line.trim().is_empty())
+   129	        .map(|line| line.trim().to_string()))
+   130	}
+   131	
+   132	fn clinical_output_path(http_path: &str) -> String {
+   133	    Path::new(http_path)
+   134	        .parent()
+   135	        .unwrap_or_else(|| Path::new("."))
+   136	        .join("clinical-observations.csv")
+   137	        .to_string_lossy()
+   138	        .into_owned()
+   139	}
+   140	
+   141	fn validate_patient(record: &Value, config: &ClinicalConfig) -> Result<()> {
+   142	    if record["uuid"].as_str() != Some(config.patient_uuid.as_str()) {
+   143	        return Err(anyhow!("Patient UUID mismatch"));
+   144	    }
+   145	
+   146	    if record["voided"].as_bool() != Some(false) {
+   147	        return Err(anyhow!("Patient is voided or voided status missing"));
+   148	    }
+   149	
+   150	    Ok(())
+   151	}
+   152	
+   153	fn validate_encounter(record: &Value, config: &ClinicalConfig) -> Result<()> {
+   154	    if record["uuid"].as_str() != Some(config.encounter_uuid.as_str()) {
+   155	        return Err(anyhow!("Encounter UUID mismatch"));
+   156	    }
+   157	
+   158	    if record["patient"]["uuid"].as_str() != Some(config.patient_uuid.as_str()) {
+   159	        return Err(anyhow!("Encounter patient UUID mismatch"));
+   160	    }
+   161	
+   162	    if record["voided"].as_bool() != Some(false) {
+   163	        return Err(anyhow!("Encounter is voided"));
+   164	    }
+   165	
+   166	    let observations = record["obs"]
+   167	        .as_array()
+   168	        .ok_or_else(|| anyhow!("Encounter observations missing"))?;
+   169	
+   170	    let observation = observations
+   171	        .iter()
+   172	        .find(|obs| obs["uuid"].as_str() == Some(config.observation_uuid.as_str()))
+   173	        .ok_or_else(|| anyhow!("Expected observation not found"))?;
+   174	
+   175	    if observation["voided"].as_bool() != Some(false) {
+   176	        return Err(anyhow!("Observation is voided"));
+   177	    }
+   178	
+   179	    if observation["concept"]["uuid"].as_str() != Some(config.concept_uuid.as_str()) {
+   180	        return Err(anyhow!("Observation concept mismatch"));
+   181	    }
+   182	
+   183	    let value = observation["value"]
+   184	        .as_f64()
+   185	        .ok_or_else(|| anyhow!("Observation value is not numeric"))?;
+   186	
+   187	    if (value - config.expected_temperature).abs() > 0.001 {
+   188	        return Err(anyhow!(
+   189	            "Temperature mismatch: expected {}, received {}",
+   190	            config.expected_temperature,
+   191	            value
+   192	        ));
+   193	    }
+   194	
+   195	    Ok(())
+   196	}
+   197	
+   198	async fn clinical_request(
+   199	    client: &Client,
+   200	    config: &ClinicalConfig,
+   201	    status: &mut u16,
+   202	) -> Result<()> {
+   203	    let base = config.base_url.trim_end_matches('/');
+   204	
+   205	    let patient_url = format!("{}/ws/rest/v1/patient/{}", base, config.patient_uuid);
+   206	
+   207	    let response = client
+   208	        .get(patient_url)
+   209	        .basic_auth(&config.username, Some(&config.password))
+   210	        .send()
+   211	        .await?;
+   212	
+   213	    *status = response.status().as_u16();
+   214	
+   215	    if !response.status().is_success() {
+   216	        return Err(anyhow!("Patient HTTP {}", status));
+   217	    }
+   218	
+   219	    let patient: Value = response.json().await?;
+   220	    validate_patient(&patient, config)?;
+   221	
+   222	    let encounter_url = format!(
+   223	        "{}/ws/rest/v1/encounter/{}?v=full",
+   224	        base, config.encounter_uuid
+   225	    );
+   226	
+   227	    let response = client
+   228	        .get(encounter_url)
+   229	        .basic_auth(&config.username, Some(&config.password))
+   230	        .send()
+   231	        .await?;
+   232	
+   233	    *status = response.status().as_u16();
+   234	
+   235	    if !response.status().is_success() {
+   236	        return Err(anyhow!("Encounter HTTP {}", status));
+   237	    }
+   238	
+   239	    let encounter: Value = response.json().await?;
+   240	    validate_encounter(&encounter, config)?;
+   241	
+   242	    Ok(())
+   243	}
+   244	
+   245	async fn run_clinical_probe(
+   246	    client: Client,
+   247	    config: ClinicalConfig,
+   248	    output_path: String,
+   249	    interval_ms: u64,
+   250	) -> Result<()> {
+   251	    let file = OpenOptions::new()
+   252	        .create(true)
+   253	        .append(true)
+   254	        .open(output_path)?;
+   255	
+   256	    let mut writer = Writer::from_writer(file);
+   257	
+   258	    println!("[CLINICAL] Clinical-data probe started");
+   259	
+   260	    loop {
+   261	        let timestamp = Utc::now();
+   262	        let start = Instant::now();
+   263	        let mut status = 0;
+   264	
+   265	        let result = clinical_request(&client, &config, &mut status).await;
+   266	
+   267	        let observation = ClinicalObservation {
+   268	            timestamp_utc: timestamp.to_rfc3339(),
+   269	            patient_uuid: config.patient_uuid.clone(),
+   270	            encounter_uuid: config.encounter_uuid.clone(),
+   271	            status,
+   272	            latency_ms: start.elapsed().as_secs_f64() * 1000.0,
+   273	            success: result.is_ok(),
+   274	            error: result.err().map(|e| e.to_string()).unwrap_or_default(),
+   275	        };
+   276	
+   277	        writer.serialize(&observation)?;
+   278	        writer.flush()?;
+   279	
+   280	        println!(
+   281	            "[CLINICAL] {} | status={} | latency={:.3}ms | success={} | error={}",
+   282	            observation.timestamp_utc,
+   283	            observation.status,
+   284	            observation.latency_ms,
+   285	            observation.success,
+   286	            observation.error
+   287	        );
+   288	
+   289	        sleep(Duration::from_millis(interval_ms)).await;
+   290	    }
+   291	}
+   292	
+   293	async fn run_standard_http_probe(
+   294	    config: HarnessConfig,
+   295	    output_path: String,
+   296	    client: Client,
+   297	) -> Result<()> {
+   298	    let file = OpenOptions::new()
+   299	        .create(true)
+   300	        .append(true)
+   301	        .open(output_path)?;
+   302	    let mut writer = Writer::from_writer(file);
+   303	
+   304	    loop {
+   305	        let timestamp = Utc::now();
+   306	        let stable_url = config.measurement_url.as_deref().filter(|s| !s.is_empty());
+   307	
+   308	        let observation = if let Some(url) = stable_url {
+   309	            // Start the HTTP request independently of Kubernetes discovery.
+   310	            // Both futures run concurrently; an API timeout cannot suppress HTTP.
+   311	            let http_request = async {
+   312	                let started = Instant::now();
+   313	                let result = client.get(url).send().await;
+   314	                (result, started.elapsed().as_secs_f64() * 1000.0)
+   315	            };
+   316	            let ((http_result, latency_ms), placement_result) = tokio::join!(
+   317	                http_request,
+   318	                discover_active_node(&config.namespace, &config.pod_label_selector)
+   319	            );
+   320	            let (node, placement_status, placement_error) = match placement_result {
+   321	                Ok(Some(node)) => (node, "KNOWN".to_string(), String::new()),
+   322	                Ok(None) => (String::new(), "UNKNOWN".to_string(),
+   323	                    "no Running workload Pod found".to_string()),
+   324	                Err(error) => (String::new(), "UNKNOWN".to_string(), error.to_string()),
+   325	            };
+   326	            match http_result {
+   327	                Ok(response) => HttpObservation {
+   328	                    timestamp_utc: timestamp.to_rfc3339(),
+   329	                    node,
+   330	                    target_url: url.to_string(),
+   331	                    status: response.status().as_u16(),
+   332	                    latency_ms,
+   333	                    success: response.status().is_success(),
+   334	                    error: String::new(),
+   335	                    placement_status,
+   336	                    placement_error,
+   337	                },
+   338	                Err(error) => HttpObservation {
+   339	                    timestamp_utc: timestamp.to_rfc3339(),
+   340	                    node,
+   341	                    target_url: url.to_string(),
+   342	                    status: 0,
+   343	                    latency_ms,
+   344	                    success: false,
+   345	                    error: error.to_string(),
+   346	                    placement_status,
+   347	                    placement_error,
+   348	                },
+   349	            }
+   350	        } else {
+   351	            // Preserve legacy node-selected Nginx measurement behavior.
+   352	            let active_node = discover_active_node(
+   353	                &config.namespace, &config.pod_label_selector
+   354	            ).await;
+   355	            let (node, target_url, discovery_error) = match active_node {
+   356	                Ok(Some(node)) => match config.service_url_for_node(&node) {
+   357	                    Some(url) => (node, url, String::new()),
+   358	                    None => (node.clone(), String::new(),
+   359	                        format!("no service target configured for node {}", node)),
+   360	                },
+   361	                Ok(None) => (String::new(), String::new(),
+   362	                    "no Running workload pod found".to_string()),
+   363	                Err(error) => (String::new(), String::new(),
+   364	                    format!("placement lookup failed: {}", error)),
+   365	            };
+   366	            let start = Instant::now();
+   367	            if target_url.is_empty() {
+   368	                HttpObservation {
+   369	                    timestamp_utc: timestamp.to_rfc3339(),
+   370	                    node,
+   371	                    target_url,
+   372	                    status: 0,
+   373	                    latency_ms: 0.0,
+   374	                    success: false,
+   375	                    error: discovery_error.clone(),
+   376	                    placement_status: "UNKNOWN".to_string(),
+   377	                    placement_error: discovery_error,
+   378	                }
+   379	            } else {
+   380	                match client.get(&target_url).send().await {
+   381	                    Ok(response) => HttpObservation {
+   382	                        timestamp_utc: timestamp.to_rfc3339(),
+   383	                        node,
+   384	                        target_url,
+   385	                        status: response.status().as_u16(),
+   386	                        latency_ms: start.elapsed().as_secs_f64() * 1000.0,
+   387	                        success: response.status().is_success(),
+   388	                        error: String::new(),
+   389	                        placement_status: "KNOWN".to_string(),
+   390	                        placement_error: String::new(),
+   391	                    },
+   392	                    Err(error) => HttpObservation {
+   393	                        timestamp_utc: timestamp.to_rfc3339(),
+   394	                        node,
+   395	                        target_url,
+   396	                        status: 0,
+   397	                        latency_ms: start.elapsed().as_secs_f64() * 1000.0,
+   398	                        success: false,
+   399	                        error: error.to_string(),
+   400	                        placement_status: "KNOWN".to_string(),
+   401	                        placement_error: String::new(),
+   402	                    },
+   403	                }
+   404	            }
+   405	        };
+   406	
+   407	        writer.serialize(&observation)?;
+   408	        writer.flush()?;
+   409	        println!(
+   410	            "[HTTP] {} | node={} | status={} | latency={:.3}ms | success={} | placement={} | placement_error={} | error={}",
+   411	            observation.timestamp_utc,
+   412	            observation.node,
+   413	            observation.status,
+   414	            observation.latency_ms,
+   415	            observation.success,
+   416	            observation.placement_status,
+   417	            observation.placement_error,
+   418	            observation.error
+   419	        );
+   420	        sleep(Duration::from_millis(config.request_interval_ms)).await;
+   421	    }
+   422	}
+   423	
+   424	pub async fn run_http_probe(config: HarnessConfig, output_path: String) -> Result<()> {
+   425	    let clinical = clinical_config()?;
+   426	
+   427	    let client = Client::builder()
+   428	        .timeout(Duration::from_millis(config.request_timeout_ms))
+   429	        .build()?;
+   430	
+   431	    match clinical {
+   432	        None => run_standard_http_probe(config, output_path, client).await,
+   433	
+   434	        Some(clinical_config) => {
+   435	            let clinical_path = clinical_output_path(&output_path);
+   436	            let interval_ms = config.request_interval_ms;
+   437	
+   438	            // Both probes remain supervised by this task.
+   439	            // A failure in either probe stops the combined task.
+   440	            tokio::try_join!(
+   441	                run_standard_http_probe(config, output_path, client.clone()),
+   442	                run_clinical_probe(client, clinical_config, clinical_path, interval_ms)
+   443	            )?;
+   444	
+   445	            Ok(())
+   446	        }
+   447	    }
+   448	}
+
+FILE: harness/src/kubernetes.rs
+     1	use anyhow::Result;
+     2	use chrono::Utc;
+     3	use csv::Writer;
+     4	use serde::Serialize;
+     5	use std::fs::OpenOptions;
+     6	use std::process::Command;
+     7	use std::time::Duration;
+     8	use tokio::time::sleep;
+     9	
+    10	#[derive(Serialize)]
+    11	struct NodeObservation {
+    12	    timestamp_utc: String,
+    13	    node: String,
+    14	    ready_status: String,
+    15	}
+    16	
+    17	#[derive(Serialize)]
+    18	struct LeaseObservation {
+    19	    timestamp_utc: String,
+    20	    node: String,
+    21	    renew_time: String,
+    22	}
+    23	
+    24	#[derive(Serialize)]
+    25	struct PodObservation {
+    26	    timestamp_utc: String,
+    27	    pod: String,
+    28	    phase: String,
+    29	    deletion_timestamp: String,
+    30	    node: String,
+    31	}
+    32	
+    33	#[derive(Serialize)]
+    34	struct TaintObservation {
+    35	    timestamp_utc: String,
+    36	    node: String,
+    37	    taints: String,
+    38	}
+    39	
+    40	#[derive(Serialize)]
+    41	struct EventObservation {
+    42	    timestamp_utc: String,
+    43	    namespace: String,
+    44	    event_type: String,
+    45	    reason: String,
+    46	    message: String,
+    47	    event_time: String,
+    48	    involved_kind: String,
+    49	    involved_name: String,
+    50	}
+    51	
+    52	fn kubectl(args: &[&str]) -> Result<String> {
+    53	    let output = Command::new("kubectl").args(args).output()?;
+    54	
+    55	    if !output.status.success() {
+    56	        return Err(anyhow::anyhow!(
+    57	            "kubectl failed: {}",
+    58	            String::from_utf8_lossy(&output.stderr)
+    59	        ));
+    60	    }
+    61	
+    62	    Ok(String::from_utf8_lossy(&output.stdout).trim().to_string())
+    63	}
+    64	
+    65	pub async fn observe_node(node: &str, output_path: String) -> Result<()> {
+    66	    let file = OpenOptions::new()
+    67	        .create(true)
+    68	        .append(true)
+    69	        .open(output_path)?;
+    70	
+    71	    let mut writer = Writer::from_writer(file);
+    72	
+    73	    loop {
+    74	        let timestamp = Utc::now();
+    75	
+    76	        let jsonpath = "{.status.conditions[?(@.type==\"Ready\")].status}";
+    77	
+    78	        let result = kubectl(&["get", "node", node, "-o", &format!("jsonpath={}", jsonpath)]);
+    79	
+    80	        let ready_status = match result {
+    81	            Ok(value) => value,
+    82	            Err(error) => format!("ERROR: {}", error),
+    83	        };
+    84	
+    85	        let observation = NodeObservation {
+    86	            timestamp_utc: timestamp.to_rfc3339(),
+    87	            node: node.to_string(),
+    88	            ready_status: ready_status.clone(),
+    89	        };
+    90	
+    91	        writer.serialize(&observation)?;
+    92	        writer.flush()?;
+    93	
+    94	        println!(
+    95	            "[NODE] {} | {} | Ready={}",
+    96	            timestamp.to_rfc3339(),
+    97	            node,
+    98	            ready_status
+    99	        );
+   100	
+   101	        sleep(Duration::from_secs(1)).await;
+   102	    }
+   103	}
+   104	
+   105	pub async fn observe_lease(node: &str, output_path: String) -> Result<()> {
+   106	    let file = OpenOptions::new()
+   107	        .create(true)
+   108	        .append(true)
+   109	        .open(output_path)?;
+   110	
+   111	    let mut writer = Writer::from_writer(file);
+   112	
+   113	    loop {
+   114	        let timestamp = Utc::now();
+   115	
+   116	        let result = kubectl(&[
+   117	            "get",
+   118	            "lease",
+   119	            node,
+   120	            "-n",
+   121	            "kube-node-lease",
+   122	            "-o",
+   123	            "jsonpath={.spec.renewTime}",
+   124	        ]);
+   125	
+   126	        let renew_time = match result {
+   127	            Ok(value) => value,
+   128	            Err(error) => format!("ERROR: {}", error),
+   129	        };
+   130	
+   131	        let observation = LeaseObservation {
+   132	            timestamp_utc: timestamp.to_rfc3339(),
+   133	            node: node.to_string(),
+   134	            renew_time: renew_time.clone(),
+   135	        };
+   136	
+   137	        writer.serialize(&observation)?;
+   138	        writer.flush()?;
+   139	
+   140	        println!(
+   141	            "[LEASE] {} | {} | renewTime={}",
+   142	            timestamp.to_rfc3339(),
+   143	            node,
+   144	            renew_time
+   145	        );
+   146	
+   147	        sleep(Duration::from_secs(1)).await;
+   148	    }
+   149	}
+   150	
+   151	pub async fn observe_pod(namespace: &str, label_selector: &str, output_path: String) -> Result<()> {
+   152	    let file = OpenOptions::new()
+   153	        .create(true)
+   154	        .append(true)
+   155	        .open(output_path)?;
+   156	
+   157	    let mut writer = Writer::from_writer(file);
+   158	
+   159	    loop {
+   160	        let timestamp = Utc::now();
+   161	
+   162	        let output = kubectl(&[
+   163	            "get",
+   164	            "pods",
+   165	            "-n",
+   166	            namespace,
+   167	            "-l",
+   168	            label_selector,
+   169	            "-o",
+   170	            "jsonpath={range .items[*]}{.metadata.name}{\"|\"}{.status.phase}{\"|\"}{.metadata.deletionTimestamp}{\"|\"}{.spec.nodeName}{\"\\n\"}{end}",
+   171	        ]);
+   172	
+   173	        match output {
+   174	            Ok(pods) => {
+   175	                for line in pods.lines() {
+   176	                    let parts: Vec<&str> = line.split('|').collect();
+   177	
+   178	                    if parts.len() != 4 {
+   179	                        continue;
+   180	                    }
+   181	
+   182	                    let observation = PodObservation {
+   183	                        timestamp_utc: timestamp.to_rfc3339(),
+   184	                        pod: parts[0].to_string(),
+   185	                        phase: parts[1].to_string(),
+   186	                        deletion_timestamp: parts[2].to_string(),
+   187	                        node: parts[3].to_string(),
+   188	                    };
+   189	
+   190	                    writer.serialize(&observation)?;
+   191	                    writer.flush()?;
+   192	
+   193	                    println!(
+   194	                        "[POD] {} | {} | phase={} | node={} | deletion={}",
+   195	                        timestamp.to_rfc3339(),
+   196	                        parts[0],
+   197	                        parts[1],
+   198	                        parts[3],
+   199	                        parts[2]
+   200	                    );
+   201	                }
+   202	            }
+   203	
+   204	            Err(error) => {
+   205	                println!("[POD] {} | ERROR: {}", timestamp.to_rfc3339(), error);
+   206	            }
+   207	        }
+   208	
+   209	        sleep(Duration::from_secs(1)).await;
+   210	    }
+   211	}
+   212	
+   213	pub async fn observe_taint(node: &str, output_path: String) -> Result<()> {
+   214	    let file = OpenOptions::new()
+   215	        .create(true)
+   216	        .append(true)
+   217	        .open(output_path)?;
+   218	
+   219	    let mut writer = Writer::from_writer(file);
+   220	
+   221	    loop {
+   222	        let timestamp = Utc::now();
+   223	
+   224	        let result = kubectl(&[
+   225	            "get",
+   226	            "node",
+   227	            node,
+   228	            "-o",
+   229	            "jsonpath={range .spec.taints[*]}{.key}{\"=\"}{.value}{\"|\"}{.effect}{\";\"}{end}",
+   230	        ]);
+   231	
+   232	        let taints = match result {
+   233	            Ok(value) => value,
+   234	            Err(error) => format!("ERROR: {}", error),
+   235	        };
+   236	
+   237	        let observation = TaintObservation {
+   238	            timestamp_utc: timestamp.to_rfc3339(),
+   239	            node: node.to_string(),
+   240	            taints: taints.clone(),
+   241	        };
+   242	
+   243	        writer.serialize(&observation)?;
+   244	        writer.flush()?;
+   245	
+   246	        println!(
+   247	            "[TAINT] {} | {} | taints={}",
+   248	            timestamp.to_rfc3339(),
+   249	            node,
+   250	            if taints.is_empty() { "<none>" } else { &taints }
+   251	        );
+   252	
+   253	        sleep(Duration::from_secs(1)).await;
+   254	    }
+   255	}
+   256	
+   257	pub async fn observe_events(node: &str, output_path: String) -> Result<()> {
+   258	    let file = OpenOptions::new()
+   259	        .create(true)
+   260	        .append(true)
+   261	        .open(output_path)?;
+   262	
+   263	    let mut writer = Writer::from_writer(file);
+   264	
+   265	    let mut seen_events = std::collections::HashSet::<String>::new();
+   266	
+   267	    loop {
+   268	        let timestamp = Utc::now();
+   269	
+   270	        let field_selector = format!("involvedObject.kind=Node,involvedObject.name={}", node);
+   271	
+   272	        let output = kubectl(&[
+   273	            "get",
+   274	            "events",
+   275	            "--all-namespaces",
+   276	            "--field-selector",
+   277	            &field_selector,
+   278	            "-o",
+   279	            "jsonpath={range .items[*]}{.metadata.uid}{\"|\"}{.metadata.resourceVersion}{\"|\"}{.metadata.namespace}{\"|\"}{.type}{\"|\"}{.reason}{\"|\"}{.message}{\"|\"}{.lastTimestamp}{\"|\"}{.involvedObject.kind}{\"|\"}{.involvedObject.name}{\"\\n\"}{end}",
+   280	        ]);
+   281	
+   282	        match output {
+   283	            Ok(events) => {
+   284	                for line in events.lines() {
+   285	                    let parts: Vec<&str> = line.split('|').collect();
+   286	
+   287	                    if parts.len() != 9 {
+   288	                        continue;
+   289	                    }
+   290	
+   291	                    let event_id = format!("{}:{}", parts[0], parts[1]);
+   292	
+   293	                    if seen_events.contains(&event_id) {
+   294	                        continue;
+   295	                    }
+   296	
+   297	                    seen_events.insert(event_id);
+   298	
+   299	                    let observation = EventObservation {
+   300	                        timestamp_utc: timestamp.to_rfc3339(),
+   301	                        namespace: parts[2].to_string(),
+   302	                        event_type: parts[3].to_string(),
+   303	                        reason: parts[4].to_string(),
+   304	                        message: parts[5].to_string(),
+   305	                        event_time: parts[6].to_string(),
+   306	                        involved_kind: parts[7].to_string(),
+   307	                        involved_name: parts[8].to_string(),
+   308	                    };
+   309	
+   310	                    writer.serialize(&observation)?;
+   311	                    writer.flush()?;
+   312	
+   313	                    println!(
+   314	                        "[EVENT] {} | type={} | reason={} | object={}/{} | message={}",
+   315	                        timestamp.to_rfc3339(),
+   316	                        parts[3],
+   317	                        parts[4],
+   318	                        parts[7],
+   319	                        parts[8],
+   320	                        parts[5]
+   321	                    );
+   322	                }
+   323	            }
+   324	
+   325	            Err(error) => {
+   326	                println!("[EVENT] {} | ERROR: {}", timestamp.to_rfc3339(), error);
+   327	            }
+   328	        }
+   329	
+   330	        sleep(Duration::from_secs(1)).await;
+   331	    }
+   332	}
+
+FILE: harness/src/main.rs
+     1	mod config;
+     2	mod http_probe;
+     3	mod kubernetes;
+     4	
+     5	use anyhow::Result;
+     6	use chrono::Utc;
+     7	use config::HarnessConfig;
+     8	use serde_json::json;
+     9	use std::fs;
+    10	
+    11	#[tokio::main]
+    12	async fn main() -> Result<()> {
+    13	    let default_config_path = format!("{}/config/scenario-b.json", env!("CARGO_MANIFEST_DIR"));
+    14	
+    15	    let config_path = std::env::var("HARNESS_CONFIG").unwrap_or(default_config_path);
+    16	
+    17	    let config = HarnessConfig::load(&config_path)?;
+    18	
+    19	    println!("Starting harness for scenario: {}", config.scenario);
+    20	
+    21	    println!("Target node: {}", config.target_node);
+    22	
+    23	    println!("Namespace: {}", config.namespace);
+    24	
+    25	    println!("Pod label selector: {}", config.pod_label_selector);
+    26	
+    27	    println!("Service targets:");
+    28	
+    29	    for target in &config.service_targets {
+    30	        println!("  {} -> {}", target.node, target.url);
+    31	    }
+    32	
+    33	    let start_time = Utc::now();
+    34	
+    35	    let run_id = format!("run-{}", start_time.format("%Y%m%dT%H%M%SZ"));
+    36	
+    37	    let output_dir = format!(
+    38	        "{}/../experiments/baseline/{}/runs/{}",
+    39	        env!("CARGO_MANIFEST_DIR"),
+    40	        config.scenario,
+    41	        run_id
+    42	    );
+    43	
+    44	    fs::create_dir_all(&output_dir)?;
+    45	
+    46	    println!("Run ID: {}", run_id);
+    47	
+    48	    println!("Output directory: {}", output_dir);
+    49	
+    50	    let metadata = json!({
+    51	        "run_id": run_id,
+    52	        "scenario": config.scenario,
+    53	        "start_time_utc": start_time.to_rfc3339(),
+    54	
+    55	        "target_node": config.target_node,
+    56	        "namespace": config.namespace,
+    57	        "pod_label_selector": config.pod_label_selector,
+    58	
+    59	        "request_interval_ms":
+    60	            config.request_interval_ms,
+    61	
+    62	        "request_timeout_ms":
+    63	            config.request_timeout_ms,
+    64	
+    65	        "service_targets":
+    66	            config.service_targets
+    67	    });
+    68	
+    69	    fs::write(
+    70	        format!("{}/metadata.json", output_dir),
+    71	        serde_json::to_string_pretty(&metadata)?,
+    72	    )?;
+    73	
+    74	    let http_output = format!("{}/http-observations.csv", output_dir);
+    75	
+    76	    let node_output = format!("{}/node-observations.csv", output_dir);
+    77	
+    78	    let lease_output = format!("{}/lease-observations.csv", output_dir);
+    79	
+    80	    let pod_output = format!("{}/pod-observations.csv", output_dir);
+    81	
+    82	    let taint_output = format!("{}/taint-observations.csv", output_dir);
+    83	
+    84	    let event_output = format!("{}/event-observations.csv", output_dir);
+    85	
+    86	    let http_config = config.clone();
+    87	
+    88	    let target_node_for_node = config.target_node.clone();
+    89	
+    90	    let target_node_for_lease = config.target_node.clone();
+    91	
+    92	    let target_node_for_taint = config.target_node.clone();
+    93	
+    94	    let target_node_for_events = config.target_node.clone();
+    95	
+    96	    let namespace = config.namespace.clone();
+    97	
+    98	    let pod_label_selector = config.pod_label_selector.clone();
+    99	
+   100	    let mut http_task =
+   101	        tokio::spawn(async move { http_probe::run_http_probe(http_config, http_output).await });
+   102	
+   103	    let mut node_task =
+   104	        tokio::spawn(
+   105	            async move { kubernetes::observe_node(&target_node_for_node, node_output).await },
+   106	        );
+   107	
+   108	    let mut lease_task = tokio::spawn(async move {
+   109	        kubernetes::observe_lease(&target_node_for_lease, lease_output).await
+   110	    });
+   111	
+   112	    let mut pod_task = tokio::spawn(async move {
+   113	        kubernetes::observe_pod(&namespace, &pod_label_selector, pod_output).await
+   114	    });
+   115	
+   116	    let mut taint_task = tokio::spawn(async move {
+   117	        kubernetes::observe_taint(&target_node_for_taint, taint_output).await
+   118	    });
+   119	
+   120	    let mut event_task = tokio::spawn(async move {
+   121	        kubernetes::observe_events(&target_node_for_events, event_output).await
+   122	    });
+   123	
+   124	    tokio::select! {
+   125	        result = &mut http_task => {
+   126	            println!(
+   127	                "HTTP task stopped: {:?}",
+   128	                result
+   129	            );
+   130	        }
+   131	
+   132	        result = &mut node_task => {
+   133	            println!(
+   134	                "Node task stopped: {:?}",
+   135	                result
+   136	            );
+   137	        }
+   138	
+   139	        result = &mut lease_task => {
+   140	            println!(
+   141	                "Lease task stopped: {:?}",
+   142	                result
+   143	            );
+   144	        }
+   145	
+   146	        result = &mut pod_task => {
+   147	            println!(
+   148	                "Pod task stopped: {:?}",
+   149	                result
+   150	            );
+   151	        }
+   152	
+   153	        result = &mut taint_task => {
+   154	            println!(
+   155	                "Taint task stopped: {:?}",
+   156	                result
+   157	            );
+   158	        }
+   159	
+   160	        result = &mut event_task => {
+   161	            println!(
+   162	                "Event task stopped: {:?}",
+   163	                result
+   164	            );
+   165	        }
+   166	
+   167	        _ = tokio::signal::ctrl_c() => {
+   168	            println!();
+   169	            println!(
+   170	                "Shutdown requested."
+   171	            );
+   172	        }
+   173	    }
+   174	
+   175	    http_task.abort();
+   176	    node_task.abort();
+   177	    lease_task.abort();
+   178	    pod_task.abort();
+   179	    taint_task.abort();
+   180	    event_task.abort();
+   181	
+   182	    println!("Harness stopped. Results saved under:");
+   183	
+   184	    println!("{}", output_dir);
+   185	
+   186	    Ok(())
+   187	}

@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+ACTION=${1:?}; POD_IP=${2:-}
+STATE=/run/openmrs-backend-fault-ip
+API_IP=${OPENMRS_API_IP:-102.34.160.89}
+IPT=/usr/sbin/iptables
+api() { "$IPT" "$1" OUTPUT -p tcp -d "$API_IP" --dport 6443 -j DROP; }
+backend() { "$IPT" "$1" FORWARD -p tcp -d "$POD_IP" --dport 8080 -j DROP; }
+case "$ACTION" in
+  apply)
+    [[ "$POD_IP" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]] || exit 2
+    [[ ! -e "$STATE" ]] || { echo 'Existing fault state' >&2; exit 1; }
+    echo "$POD_IP" > "$STATE"
+    api -C 2>/dev/null || api -I
+    backend -C 2>/dev/null || backend -I
+    api -C && backend -C
+    ;;
+  status)
+    [[ -f "$STATE" ]] || exit 1
+    POD_IP=$(cat "$STATE")
+    api -C && backend -C
+    ;;
+  clear)
+    [[ -f "$STATE" ]] || { echo 'No state file: cannot verify cleanup' >&2; exit 1; }
+    POD_IP=$(cat "$STATE")
+    while api -C 2>/dev/null; do api -D; done
+    while backend -C 2>/dev/null; do backend -D; done
+    rm -f "$STATE"
+    ;;
+  *) exit 2;;
+esac

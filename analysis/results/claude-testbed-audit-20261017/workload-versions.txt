@@ -1,0 +1,36 @@
+=== ALL CONTAINER IMAGES ===
+failure-aware-db-test fenced-mariadb-5955b78688-5cv7d mariadb mariadb:10.11.19
+failure-aware baseline-web-75c79699bc-88x2c nginx nginx:alpine
+failure-aware fenced-postgres-558494f744-ks9f2 postgres postgres:16-alpine
+failure-aware postgres-client-56bc94b556-dd8qv postgres-client postgres:16-alpine
+kube-system coredns-54996dc9b4-9499t coredns rancher/mirrored-coredns-coredns:1.14.6
+kube-system helm-install-traefik-crd-qnqvx helm rancher/klipper-helm:v0.13.3-build20260727
+kube-system helm-install-traefik-l8j2j helm rancher/klipper-helm:v0.13.3-build20260727
+kube-system local-path-provisioner-77b9867795-w85jt local-path-provisioner rancher/local-path-provisioner:v0.0.37
+kube-system metrics-server-6dc596dfb8-gd4sg metrics-server rancher/mirrored-metrics-server:v0.9.0
+kube-system svclb-traefik-4652a1e7-7cfz7 lb-tcp-80 rancher/klipper-lb:v0.4.17
+kube-system svclb-traefik-4652a1e7-7cfz7 lb-tcp-443 rancher/klipper-lb:v0.4.17
+kube-system svclb-traefik-4652a1e7-b267b lb-tcp-80 rancher/klipper-lb:v0.4.17
+kube-system svclb-traefik-4652a1e7-b267b lb-tcp-443 rancher/klipper-lb:v0.4.17
+kube-system svclb-traefik-4652a1e7-l9n8s lb-tcp-80 rancher/klipper-lb:v0.4.17
+kube-system svclb-traefik-4652a1e7-l9n8s lb-tcp-443 rancher/klipper-lb:v0.4.17
+kube-system svclb-traefik-4652a1e7-q8cb6 lb-tcp-80 rancher/klipper-lb:v0.4.17
+kube-system svclb-traefik-4652a1e7-q8cb6 lb-tcp-443 rancher/klipper-lb:v0.4.17
+kube-system svclb-traefik-4652a1e7-qhrld lb-tcp-80 rancher/klipper-lb:v0.4.17
+kube-system svclb-traefik-4652a1e7-qhrld lb-tcp-443 rancher/klipper-lb:v0.4.17
+kube-system traefik-59b7647586-qmxgn traefik rancher/mirrored-library-traefik:3.7.8
+nfs-provisioner nfs-provisioner-nfs-subdir-external-provisioner-7bd87bf7ccb56dn nfs-subdir-external-provisioner registry.k8s.io/sig-storage/nfs-subdir-external-provisioner:v4.0.2
+openmrs openmrs-backend-588d5d4d88-2p77s backend openmrs/openmrs-reference-application-3-backend:3.7.1
+openmrs openmrs-frontend-5c586c56ff-jtxdt frontend openmrs/openmrs-reference-application-3-frontend:3.7.1
+openmrs openmrs-gateway-7995b88dd7-7gdlr gateway openmrs/openmrs-reference-application-3-gateway:3.7.1
+openmrs openmrs-mariadb-7645bb895c-t5vdj mariadb mariadb:10.11
+openmrs37 openmrs-backend-c56bcf795-kn5xj backend openmrs/openmrs-reference-application-3-backend:3.7.1
+openmrs37 openmrs-frontend-6c76c4497d-nwxnm frontend openmrs/openmrs-reference-application-3-frontend:3.7.1
+openmrs37 openmrs-gateway-5794bbd8f4-g8fdd gateway openmrs/openmrs-reference-application-3-gateway:3.7.1
+openmrs37 openmrs-mariadb-6455d5fcc9-grgz4 mariadb mariadb:10.11.19
+
+=== IMAGE REFERENCES IN REPOSITORY ===
+workloads/stateful-fencing/postgres.yaml:34:          image: postgres:16-alpine
+workloads/test-workload/nginx-native.yaml:33:          image: nginx:alpine
+workloads/test-workload/remote-postgres.yaml:38:          image: postgres:16-alpine
+workloads/test-workload/nginx.yaml:42:          image: nginx:alpine

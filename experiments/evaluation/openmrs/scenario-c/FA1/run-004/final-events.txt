@@ -1,0 +1,94 @@
+LAST SEEN   TYPE      REASON                 OBJECT                                   MESSAGE
+43m         Normal    ScalingReplicaSet      deployment/openmrs-backend               Scaled down replica set openmrs-backend-7bd876ddcf from 1 to 0
+60m         Warning   NodeNotReady           pod/openmrs-gateway-7995b88dd7-2jxgj     Node is not ready
+60m         Warning   NodeNotReady           pod/openmrs-backend-7bd876ddcf-pkh6l     Node is not ready
+60m         Warning   NodeNotReady           pod/openmrs-frontend-5c586c56ff-zw6l2    Node is not ready
+55m         Normal    TaintManagerEviction   pod/openmrs-gateway-7995b88dd7-2jxgj     Marking for deletion Pod openmrs37/openmrs-gateway-7995b88dd7-2jxgj
+55m         Normal    SuccessfulCreate       replicaset/openmrs-gateway-7995b88dd7    Created pod: openmrs-gateway-7995b88dd7-jkp4n
+55m         Normal    SuccessfulCreate       replicaset/openmrs-frontend-5c586c56ff   Created pod: openmrs-frontend-5c586c56ff-hzw6z
+55m         Normal    TaintManagerEviction   pod/openmrs-frontend-5c586c56ff-zw6l2    Marking for deletion Pod openmrs37/openmrs-frontend-5c586c56ff-zw6l2
+55m         Warning   FailedScheduling       pod/openmrs-gateway-7995b88dd7-jkp4n     0/5 nodes are available: 1 node(s) had untolerated taint(s), 4 node(s) didn't match Pod's node affinity/selector. no new claims to deallocate, preemption: 0/5 nodes are available: 5 Preemption is not helpful for scheduling.
+55m         Normal    TaintManagerEviction   pod/openmrs-backend-7bd876ddcf-pkh6l     Marking for deletion Pod openmrs37/openmrs-backend-7bd876ddcf-pkh6l
+55m         Warning   FailedScheduling       pod/openmrs-frontend-5c586c56ff-hzw6z    0/5 nodes are available: 1 node(s) had untolerated taint(s), 4 node(s) didn't match Pod's node affinity/selector. no new claims to deallocate, preemption: 0/5 nodes are available: 5 Preemption is not helpful for scheduling.
+55m         Normal    SuccessfulCreate       replicaset/openmrs-backend-7bd876ddcf    Created pod: openmrs-backend-7bd876ddcf-dsrtx
+55m         Normal    Scheduled              pod/openmrs-backend-7bd876ddcf-dsrtx     Successfully assigned openmrs37/openmrs-backend-7bd876ddcf-dsrtx to k3s-worker2
+55m         Normal    Pulled                 pod/openmrs-backend-7bd876ddcf-dsrtx     Container image "openmrs/openmrs-reference-application-3-backend:3.7.1" already present on machine and can be accessed by the pod
+55m         Normal    Created                pod/openmrs-backend-7bd876ddcf-dsrtx     Container created
+55m         Normal    Started                pod/openmrs-backend-7bd876ddcf-dsrtx     Container started
+50m         Warning   Unhealthy              pod/openmrs-backend-7bd876ddcf-dsrtx     Startup probe failed: Get "http://10.42.2.175:8080/openmrs": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+50m         Warning   FailedScheduling       pod/openmrs-gateway-7995b88dd7-jkp4n     0/5 nodes are available: 1 node(s) had untolerated taint(s), 4 node(s) didn't match Pod's node affinity/selector. no new claims to deallocate, preemption: 0/5 nodes are available: 5 Preemption is not helpful for scheduling.
+50m         Warning   FailedScheduling       pod/openmrs-frontend-5c586c56ff-hzw6z    0/5 nodes are available: 1 node(s) had untolerated taint(s), 4 node(s) didn't match Pod's node affinity/selector. no new claims to deallocate, preemption: 0/5 nodes are available: 5 Preemption is not helpful for scheduling.
+46m         Normal    Killing                pod/openmrs-frontend-5c586c56ff-zw6l2    Stopping container frontend
+46m         Normal    Killing                pod/openmrs-gateway-7995b88dd7-2jxgj     Stopping container gateway
+46m         Normal    Killing                pod/openmrs-backend-7bd876ddcf-pkh6l     Stopping container backend
+46m         Normal    Scheduled              pod/openmrs-gateway-7995b88dd7-jkp4n     Successfully assigned openmrs37/openmrs-gateway-7995b88dd7-jkp4n to k3s-worker1
+46m         Normal    Scheduled              pod/openmrs-frontend-5c586c56ff-hzw6z    Successfully assigned openmrs37/openmrs-frontend-5c586c56ff-hzw6z to k3s-worker1
+45m         Normal    Created                pod/openmrs-gateway-7995b88dd7-jkp4n     Container created
+45m         Normal    Created                pod/openmrs-frontend-5c586c56ff-hzw6z    Container created
+45m         Normal    Started                pod/openmrs-gateway-7995b88dd7-jkp4n     Container started
+45m         Normal    Pulled                 pod/openmrs-gateway-7995b88dd7-jkp4n     Container image "openmrs/openmrs-reference-application-3-gateway:3.7.1" already present on machine and can be accessed by the pod
+45m         Normal    Pulled                 pod/openmrs-frontend-5c586c56ff-hzw6z    Container image "openmrs/openmrs-reference-application-3-frontend:3.7.1" already present on machine and can be accessed by the pod
+45m         Normal    Started                pod/openmrs-frontend-5c586c56ff-hzw6z    Container started
+45m         Normal    TaintManagerEviction   pod/openmrs-frontend-5c586c56ff-hzw6z    Cancelling deletion of Pod openmrs37/openmrs-frontend-5c586c56ff-hzw6z
+45m         Normal    TaintManagerEviction   pod/openmrs-gateway-7995b88dd7-jkp4n     Cancelling deletion of Pod openmrs37/openmrs-gateway-7995b88dd7-jkp4n
+43m         Normal    SuccessfulDelete       replicaset/openmrs-backend-7bd876ddcf    Deleted pod: openmrs-backend-7bd876ddcf-dsrtx
+43m         Normal    Scheduled              pod/openmrs-backend-c56bcf795-7kwvc      Successfully assigned openmrs37/openmrs-backend-c56bcf795-7kwvc to k3s-worker1
+25m         Normal    ScalingReplicaSet      deployment/openmrs-backend               Scaled up replica set openmrs-backend-c56bcf795 from 0 to 1
+43m         Normal    Killing                pod/openmrs-backend-7bd876ddcf-dsrtx     Stopping container backend
+43m         Normal    SuccessfulCreate       replicaset/openmrs-backend-c56bcf795     Created pod: openmrs-backend-c56bcf795-7kwvc
+43m         Normal    Started                pod/openmrs-backend-c56bcf795-7kwvc      Container started
+43m         Normal    Created                pod/openmrs-backend-c56bcf795-7kwvc      Container created
+43m         Normal    Pulled                 pod/openmrs-backend-c56bcf795-7kwvc      Container image "openmrs/openmrs-reference-application-3-backend:3.7.1" already present on machine and can be accessed by the pod
+38m         Warning   Unhealthy              pod/openmrs-backend-c56bcf795-7kwvc      Startup probe failed: Get "http://10.42.1.171:8080/openmrs": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+34m         Normal    Scheduled              pod/openmrs-backend-646646c6c5-7cnfl     Successfully assigned openmrs37/openmrs-backend-646646c6c5-7cnfl to k3s-worker1
+34m         Normal    SuccessfulDelete       replicaset/openmrs-backend-c56bcf795     Deleted pod: openmrs-backend-c56bcf795-7kwvc
+34m         Normal    SuccessfulCreate       replicaset/openmrs-backend-646646c6c5    Created pod: openmrs-backend-646646c6c5-7cnfl
+34m         Normal    Killing                pod/openmrs-backend-c56bcf795-7kwvc      Stopping container backend
+15m         Normal    ScalingReplicaSet      deployment/openmrs-backend               Scaled down replica set openmrs-backend-c56bcf795 from 1 to 0
+34m         Normal    ScalingReplicaSet      deployment/openmrs-backend               Scaled up replica set openmrs-backend-646646c6c5 from 0 to 1
+34m         Normal    Pulled                 pod/openmrs-backend-646646c6c5-7cnfl     Container image "openmrs/openmrs-reference-application-3-backend:3.7.1" already present on machine and can be accessed by the pod
+34m         Normal    Started                pod/openmrs-backend-646646c6c5-7cnfl     Container started
+34m         Normal    Created                pod/openmrs-backend-646646c6c5-7cnfl     Container created
+29m         Warning   Unhealthy              pod/openmrs-backend-646646c6c5-7cnfl     Startup probe failed: Get "http://10.42.1.172:8080/openmrs": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+25m         Normal    ScalingReplicaSet      deployment/openmrs-backend               Scaled down replica set openmrs-backend-646646c6c5 from 1 to 0
+25m         Normal    SuccessfulDelete       replicaset/openmrs-backend-646646c6c5    Deleted pod: openmrs-backend-646646c6c5-7cnfl
+25m         Normal    Killing                pod/openmrs-backend-646646c6c5-7cnfl     Stopping container backend
+25m         Normal    Scheduled              pod/openmrs-backend-c56bcf795-kzhp4      Successfully assigned openmrs37/openmrs-backend-c56bcf795-kzhp4 to k3s-worker1
+25m         Normal    SuccessfulCreate       replicaset/openmrs-backend-c56bcf795     Created pod: openmrs-backend-c56bcf795-kzhp4
+25m         Normal    Started                pod/openmrs-backend-c56bcf795-kzhp4      Container started
+25m         Normal    Created                pod/openmrs-backend-c56bcf795-kzhp4      Container created
+25m         Normal    Pulled                 pod/openmrs-backend-c56bcf795-kzhp4      Container image "openmrs/openmrs-reference-application-3-backend:3.7.1" already present on machine and can be accessed by the pod
+20m         Warning   Unhealthy              pod/openmrs-backend-c56bcf795-kzhp4      Startup probe failed: Get "http://10.42.1.173:8080/openmrs": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+15m         Warning   NodeNotReady           pod/openmrs-backend-c56bcf795-kzhp4      Node is not ready
+15m         Warning   NodeNotReady           pod/openmrs-frontend-5c586c56ff-hzw6z    Node is not ready
+15m         Warning   NodeNotReady           pod/openmrs-gateway-7995b88dd7-jkp4n     Node is not ready
+15m         Normal    SuccessfulDelete       replicaset/openmrs-backend-c56bcf795     Deleted pod: openmrs-backend-c56bcf795-kzhp4
+15m         Normal    ScalingReplicaSet      deployment/openmrs-backend               Scaled up replica set openmrs-backend-5ddf4cbc6 from 0 to 1
+15m         Normal    Scheduled              pod/openmrs-backend-5ddf4cbc6-grs7d      Successfully assigned openmrs37/openmrs-backend-5ddf4cbc6-grs7d to k3s-worker2
+15m         Normal    SuccessfulCreate       replicaset/openmrs-backend-5ddf4cbc6     Created pod: openmrs-backend-5ddf4cbc6-grs7d
+15m         Normal    Pulled                 pod/openmrs-backend-5ddf4cbc6-grs7d      Container image "openmrs/openmrs-reference-application-3-backend:3.7.1" already present on machine and can be accessed by the pod
+15m         Normal    Created                pod/openmrs-backend-5ddf4cbc6-grs7d      Container created
+15m         Normal    Started                pod/openmrs-backend-5ddf4cbc6-grs7d      Container started
+15m         Warning   Unhealthy              pod/openmrs-backend-5ddf4cbc6-grs7d      Startup probe failed: Get "http://10.42.2.176:8080/openmrs": dial tcp 10.42.2.176:8080: connect: connection refused
+5m6s        Warning   Unhealthy              pod/openmrs-backend-5ddf4cbc6-grs7d      Startup probe failed: Get "http://10.42.2.176:8080/openmrs": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+10m         Warning   FailedScheduling       pod/openmrs-frontend-5c586c56ff-8rdxd    0/5 nodes are available: 1 node(s) had untolerated taint(s), 4 node(s) didn't match Pod's node affinity/selector. no new claims to deallocate, preemption: 0/5 nodes are available: 5 Preemption is not helpful for scheduling.
+10m         Warning   FailedScheduling       pod/openmrs-gateway-7995b88dd7-m58gg     0/5 nodes are available: 1 node(s) had untolerated taint(s), 4 node(s) didn't match Pod's node affinity/selector. no new claims to deallocate, preemption: 0/5 nodes are available: 5 Preemption is not helpful for scheduling.
+10m         Normal    SuccessfulCreate       replicaset/openmrs-frontend-5c586c56ff   Created pod: openmrs-frontend-5c586c56ff-8rdxd
+10m         Normal    SuccessfulCreate       replicaset/openmrs-gateway-7995b88dd7    Created pod: openmrs-gateway-7995b88dd7-m58gg
+10m         Normal    TaintManagerEviction   pod/openmrs-frontend-5c586c56ff-hzw6z    Marking for deletion Pod openmrs37/openmrs-frontend-5c586c56ff-hzw6z
+10m         Normal    TaintManagerEviction   pod/openmrs-gateway-7995b88dd7-jkp4n     Marking for deletion Pod openmrs37/openmrs-gateway-7995b88dd7-jkp4n
+5m17s       Warning   FailedScheduling       pod/openmrs-frontend-5c586c56ff-8rdxd    0/5 nodes are available: 1 node(s) had untolerated taint(s), 4 node(s) didn't match Pod's node affinity/selector. no new claims to deallocate, preemption: 0/5 nodes are available: 5 Preemption is not helpful for scheduling.
+5m17s       Warning   FailedScheduling       pod/openmrs-gateway-7995b88dd7-m58gg     0/5 nodes are available: 1 node(s) had untolerated taint(s), 4 node(s) didn't match Pod's node affinity/selector. no new claims to deallocate, preemption: 0/5 nodes are available: 5 Preemption is not helpful for scheduling.
+83s         Normal    Scheduled              pod/openmrs-gateway-7995b88dd7-m58gg     Successfully assigned openmrs37/openmrs-gateway-7995b88dd7-m58gg to k3s-worker1
+83s         Normal    Scheduled              pod/openmrs-frontend-5c586c56ff-8rdxd    Successfully assigned openmrs37/openmrs-frontend-5c586c56ff-8rdxd to k3s-worker1
+80s         Normal    TaintManagerEviction   pod/openmrs-frontend-5c586c56ff-8rdxd    Cancelling deletion of Pod openmrs37/openmrs-frontend-5c586c56ff-8rdxd
+80s         Normal    TaintManagerEviction   pod/openmrs-gateway-7995b88dd7-m58gg     Cancelling deletion of Pod openmrs37/openmrs-gateway-7995b88dd7-m58gg
+83s         Normal    Killing                pod/openmrs-gateway-7995b88dd7-jkp4n     Stopping container gateway
+83s         Normal    Killing                pod/openmrs-backend-c56bcf795-kzhp4      Stopping container backend
+83s         Normal    Killing                pod/openmrs-frontend-5c586c56ff-hzw6z    Stopping container frontend
+81s         Normal    Pulled                 pod/openmrs-gateway-7995b88dd7-m58gg     Container image "openmrs/openmrs-reference-application-3-gateway:3.7.1" already present on machine and can be accessed by the pod
+81s         Normal    Created                pod/openmrs-gateway-7995b88dd7-m58gg     Container created
+81s         Normal    Started                pod/openmrs-gateway-7995b88dd7-m58gg     Container started
+81s         Normal    Created                pod/openmrs-frontend-5c586c56ff-8rdxd    Container created
+81s         Normal    Started                pod/openmrs-frontend-5c586c56ff-8rdxd    Container started
+81s         Normal    Pulled                 pod/openmrs-frontend-5c586c56ff-8rdxd    Container image "openmrs/openmrs-reference-application-3-frontend:3.7.1" already present on machine and can be accessed by the pod

@@ -1,0 +1,39 @@
+
+========================================
+FILE: experiments/evaluation/scenario-b/failure-aware/run-003/controller.log
+========================================
+     1	Starting Failure-Aware Controller
+     2	Target node: k3s-worker1
+     3	Native suspicion trigger: Ready=Unknown
+     4	Verification URL: http://102.34.160.87:30364
+     5	Verification timeout: 3000 ms
+     6	Verification attempts: 3
+     7	Verification interval: 500 ms
+     8	Workload: baseline-web
+     9	Workload type: Stateless
+    10	Duplication sensitive: false
+    11	Service criticality: Medium
+    12	Namespace: failure-aware
+    13	Pod label selector: app=baseline-web
+    14	Recovery candidate: k3s-worker2
+    15	Required recovery CPU: 100m
+    16	Required recovery memory: 128 MiB
+    17	Required recovery node labels: {}
+    18	Fencing supported: false
+    19	Fencing command: <none>
+    20	Connected to Kubernetes API
+    21	[LISTENER] Watching node=k3s-worker1 for Ready=Unknown
+    22	[LISTENER] Initializing node watch
+    23	[INITIAL STATE] node=k3s-worker1 | Ready=Some("True")
+    24	[LISTENER] Initial node state synchronized
+    25	[SUSPICION] 2026-09-21T21:57:32.722104425+00:00 | node=k3s-worker1 | Ready=Some("True") -> Unknown
+    26	[VERIFY] 2026-09-21T21:57:32.722179478+00:00 | starting bounded verification against http://102.34.160.87:30364
+    27	[VERIFY] attempt=1/3 | reachable=true | HTTP=Some(200) | latency=28.493 ms | error=None
+    28	[VERIFY] attempt=2/3 | reachable=true | HTTP=Some(200) | latency=65.186 ms | error=None
+    29	[VERIFY] attempt=3/3 | reachable=true | HTTP=Some(200) | latency=35.869 ms | error=None
+    30	[RESOURCE] 2026-09-21T22:07:58.511557961+00:00 | candidate=k3s-worker2 | state=Available | Ready=true | labels_match=true | CPU=4000m required=100m | memory=3915Mi required=128Mi
+    31	[RECOVERY SAFETY] 2026-09-21T22:07:58.511634013+00:00 | state=Safe | fencing_required=false | fencing_supported=false
+    32	[AWARENESS] 2026-09-21T22:07:58.511643977+00:00 | node=k3s-worker1 | operational_state=ReachableOutsideControlPlane | workload=baseline-web | workload_type=Stateless | duplication_sensitive=false | service_criticality=Medium | resource_state=Available | recovery_candidate=k3s-worker2 | recovery_safety=Safe | fencing_required=false | attempts=3 | successes=3 | failures=0
+    33	[DECISION] 2026-09-21T22:07:58.511651383+00:00 | node=k3s-worker1 | decision=Preserve | fencing_required=false | reason=workload remains reachable outside the control-plane path
+    34	[ENFORCEMENT] 2026-09-21T22:07:58.511663689+00:00 | node=k3s-worker1 | action=PreserveExisting | enforced=true | message=existing workload remains bound; no recovery action initiated
+    35	[RECOVERED] 2026-09-22T00:05:53.424402742+00:00 | node=k3s-worker1 | Ready=Unknown -> True

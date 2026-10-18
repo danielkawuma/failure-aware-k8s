@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openmrs-mariadb
+  namespace: openmrs37
+  labels:
+    app: openmrs-mariadb
+    failure-aware.io/duplication-sensitive: "true"
+    failure-aware.io/database-engine: "mariadb"
+
+spec:
+  replicas: 1
+
+  strategy:
+    type: Recreate
+
+  selector:
+    matchLabels:
+      app: openmrs-mariadb
+
+  template:
+    metadata:
+      labels:
+        app: openmrs-mariadb
+        failure-aware.io/duplication-sensitive: "true"
+        failure-aware.io/database-engine: "mariadb"
+
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: k3s-worker2
+
+      securityContext:
+        runAsUser: 999
+        runAsGroup: 999
+
+      containers:
+        - name: mariadb
+          image: mariadb:10.11.19
+          imagePullPolicy: IfNotPresent
+
+          args:
+            - --character-set-server=utf8mb4
+            - --collation-server=utf8mb4_general_ci
+
+          envFrom:
+            - secretRef:
+                name: openmrs-db-secret
+
+          ports:
+            - name: mysql
+              containerPort: 3306
+
+          resources:
+            requests:
+              cpu: 300m
+              memory: 512Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+
+          readinessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - >
+                  mariadb-admin ping
+                  -h 127.0.0.1
+                  -uroot
+                  -p"${MYSQL_ROOT_PASSWORD}"
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 12
+
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/mysql
+
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: openmrs-mariadb-data-nfs
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: openmrs-mariadb
+  namespace: openmrs37
+
+spec:
+  selector:
+    app: openmrs-mariadb
+
+  ports:
+    - name: mysql
+      port: 3306
+      targetPort: 3306

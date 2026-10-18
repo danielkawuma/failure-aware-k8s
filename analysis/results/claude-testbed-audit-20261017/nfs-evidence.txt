@@ -1,0 +1,39 @@
+=== NFS SERVER ===
+NFS PACKAGES:
+nfs-common	1:2.6.4-3ubuntu5.1
+nfs-kernel-server	1:2.6.4-3ubuntu5.1
+EXPORTS:
+/srv/failure-aware/postgres
+		102.34.160.87(sync,wdelay,hide,no_subtree_check,sec=sys,rw,secure,no_root_squash,no_all_squash)
+/srv/failure-aware/postgres
+		102.34.160.103(sync,wdelay,hide,no_subtree_check,sec=sys,rw,secure,no_root_squash,no_all_squash)
+/srv/failure-aware/k8s-dynamic
+		102.34.160.87(sync,wdelay,hide,no_subtree_check,sec=sys,rw,secure,root_squash,no_all_squash)
+/srv/failure-aware/k8s-dynamic
+		102.34.160.103(sync,wdelay,hide,no_subtree_check,sec=sys,rw,secure,root_squash,no_all_squash)
+/srv/failure-aware/k8s-dynamic
+		102.34.160.36(sync,wdelay,hide,no_subtree_check,sec=sys,rw,secure,root_squash,no_all_squash)
+/srv/failure-aware/k8s-dynamic
+		102.34.160.104(sync,wdelay,hide,no_subtree_check,sec=sys,rw,secure,root_squash,no_all_squash)
+NFS SERVICE:
+● nfs-server.service - NFS server and services
+     Loaded: loaded (/usr/lib/systemd/system/nfs-server.service; enabled; preset: enabled)
+    Drop-In: /run/systemd/generator/nfs-server.service.d
+             └─order-with-mounts.conf
+     Active: active (exited) since Thu 2026-10-15 06:13:32 UTC; 2 days ago
+   Main PID: 1834654 (code=exited, status=0/SUCCESS)
+        CPU: 12ms
+
+Oct 15 06:13:32 k3s-server systemd[1]: Starting nfs-server.service - NFS server and services...
+Oct 15 06:13:32 k3s-server systemd[1]: Finished nfs-server.service - NFS server and services.
+
+=== CLIENT NFS MOUNTS ===
+CLIENT=102.34.160.87
+TARGET                                                                                                                        SOURCE                                                                                                                   FSTYPE OPTIONS
+/var/lib/kubelet/pods/77805cb3-c8ae-47bf-aa3a-4dfab76bcc65/volumes/kubernetes.io~nfs/pvc-edb15706-e304-4863-9d20-2262c33d7386 102.34.160.89:/srv/failure-aware/k8s-dynamic/openmrs37-openmrs-backend-data-nfs-pvc-edb15706-e304-4863-9d20-2262c33d7386 nfs4   rw,relatime,vers=4.2,rsize=524288,wsize=524288,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=102.34.160.87,local_lock=none,addr=102.34.160.89
+CLIENT=102.34.160.103
+TARGET                                                                                                                        SOURCE                                                                                                                   FSTYPE OPTIONS
+/var/lib/kubelet/pods/d3ecd2e8-a430-4078-9444-856e13907458/volumes/kubernetes.io~nfs/postgres-fencing-pv                      102.34.160.89:/srv/failure-aware/postgres                                                                                nfs4   rw,relatime,vers=4.1,rsize=524288,wsize=524288,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=102.34.160.103,local_lock=none,addr=102.34.160.89
+/var/lib/kubelet/pods/213dd178-79bf-41b9-be12-5a283cae2fd2/volumes/kubernetes.io~nfs/pvc-1cab6ed7-7bfd-4612-a519-b80dac7faf7a 102.34.160.89:/srv/failure-aware/k8s-dynamic/openmrs37-openmrs-mariadb-data-nfs-pvc-1cab6ed7-7bfd-4612-a519-b80dac7faf7a nfs4   rw,relatime,vers=4.2,rsize=524288,wsize=524288,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=102.34.160.103,local_lock=none,addr=102.34.160.89
+/var/lib/kubelet/pods/1fb1dbdc-17d4-456d-b4d5-6ff304241491/volumes/kubernetes.io~nfs/nfs-subdir-external-provisioner-root     102.34.160.89:/srv/failure-aware/k8s-dynamic                                                                             nfs4   rw,relatime,vers=4.2,rsize=524288,wsize=524288,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=102.34.160.103,local_lock=none,addr=102.34.160.89
+CLIENT=102.34.160.36

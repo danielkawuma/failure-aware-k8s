@@ -1,0 +1,20 @@
+{
+  "target_node": "k3s-worker2",
+  "trigger_ready_status": "Unknown",
+  "verification_url": "http://127.0.0.1:9/unavailable-database-probe",
+  "verification_timeout_ms": 3000,
+  "verification_attempts": 3,
+  "verification_interval_ms": 500,
+  "workload_name": "openmrs-mariadb",
+  "workload_type": "database",
+  "duplication_sensitive": true,
+  "service_criticality": "high",
+  "namespace": "openmrs37",
+  "pod_label_selector": "app=openmrs-mariadb",
+  "recovery_candidate_node": "k3s-worker3",
+  "required_cpu_millicores": 300,
+  "required_memory_mib": 512,
+  "required_node_labels": {"failure-aware.io/role": "recovery-candidate"},
+  "fencing_supported": false,
+  "fencing_command": ""
+}

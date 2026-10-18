@@ -1,0 +1,11 @@
+=== POSSIBLE NETWORK TRACE FILES ===
+analysis/results/claude-final-evidence-audit-20261018/06-real-network-traces.txt
+analysis/results/http_latency_by_run.csv
+analysis/results/http_latency_observations.csv
+analysis/results/http_latency_summary.csv
+
+=== ACTUAL NETWORK MEASUREMENT COMMANDS ===
+scripts/openmrs-db-tcp-probe.sh:7:kubectl exec -n "$NS" "$POD" -- sh -c 'mariadb-admin ping -h 127.0.0.1 -uroot -p"$MYSQL_ROOT_PASSWORD"'
+scripts/scenario-a-run.sh:73:    ping -n -c 1 -W 1 "$WORKER1_IP" >/dev/null 2>&1
+
+=== RECORDED NETWORK MEASUREMENT LINES ===

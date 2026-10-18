@@ -1,0 +1,28 @@
+=== TESTBED SOFTWARE AND INFRASTRUCTURE ===
+docs/testbed.md:19:| Node | Role | Hostname | IP Address | vCPU | RAM | Disk | OS |
+docs/testbed.md:733:          image: nginx:1.27
+docs/testbed.md:1168:| Node | vCPU | RAM | Disk |
+docs/testbed.md:1194:1 vCPU
+docs/testbed.md:1201:2 vCPU
+docs/testbed.md:1208:4 vCPU
+docs/testbed.md:9224:hypervisor/power-management or equivalent authoritative isolation
+scripts/run-openmrs-cd-live-pilot.sh.backup:95:# Validate actual database TCP isolation from the controller host.
+workloads/stateful-fencing/postgres.yaml:34:          image: postgres:16-alpine
+workloads/test-workload/nginx-native.yaml:33:          image: nginx:alpine
+workloads/test-workload/remote-postgres.yaml:38:          image: postgres:16-alpine
+workloads/test-workload/nginx.yaml:42:          image: nginx:alpine
+
+=== CLUSTER NODES ===
+NAME          STATUS                     ROLES           AGE   VERSION        INTERNAL-IP      EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION              CONTAINER-RUNTIME
+k3s-server    Ready                      control-plane   30d   v1.36.4+k3s1   102.34.160.89    <none>        Ubuntu 24.04.5 LTS   6.8.0-59-generic (amd64)    containerd://2.3.4-k3s1.36
+k3s-worker1   Ready                      <none>          30d   v1.36.4+k3s1   102.34.160.87    <none>        Ubuntu 24.04.5 LTS   6.8.0-59-generic (amd64)    containerd://2.3.4-k3s1.36
+k3s-worker2   Ready                      <none>          30d   v1.36.4+k3s1   102.34.160.103   <none>        Ubuntu 24.04.5 LTS   6.8.0-59-generic (amd64)    containerd://2.3.4-k3s1.36
+k3s-worker3   Ready,SchedulingDisabled   <none>          13d   v1.36.4+k3s1   102.34.160.36    <none>        Ubuntu 24.04.5 LTS   6.8.0-147-generic (amd64)   containerd://2.3.4-k3s1.36
+k3s-worker4   Ready                      <none>          13d   v1.36.4+k3s1   102.34.160.104   <none>        Ubuntu 24.04.5 LTS   6.8.0-59-generic (amd64)    containerd://2.3.4-k3s1.36
+
+=== NGINX IMAGES ===
+baseline-web-75c79699bc-88x2c nginx:alpine
+
+=== POSTGRESQL IMAGES ===
+failure-aware fenced-postgres-558494f744-ks9f2 postgres:16-alpine
+failure-aware postgres-client-56bc94b556-dd8qv postgres:16-alpine

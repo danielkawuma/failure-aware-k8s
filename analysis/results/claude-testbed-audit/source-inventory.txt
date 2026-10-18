@@ -1,0 +1,691 @@
+=== GIT REVISION ===
+359fb86f131a9847a97e74a9fa913e0c97c2a619
+ M Makefile
+ M README.md
+ M analysis/results/run-metrics.csv
+ D controller/config/node-history.json
+ M controller/src/awareness.rs
+ M controller/src/config.rs
+ M controller/src/enforcement.rs
+ M controller/src/fencing.rs
+ M controller/src/main.rs
+ M controller/src/recovery_safety.rs
+ M controller/src/resource.rs
+ M controller/src/suspicion.rs
+ M controller/src/verification.rs
+ M controller/src/workload.rs
+ M harness/src/config.rs
+ M harness/src/http_probe.rs
+ M harness/src/kubernetes.rs
+ M harness/src/main.rs
+ M scripts/experiment-config.sh
+ M scripts/fault.sh
+ D scripts/fence-worker1.sh
+ M scripts/remote/failure-aware-fault.sh
+ M scripts/remote/storage-fence-worker1.sh
+ M scripts/run-campaign.sh
+ M scripts/run-scenario-e-campaign.sh
+ M scripts/scenario-d-config.sh
+ M scripts/storage-fence.sh
+?? README.txt
+?? analysis/analyze-openmrs-campaigns.py
+?? analysis/analyze-openmrs-clinical.py
+?? analysis/analyze-openmrs-fencing.py
+?? analysis/analyze-openmrs-phase2.py
+?? analysis/analyze-openmrs-recovery.py
+?? analysis/analyze-openmrs-statistics.py
+?? analysis/audits/
+?? analysis/results/claude-evidence/
+?? analysis/results/claude-testbed-audit/
+?? analysis/results/openmrs-phase2-audit/
+?? analysis/results/openmrs/
+?? analysis/results/source-evidence-audit/
+?? backups/
+?? controller/backups/
+?? controller/config/node-history-runtime.json
+?? controller/config/node-history.json.bak
+?? controller/config/node-observation-state.json
+?? controller/config/node-observations.jsonl
+?? controller/config/openmrs-backend.json
+?? controller/config/openmrs-backend.json.bak-20261012T082400Z
+?? controller/config/openmrs-mariadb.FAIL-CLOSED.json
+?? controller/config/openmrs-mariadb.STAGING.json
+?? controller/src/enforcement.rs.backup
+?? controller/src/main.rs.backup
+?? controller/src/main.rs.pre-openmrs-cd
+?? experiments/diagnostics/
+?? experiments/evaluation/openmrs/
+?? experiments/evaluation/scenario-d/
+?? experiments/evaluation/scenario-e/failure-aware/mild/run-901/
+?? experiments/evaluation/scenario-e/failure-aware/moderate/run-901/
+?? experiments/evaluation/scenario-e/failure-aware/severe/run-901/
+?? experiments/openmrs-bootstrap/
+?? harness/config/openmrs-pilot.json
+?? harness/config/openmrs-scenario-b.json
+?? harness/config/openmrs-scenario-c.json
+?? harness/config/openmrs-scenario-e.json
+?? openmrs-scenario-e-observation-fix.zip
+?? openmrs_backend_reset_campaign_update.tar.gz
+?? openmrs_cd_placement_lifecycle_update.tar.gz
+?? openmrs_mode_preparation_update.tar.gz
+?? openmrs_resume_campaigns_update.tar.gz
+?? results/candidate-selection/campaign-20261004T202540Z/
+?? scripts/check-openmrs-e.sh
+?? scripts/openmrs-backend-fault.remote
+?? scripts/openmrs-backend-reset.sh
+?? scripts/openmrs-c-fault.sh
+?? scripts/openmrs-cd-auto-reconcile.sh
+?? scripts/openmrs-cd-auto-reconcile.sh.backup
+?? scripts/openmrs-cd-check.sh
+?? scripts/openmrs-cd-data-access-test.sh
+?? scripts/openmrs-cd-fault.remote
+?? scripts/openmrs-cd-fence-original.sh
+?? scripts/openmrs-cd-placement-prepare.sh
+?? scripts/openmrs-cd-prepare.py
+?? scripts/openmrs-cd-reconcile-check.sh
+?? scripts/openmrs-cd-reset-placement.sh
+?? scripts/openmrs-cd-runtime-diagnostics.sh
+?? scripts/openmrs-cd-sql-verify.sh
+?? scripts/openmrs-db-probe.py
+?? scripts/openmrs-db-tcp-probe.sh
+?? scripts/openmrs-mariadb-fence.sh
+?? scripts/openmrs-mariadb-unfence-check.sh
+?? scripts/openmrs-mode-prepare.sh
+?? scripts/openmrs-placement-prepare.sh
+?? scripts/openmrs-recovery-probe.py
+?? scripts/openmrs/
+?? scripts/prepare-scenario-d-run004.sh
+?? scripts/reconcile-scenario-d-mariadb.sh
+?? scripts/remote/database-authority-agent.sh
+?? scripts/remote/fence-mariadb.sh
+?? scripts/remote/fence-postgresql.sh
+?? scripts/remote/openmrs-backend-fault
+?? scripts/remote/openmrs-fault.sh
+?? scripts/run-openmrs-all-campaigns.sh
+?? scripts/run-openmrs-campaign-integrated.sh
+?? scripts/run-openmrs-campaign.sh
+?? scripts/run-openmrs-cd-campaign.sh
+?? scripts/run-openmrs-cd-live-pilot.sh
+?? scripts/run-openmrs-cd-live-pilot.sh.backup
+?? scripts/run-openmrs-cd-pilot.sh
+?? scripts/run-openmrs-e-campaign.sh
+?? scripts/run-openmrs-experiment.sh
+?? scripts/run-openmrs-experiment.sh.backup
+?? scripts/run-openmrs-integrated.sh
+?? scripts/run-openmrs-overnight.sh
+?? scripts/run-scenario-d-mariadb.sh
+?? workloads/openmrs/
+?? workloads/openmrs37/
+?? workloads/stateful-fencing/mariadb.yaml
+
+=== TESTBED AND FAULT IMPLEMENTATION FILES ===
+./backups/scenario-e-observation-20261012T203803Z/harness/config/openmrs-scenario-e.json
+./backups/scenario-e-observation-20261012T203803Z/harness/src/config.rs
+./backups/scenario-e-observation-20261012T203803Z/harness/src/http_probe.rs
+./controller/config/controller.json
+./controller/config/node-history-runtime.json
+./controller/config/node-observation-state.json
+./controller/config/openmrs-backend.json
+./controller/config/openmrs-mariadb.FAIL-CLOSED.json
+./controller/config/openmrs-mariadb.STAGING.json
+./controller/src/config.rs
+./docs/experimental-design.md
+./docs/testbed.md
+./experiments/baseline/openmrs-pilot/runs/run-20261010T085914Z/metadata.json
+./experiments/baseline/openmrs-pilot/runs/run-20261010T180724Z/metadata.json
+./experiments/baseline/openmrs-scenario-b/runs/run-20261010T184552Z/metadata.json
+./experiments/baseline/openmrs-scenario-b/runs/run-20261011T034947Z/metadata.json
+./experiments/baseline/openmrs-scenario-b/runs/run-20261011T072213Z/metadata.json
+./experiments/baseline/openmrs-scenario-b/runs/run-20261011T084702Z/metadata.json
+./experiments/baseline/openmrs-scenario-b/runs/run-20261011T101300Z/metadata.json
+./experiments/baseline/openmrs-scenario-b/runs/run-20261011T110308Z/metadata.json
+./experiments/baseline/openmrs-scenario-b/runs/run-20261011T125748Z/metadata.json
+./experiments/baseline/openmrs-scenario-b/runs/run-20261011T150431Z/metadata.json
+./experiments/baseline/openmrs-scenario-b/runs/run-20261011T190821Z/metadata.json
+./experiments/baseline/openmrs-scenario-b/runs/run-20261011T202758Z/metadata.json
+./experiments/baseline/openmrs-scenario-b/runs/run-20261011T223535Z/metadata.json
+./experiments/baseline/openmrs-scenario-b/runs/run-20261011T231200Z/metadata.json
+./experiments/baseline/openmrs-scenario-b/runs/run-20261011T234830Z/metadata.json
+./experiments/baseline/openmrs-scenario-b/runs/run-20261012T002255Z/metadata.json
+./experiments/baseline/openmrs-scenario-b/runs/run-20261012T005941Z/metadata.json
+./experiments/baseline/openmrs-scenario-b/runs/run-20261012T013559Z/metadata.json
+./experiments/baseline/openmrs-scenario-b/runs/run-20261012T095004Z/metadata.json
+./experiments/baseline/openmrs-scenario-c/runs/run-20261010T195306Z/metadata.json
+./experiments/baseline/openmrs-scenario-c/runs/run-20261010T202255Z/metadata.json
+./experiments/baseline/openmrs-scenario-c/runs/run-20261010T210317Z/metadata.json
+./experiments/baseline/openmrs-scenario-c/runs/run-20261011T041129Z/metadata.json
+./experiments/baseline/openmrs-scenario-c/runs/run-20261011T075119Z/metadata.json
+./experiments/baseline/openmrs-scenario-c/runs/run-20261011T090751Z/metadata.json
+./experiments/baseline/openmrs-scenario-c/runs/run-20261011T113753Z/metadata.json
+./experiments/baseline/openmrs-scenario-c/runs/run-20261011T134126Z/metadata.json
+./experiments/baseline/openmrs-scenario-c/runs/run-20261011T153950Z/metadata.json
+./experiments/baseline/openmrs-scenario-c/runs/run-20261011T194409Z/metadata.json
+./experiments/baseline/openmrs-scenario-c/runs/run-20261011T210138Z/metadata.json
+./experiments/baseline/openmrs-scenario-c/runs/run-20261012T045754Z/metadata.json
+./experiments/baseline/openmrs-scenario-c/runs/run-20261012T054247Z/metadata.json
+./experiments/baseline/openmrs-scenario-c/runs/run-20261012T062733Z/metadata.json
+./experiments/baseline/openmrs-scenario-c/runs/run-20261012T071218Z/metadata.json
+./experiments/baseline/openmrs-scenario-c/runs/run-20261012T104202Z/metadata.json
+./experiments/baseline/openmrs-scenario-e/runs/run-20261012T112650Z/metadata.json
+./experiments/baseline/openmrs-scenario-e/runs/run-20261012T120858Z/metadata.json
+./experiments/baseline/openmrs-scenario-e/runs/run-20261012T123108Z/metadata.json
+./experiments/baseline/openmrs-scenario-e/runs/run-20261012T125314Z/metadata.json
+./experiments/baseline/openmrs-scenario-e/runs/run-20261012T135204Z/metadata.json
+./experiments/baseline/openmrs-scenario-e/runs/run-20261012T163850Z/metadata.json
+./experiments/baseline/openmrs-scenario-e/runs/run-20261012T171724Z/metadata.json
+./experiments/baseline/openmrs-scenario-e/runs/run-20261012T173942Z/metadata.json
+./experiments/baseline/openmrs-scenario-e/runs/run-20261012T180157Z/metadata.json
+./experiments/baseline/openmrs-scenario-e/runs/run-20261012T184136Z/metadata.json
+./experiments/baseline/openmrs-scenario-e/runs/run-20261012T190346Z/metadata.json
+./experiments/baseline/openmrs-scenario-e/runs/run-20261012T210727Z/metadata.json
+./experiments/baseline/openmrs-scenario-e/runs/run-20261012T212926Z/metadata.json
+./experiments/baseline/openmrs-scenario-e/runs/run-20261012T215111Z/metadata.json
+./experiments/baseline/openmrs-scenario-e/runs/run-20261013T025508Z/metadata.json
+./experiments/baseline/openmrs-scenario-e/runs/run-20261013T032557Z/metadata.json
+./experiments/baseline/openmrs-scenario-e/runs/run-20261013T034815Z/metadata.json
+./experiments/baseline/openmrs-scenario-e/runs/run-20261013T081654Z/metadata.json
+./experiments/baseline/openmrs-scenario-e/runs/run-20261013T084756Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260920T163127Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260920T163627Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260920T170040Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T041440Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T070027Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T073656Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T074358Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T083448Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T085544Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T114517Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T115340Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T133654Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T134409Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T135143Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T135904Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T140623Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T141334Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T142052Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T142809Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T143532Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T144252Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T145008Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T145720Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T150438Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T151157Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T151920Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T152642Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T153406Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T154119Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T154833Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T155549Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T160308Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T161023Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T161746Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T162513Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T163233Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T163959Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T164729Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T165452Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T170217Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T184242Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T184552Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T192044Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T214924Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260921T215640Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260922T000627Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260922T001342Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260922T002054Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260922T002807Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260922T085744Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260922T090500Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260922T091225Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260922T091940Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260922T092653Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260922T093407Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260922T094124Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260922T095004Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260922T095711Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260922T111137Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260922T111824Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260922T112512Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260922T113201Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260922T113851Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260922T114357Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260922T115057Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260922T115745Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260922T120435Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260922T121125Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260922T121814Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260922T122505Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260922T123157Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260922T123855Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260922T124735Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260922T125426Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260922T193354Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20260922T200922Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20261004T182400Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20261004T185323Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20261014T134010Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20261014T134656Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20261014T135343Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20261014T140029Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20261014T140716Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20261014T141404Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20261014T142049Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20261014T142600Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20261014T170505Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20261014T170917Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20261014T171037Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20261014T181449Z/metadata.json
+./experiments/baseline/scenario-b/runs/run-20261014T185216Z/metadata.json
+./experiments/baseline/scenario-b/worker1-lease.yaml
+./experiments/baseline/scenario-b/worker1-node.yaml
+./experiments/baseline/scenario-c/runs/run-20260921T095917Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260921T103526Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260921T105733Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260921T113722Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260921T114011Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260921T114304Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260921T130827Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260921T173537Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260921T174218Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260921T174901Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260921T175543Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260921T180223Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260921T180904Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260921T181546Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260921T182225Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260921T182905Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260921T183546Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260921T183743Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260921T214224Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T042352Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T043039Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T043729Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T044418Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T045114Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T045754Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T051117Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T051811Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T052505Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T053154Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T053841Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T055659Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T060344Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T061031Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T063254Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T063936Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T064616Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T065302Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T072623Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T072819Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T073020Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T073218Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T073422Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T073620Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T073826Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T074021Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T074216Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T074416Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T074611Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T074803Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T074954Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T075151Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T075356Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T075557Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T075755Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T075953Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T080155Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T080355Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T080556Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T080756Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T080953Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T081152Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T081354Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T081556Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T081754Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T163358Z/metadata.json
+./experiments/baseline/scenario-c/runs/run-20260922T170219Z/metadata.json
+./experiments/baseline/scenario-e/runs/run-20261003T132804Z/metadata.json
+./experiments/baseline/scenario-e/runs/run-20261003T133240Z/metadata.json
+./experiments/baseline/scenario-e/runs/run-20261003T133441Z/metadata.json
+./experiments/baseline/scenario-e/runs/run-20261003T134718Z/metadata.json
+./experiments/baseline/scenario-e/runs/run-20261003T140120Z/metadata.json
+./experiments/baseline/scenario-e/runs/run-20261003T140203Z/metadata.json
+./experiments/baseline/scenario-e/runs/run-20261003T140400Z/metadata.json
+./experiments/baseline/scenario-e/runs/run-20261003T140556Z/metadata.json
+./experiments/baseline/scenario-e/runs/run-20261003T140753Z/metadata.json
+./experiments/baseline/scenario-e/runs/run-20261003T144018Z/metadata.json
+./experiments/baseline/scenario-e/runs/run-20261003T144216Z/metadata.json
+./experiments/baseline/scenario-e/runs/run-20261003T144425Z/metadata.json
+./experiments/baseline/scenario-e/runs/run-20261003T144633Z/metadata.json
+./experiments/baseline/scenario-e/runs/run-20261003T180639Z/metadata.json
+./experiments/baseline/scenario-e/runs/run-20261003T180837Z/metadata.json
+./experiments/baseline/scenario-e/runs/run-20261003T181034Z/metadata.json
+./experiments/baseline/scenario-e/runs/run-20261003T181231Z/metadata.json
+./experiments/baseline/scenario-e/runs/run-20261003T181429Z/metadata.json
+./experiments/baseline/scenario-e/runs/run-20261003T181627Z/metadata.json
+./experiments/baseline/scenario-e/runs/run-20261003T181826Z/metadata.json
+./experiments/baseline/scenario-e/runs/run-20261003T182024Z/metadata.json
+./experiments/baseline/scenario-e/runs/run-20261003T182222Z/metadata.json
+./experiments/baseline/scenario-e/runs/run-20261003T182419Z/metadata.json
+./experiments/baseline/scenario-e/runs/run-20261003T182617Z/metadata.json
+./experiments/baseline/scenario-e/runs/run-20261003T182815Z/metadata.json
+./experiments/baseline/scenario-e/runs/run-20261003T183013Z/metadata.json
+./experiments/baseline/scenario-e/runs/run-20261003T183211Z/metadata.json
+./experiments/baseline/scenario-e/runs/run-20261003T184118Z/metadata.json
+./experiments/baseline/scenario-e/runs/run-20261003T184429Z/metadata.json
+./experiments/baseline/scenario-e/runs/run-20261003T184745Z/metadata.json
+./experiments/baseline/scenario-e/runs/run-20261003T185028Z/metadata.json
+./experiments/baseline/scenario-e/runs/run-20261003T185706Z/metadata.json
+./experiments/baseline/scenario-e/runs/run-20261004T201329Z/metadata.json
+./experiments/baseline/scenario-e/runs/run-20261004T201530Z/metadata.json
+./experiments/baseline/scenario-e/runs/run-20261004T201729Z/metadata.json
+./experiments/diagnostics/openmrs/scenario-b/T10/failed-run-003-20261011T033944Z/before-deployment.yaml
+./experiments/diagnostics/openmrs/scenario-b/T10/failed-run-003-20261011T033944Z/before-endpointslices.yaml
+./experiments/diagnostics/openmrs/scenario-b/T10/failed-run-003-20261011T033944Z/benchmark-template.json
+./experiments/diagnostics/openmrs/scenario-b/T10/failed-run-003-20261011T033944Z/final-deployment.yaml
+./experiments/diagnostics/openmrs/scenario-b/T10/failed-run-003-20261011T033944Z/final-endpointslices.yaml
+./experiments/diagnostics/openmrs/scenario-b/T10/failed-run-003-20261011T033944Z/original-deployment.json
+./experiments/diagnostics/openmrs/scenario-b/T10/failed-run-003-20261011T033944Z/original-template.json
+./experiments/diagnostics/openmrs/scenario-b/T10/failed-run-003-20261011T033944Z/restore-patch.json
+./experiments/diagnostics/openmrs/scenario-c-d/failed-pilot-20261011T042419Z/controller-authority.json
+./experiments/diagnostics/openmrs/scenario-c-d/failed-pilot-20261011T042419Z/controller.json
+./experiments/diagnostics/openmrs/scenario-c/V0/failed-run-001-20261010T202242Z/after-deployment.yaml
+./experiments/diagnostics/openmrs/scenario-c/V0/failed-run-001-20261010T202242Z/after-endpointslices.yaml
+./experiments/diagnostics/openmrs/scenario-c/V0/failed-run-001-20261010T202242Z/before-deployment.yaml
+./experiments/diagnostics/openmrs/scenario-c/V0/failed-run-001-20261010T202242Z/before-endpointslices.yaml
+./experiments/diagnostics/openmrs/scenario-c/V0/failed-run-001-20261010T202242Z/benchmark-template.json
+./experiments/diagnostics/openmrs/scenario-c/V0/failed-run-001-20261010T202242Z/final-deployment.yaml
+./experiments/diagnostics/openmrs/scenario-c/V0/failed-run-001-20261010T202242Z/final-endpointslices.yaml
+./experiments/diagnostics/openmrs/scenario-c/V0/failed-run-001-20261010T202242Z/initial-pod.json
+./experiments/diagnostics/openmrs/scenario-c/V0/failed-run-001-20261010T202242Z/original-deployment.json
+./experiments/diagnostics/openmrs/scenario-c/V0/failed-run-001-20261010T202242Z/original-template.json
+./experiments/diagnostics/openmrs/scenario-c/V0/failed-run-001-20261010T202242Z/recovery-pods.json
+./experiments/diagnostics/openmrs/scenario-c/V0/failed-run-001-20261010T202242Z/restore-patch.json
+./experiments/openmrs-bootstrap/baseline/clinical-data.json
+./experiments/openmrs-bootstrap/baseline/patients.json
+./experiments/openmrs-bootstrap/clinical-data.json
+./experiments/openmrs-bootstrap/migration/backend-before-nfs.yaml
+./experiments/openmrs-bootstrap/patients.json
+./harness/config/openmrs-pilot.json
+./harness/config/openmrs-scenario-b.json
+./harness/config/openmrs-scenario-c.json
+./harness/config/openmrs-scenario-e.json
+./harness/config/scenario-b.json
+./harness/config/scenario-c.json
+./harness/config/scenario-e.json
+./harness/src/config.rs
+./harness/src/http_probe.rs
+./harness/src/kubernetes.rs
+./harness/src/main.rs
+./harness/target/.rustc_info.json
+./harness/target/debug/.fingerprint/anyhow-30de1fe9efd21a23/run-build-script-build-script-build.json
+./harness/target/debug/.fingerprint/anyhow-33aa09c41829759b/lib-anyhow.json
+./harness/target/debug/.fingerprint/anyhow-b73a1c715f21f557/lib-anyhow.json
+./harness/target/debug/.fingerprint/anyhow-fbd2417508b87357/build-script-build-script-build.json
+./harness/target/debug/.fingerprint/atomic-waker-d3e04e7f6d1be0ac/lib-atomic_waker.json
+./harness/target/debug/.fingerprint/atomic-waker-e5e89b778c05eae9/lib-atomic_waker.json
+./harness/target/debug/.fingerprint/autocfg-97199d8a0cfbdba5/lib-autocfg.json
+./harness/target/debug/.fingerprint/base64-86c29447d3e7c92b/lib-base64.json
+./harness/target/debug/.fingerprint/base64-ef7c71042959ea5a/lib-base64.json
+./harness/target/debug/.fingerprint/bitflags-2339fcb83a3f04fa/lib-bitflags.json
+./harness/target/debug/.fingerprint/bitflags-32e14ae359be5a5c/lib-bitflags.json
+./harness/target/debug/.fingerprint/bytes-b2e2b6c22704bf2c/lib-bytes.json
+./harness/target/debug/.fingerprint/bytes-c3394b0af77a15c5/lib-bytes.json
+./harness/target/debug/.fingerprint/cc-dc32de27c211cf32/lib-cc.json
+./harness/target/debug/.fingerprint/cfg-if-8a23cabd694141b2/lib-cfg_if.json
+./harness/target/debug/.fingerprint/cfg-if-df36609db5008abf/lib-cfg_if.json
+./harness/target/debug/.fingerprint/chrono-3a043bb2127a0177/lib-chrono.json
+./harness/target/debug/.fingerprint/chrono-f96979dc353d95aa/lib-chrono.json
+./harness/target/debug/.fingerprint/core_detect-6df49a44b14857c5/lib-core_detect.json
+./harness/target/debug/.fingerprint/core_detect-7b90307a91b0070a/lib-core_detect.json
+./harness/target/debug/.fingerprint/csv-2bfb7c35f8b834bd/lib-csv.json
+./harness/target/debug/.fingerprint/csv-7996e45762842280/lib-csv.json
+./harness/target/debug/.fingerprint/csv-core-332b298b0d69bc1f/lib-csv_core.json
+./harness/target/debug/.fingerprint/csv-core-f587318c02a64098/lib-csv_core.json
+./harness/target/debug/.fingerprint/displaydoc-1b90f4855be6d79b/lib-displaydoc.json
+./harness/target/debug/.fingerprint/encoding_rs-22abe4e599dc5b3d/build-script-build-script-build.json
+./harness/target/debug/.fingerprint/encoding_rs-9e20a0680e2516fa/run-build-script-build-script-build.json
+./harness/target/debug/.fingerprint/encoding_rs-a65ba99ebb6d5ad4/lib-encoding_rs.json
+./harness/target/debug/.fingerprint/encoding_rs-b7a0e434a46fe768/lib-encoding_rs.json
+./harness/target/debug/.fingerprint/equivalent-01e821a4d110282a/lib-equivalent.json
+./harness/target/debug/.fingerprint/equivalent-c8922812beabd051/lib-equivalent.json
+./harness/target/debug/.fingerprint/errno-41cb959a1577806c/lib-errno.json
+./harness/target/debug/.fingerprint/errno-6f35137132c41998/lib-errno.json
+./harness/target/debug/.fingerprint/failure-aware-harness-2bef27134ce37da4/bin-failure-aware-harness.json
+./harness/target/debug/.fingerprint/failure-aware-harness-55223a7823e77e44/test-bin-failure-aware-harness.json
+./harness/target/debug/.fingerprint/failure-aware-harness-ca28e0ffe29b27b6/bin-failure-aware-harness.json
+./harness/target/debug/.fingerprint/find-msvc-tools-b2839240ba43aaeb/lib-find_msvc_tools.json
+./harness/target/debug/.fingerprint/fnv-33af544c23528ae9/lib-fnv.json
+./harness/target/debug/.fingerprint/fnv-ab13bc89a5ae4a58/lib-fnv.json
+./harness/target/debug/.fingerprint/foreign-types-6879a51f4032507c/lib-foreign_types.json
+./harness/target/debug/.fingerprint/foreign-types-76a38d8c7b3bc101/lib-foreign_types.json
+./harness/target/debug/.fingerprint/foreign-types-shared-54e8db92a107bd27/lib-foreign_types_shared.json
+./harness/target/debug/.fingerprint/foreign-types-shared-7e3ac95f0ca4689f/lib-foreign_types_shared.json
+./harness/target/debug/.fingerprint/form_urlencoded-06177f51e9868e5c/lib-form_urlencoded.json
+./harness/target/debug/.fingerprint/form_urlencoded-30ee8c9b68b67810/lib-form_urlencoded.json
+./harness/target/debug/.fingerprint/futures-channel-3a11082cc9cc9407/lib-futures_channel.json
+./harness/target/debug/.fingerprint/futures-channel-d6ca44182577db73/lib-futures_channel.json
+./harness/target/debug/.fingerprint/futures-core-6eef8ae4428d3e60/lib-futures_core.json
+./harness/target/debug/.fingerprint/futures-core-fada19342769d6bd/lib-futures_core.json
+./harness/target/debug/.fingerprint/futures-sink-03e0d2287c41ec51/lib-futures_sink.json
+./harness/target/debug/.fingerprint/futures-sink-3019c0b9b26f9271/lib-futures_sink.json
+./harness/target/debug/.fingerprint/futures-task-7ec0a59cb65d5608/lib-futures_task.json
+./harness/target/debug/.fingerprint/futures-task-dfaaf05b4f463107/lib-futures_task.json
+./harness/target/debug/.fingerprint/futures-util-0c3049674bc0d36c/lib-futures_util.json
+./harness/target/debug/.fingerprint/futures-util-500c64361c011e8c/lib-futures_util.json
+./harness/target/debug/.fingerprint/h2-a3664507d613a9a7/lib-h2.json
+./harness/target/debug/.fingerprint/h2-b15150637a19fd15/lib-h2.json
+./harness/target/debug/.fingerprint/hashbrown-5cfb98346d9bdeab/lib-hashbrown.json
+./harness/target/debug/.fingerprint/hashbrown-9b83f35226680068/lib-hashbrown.json
+./harness/target/debug/.fingerprint/http-70f1741eb8ff2b4a/lib-http.json
+./harness/target/debug/.fingerprint/http-7245e47e9557fa6c/lib-http.json
+./harness/target/debug/.fingerprint/http-body-196ed6e5d2ed22bf/lib-http_body.json
+./harness/target/debug/.fingerprint/http-body-26dc734150ae4b6f/lib-http_body.json
+./harness/target/debug/.fingerprint/http-body-util-89708133881aa3f0/lib-http_body_util.json
+./harness/target/debug/.fingerprint/http-body-util-f6db6874da017e35/lib-http_body_util.json
+./harness/target/debug/.fingerprint/httparse-052f35d69ef80cf8/build-script-build-script-build.json
+./harness/target/debug/.fingerprint/httparse-53fe1ce4676ef55c/run-build-script-build-script-build.json
+./harness/target/debug/.fingerprint/httparse-c3142aba67620658/lib-httparse.json
+./harness/target/debug/.fingerprint/httparse-fdd448910e772fde/lib-httparse.json
+./harness/target/debug/.fingerprint/hyper-99f461dc528fa23a/lib-hyper.json
+./harness/target/debug/.fingerprint/hyper-ccc7fac9192bdcf6/lib-hyper.json
+./harness/target/debug/.fingerprint/hyper-tls-294c8b67e86d6761/lib-hyper_tls.json
+./harness/target/debug/.fingerprint/hyper-tls-c717fbd56facfbf9/lib-hyper_tls.json
+./harness/target/debug/.fingerprint/hyper-util-3843139a2b10d6fe/lib-hyper_util.json
+./harness/target/debug/.fingerprint/hyper-util-5007cee6c19a8963/lib-hyper_util.json
+./harness/target/debug/.fingerprint/iana-time-zone-62c3b0c572a8d4e3/lib-iana_time_zone.json
+./harness/target/debug/.fingerprint/iana-time-zone-a0af26953165116d/lib-iana_time_zone.json
+./harness/target/debug/.fingerprint/icu_collections-4168dff8711e3d4c/lib-icu_collections.json
+./harness/target/debug/.fingerprint/icu_collections-f9b4cf2c1dbcbf29/lib-icu_collections.json
+./harness/target/debug/.fingerprint/icu_locale_core-a2499311de44d198/lib-icu_locale_core.json
+./harness/target/debug/.fingerprint/icu_locale_core-aa63cc7ad231b2d0/lib-icu_locale_core.json
+./harness/target/debug/.fingerprint/icu_normalizer-4e667ff75bab45ef/lib-icu_normalizer.json
+./harness/target/debug/.fingerprint/icu_normalizer-a478a7c5b5f3811a/lib-icu_normalizer.json
+./harness/target/debug/.fingerprint/icu_normalizer_data-29bd342b3408c403/lib-icu_normalizer_data.json
+./harness/target/debug/.fingerprint/icu_normalizer_data-bff140a568879ee7/lib-icu_normalizer_data.json
+./harness/target/debug/.fingerprint/icu_normalizer_data-eb57fc2b1e86d91c/run-build-script-build-script-build.json
+./harness/target/debug/.fingerprint/icu_normalizer_data-fc101d4fefc4251e/build-script-build-script-build.json
+./harness/target/debug/.fingerprint/icu_properties-0bf5696456638cb6/lib-icu_properties.json
+./harness/target/debug/.fingerprint/icu_properties-cfe09f86d3496d68/lib-icu_properties.json
+./harness/target/debug/.fingerprint/icu_properties_data-09b82b1eb9552b79/run-build-script-build-script-build.json
+./harness/target/debug/.fingerprint/icu_properties_data-1bd00b8bd7712901/build-script-build-script-build.json
+./harness/target/debug/.fingerprint/icu_properties_data-e16c3339b30c6bbd/lib-icu_properties_data.json
+./harness/target/debug/.fingerprint/icu_properties_data-ed2d014cfdff544e/lib-icu_properties_data.json
+./harness/target/debug/.fingerprint/icu_provider-5938abd93c0723d6/lib-icu_provider.json
+./harness/target/debug/.fingerprint/icu_provider-6ae9e38db59970bb/lib-icu_provider.json
+./harness/target/debug/.fingerprint/idna-3218d2cb55b078b1/lib-idna.json
+./harness/target/debug/.fingerprint/idna-6a002bde6a5b56c4/lib-idna.json
+./harness/target/debug/.fingerprint/idna_adapter-9a13a494b066af5f/lib-idna_adapter.json
+./harness/target/debug/.fingerprint/idna_adapter-e243a8d5ed1ba359/lib-idna_adapter.json
+./harness/target/debug/.fingerprint/indexmap-7de0c1f310121f40/lib-indexmap.json
+./harness/target/debug/.fingerprint/indexmap-ac091afb551e503d/lib-indexmap.json
+./harness/target/debug/.fingerprint/ipnet-241870d733a6b50e/lib-ipnet.json
+./harness/target/debug/.fingerprint/ipnet-888bf154219708a6/lib-ipnet.json
+./harness/target/debug/.fingerprint/itoa-6ddde9f8d1eacb1c/lib-itoa.json
+./harness/target/debug/.fingerprint/itoa-e1cf0ba11d02098b/lib-itoa.json
+./harness/target/debug/.fingerprint/libc-010731c869a51028/lib-libc.json
+./harness/target/debug/.fingerprint/libc-19124a20af635abc/build-script-build-script-build.json
+./harness/target/debug/.fingerprint/libc-72577fe584cae775/lib-libc.json
+./harness/target/debug/.fingerprint/libc-a72ef1f50d94be8f/run-build-script-build-script-build.json
+./harness/target/debug/.fingerprint/litemap-46e10f6dfff6acdb/lib-litemap.json
+./harness/target/debug/.fingerprint/litemap-dcf936503d37bd39/lib-litemap.json
+./harness/target/debug/.fingerprint/lock_api-8c2d92eaab852e67/lib-lock_api.json
+./harness/target/debug/.fingerprint/lock_api-a725f8519c91f1ca/lib-lock_api.json
+./harness/target/debug/.fingerprint/log-1c955401b27a4875/lib-log.json
+./harness/target/debug/.fingerprint/log-eef196ac9b73d95b/lib-log.json
+./harness/target/debug/.fingerprint/memchr-0263503a7d6f4437/lib-memchr.json
+./harness/target/debug/.fingerprint/memchr-0b319444e8f73b56/lib-memchr.json
+./harness/target/debug/.fingerprint/mime-2398f3503d3d8c77/lib-mime.json
+./harness/target/debug/.fingerprint/mime-8aa0e4b703d73f4c/lib-mime.json
+./harness/target/debug/.fingerprint/mio-41a06f8a4881f409/lib-mio.json
+./harness/target/debug/.fingerprint/mio-d01f67012f449e55/lib-mio.json
+./harness/target/debug/.fingerprint/multiversion-0b17bb1a891660bd/lib-multiversion.json
+./harness/target/debug/.fingerprint/multiversion-fdee88996418b71b/lib-multiversion.json
+./harness/target/debug/.fingerprint/multiversion-macros-cb3af1bc85386681/lib-multiversion_macros.json
+./harness/target/debug/.fingerprint/multiversion_no_op-771a02e3fcb3c254/lib-multiversion_no_op.json
+./harness/target/debug/.fingerprint/native-tls-4256378b31bfc388/run-build-script-build-script-build.json
+./harness/target/debug/.fingerprint/native-tls-99f4627616e51128/lib-native_tls.json
+./harness/target/debug/.fingerprint/native-tls-ac2da2d2c7cc01f2/lib-native_tls.json
+./harness/target/debug/.fingerprint/native-tls-b2a843bceea7e785/build-script-build-script-build.json
+./harness/target/debug/.fingerprint/num-traits-b195d64b2dcfa523/build-script-build-script-build.json
+./harness/target/debug/.fingerprint/num-traits-c63a41f2373c58b9/lib-num_traits.json
+./harness/target/debug/.fingerprint/num-traits-ee746ab721b578f0/run-build-script-build-script-build.json
+./harness/target/debug/.fingerprint/num-traits-fba3e9da9b0009e3/lib-num_traits.json
+./harness/target/debug/.fingerprint/once_cell-7f4756946a1dc156/lib-once_cell.json
+./harness/target/debug/.fingerprint/once_cell-c455c5f2ae07f315/lib-once_cell.json
+./harness/target/debug/.fingerprint/openssl-45a4bd4610f3e854/lib-openssl.json
+./harness/target/debug/.fingerprint/openssl-b9d4d3fad9aa9cb2/run-build-script-build-script-build.json
+./harness/target/debug/.fingerprint/openssl-c79e4ce857454671/lib-openssl.json
+./harness/target/debug/.fingerprint/openssl-e5a58204802132cc/build-script-build-script-build.json
+./harness/target/debug/.fingerprint/openssl-macros-f31dddb8ac88f4c1/lib-openssl_macros.json
+./harness/target/debug/.fingerprint/openssl-probe-206dbcdad37e9dde/lib-openssl_probe.json
+./harness/target/debug/.fingerprint/openssl-probe-8d1fe706c4494de3/lib-openssl_probe.json
+./harness/target/debug/.fingerprint/openssl-sys-678308f6c6eea45a/lib-openssl_sys.json
+./harness/target/debug/.fingerprint/openssl-sys-713ade50c5c70e03/build-script-build-script-main.json
+./harness/target/debug/.fingerprint/openssl-sys-8fa3e3ad54cc0d3d/lib-openssl_sys.json
+./harness/target/debug/.fingerprint/openssl-sys-9ce07d3026df8c2e/run-build-script-build-script-main.json
+./harness/target/debug/.fingerprint/parking_lot-83089a7579f2b4c8/lib-parking_lot.json
+./harness/target/debug/.fingerprint/parking_lot-9b6e56ce41313727/lib-parking_lot.json
+./harness/target/debug/.fingerprint/parking_lot_core-0e14587453093e77/lib-parking_lot_core.json
+./harness/target/debug/.fingerprint/parking_lot_core-41ba511dd97bc79c/lib-parking_lot_core.json
+./harness/target/debug/.fingerprint/parking_lot_core-52063db600f06e4d/build-script-build-script-build.json
+./harness/target/debug/.fingerprint/parking_lot_core-7278ab506aa01ffc/run-build-script-build-script-build.json
+./harness/target/debug/.fingerprint/percent-encoding-04b199d204ef816e/lib-percent_encoding.json
+./harness/target/debug/.fingerprint/percent-encoding-fdfc253f68ee3774/lib-percent_encoding.json
+./harness/target/debug/.fingerprint/pin-project-lite-9a718c0716770040/lib-pin_project_lite.json
+./harness/target/debug/.fingerprint/pin-project-lite-e9d4ca73b9a6a34c/lib-pin_project_lite.json
+./harness/target/debug/.fingerprint/pkg-config-3a32112fd8d6d350/lib-pkg_config.json
+./harness/target/debug/.fingerprint/potential_utf-48d31e0790a5e378/lib-potential_utf.json
+./harness/target/debug/.fingerprint/potential_utf-6e8a8bfdf5aa382f/lib-potential_utf.json
+./harness/target/debug/.fingerprint/proc-macro2-1075039a6f7f989d/run-build-script-build-script-build.json
+./harness/target/debug/.fingerprint/proc-macro2-16d4d30e9bce23d4/lib-proc_macro2.json
+./harness/target/debug/.fingerprint/proc-macro2-7d0ed4e509752a35/build-script-build-script-build.json
+./harness/target/debug/.fingerprint/quote-310eda54036e5868/lib-quote.json
+./harness/target/debug/.fingerprint/quote-6dff9724e4e81362/build-script-build-script-build.json
+./harness/target/debug/.fingerprint/quote-dadf5ecac53f25b4/run-build-script-build-script-build.json
+./harness/target/debug/.fingerprint/reqwest-f1e0ee052a782784/lib-reqwest.json
+./harness/target/debug/.fingerprint/reqwest-f48630fd3d28304e/lib-reqwest.json
+./harness/target/debug/.fingerprint/rustls-pki-types-111da17fe2ab5496/lib-rustls_pki_types.json
+./harness/target/debug/.fingerprint/rustls-pki-types-95f1e31e1ee0a783/lib-rustls_pki_types.json
+./harness/target/debug/.fingerprint/rustversion-313fded5362961f8/run-build-script-build-script-build.json
+./harness/target/debug/.fingerprint/rustversion-b0526d303ea2073d/build-script-build-script-build.json
+./harness/target/debug/.fingerprint/rustversion-d7df6ce16ce770b8/lib-rustversion.json
+./harness/target/debug/.fingerprint/ryu-165e4d83438b694e/lib-ryu.json
+./harness/target/debug/.fingerprint/ryu-1f4bd1732b57412d/lib-ryu.json
+./harness/target/debug/.fingerprint/scopeguard-9231b86801b00f36/lib-scopeguard.json
+./harness/target/debug/.fingerprint/scopeguard-9c2379402a25548e/lib-scopeguard.json
+./harness/target/debug/.fingerprint/serde-00bd4ed326218056/lib-serde.json
+./harness/target/debug/.fingerprint/serde-047fb28ec31c7b7d/build-script-build-script-build.json
+./harness/target/debug/.fingerprint/serde-46367230ef002103/run-build-script-build-script-build.json
+./harness/target/debug/.fingerprint/serde-67024e0e5187bf68/lib-serde.json
+./harness/target/debug/.fingerprint/serde_core-6e3a3f0a77c04e93/lib-serde_core.json
+./harness/target/debug/.fingerprint/serde_core-767d9572981bb9ed/run-build-script-build-script-build.json
+./harness/target/debug/.fingerprint/serde_core-c42fceff96a6af09/build-script-build-script-build.json
+./harness/target/debug/.fingerprint/serde_core-ef1a50e1898a276d/lib-serde_core.json
+./harness/target/debug/.fingerprint/serde_derive-274a672d43771a02/lib-serde_derive.json
+./harness/target/debug/.fingerprint/serde_json-1b15c588822affbf/run-build-script-build-script-build.json
+./harness/target/debug/.fingerprint/serde_json-2c0a994303fe8e5c/build-script-build-script-build.json
+./harness/target/debug/.fingerprint/serde_json-473903a9af945701/lib-serde_json.json
+./harness/target/debug/.fingerprint/serde_json-88bc1e98329c275f/lib-serde_json.json
+./harness/target/debug/.fingerprint/serde_urlencoded-8ecd48b731154a27/lib-serde_urlencoded.json
+./harness/target/debug/.fingerprint/serde_urlencoded-a7d917991975fc14/lib-serde_urlencoded.json
+./harness/target/debug/.fingerprint/shlex-7b06ff0077903996/lib-shlex.json
+./harness/target/debug/.fingerprint/signal-hook-registry-39592bb56b2ce8b4/lib-signal_hook_registry.json
+./harness/target/debug/.fingerprint/signal-hook-registry-ca61398a9ca98351/lib-signal_hook_registry.json
+./harness/target/debug/.fingerprint/simdutf8-4b5b1533f26d3f04/lib-simdutf8.json
+./harness/target/debug/.fingerprint/simdutf8-54b25b4260ffc61d/lib-simdutf8.json
+./harness/target/debug/.fingerprint/slab-5977cd619857250a/lib-slab.json
+./harness/target/debug/.fingerprint/slab-5a82f5ac5267aef8/lib-slab.json
+./harness/target/debug/.fingerprint/smallvec-8a1caf1dcde465c6/lib-smallvec.json
+./harness/target/debug/.fingerprint/smallvec-fc3f87fcaacbefef/lib-smallvec.json
+./harness/target/debug/.fingerprint/socket2-ee609f0c068ed908/lib-socket2.json
+./harness/target/debug/.fingerprint/socket2-f13486a30239ac18/lib-socket2.json
+./harness/target/debug/.fingerprint/stable_deref_trait-22158042bda71a4d/lib-stable_deref_trait.json
+./harness/target/debug/.fingerprint/stable_deref_trait-eb81eec56f31d4b1/lib-stable_deref_trait.json
+./harness/target/debug/.fingerprint/syn-59bc9381de723cfc/lib-syn.json
+./harness/target/debug/.fingerprint/syn-ff7f7d776896c10f/lib-syn.json
+./harness/target/debug/.fingerprint/sync_wrapper-a208578ec01ac4cc/lib-sync_wrapper.json
+./harness/target/debug/.fingerprint/sync_wrapper-e48614536da21126/lib-sync_wrapper.json
+./harness/target/debug/.fingerprint/synstructure-e155f5211045882c/lib-synstructure.json
+./harness/target/debug/.fingerprint/tinystr-8b84ed21d91aab87/lib-tinystr.json
+./harness/target/debug/.fingerprint/tinystr-f40159cb9ff8b65a/lib-tinystr.json
+./harness/target/debug/.fingerprint/tokio-96ed0f6d1bc1aa28/lib-tokio.json
+./harness/target/debug/.fingerprint/tokio-a7d373ff24addccb/lib-tokio.json
+./harness/target/debug/.fingerprint/tokio-macros-8630c685f4354c32/lib-tokio_macros.json
+./harness/target/debug/.fingerprint/tokio-native-tls-682ae7fb62965af5/lib-tokio_native_tls.json
+./harness/target/debug/.fingerprint/tokio-native-tls-9a30ac032cf6557f/lib-tokio_native_tls.json
+./harness/target/debug/.fingerprint/tokio-util-4607781f31b18638/lib-tokio_util.json
+./harness/target/debug/.fingerprint/tokio-util-81f6abab60b65d82/lib-tokio_util.json
+./harness/target/debug/.fingerprint/tower-be7a18464cb0cb49/lib-tower.json
+./harness/target/debug/.fingerprint/tower-fa6cab51a2aa84b1/lib-tower.json
+./harness/target/debug/.fingerprint/tower-http-200a123b46b4cd28/lib-tower_http.json
+./harness/target/debug/.fingerprint/tower-http-e63b21aa719f209a/lib-tower_http.json
+./harness/target/debug/.fingerprint/tower-layer-71414212be0da1f7/lib-tower_layer.json
+./harness/target/debug/.fingerprint/tower-layer-cbfd986b2c761aee/lib-tower_layer.json
+./harness/target/debug/.fingerprint/tower-service-407a1cd7ae16c1dd/lib-tower_service.json
+./harness/target/debug/.fingerprint/tower-service-eace9da83de8d2ed/lib-tower_service.json
+./harness/target/debug/.fingerprint/tracing-5ccf9de86948cc6f/lib-tracing.json
+./harness/target/debug/.fingerprint/tracing-c86e9522ecc28686/lib-tracing.json
+./harness/target/debug/.fingerprint/tracing-core-28c574e1d1220543/lib-tracing_core.json
+./harness/target/debug/.fingerprint/tracing-core-d743b9980c68eb90/lib-tracing_core.json
+./harness/target/debug/.fingerprint/try-lock-4cd2fe57154c36e6/lib-try_lock.json
+./harness/target/debug/.fingerprint/try-lock-cb41f564bcf424b7/lib-try_lock.json
+./harness/target/debug/.fingerprint/unicode-ident-4615f73e4944f8df/lib-unicode_ident.json
+./harness/target/debug/.fingerprint/url-e812a6452f3dec1d/lib-url.json
+./harness/target/debug/.fingerprint/url-f652890f060083c5/lib-url.json
+./harness/target/debug/.fingerprint/utf8_iter-7da21bedc099d769/lib-utf8_iter.json
+./harness/target/debug/.fingerprint/utf8_iter-9648d233b120e42e/lib-utf8_iter.json
+./harness/target/debug/.fingerprint/vcpkg-3a3c8d3e553ae3be/lib-vcpkg.json
+./harness/target/debug/.fingerprint/want-0474dccf36bc7ee8/lib-want.json
+./harness/target/debug/.fingerprint/want-767f9615c78a11d2/lib-want.json
+./harness/target/debug/.fingerprint/writeable-10c7b18e15bb6814/lib-writeable.json
+./harness/target/debug/.fingerprint/writeable-aee773b8f9588676/lib-writeable.json
+./harness/target/debug/.fingerprint/yoke-19e36ffc8f9d9247/lib-yoke.json
+./harness/target/debug/.fingerprint/yoke-d5b1ee17a9e5507d/lib-yoke.json
+./harness/target/debug/.fingerprint/yoke-derive-952977dda8002cc0/lib-yoke_derive.json
+./harness/target/debug/.fingerprint/zerofrom-0e8f7b52ff39dfd3/lib-zerofrom.json
+./harness/target/debug/.fingerprint/zerofrom-26c5607ebbd3d3ed/lib-zerofrom.json
+./harness/target/debug/.fingerprint/zerofrom-derive-7ba2cc622d056eb8/lib-zerofrom_derive.json
+./harness/target/debug/.fingerprint/zeroize-ce946e388139ecee/lib-zeroize.json
+./harness/target/debug/.fingerprint/zeroize-e674f08f435e3187/lib-zeroize.json
+./harness/target/debug/.fingerprint/zerotrie-a5d1c023f4146942/lib-zerotrie.json
+./harness/target/debug/.fingerprint/zerotrie-ef2efd2ea4716e40/lib-zerotrie.json
+./harness/target/debug/.fingerprint/zerovec-0d539cc50acd3cf4/lib-zerovec.json
+./harness/target/debug/.fingerprint/zerovec-9f0829e723fea9d4/lib-zerovec.json
+./harness/target/debug/.fingerprint/zerovec-derive-aad34b44377a3fcd/lib-zerovec_derive.json
+./harness/target/debug/.fingerprint/zmij-09764c09118bc5c9/lib-zmij.json
+./harness/target/debug/.fingerprint/zmij-1d41e468114f7fa5/run-build-script-build-script-build.json
+./harness/target/debug/.fingerprint/zmij-37c7a7b83a60607f/build-script-build-script-build.json
+./harness/target/debug/.fingerprint/zmij-fe95c7ae1d0a6e3a/lib-zmij.json
+./harness/target/debug/build/serde-46367230ef002103/out/private.rs
+./harness/target/debug/build/serde_core-767d9572981bb9ed/out/private.rs
+./scripts/experiment-config.sh
+./scripts/fault.sh
+./scripts/openmrs-backend-fault.remote
+./scripts/openmrs-c-fault.sh
+./scripts/openmrs-cd-fault.remote
+./scripts/remote/failure-aware-fault.sh
+./scripts/remote/openmrs-fault.sh
+./scripts/run-experiment.sh
+./scripts/run-openmrs-experiment.sh
+./scripts/scenario-d-config.sh

@@ -1,0 +1,278 @@
+=== NON-EXPIRING TOLERATION DEFINITIONS ===
+workloads/stateful-fencing/postgres.yaml:24:        - key: "node.kubernetes.io/unreachable"
+workloads/stateful-fencing/postgres.yaml:28:        - key: "node.kubernetes.io/not-ready"
+workloads/test-workload/nginx.yaml:32:        - key: "node.kubernetes.io/unreachable"
+workloads/test-workload/nginx.yaml:36:        - key: "node.kubernetes.io/not-ready"
+scripts/openmrs-mode-prepare.sh:76:    "node.kubernetes.io/not-ready",
+scripts/openmrs-mode-prepare.sh:77:    "node.kubernetes.io/unreachable"
+scripts/openmrs-mode-prepare.sh:96:        toleration["tolerationSeconds"] = int(value)
+scripts/openmrs-mode-prepare.sh:184:    "node.kubernetes.io/not-ready",
+scripts/openmrs-mode-prepare.sh:185:    "node.kubernetes.io/unreachable"
+scripts/openmrs-mode-prepare.sh:206:        assert t.get("tolerationSeconds") is None, (
+scripts/openmrs-mode-prepare.sh:210:        assert t.get("tolerationSeconds") == int(expected), (
+scripts/scenario-a-run.sh:394:    "node.kubernetes.io/not-ready",
+scripts/scenario-a-run.sh:395:    "node.kubernetes.io/unreachable",
+scripts/scenario-a-run.sh:407:    seconds = matches[0].get("tolerationSeconds")
+scripts/run-openmrs-integrated.sh:364:    "node.kubernetes.io/unreachable",
+scripts/run-openmrs-integrated.sh:365:    "node.kubernetes.io/not-ready"
+scripts/run-openmrs-integrated.sh:369:    t.get("tolerationSeconds")
+scripts/run-openmrs-integrated.sh:397:    "node.kubernetes.io/not-ready",
+scripts/run-openmrs-integrated.sh:398:    "node.kubernetes.io/unreachable"
+scripts/run-openmrs-integrated.sh:410:    if matches[0].get("tolerationSeconds") is not None:
+scripts/run-openmrs-experiment.sh:341:            "node.kubernetes.io/not-ready",
+scripts/run-openmrs-experiment.sh:342:            "node.kubernetes.io/unreachable"
+scripts/run-openmrs-experiment.sh:350:        "node.kubernetes.io/not-ready",
+scripts/run-openmrs-experiment.sh:351:        "node.kubernetes.io/unreachable"
+scripts/run-openmrs-experiment.sh:357:            "tolerationSeconds":int(seconds)
+
+=== NATIVE AND FA1 MODE SELECTION ===
+scripts/run-experiment.sh:14:    echo "  $0 scenario-b native 001"
+scripts/run-experiment.sh:15:    echo "  $0 scenario-b failure-aware 001"
+scripts/run-experiment.sh:16:    echo "  $0 scenario-c native 001"
+scripts/run-experiment.sh:17:    echo "  $0 scenario-c failure-aware 001"
+scripts/run-experiment.sh:32:if [[ "${MODE}" != "native" &&
+scripts/run-experiment.sh:33:      "${MODE}" != "failure-aware" ]]
+scripts/run-experiment.sh:375:if [[ "${MODE}" == "native" ]]; then
+scripts/run-experiment.sh:377:      -f "${NATIVE_MANIFEST}"
+scripts/run-experiment.sh:380:      -f "${FA_MANIFEST}"
+scripts/run-experiment.sh:483:if [[ "${MODE}" == "failure-aware" ]]; then
+scripts/run-experiment.sh:488:        "${CONTROLLER_BINARY}"
+scripts/run-campaign.sh:12:    echo "  $0 scenario-b native 30 [start-run]"
+scripts/run-campaign.sh:13:    echo "  $0 scenario-b failure-aware 30 [start-run]"
+scripts/run-campaign.sh:14:    echo "  $0 scenario-c native 30 [start-run]"
+scripts/run-campaign.sh:15:    echo "  $0 scenario-c failure-aware 30 [start-run]"
+scripts/run-campaign.sh:30:if [[ "${MODE}" != "native" &&
+scripts/run-campaign.sh:31:      "${MODE}" != "failure-aware" ]]; then
+scripts/run-openmrs-experiment.sh:15:HARNESS_BINARY="$REPO_ROOT/harness/target/debug/failure-aware-harness"
+scripts/run-openmrs-experiment.sh:16:CONTROLLER_BINARY="$REPO_ROOT/controller/target/debug/failure-aware-controller"
+scripts/run-openmrs-experiment.sh:246:    [[ -x "$CONTROLLER_BINARY" ]] ||
+scripts/run-openmrs-experiment.sh:299:# Select native toleration configuration.
+scripts/run-openmrs-experiment.sh:442:          "$CONTROLLER_BINARY"
+scripts/run-openmrs-integrated.sh:106:HARNESS="$ROOT/harness/target/debug/failure-aware-harness"
+scripts/run-openmrs-integrated.sh:107:CONTROLLER="$ROOT/controller/target/debug/failure-aware-controller"
+
+=== RECORDED NGINX CONFIGURATIONS ===
+experiments/evaluation/scenario-b/native/run-005/metadata.json
+experiments/evaluation/scenario-b/native/run-016/metadata.json
+experiments/evaluation/scenario-b/native/run-029/metadata.json
+experiments/evaluation/scenario-b/native/run-007/metadata.json
+experiments/evaluation/scenario-b/native/run-022/metadata.json
+experiments/evaluation/scenario-b/native/run-014/metadata.json
+experiments/evaluation/scenario-b/native/run-012/metadata.json
+experiments/evaluation/scenario-b/native/run-013/metadata.json
+experiments/evaluation/scenario-b/native/run-015/metadata.json
+experiments/evaluation/scenario-b/native/run-018/metadata.json
+experiments/evaluation/scenario-b/native/run-008/metadata.json
+experiments/evaluation/scenario-b/native/run-017/metadata.json
+experiments/evaluation/scenario-b/native/run-002/metadata.json
+experiments/evaluation/scenario-b/native/run-030/metadata.json
+experiments/evaluation/scenario-b/native/run-026/metadata.json
+experiments/evaluation/scenario-b/native/run-006/metadata.json
+experiments/evaluation/scenario-b/native/run-020/metadata.json
+experiments/evaluation/scenario-b/native/run-001/metadata.json
+experiments/evaluation/scenario-b/native/run-010/metadata.json
+experiments/evaluation/scenario-b/native/run-009/metadata.json
+experiments/evaluation/scenario-b/native/run-024/metadata.json
+experiments/evaluation/scenario-b/native/run-028/metadata.json
+experiments/evaluation/scenario-b/native/run-027/metadata.json
+experiments/evaluation/scenario-b/native/run-025/metadata.json
+experiments/evaluation/scenario-b/native/run-019/metadata.json
+experiments/evaluation/scenario-b/native/run-023/metadata.json
+experiments/evaluation/scenario-b/native/run-004/metadata.json
+experiments/evaluation/scenario-b/native/run-021/metadata.json
+experiments/evaluation/scenario-b/native/run-011/metadata.json
+experiments/evaluation/scenario-b/native/run-003/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-005/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-032/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-016/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-033/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-200/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-029/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-038/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-007/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-201/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-100/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-022/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-014/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-012/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-302/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-013/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-501/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-015/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-018/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-300/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-503/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-301/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-008/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-017/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-002/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-030/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-026/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-006/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-020/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-001/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-502/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-500/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-010/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-034/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-039/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-009/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-035/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-040/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-036/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-505/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-024/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-037/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-028/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-027/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-025/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-019/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-023/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-600/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-004/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-031/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-021/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-011/metadata.json
+experiments/evaluation/scenario-b/failure-aware/run-003/metadata.json
+experiments/evaluation/scenario-e/failure-aware/mild/run-005/metadata.json
+experiments/evaluation/scenario-e/failure-aware/mild/run-007/metadata.json
+experiments/evaluation/scenario-e/failure-aware/mild/run-008/metadata.json
+experiments/evaluation/scenario-e/failure-aware/mild/run-901/metadata.json
+experiments/evaluation/scenario-e/failure-aware/mild/run-002/metadata.json
+experiments/evaluation/scenario-e/failure-aware/mild/run-006/metadata.json
+experiments/evaluation/scenario-e/failure-aware/mild/run-001/metadata.json
+experiments/evaluation/scenario-e/failure-aware/mild/run-010/metadata.json
+experiments/evaluation/scenario-e/failure-aware/mild/run-009/metadata.json
+experiments/evaluation/scenario-e/failure-aware/mild/run-004/metadata.json
+experiments/evaluation/scenario-e/failure-aware/mild/run-011/metadata.json
+experiments/evaluation/scenario-e/failure-aware/mild/run-003/metadata.json
+experiments/evaluation/scenario-e/failure-aware/moderate/run-005/metadata.json
+experiments/evaluation/scenario-e/failure-aware/moderate/run-007/metadata.json
+experiments/evaluation/scenario-e/failure-aware/moderate/run-008/metadata.json
+experiments/evaluation/scenario-e/failure-aware/moderate/run-901/metadata.json
+experiments/evaluation/scenario-e/failure-aware/moderate/run-002/metadata.json
+experiments/evaluation/scenario-e/failure-aware/moderate/run-006/metadata.json
+experiments/evaluation/scenario-e/failure-aware/moderate/run-001/metadata.json
+experiments/evaluation/scenario-e/failure-aware/moderate/run-010/metadata.json
+experiments/evaluation/scenario-e/failure-aware/moderate/run-009/metadata.json
+experiments/evaluation/scenario-e/failure-aware/moderate/run-004/metadata.json
+experiments/evaluation/scenario-e/failure-aware/moderate/run-011/metadata.json
+experiments/evaluation/scenario-e/failure-aware/moderate/run-003/metadata.json
+experiments/evaluation/scenario-e/failure-aware/severe/run-901/metadata.json
+experiments/evaluation/scenario-e/failure-aware/severe/run-002/metadata.json
+experiments/evaluation/scenario-e/failure-aware/severe/run-001/metadata.json
+experiments/evaluation/scenario-e/failure-aware/severe/run-004/metadata.json
+experiments/evaluation/scenario-e/failure-aware/severe/run-003/metadata.json
+experiments/evaluation/openmrs/scenario-c-d/reset-20261017T144401Z-68626/pods-before.json
+experiments/evaluation/openmrs/scenario-c-d/reset-20261011T115514Z-588290/pods-before.json
+experiments/evaluation/openmrs/scenario-c-d/reset-20261017T192743Z-132913/pods-before.json
+experiments/evaluation/openmrs/scenario-c-d/reset-20261011T080204Z-370652/pods-before.json
+experiments/evaluation/openmrs/scenario-c-d/reset-20261016T172223Z-18372/pods-before.json
+experiments/evaluation/openmrs/scenario-c-d/reset-20261017T191404Z-128508/pods-before.json
+experiments/evaluation/openmrs/scenario-c-d/reset-20261017T120850Z-37020/pods-before.json
+experiments/evaluation/openmrs/scenario-c-d/reset-20261017T194149Z-137428/pods-before.json
+experiments/evaluation/openmrs/scenario-c-d/reset-20261017T144725Z-69482/pods-before.json
+experiments/evaluation/openmrs/scenario-c-d/reset-20261017T172726Z-103253/pods-before.json
+experiments/evaluation/openmrs/scenario-c-d/reset-20261017T185953Z-123953/pods-before.json
+experiments/evaluation/openmrs/scenario-c-d/reset-20261017T201000Z-146430/pods-before.json
+experiments/evaluation/openmrs/scenario-c-d/reset-20261017T184520Z-119387/pods-before.json
+experiments/evaluation/openmrs/scenario-c-d/reset-20261017T195558Z-141890/pods-before.json
+experiments/evaluation/openmrs/scenario-c-d/reset-20261017T081803Z-5362/pods-before.json
+experiments/evaluation/openmrs/scenario-c-d/reset-20261017T164045Z-92720/pods-before.json
+experiments/evaluation/openmrs/scenario-c-d/reset-20261017T161018Z-85098/pods-before.json
+experiments/evaluation/openmrs/scenario-c-d/reset-20261017T202338Z-150809/pods-before.json
+experiments/evaluation/openmrs/scenario-c-d/reset-20261013T150224Z-746715/pods-before.json
+experiments/evaluation/openmrs/invalid-attempts/scenario-e/moderate/FA1/run-003-20261012T204003Z/metadata.env
+experiments/evaluation/openmrs/invalid-attempts/scenario-e/severe/FA1/run-003-20261013T074945Z/metadata.env
+experiments/evaluation/openmrs/invalid-attempts/scenario-e/severe/T10/run-003-20261013T022954Z/metadata.env
+experiments/evaluation/openmrs/invalid-attempts/scenario-e/severe/T5/run-003-20261012T162039Z/metadata.env
+experiments/evaluation/openmrs/invalid-attempts/scenario-e/severe/T5/run-003-20261012T133351Z/metadata.env
+experiments/evaluation/openmrs/invalid-attempts/scenario-c/T30/run-004-20261012T082252Z/metadata.env
+experiments/evaluation/openmrs/invalid-attempts/scenario-c/V0/run-003-fault-duration-127s-20261011T103501Z/metadata.env
+experiments/evaluation/openmrs/invalid-attempts/scenario-c/V0/run-003-observation-failure-20261011T183725Z/metadata.env
+experiments/evaluation/openmrs/scenario-e/mild/T30/run-003/metadata.env
+experiments/evaluation/openmrs/scenario-e/mild/V0/run-003/metadata.env
+experiments/evaluation/openmrs/scenario-e/mild/FA1/run-003/metadata.env
+experiments/evaluation/openmrs/scenario-e/mild/T10/run-003/metadata.env
+experiments/evaluation/openmrs/scenario-e/mild/T5/run-003/metadata.env
+experiments/evaluation/openmrs/scenario-e/moderate/T30/run-003/metadata.env
+experiments/evaluation/openmrs/scenario-e/moderate/V0/run-003/metadata.env
+experiments/evaluation/openmrs/scenario-e/moderate/FA1/run-003/metadata.env
+experiments/evaluation/openmrs/scenario-e/moderate/T10/run-003/metadata.env
+experiments/evaluation/openmrs/scenario-e/moderate/T5/run-003/metadata.env
+experiments/evaluation/openmrs/scenario-e/severe/T30/run-003/metadata.env
+experiments/evaluation/openmrs/scenario-e/severe/V0/run-003/metadata.env
+experiments/evaluation/openmrs/scenario-e/severe/FA1/run-003/metadata.env
+experiments/evaluation/openmrs/scenario-e/severe/T5/run-003/metadata.env
+experiments/evaluation/openmrs/scenario-c/T30/run-004/metadata.env
+experiments/evaluation/openmrs/scenario-c/T30/run-003/metadata.env
+experiments/evaluation/openmrs/scenario-c/V0/run-002/metadata.env
+experiments/evaluation/openmrs/scenario-c/V0/run-004/metadata.env
+experiments/evaluation/openmrs/scenario-c/V0/run-003/metadata.env
+experiments/evaluation/openmrs/scenario-c/FA1/run-004/metadata.env
+experiments/evaluation/openmrs/scenario-c/FA1/run-003/metadata.env
+experiments/evaluation/openmrs/scenario-c/T10/run-004/metadata.env
+experiments/evaluation/openmrs/scenario-c/T10/run-003/metadata.env
+experiments/evaluation/openmrs/scenario-c/T5/run-004/metadata.env
+experiments/evaluation/openmrs/scenario-c/T5/run-003/metadata.env
+experiments/evaluation/scenario-c/native/run-005/metadata.json
+experiments/evaluation/scenario-c/native/run-016/metadata.json
+experiments/evaluation/scenario-c/native/run-029/metadata.json
+experiments/evaluation/scenario-c/native/run-007/metadata.json
+experiments/evaluation/scenario-c/native/run-022/metadata.json
+experiments/evaluation/scenario-c/native/run-014/metadata.json
+experiments/evaluation/scenario-c/native/run-012/metadata.json
+experiments/evaluation/scenario-c/native/run-013/metadata.json
+experiments/evaluation/scenario-c/native/run-015/metadata.json
+experiments/evaluation/scenario-c/native/run-001-invalid/metadata.json
+experiments/evaluation/scenario-c/native/run-018/metadata.json
+experiments/evaluation/scenario-c/native/run-008/metadata.json
+experiments/evaluation/scenario-c/native/run-017/metadata.json
+experiments/evaluation/scenario-c/native/run-002/metadata.json
+experiments/evaluation/scenario-c/native/run-030/metadata.json
+experiments/evaluation/scenario-c/native/run-026/metadata.json
+experiments/evaluation/scenario-c/native/run-006/metadata.json
+experiments/evaluation/scenario-c/native/run-020/metadata.json
+experiments/evaluation/scenario-c/native/run-001/metadata.json
+experiments/evaluation/scenario-c/native/run-010/metadata.json
+experiments/evaluation/scenario-c/native/run-009/metadata.json
+experiments/evaluation/scenario-c/native/run-024/metadata.json
+experiments/evaluation/scenario-c/native/run-028/metadata.json
+experiments/evaluation/scenario-c/native/run-027/metadata.json
+experiments/evaluation/scenario-c/native/run-025/metadata.json
+experiments/evaluation/scenario-c/native/run-019/metadata.json
+experiments/evaluation/scenario-c/native/run-023/metadata.json
+experiments/evaluation/scenario-c/native/run-004/metadata.json
+experiments/evaluation/scenario-c/native/run-021/metadata.json
+experiments/evaluation/scenario-c/native/run-011/metadata.json
+experiments/evaluation/scenario-c/native/run-003/metadata.json
+experiments/evaluation/scenario-c/failure-aware/run-005/metadata.json
+experiments/evaluation/scenario-c/failure-aware/run-016/metadata.json
+experiments/evaluation/scenario-c/failure-aware/run-029/metadata.json
+experiments/evaluation/scenario-c/failure-aware/run-007/metadata.json
+experiments/evaluation/scenario-c/failure-aware/run-022/metadata.json
+experiments/evaluation/scenario-c/failure-aware/run-014/metadata.json
+experiments/evaluation/scenario-c/failure-aware/run-012/metadata.json
+experiments/evaluation/scenario-c/failure-aware/run-013/metadata.json
+experiments/evaluation/scenario-c/failure-aware/run-015/metadata.json
+experiments/evaluation/scenario-c/failure-aware/run-018/metadata.json
+experiments/evaluation/scenario-c/failure-aware/run-008/metadata.json
+experiments/evaluation/scenario-c/failure-aware/run-017/metadata.json
+experiments/evaluation/scenario-c/failure-aware/run-002/metadata.json
+experiments/evaluation/scenario-c/failure-aware/run-030/metadata.json
+experiments/evaluation/scenario-c/failure-aware/run-026/metadata.json
+experiments/evaluation/scenario-c/failure-aware/run-006/metadata.json
+experiments/evaluation/scenario-c/failure-aware/run-020/metadata.json
+experiments/evaluation/scenario-c/failure-aware/run-001/metadata.json
+experiments/evaluation/scenario-c/failure-aware/run-010/metadata.json
+experiments/evaluation/scenario-c/failure-aware/run-009/metadata.json
+experiments/evaluation/scenario-c/failure-aware/run-024/metadata.json
+experiments/evaluation/scenario-c/failure-aware/run-028/metadata.json
+experiments/evaluation/scenario-c/failure-aware/run-027/metadata.json
+experiments/evaluation/scenario-c/failure-aware/run-025/metadata.json
+experiments/evaluation/scenario-c/failure-aware/run-019/metadata.json
+experiments/evaluation/scenario-c/failure-aware/run-023/metadata.json
+experiments/evaluation/scenario-c/failure-aware/run-004/metadata.json
+experiments/evaluation/scenario-c/failure-aware/run-021/metadata.json
+experiments/evaluation/scenario-c/failure-aware/run-011/metadata.json
+experiments/evaluation/scenario-c/failure-aware/run-003/metadata.json

@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: openmrs-backend-data-migration
+  namespace: openmrs37
+spec:
+  restartPolicy: Never
+
+  nodeSelector:
+    kubernetes.io/hostname: k3s-worker1
+
+  securityContext:
+    runAsUser: 1001
+    runAsGroup: 0
+    supplementalGroups:
+      - 0
+
+  containers:
+    - name: migration
+      image: alpine:3.20
+      imagePullPolicy: IfNotPresent
+
+      command:
+        - sh
+        - -c
+        - |
+          echo "OpenMRS NFS migration Pod ready"
+          sleep 86400
+
+      securityContext:
+        runAsUser: 1001
+        runAsGroup: 0
+        allowPrivilegeEscalation: false
+
+      volumeMounts:
+        - name: source
+          mountPath: /source
+          readOnly: true
+
+        - name: destination
+          mountPath: /destination
+
+  volumes:
+    - name: source
+      persistentVolumeClaim:
+        claimName: openmrs-backend-data
+
+    - name: destination
+      persistentVolumeClaim:
+        claimName: openmrs-backend-data-nfs

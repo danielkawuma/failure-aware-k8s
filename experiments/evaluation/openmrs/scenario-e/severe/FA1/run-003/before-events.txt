@@ -1,0 +1,60 @@
+LAST SEEN   TYPE      REASON                 OBJECT                                  MESSAGE
+40m         Normal    ScalingReplicaSet      deployment/openmrs-backend              Scaled up replica set openmrs-backend-7bd876ddcf from 0 to 1
+17m         Normal    ScalingReplicaSet      deployment/openmrs-backend              Scaled down replica set openmrs-backend-c56bcf795 from 1 to 0
+57m         Normal    Killing                pod/openmrs-backend-c56bcf795-5k8vs     Stopping container backend
+57m         Normal    SuccessfulDelete       replicaset/openmrs-backend-c56bcf795    Deleted pod: openmrs-backend-c56bcf795-5k8vs
+57m         Normal    Created                pod/openmrs-backend-7bd876ddcf-gwqd7    Container created
+57m         Normal    SuccessfulCreate       replicaset/openmrs-backend-7bd876ddcf   Created pod: openmrs-backend-7bd876ddcf-gwqd7
+57m         Normal    Scheduled              pod/openmrs-backend-7bd876ddcf-gwqd7    Successfully assigned openmrs37/openmrs-backend-7bd876ddcf-gwqd7 to k3s-worker1
+57m         Normal    Pulled                 pod/openmrs-backend-7bd876ddcf-gwqd7    Container image "openmrs/openmrs-reference-application-3-backend:3.7.1" already present on machine and can be accessed by the pod
+57m         Normal    Started                pod/openmrs-backend-7bd876ddcf-gwqd7    Container started
+52m         Warning   Unhealthy              pod/openmrs-backend-7bd876ddcf-gwqd7    Startup probe failed: Get "http://10.42.1.250:8080/openmrs": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+48m         Normal    Killing                pod/openmrs-backend-7bd876ddcf-gwqd7    Stopping container backend
+48m         Normal    ScalingReplicaSet      deployment/openmrs-backend              Scaled up replica set openmrs-backend-7dbbb96db7 from 0 to 1
+26m         Normal    ScalingReplicaSet      deployment/openmrs-backend              Scaled down replica set openmrs-backend-7bd876ddcf from 1 to 0
+48m         Normal    SuccessfulCreate       replicaset/openmrs-backend-7dbbb96db7   Created pod: openmrs-backend-7dbbb96db7-ww5pf
+48m         Normal    Scheduled              pod/openmrs-backend-7dbbb96db7-ww5pf    Successfully assigned openmrs37/openmrs-backend-7dbbb96db7-ww5pf to k3s-worker1
+48m         Normal    SuccessfulDelete       replicaset/openmrs-backend-7bd876ddcf   Deleted pod: openmrs-backend-7bd876ddcf-gwqd7
+48m         Normal    Created                pod/openmrs-backend-7dbbb96db7-ww5pf    Container created
+48m         Normal    Pulled                 pod/openmrs-backend-7dbbb96db7-ww5pf    Container image "openmrs/openmrs-reference-application-3-backend:3.7.1" already present on machine and can be accessed by the pod
+48m         Normal    Started                pod/openmrs-backend-7dbbb96db7-ww5pf    Container started
+43m         Warning   Unhealthy              pod/openmrs-backend-7dbbb96db7-ww5pf    Startup probe failed: Get "http://10.42.1.251:8080/openmrs": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+40m         Normal    ScalingReplicaSet      deployment/openmrs-backend              Scaled down replica set openmrs-backend-7dbbb96db7 from 1 to 0
+40m         Normal    SuccessfulDelete       replicaset/openmrs-backend-7dbbb96db7   Deleted pod: openmrs-backend-7dbbb96db7-ww5pf
+40m         Normal    Scheduled              pod/openmrs-backend-7bd876ddcf-hq9t7    Successfully assigned openmrs37/openmrs-backend-7bd876ddcf-hq9t7 to k3s-worker1
+40m         Normal    SuccessfulCreate       replicaset/openmrs-backend-7bd876ddcf   Created pod: openmrs-backend-7bd876ddcf-hq9t7
+40m         Normal    Killing                pod/openmrs-backend-7dbbb96db7-ww5pf    Stopping container backend
+40m         Normal    Created                pod/openmrs-backend-7bd876ddcf-hq9t7    Container created
+40m         Normal    Pulled                 pod/openmrs-backend-7bd876ddcf-hq9t7    Container image "openmrs/openmrs-reference-application-3-backend:3.7.1" already present on machine and can be accessed by the pod
+40m         Normal    Started                pod/openmrs-backend-7bd876ddcf-hq9t7    Container started
+34m         Warning   Unhealthy              pod/openmrs-backend-7bd876ddcf-hq9t7    Startup probe failed: Get "http://10.42.1.252:8080/openmrs": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+29m         Warning   NodeNotReady           pod/openmrs-backend-7bd876ddcf-hq9t7    Node is not ready
+28m         Normal    TaintManagerEviction   pod/openmrs-backend-7bd876ddcf-hq9t7    Cancelling deletion of Pod openmrs37/openmrs-backend-7bd876ddcf-hq9t7
+26m         Warning   Unhealthy              pod/openmrs-backend-7bd876ddcf-hq9t7    Readiness probe failed: Get "http://10.42.1.252:8080/openmrs": read tcp 10.42.1.1:54656->10.42.1.252:8080: read: connection reset by peer
+9m3s        Normal    ScalingReplicaSet      deployment/openmrs-backend              Scaled up replica set openmrs-backend-c56bcf795 from 0 to 1
+26m         Normal    Killing                pod/openmrs-backend-7bd876ddcf-hq9t7    Stopping container backend
+26m         Normal    SuccessfulDelete       replicaset/openmrs-backend-7bd876ddcf   Deleted pod: openmrs-backend-7bd876ddcf-hq9t7
+26m         Normal    SuccessfulCreate       replicaset/openmrs-backend-c56bcf795    Created pod: openmrs-backend-c56bcf795-4txh5
+26m         Normal    Scheduled              pod/openmrs-backend-c56bcf795-4txh5     Successfully assigned openmrs37/openmrs-backend-c56bcf795-4txh5 to k3s-worker1
+26m         Normal    Pulled                 pod/openmrs-backend-c56bcf795-4txh5     Container image "openmrs/openmrs-reference-application-3-backend:3.7.1" already present on machine and can be accessed by the pod
+26m         Normal    Started                pod/openmrs-backend-c56bcf795-4txh5     Container started
+26m         Normal    Created                pod/openmrs-backend-c56bcf795-4txh5     Container created
+21m         Warning   Unhealthy              pod/openmrs-backend-c56bcf795-4txh5     Startup probe failed: Get "http://10.42.1.253:8080/openmrs": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+17m         Normal    Killing                pod/openmrs-backend-c56bcf795-4txh5     Stopping container backend
+17m         Normal    SuccessfulDelete       replicaset/openmrs-backend-c56bcf795    Deleted pod: openmrs-backend-c56bcf795-4txh5
+17m         Normal    ScalingReplicaSet      deployment/openmrs-backend              Scaled up replica set openmrs-backend-646646c6c5 from 0 to 1
+17m         Normal    SuccessfulCreate       replicaset/openmrs-backend-646646c6c5   Created pod: openmrs-backend-646646c6c5-th4xm
+17m         Normal    Scheduled              pod/openmrs-backend-646646c6c5-th4xm    Successfully assigned openmrs37/openmrs-backend-646646c6c5-th4xm to k3s-worker1
+17m         Normal    Pulled                 pod/openmrs-backend-646646c6c5-th4xm    Container image "openmrs/openmrs-reference-application-3-backend:3.7.1" already present on machine and can be accessed by the pod
+17m         Normal    Created                pod/openmrs-backend-646646c6c5-th4xm    Container created
+17m         Normal    Started                pod/openmrs-backend-646646c6c5-th4xm    Container started
+12m         Warning   Unhealthy              pod/openmrs-backend-646646c6c5-th4xm    Startup probe failed: Get "http://10.42.1.254:8080/openmrs": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+9m4s        Normal    SuccessfulDelete       replicaset/openmrs-backend-646646c6c5   Deleted pod: openmrs-backend-646646c6c5-th4xm
+9m4s        Normal    Killing                pod/openmrs-backend-646646c6c5-th4xm    Stopping container backend
+9m4s        Normal    ScalingReplicaSet      deployment/openmrs-backend              Scaled down replica set openmrs-backend-646646c6c5 from 1 to 0
+9m3s        Normal    SuccessfulCreate       replicaset/openmrs-backend-c56bcf795    Created pod: openmrs-backend-c56bcf795-kn5xj
+9m3s        Normal    Scheduled              pod/openmrs-backend-c56bcf795-kn5xj     Successfully assigned openmrs37/openmrs-backend-c56bcf795-kn5xj to k3s-worker1
+9m2s        Normal    Started                pod/openmrs-backend-c56bcf795-kn5xj     Container started
+9m2s        Normal    Created                pod/openmrs-backend-c56bcf795-kn5xj     Container created
+9m2s        Normal    Pulled                 pod/openmrs-backend-c56bcf795-kn5xj     Container image "openmrs/openmrs-reference-application-3-backend:3.7.1" already present on machine and can be accessed by the pod
+3m41s       Warning   Unhealthy              pod/openmrs-backend-c56bcf795-kn5xj     Startup probe failed: Get "http://10.42.1.3:8080/openmrs": context deadline exceeded (Client.Timeout exceeded while awaiting headers)

@@ -1,0 +1,118 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openmrs-backend
+  namespace: openmrs37
+spec:
+  replicas: 1
+
+  strategy:
+    type: Recreate
+
+  selector:
+    matchLabels:
+      app: openmrs-backend
+
+  template:
+    metadata:
+      labels:
+        app: openmrs-backend
+
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: k3s-worker1
+
+      securityContext:
+        runAsUser: 1001
+        runAsGroup: 0
+        supplementalGroups:
+          - 0
+
+      containers:
+        - name: backend
+          image: openmrs/openmrs-reference-application-3-backend:3.7.1
+          imagePullPolicy: IfNotPresent
+
+          env:
+            - name: OMRS_CONFIG_MODULE_WEB_ADMIN
+              value: "true"
+
+            - name: OMRS_CONFIG_AUTO_UPDATE_DATABASE
+              value: "true"
+
+            - name: OMRS_CONFIG_CREATE_TABLES
+              value: "true"
+
+            - name: OMRS_CONFIG_CONNECTION_SERVER
+              value: openmrs-mariadb.openmrs37.svc.cluster.local
+
+            - name: OMRS_CONFIG_CONNECTION_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: openmrs-db-secret
+                  key: MYSQL_DATABASE
+
+            - name: OMRS_CONFIG_CONNECTION_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: openmrs-db-secret
+                  key: MYSQL_USER
+
+            - name: OMRS_CONFIG_CONNECTION_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: openmrs-db-secret
+                  key: MYSQL_PASSWORD
+
+          ports:
+            - name: http
+              containerPort: 8080
+
+          resources:
+            requests:
+              cpu: 750m
+              memory: 1400Mi
+
+            limits:
+              cpu: "2"
+              memory: 2200Mi
+
+          volumeMounts:
+            - name: backend-data
+              mountPath: /openmrs/data
+
+          startupProbe:
+            httpGet:
+              path: /openmrs
+              port: 8080
+            periodSeconds: 10
+            timeoutSeconds: 10
+            failureThreshold: 180
+
+          readinessProbe:
+            httpGet:
+              path: /openmrs
+              port: 8080
+            periodSeconds: 10
+            timeoutSeconds: 10
+            failureThreshold: 12
+
+      volumes:
+        - name: backend-data
+          persistentVolumeClaim:
+            claimName: openmrs-backend-data-nfs
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: openmrs-backend
+  namespace: openmrs37
+spec:
+  selector:
+    app: openmrs-backend
+
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080

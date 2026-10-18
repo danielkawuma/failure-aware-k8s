@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"openmrs-frontend","namespace":"openmrs37"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"openmrs-frontend"}},"template":{"metadata":{"labels":{"app":"openmrs-frontend"}},"spec":{"containers":[{"env":[{"name":"SPA_PATH","value":"/openmrs/spa"},{"name":"API_URL","value":"/openmrs"},{"name":"SPA_CONFIG_URLS","value":"/openmrs/spa/config-core_demo.json"}],"image":"openmrs/openmrs-reference-application-3-frontend:3.7.1","imagePullPolicy":"IfNotPresent","name":"frontend","ports":[{"containerPort":80,"name":"http"}],"readinessProbe":{"httpGet":{"path":"/","port":80},"initialDelaySeconds":5,"periodSeconds":5,"timeoutSeconds":3},"resources":{"limits":{"cpu":"300m","memory":"256Mi"},"requests":{"cpu":"100m","memory":"96Mi"}}}],"nodeSelector":{"kubernetes.io/hostname":"k3s-worker1"}}}}}
+  creationTimestamp: "2026-10-07T20:46:24Z"
+  generation: 1
+  name: openmrs-frontend
+  namespace: openmrs37
+  resourceVersion: "1664817"
+  uid: c6c710b1-b384-4f91-bbc6-fd2a36cffda8
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: openmrs-frontend
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: openmrs-frontend
+    spec:
+      containers:
+      - env:
+        - name: SPA_PATH
+          value: /openmrs/spa
+        - name: API_URL
+          value: /openmrs
+        - name: SPA_CONFIG_URLS
+          value: /openmrs/spa/config-core_demo.json
+        image: openmrs/openmrs-reference-application-3-frontend:3.7.1
+        imagePullPolicy: IfNotPresent
+        name: frontend
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 80
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 3
+        resources:
+          limits:
+            cpu: 300m
+            memory: 256Mi
+          requests:
+            cpu: 100m
+            memory: 96Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      nodeSelector:
+        kubernetes.io/hostname: k3s-worker1
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: "2026-10-07T20:46:24Z"
+    lastUpdateTime: "2026-10-07T20:46:30Z"
+    message: ReplicaSet "openmrs-frontend-5c586c56ff" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  - lastTransitionTime: "2026-10-12T08:06:37Z"
+    lastUpdateTime: "2026-10-12T08:06:37Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  observedGeneration: 1
+  readyReplicas: 1
+  replicas: 1
+  terminatingReplicas: 0
+  updatedReplicas: 1

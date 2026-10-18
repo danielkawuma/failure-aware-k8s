@@ -1,0 +1,75 @@
+=== K3S SERVER VERSION ===
+k3s version v1.36.4+k3s1 (4dedb15b)
+go version go1.26.7
+
+=== KUBERNETES VERSION ===
+Client Version: v1.32.3
+Kustomize Version: v5.5.0
+Server Version: v1.36.4+k3s1
+WARNING: version difference between client (1.32) and server (1.36) exceeds the supported minor version skew of +/-1
+
+=== K3S SERVER PROCESS ===
+  34478 /usr/local/bin/k3s server
+
+=== K3S CONFIGURATION ===
+
+=== K3S SERVICE CONFIGURATION ===
+# /etc/systemd/system/k3s.service
+[Unit]
+Description=Lightweight Kubernetes
+Documentation=https://k3s.io
+Wants=network-online.target
+After=network-online.target
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+Type=notify
+EnvironmentFile=-/etc/default/%N
+EnvironmentFile=-/etc/sysconfig/%N
+EnvironmentFile=-/etc/systemd/system/k3s.service.env
+KillMode=process
+Delegate=yes
+User=root
+# Having non-zero Limit*s causes performance problems due to accounting overhead
+# in the kernel. We recommend using cgroups to do container-local accounting.
+LimitNOFILE=1048576
+LimitNPROC=infinity
+LimitCORE=infinity
+TasksMax=infinity
+TimeoutStartSec=0
+Restart=always
+RestartSec=5s
+ExecStartPre=-/sbin/modprobe br_netfilter
+ExecStartPre=-/sbin/modprobe overlay
+ExecStart=/usr/local/bin/k3s \
+    server \
+
+
+=== K3S EFFECTIVE COMMAND LINE ===
+/usr/local/bin/k3s server 
+
+=== NODE MONITOR AND TOLERATION SETTINGS ===
+
+=== WORKER1 LEASE ===
+apiVersion: coordination.k8s.io/v1
+kind: Lease
+metadata:
+  creationTimestamp: "2026-09-16T20:24:12Z"
+  name: k3s-worker1
+  namespace: kube-node-lease
+  ownerReferences:
+  - apiVersion: v1
+    kind: Node
+    name: k3s-worker1
+    uid: dd50ced0-03ac-477a-955f-001071cc593b
+  resourceVersion: "2049539"
+  uid: e616b0d3-327b-4149-b348-b899021fc9d0
+spec:
+  holderIdentity: k3s-worker1
+  leaseDurationSeconds: 40
+  renewTime: "2026-10-15T15:44:52.024096Z"
+
+=== WORKER1 READY CONDITION ===
+status=True lastHeartbeat=2026-10-15T15:42:02Z lastTransition=2026-10-14T18:58:30Z
