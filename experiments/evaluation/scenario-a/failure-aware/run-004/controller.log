@@ -1,0 +1,64 @@
+Starting Failure-Aware Controller
+Target node: k3s-worker1
+Native suspicion trigger: Ready=Unknown
+Verification URL: http://102.34.160.87:30364
+Verification timeout: 3000 ms
+Verification attempts: 3
+Verification interval: 500 ms
+Workload: baseline-web
+Workload type: Stateless
+Duplication sensitive: false
+Namespace: failure-aware
+Pod label selector: app=baseline-web
+Recovery candidate: k3s-worker2
+Required recovery CPU: 100m
+Required recovery memory: 128 MiB
+Required recovery node labels: {"failure-aware.io/role": "recovery-candidate"}
+Kubernetes API timeout: 3000 ms
+Resource evaluation timeout: 10000 ms
+Enforcement timeout: 15000 ms
+Fencing timeout: 30000 ms
+Fencing supported: false
+Fencing command configured: false
+[HISTORY] Runtime history file: /home/daniel/failure-aware-k8s/controller/config/node-history-runtime.json
+Connected to Kubernetes API
+[HISTORY] Dynamic node-history collector started
+[HISTORY] Background collection task started
+[LISTENER] Watching node=k3s-worker1 for Ready=Unknown
+[LISTENER] Initializing node watch
+[INITIAL STATE] node=k3s-worker1 | Ready=Some("True")
+[LISTENER] Initial node state synchronized
+[HISTORY] 2026-10-18T17:05:42.188006725+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T17:06:12.383404039+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T17:06:42.591698909+00:00 | nodes=5 | history_updated=true
+[SUSPICION] 2026-10-18T17:06:48.788256604+00:00 | node=k3s-worker1 | Ready=Some("True") -> Unknown
+[VERIFY] attempt=1/3 | reachable=false | HTTP=None | latency=3004.227 ms | error=Some("error sending request for url (http://102.34.160.87:30364/)")
+[VERIFY] attempt=2/3 | reachable=false | HTTP=None | latency=3002.944 ms | error=Some("error sending request for url (http://102.34.160.87:30364/)")
+[VERIFY] attempt=3/3 | reachable=false | HTTP=None | latency=3001.258 ms | error=Some("error sending request for url (http://102.34.160.87:30364/)")
+[VERIFICATION] node=k3s-worker1 | state=Unreachable | attempts=3 | successes=0 | failures=3
+[WORKLOAD] name=baseline-web | target_node=k3s-worker1 | duplication_sensitive=false
+[WORKLOAD] node=k3s-worker1 | name=baseline-web | type=Stateless | duplication_sensitive=false
+[RECOVERY SAFETY] state=Safe | fencing_required=false | fencing_supported=false
+[RESOURCE ERROR] node=k3s-worker1 | error=recovery candidate Node listing timed out after 3000 ms
+[DECISION] 2026-10-18T17:07:03.255231741+00:00 | node=k3s-worker1 | decision=Preserve | fencing_required=false | selected_candidate=None | reason=recovery deferred because candidate evaluation failed
+[ENFORCEMENT] node=k3s-worker1 | action=PreserveExisting | no disruptive action
+[HISTORY] 2026-10-18T17:07:14.120320732+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T17:07:43.801365265+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T17:08:13.780167502+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T17:08:44.104543834+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T17:09:14.195076803+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T17:09:44.879502089+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T17:10:15.386398895+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T17:10:45.701129487+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T17:11:15.741832282+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T17:11:46.608371600+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T17:12:16.597576043+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T17:12:46.651430409+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T17:13:16.865108744+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T17:13:47.578317323+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T17:14:18.693810342+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T17:14:50.304543873+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T17:15:20.407902589+00:00 | nodes=5 | history_updated=true
+[RECOVERED] 2026-10-18T17:15:48.018609857+00:00 | node=k3s-worker1 | Ready=Unknown -> True
+[HISTORY] 2026-10-18T17:15:50.622407205+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T17:16:21.701613969+00:00 | nodes=5 | history_updated=true

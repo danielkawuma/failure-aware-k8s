@@ -1,0 +1,51 @@
+[SCENARIO-A] 2026-10-18T18:14:18.050Z Starting failure-aware run-007
+[SCENARIO-A] 2026-10-18T18:14:18.053Z Checking workers and standalone service
+[SCENARIO-A] 2026-10-18T18:14:19.481Z Preparing Kubernetes Nginx
+deployment.apps/baseline-web scaled
+pod/baseline-web-76c9977f7-p4sq7 condition met
+deployment.apps/baseline-web configured
+service/baseline-web unchanged
+deployment.apps/baseline-web patched (no change)
+deployment.apps/baseline-web scaled
+Waiting for deployment "baseline-web" rollout to finish: 0 of 1 updated replicas are available...
+deployment "baseline-web" successfully rolled out
+[SCENARIO-A] 2026-10-18T18:14:27.254Z CLEAN_NGINX_VERIFIED
+INITIAL_WORKLOAD_VERIFIED
+ORIGINAL_POD baseline-web-5f5bbfb459-zs6q6
+ORIGINAL_UID 691ee1b0-d621-4ec9-90d1-299eef5be7a4
+[SCENARIO-A] 2026-10-18T18:14:27.543Z Starting measurement observers
+[SCENARIO-A] 2026-10-18T18:14:42.549Z Requesting SSH guest shutdown
+[SCENARIO-A] 2026-10-18T18:14:49.115Z Network-observed Worker1 loss verified
+[SCENARIO-A] 2026-10-18T18:14:49.116Z Holding Worker1 offline for 480s
+[SCENARIO-A] 2026-10-18T18:22:50.701Z Offline observation completed
+
+==========================================
+START WORKER1 THROUGH OPENSTACK HORIZON
+The runner will detect its return.
+==========================================
+[SCENARIO-A] 2026-10-18T18:23:27.337Z Observing post-return period for 60s
+[SCENARIO-A] 2026-10-18T18:24:25.760Z Stopping observers and preserving evidence
+RECOVERY_OUTCOME RECOVERED_BEFORE_RESTART
+REPLACEMENT_POD baseline-web-694769f78d-9pgn8
+REPLACEMENT_NODE k3s-worker2
+[SCENARIO-A] 2026-10-18T18:24:28.258Z Restoring controlled starting placement
+deployment.apps/baseline-web scaled
+pod/baseline-web-694769f78d-9pgn8 condition met
+deployment.apps/baseline-web patched
+deployment.apps/baseline-web scaled
+Waiting for deployment "baseline-web" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "baseline-web" rollout to finish: 0 of 1 updated replicas are available...
+deployment "baseline-web" successfully rolled out
+[SCENARIO-A] 2026-10-18T18:24:37.324Z CLEAN_NGINX_VERIFIED
+[SCENARIO-A] 2026-10-18T18:24:37.325Z Verifying final service stability
+[SCENARIO-A] 2026-10-18T18:24:37.327Z Waiting for stable HTTP: final-standalone-http
+[SCENARIO-A] 2026-10-18T18:24:37.361Z final-standalone-http HTTP success 1/3
+[SCENARIO-A] 2026-10-18T18:24:39.401Z final-standalone-http HTTP success 2/3
+[SCENARIO-A] 2026-10-18T18:24:41.451Z final-standalone-http HTTP success 3/3
+[SCENARIO-A] 2026-10-18T18:24:41.454Z final-standalone-http_HTTP_STABLE
+[SCENARIO-A] 2026-10-18T18:24:41.456Z Waiting for stable HTTP: final-kubernetes-http
+[SCENARIO-A] 2026-10-18T18:24:41.522Z final-kubernetes-http HTTP success 1/3
+[SCENARIO-A] 2026-10-18T18:24:42.813Z final-kubernetes-http HTTP success 2/3
+[SCENARIO-A] 2026-10-18T18:24:44.854Z final-kubernetes-http HTTP success 3/3
+[SCENARIO-A] 2026-10-18T18:24:44.856Z final-kubernetes-http_HTTP_STABLE
+[SCENARIO-A] 2026-10-18T18:24:46.355Z SCENARIO_A_RUN_COMPLETE failure-aware 007

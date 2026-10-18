@@ -1,0 +1,28 @@
+[SCENARIO-A] 2026-10-18T15:56:23.445Z Starting failure-aware run-002
+[SCENARIO-A] 2026-10-18T15:56:23.449Z Checking workers and standalone service
+[SCENARIO-A] 2026-10-18T15:56:25.761Z Preparing Kubernetes Nginx
+deployment.apps/baseline-web scaled
+pod/baseline-web-76c9977f7-wwn64 condition met
+deployment.apps/baseline-web configured
+service/baseline-web unchanged
+deployment.apps/baseline-web patched (no change)
+deployment.apps/baseline-web scaled
+Waiting for deployment "baseline-web" rollout to finish: 0 of 1 updated replicas are available...
+deployment "baseline-web" successfully rolled out
+[SCENARIO-A] 2026-10-18T15:56:33.473Z CLEAN_NGINX_VERIFIED
+INITIAL_WORKLOAD_VERIFIED
+ORIGINAL_POD baseline-web-5f5bbfb459-xcxtm
+ORIGINAL_UID 7e089961-33ce-4e61-9911-75a1eda3b2c0
+[SCENARIO-A] 2026-10-18T15:56:33.695Z Starting measurement observers
+[SCENARIO-A] 2026-10-18T15:56:48.700Z Requesting SSH guest shutdown
+[SCENARIO-A] 2026-10-18T15:56:55.777Z Network-observed Worker1 loss verified
+[SCENARIO-A] 2026-10-18T15:56:55.778Z Holding Worker1 offline for 480s
+[SCENARIO-A] 2026-10-18T16:04:55.994Z Offline observation completed
+
+==========================================
+START WORKER1 THROUGH OPENSTACK HORIZON
+The runner will detect its return.
+==========================================
+[SCENARIO-A] 2026-10-18T16:34:55.655Z BLOCKED: Worker1 did not return before timeout
+[SCENARIO-A] 2026-10-18T16:34:57.686Z Run incomplete; evidence retained: /home/daniel/failure-aware-k8s/experiments/evaluation/scenario-a/failure-aware/run-002
+[SCENARIO-A] 2026-10-18T16:34:57.689Z WARNING: Worker1 may still be powered off

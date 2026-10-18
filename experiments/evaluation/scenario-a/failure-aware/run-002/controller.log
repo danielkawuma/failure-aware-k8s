@@ -1,0 +1,125 @@
+Starting Failure-Aware Controller
+Target node: k3s-worker1
+Native suspicion trigger: Ready=Unknown
+Verification URL: http://102.34.160.87:30364
+Verification timeout: 3000 ms
+Verification attempts: 3
+Verification interval: 500 ms
+Workload: baseline-web
+Workload type: Stateless
+Duplication sensitive: false
+Namespace: failure-aware
+Pod label selector: app=baseline-web
+Recovery candidate: k3s-worker2
+Required recovery CPU: 100m
+Required recovery memory: 128 MiB
+Required recovery node labels: {"failure-aware.io/role": "recovery-candidate"}
+Kubernetes API timeout: 3000 ms
+Resource evaluation timeout: 10000 ms
+Enforcement timeout: 15000 ms
+Fencing timeout: 30000 ms
+Fencing supported: false
+Fencing command configured: false
+[HISTORY] Runtime history file: /home/daniel/failure-aware-k8s/controller/config/node-history-runtime.json
+Connected to Kubernetes API
+[HISTORY] Background collection task started
+[LISTENER] Watching node=k3s-worker1 for Ready=Unknown
+[HISTORY] Dynamic node-history collector started
+[LISTENER] Initializing node watch
+[INITIAL STATE] node=k3s-worker1 | Ready=Some("True")
+[LISTENER] Initial node state synchronized
+[HISTORY] 2026-10-18T15:56:33.937053716+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T15:57:03.408485672+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T15:57:32.906443820+00:00 | nodes=5 | history_updated=true
+[SUSPICION] 2026-10-18T15:57:36.820717138+00:00 | node=k3s-worker1 | Ready=Some("True") -> Unknown
+[VERIFY] attempt=1/3 | reachable=false | HTTP=None | latency=3005.303 ms | error=Some("error sending request for url (http://102.34.160.87:30364/)")
+[VERIFY] attempt=2/3 | reachable=false | HTTP=None | latency=3002.328 ms | error=Some("error sending request for url (http://102.34.160.87:30364/)")
+[VERIFY] attempt=3/3 | reachable=false | HTTP=None | latency=3001.017 ms | error=Some("error sending request for url (http://102.34.160.87:30364/)")
+[VERIFICATION] node=k3s-worker1 | state=Unreachable | attempts=3 | successes=0 | failures=3
+[WORKLOAD] name=baseline-web | target_node=k3s-worker1 | duplication_sensitive=false
+[WORKLOAD] node=k3s-worker1 | name=baseline-web | type=Stateless | duplication_sensitive=false
+[RECOVERY SAFETY] state=Safe | fencing_required=false | fencing_supported=false
+[CANDIDATE] node=k3s-worker2 | eligible=true | Ready=true | schedulable=true | labels_match=true | alloc_cpu=4000m | requested_cpu=600m | remaining_cpu=3400m | required_cpu=100m | alloc_memory=3916Mi | requested_memory=1024Mi | remaining_memory=2892Mi | required_memory=128Mi | reliability=1.000000
+[CANDIDATE] node=k3s-worker3 | eligible=true | Ready=true | schedulable=true | labels_match=true | alloc_cpu=2000m | requested_cpu=0m | remaining_cpu=2000m | required_cpu=100m | alloc_memory=1968Mi | requested_memory=0Mi | remaining_memory=1968Mi | required_memory=128Mi | reliability=0.925000
+[CANDIDATE] node=k3s-worker4 | eligible=true | Ready=true | schedulable=true | labels_match=true | alloc_cpu=2000m | requested_cpu=500m | remaining_cpu=1500m | required_cpu=100m | alloc_memory=1968Mi | requested_memory=704Mi | remaining_memory=1264Mi | required_memory=128Mi | reliability=0.925000
+[SELECTION] selected=k3s-worker2 | reason=highest_reliability_among_eligible | reliability=1.000000 | remaining_cpu=3400m | remaining_memory=2892Mi
+[RESOURCE] candidate=k3s-worker2 | state=Available | Ready=true | schedulable=true | remaining_cpu=3400m | remaining_memory=2892Mi | reliability=1.000000
+[DECISION] 2026-10-18T15:57:47.076144666+00:00 | node=k3s-worker1 | decision=Recover | fencing_required=false | selected_candidate=Some("k3s-worker2") | reason=workload is unreachable, recovery capacity is available, and recovery is safe
+[PLACEMENT] 2026-10-18T15:57:47.365670591+00:00 | workload=Deployment/baseline-web | candidate=k3s-worker2 | cleanup=pending
+[RECOVERY VERIFIED] 2026-10-18T15:57:51.532994596+00:00 | replacement=baseline-web-694769f78d-gc45n
+[ENFORCEMENT] 2026-10-18T15:57:51.534079626+00:00 | node=k3s-worker1 | action=RecoveryReleased | enforced=true | message=Replacement baseline-web-694769f78d-gc45n verified Ready and application reachable; placement cleanup pending
+[HISTORY] 2026-10-18T15:58:02.935996536+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T15:58:32.463646379+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T15:59:02.619142931+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T15:59:32.358792171+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:00:01.769556144+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:00:31.397882590+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:01:00.838890264+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:01:30.251489129+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:01:59.651573964+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:02:29.080378040+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:02:58.476543739+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:03:28.170992430+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:03:57.753378337+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:04:27.168802929+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:04:56.864356747+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:05:26.964722158+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:05:56.317085814+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:06:25.740806529+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:06:55.881267267+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:07:25.446315659+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:07:55.569317048+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:08:25.055407812+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:08:54.459191256+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:09:24.152660126+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:09:53.557356320+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:10:23.307449745+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:10:53.206621142+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:11:22.685707414+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:11:52.085598222+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:12:21.435473862+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:12:50.982037947+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:13:20.310403066+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:13:49.850924274+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:14:19.980765654+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:14:49.441363830+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:15:19.513538742+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:15:49.450439875+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:16:19.594889964+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:16:49.348960948+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:17:18.736738825+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:17:48.368554853+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:18:18.308838258+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:18:47.740424341+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:19:17.131909534+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:19:46.965438301+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:20:16.403561480+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:20:45.751780621+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:21:15.263097537+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:21:44.826232820+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:22:14.973717035+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:22:44.571690172+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:23:14.297043593+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:23:43.631727698+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:24:12.960816773+00:00 | nodes=5 | history_updated=true
+[HISTORY ERROR] 2026-10-18T16:24:45.307665738+00:00 | node-history Node listing timed out after 3000 ms
+[HISTORY] 2026-10-18T16:25:15.450037928+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:25:45.516856557+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:26:15.606858036+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:26:45.419643563+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:27:15.068473705+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:27:44.554736755+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:28:14.294382791+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:28:45.357649933+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:29:15.303150184+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:29:45.105705130+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:30:14.709953243+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:30:44.687859563+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:31:14.250443535+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:31:43.758473902+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:32:13.893984867+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:32:43.866462626+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:33:14.939851613+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:33:45.428217521+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:34:15.804989784+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T16:34:46.656252437+00:00 | nodes=5 | history_updated=true

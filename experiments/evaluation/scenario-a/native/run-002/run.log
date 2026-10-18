@@ -1,0 +1,38 @@
+[SCENARIO-A] 2026-10-18T14:27:56.445Z Starting native run-002
+[SCENARIO-A] 2026-10-18T14:27:56.448Z Checking workers and standalone service
+[SCENARIO-A] 2026-10-18T14:27:58.792Z Preparing Kubernetes Nginx
+deployment.apps/baseline-web scaled
+pod/baseline-web-76c9977f7-q6gtc condition met
+deployment.apps/baseline-web configured
+service/baseline-web unchanged
+deployment.apps/baseline-web patched (no change)
+deployment.apps/baseline-web scaled
+Waiting for deployment "baseline-web" rollout to finish: 0 of 1 updated replicas are available...
+deployment "baseline-web" successfully rolled out
+[SCENARIO-A] 2026-10-18T14:28:07.464Z CLEAN_NGINX_VERIFIED
+INITIAL_WORKLOAD_VERIFIED
+ORIGINAL_POD baseline-web-76c9977f7-v4twd
+ORIGINAL_UID 028f4b37-8920-45f3-a2c7-b54905386a7b
+[SCENARIO-A] 2026-10-18T14:28:07.657Z Starting measurement observers
+[SCENARIO-A] 2026-10-18T14:28:21.979Z Requesting SSH guest shutdown
+[SCENARIO-A] 2026-10-18T14:28:28.937Z Network-observed Worker1 loss verified
+[SCENARIO-A] 2026-10-18T14:28:28.938Z Holding Worker1 offline for 480s
+[SCENARIO-A] 2026-10-18T14:36:28.707Z Offline observation completed
+
+==========================================
+START WORKER1 THROUGH OPENSTACK HORIZON
+The runner will detect its return.
+==========================================
+[SCENARIO-A] 2026-10-18T14:37:20.560Z Observing post-return period for 60s
+[SCENARIO-A] 2026-10-18T14:38:19.135Z Stopping observers and preserving evidence
+RECOVERY_OUTCOME NO_REPLACEMENT
+[SCENARIO-A] 2026-10-18T14:38:22.117Z Restoring controlled starting placement
+deployment.apps/baseline-web scaled
+pod/baseline-web-76c9977f7-jvfjl condition met
+deployment.apps/baseline-web patched (no change)
+deployment.apps/baseline-web scaled
+Waiting for deployment "baseline-web" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "baseline-web" rollout to finish: 0 of 1 updated replicas are available...
+deployment "baseline-web" successfully rolled out
+[SCENARIO-A] 2026-10-18T14:38:30.651Z CLEAN_NGINX_VERIFIED
+[SCENARIO-A] 2026-10-18T14:38:32.079Z SCENARIO_A_RUN_COMPLETE native 002

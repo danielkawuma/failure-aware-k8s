@@ -1,0 +1,41 @@
+[SCENARIO-A] 2026-10-18T14:52:58.990Z Starting failure-aware run-001
+[SCENARIO-A] 2026-10-18T14:52:58.993Z Checking workers and standalone service
+[SCENARIO-A] 2026-10-18T14:53:01.540Z Preparing Kubernetes Nginx
+deployment.apps/baseline-web scaled
+pod/baseline-web-76c9977f7-w7x8t condition met
+deployment.apps/baseline-web configured
+service/baseline-web unchanged
+deployment.apps/baseline-web patched (no change)
+deployment.apps/baseline-web scaled
+Waiting for deployment "baseline-web" rollout to finish: 0 of 1 updated replicas are available...
+deployment "baseline-web" successfully rolled out
+[SCENARIO-A] 2026-10-18T14:53:10.106Z CLEAN_NGINX_VERIFIED
+INITIAL_WORKLOAD_VERIFIED
+ORIGINAL_POD baseline-web-5f5bbfb459-bkmnn
+ORIGINAL_UID c0458592-7fe2-40c1-a933-7e4b90904985
+[SCENARIO-A] 2026-10-18T14:53:10.335Z Starting measurement observers
+[SCENARIO-A] 2026-10-18T14:53:25.342Z Requesting SSH guest shutdown
+[SCENARIO-A] 2026-10-18T14:53:31.543Z Network-observed Worker1 loss verified
+[SCENARIO-A] 2026-10-18T14:53:31.544Z Holding Worker1 offline for 480s
+[SCENARIO-A] 2026-10-18T15:01:34.112Z Offline observation completed
+
+==========================================
+START WORKER1 THROUGH OPENSTACK HORIZON
+The runner will detect its return.
+==========================================
+[SCENARIO-A] 2026-10-18T15:03:17.593Z Observing post-return period for 60s
+[SCENARIO-A] 2026-10-18T15:04:16.185Z Stopping observers and preserving evidence
+RECOVERY_OUTCOME RECOVERED_BEFORE_RESTART
+REPLACEMENT_POD baseline-web-694769f78d-zgmw5
+REPLACEMENT_NODE k3s-worker2
+[SCENARIO-A] 2026-10-18T15:04:18.425Z Restoring controlled starting placement
+deployment.apps/baseline-web scaled
+pod/baseline-web-694769f78d-zgmw5 condition met
+deployment.apps/baseline-web patched
+deployment.apps/baseline-web scaled
+Waiting for deployment "baseline-web" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "baseline-web" rollout to finish: 0 of 1 updated replicas are available...
+deployment "baseline-web" successfully rolled out
+[SCENARIO-A] 2026-10-18T15:04:26.699Z CLEAN_NGINX_VERIFIED
+[SCENARIO-A] 2026-10-18T15:04:26.730Z BLOCKED: Final Kubernetes health failed
+[SCENARIO-A] 2026-10-18T15:04:28.029Z Run incomplete; evidence retained: /home/daniel/failure-aware-k8s/experiments/evaluation/scenario-a/failure-aware/run-001

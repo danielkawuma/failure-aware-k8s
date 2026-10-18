@@ -1,0 +1,71 @@
+Starting Failure-Aware Controller
+Target node: k3s-worker1
+Native suspicion trigger: Ready=Unknown
+Verification URL: http://102.34.160.87:30364
+Verification timeout: 3000 ms
+Verification attempts: 3
+Verification interval: 500 ms
+Workload: baseline-web
+Workload type: Stateless
+Duplication sensitive: false
+Namespace: failure-aware
+Pod label selector: app=baseline-web
+Recovery candidate: k3s-worker2
+Required recovery CPU: 100m
+Required recovery memory: 128 MiB
+Required recovery node labels: {"failure-aware.io/role": "recovery-candidate"}
+Kubernetes API timeout: 3000 ms
+Resource evaluation timeout: 10000 ms
+Enforcement timeout: 15000 ms
+Fencing timeout: 30000 ms
+Fencing supported: false
+Fencing command configured: false
+[HISTORY] Runtime history file: /home/daniel/failure-aware-k8s/controller/config/node-history-runtime.json
+Connected to Kubernetes API
+[HISTORY] Background collection task started
+[HISTORY] Dynamic node-history collector started
+[LISTENER] Watching node=k3s-worker1 for Ready=Unknown
+[LISTENER] Initializing node watch
+[INITIAL STATE] node=k3s-worker1 | Ready=Some("True")
+[LISTENER] Initial node state synchronized
+[HISTORY] 2026-10-18T17:27:54.295853941+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T17:28:24.156139195+00:00 | nodes=5 | history_updated=true
+[SUSPICION] 2026-10-18T17:28:53.318895041+00:00 | node=k3s-worker1 | Ready=Some("True") -> Unknown
+[HISTORY] 2026-10-18T17:28:53.588322358+00:00 | nodes=5 | history_updated=true
+[VERIFY] attempt=1/3 | reachable=false | HTTP=None | latency=3004.582 ms | error=Some("error sending request for url (http://102.34.160.87:30364/)")
+[VERIFY] attempt=2/3 | reachable=false | HTTP=None | latency=3001.640 ms | error=Some("error sending request for url (http://102.34.160.87:30364/)")
+[VERIFY] attempt=3/3 | reachable=false | HTTP=None | latency=3002.195 ms | error=Some("error sending request for url (http://102.34.160.87:30364/)")
+[VERIFICATION] node=k3s-worker1 | state=Unreachable | attempts=3 | successes=0 | failures=3
+[WORKLOAD] name=baseline-web | target_node=k3s-worker1 | duplication_sensitive=false
+[WORKLOAD] node=k3s-worker1 | name=baseline-web | type=Stateless | duplication_sensitive=false
+[RECOVERY SAFETY] state=Safe | fencing_required=false | fencing_supported=false
+[CANDIDATE] node=k3s-worker2 | eligible=true | Ready=true | schedulable=true | labels_match=true | alloc_cpu=4000m | requested_cpu=600m | remaining_cpu=3400m | required_cpu=100m | alloc_memory=3916Mi | requested_memory=1024Mi | remaining_memory=2892Mi | required_memory=128Mi | reliability=1.000000
+[CANDIDATE] node=k3s-worker3 | eligible=true | Ready=true | schedulable=true | labels_match=true | alloc_cpu=2000m | requested_cpu=0m | remaining_cpu=2000m | required_cpu=100m | alloc_memory=1968Mi | requested_memory=0Mi | remaining_memory=1968Mi | required_memory=128Mi | reliability=0.925000
+[CANDIDATE] node=k3s-worker4 | eligible=true | Ready=true | schedulable=true | labels_match=true | alloc_cpu=2000m | requested_cpu=500m | remaining_cpu=1500m | required_cpu=100m | alloc_memory=1968Mi | requested_memory=704Mi | remaining_memory=1264Mi | required_memory=128Mi | reliability=0.925000
+[SELECTION] selected=k3s-worker2 | reason=highest_reliability_among_eligible | reliability=1.000000 | remaining_cpu=3400m | remaining_memory=2892Mi
+[RESOURCE] candidate=k3s-worker2 | state=Available | Ready=true | schedulable=true | remaining_cpu=3400m | remaining_memory=2892Mi | reliability=1.000000
+[DECISION] 2026-10-18T17:29:03.602539351+00:00 | node=k3s-worker1 | decision=Recover | fencing_required=false | selected_candidate=Some("k3s-worker2") | reason=workload is unreachable, recovery capacity is available, and recovery is safe
+[PLACEMENT] 2026-10-18T17:29:03.792610119+00:00 | workload=Deployment/baseline-web | candidate=k3s-worker2 | cleanup=pending
+[RECOVERY VERIFIED] 2026-10-18T17:29:08.623144031+00:00 | replacement=baseline-web-694769f78d-9v2wq
+[ENFORCEMENT] 2026-10-18T17:29:08.625022109+00:00 | node=k3s-worker1 | action=RecoveryReleased | enforced=true | message=Replacement baseline-web-694769f78d-9v2wq verified Ready and application reachable; placement cleanup pending
+[HISTORY] 2026-10-18T17:29:23.002925329+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T17:29:52.973466222+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T17:30:22.658343772+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T17:30:52.063716408+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T17:31:22.207564008+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T17:31:51.626908457+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T17:32:21.035849936+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T17:32:50.441549684+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T17:33:19.851782333+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T17:33:49.298147879+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T17:34:19.301922083+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T17:34:48.811721527+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T17:35:18.216677360+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T17:35:48.279765152+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T17:36:18.162620625+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T17:36:47.830654266+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T17:37:18.078164146+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T17:37:48.022212761+00:00 | nodes=5 | history_updated=true
+[RECOVERED] 2026-10-18T17:37:51.422906772+00:00 | node=k3s-worker1 | Ready=Unknown -> True
+[HISTORY] 2026-10-18T17:38:17.989268227+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-18T17:38:47.543673353+00:00 | nodes=5 | history_updated=true
