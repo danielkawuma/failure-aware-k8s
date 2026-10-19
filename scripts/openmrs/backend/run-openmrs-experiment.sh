@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 
 SCENARIO="${1:-}"
 MODE="${2:-}"
@@ -15,8 +15,8 @@ SELECTOR="app=openmrs-backend"
 HARNESS_BINARY="$REPO_ROOT/harness/target/debug/failure-aware-harness"
 CONTROLLER_BINARY="$REPO_ROOT/controller/target/debug/failure-aware-controller"
 
-FAULT_SCRIPT="$SCRIPT_DIR/fault.sh"
-OPENMRS_C_FAULT="$SCRIPT_DIR/openmrs-c-fault.sh"
+FAULT_SCRIPT="$REPO_ROOT/scripts/fault.sh"
+OPENMRS_C_FAULT="$REPO_ROOT/scripts/openmrs/backend/openmrs-c-fault.sh"
 
 SSH_KEY="${SSH_KEY:-$HOME/.ssh/k8s-aware}"
 

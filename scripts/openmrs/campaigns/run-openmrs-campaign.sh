@@ -14,7 +14,7 @@ set -Eeuo pipefail
 #
 # No experimental algorithms are modified.
 
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 
 SCENARIO="${1:-}"
 PROFILE="${2:-}"
@@ -60,7 +60,7 @@ case "$CAMPAIGN_TYPE" in
     standard)
         (
 set -Eeuo pipefail
-ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)
 SCENARIO=${1:?Usage: run-openmrs-campaign.sh scenario-b|scenario-c}
 case "$SCENARIO" in scenario-b|scenario-c) ;; *) exit 2;; esac
 [[ ${OPENMRS_CAMPAIGN_APPROVED:-false} == true ]] || {
@@ -101,7 +101,7 @@ done
     profiled)
         (
 set -Eeuo pipefail
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 SCENARIO="${1:-}"; case "$SCENARIO" in scenario-c|scenario-e) ;; *) echo 'Usage: run-openmrs-campaign-integrated.sh scenario-c|scenario-e [profile]' >&2; exit 2;; esac
 PROFILE="${2:-mild}"
 COUNT="${RUNS_PER_MODE:-10}"; START="${START_RUN:-1}"; MODES_STRING="${BENCHMARK_MODES:-V0 T5 T10 T30 FA1}"

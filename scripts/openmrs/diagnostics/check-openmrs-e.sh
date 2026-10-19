@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 cd "$ROOT"
 : "${SSH_KEY:=$HOME/.ssh/k8s-aware}"
 [[ -f "$SSH_KEY" ]] || { echo 'SSH key missing' >&2; exit 1; }

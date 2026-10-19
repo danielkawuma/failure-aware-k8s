@@ -4,7 +4,7 @@
 # and release NFS fence only after safety checks.
 set -Eeuo pipefail
 
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 cd "$ROOT"
 
 : "${OPENMRS_CD_AUTHORITY_FILE:?Set OPENMRS_CD_AUTHORITY_FILE}"

@@ -4,7 +4,7 @@
 # verified recovery + SSH reconciliation + evidence.
 set -Eeuo pipefail
 
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 cd "$ROOT"
 
 BASE="$ROOT/experiments/evaluation/openmrs/scenario-c-d"

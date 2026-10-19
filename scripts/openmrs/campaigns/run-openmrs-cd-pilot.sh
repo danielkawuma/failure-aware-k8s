@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 # Safety-gated inspection only. Never substitutes stop-before-fence for a live-writer test.
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 NAMESPACE="${OPENMRS_DB_NAMESPACE:-openmrs37}"
 DEPLOYMENT="${OPENMRS_DB_DEPLOYMENT:-openmrs-mariadb}"
 OUT="$ROOT/experiments/evaluation/openmrs/scenario-c-d/preflight-$(date -u +%Y%m%dT%H%M%SZ)"
