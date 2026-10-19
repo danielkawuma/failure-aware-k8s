@@ -58,24 +58,6 @@ fi
 
 case "$CAMPAIGN_TYPE" in
     standard)
-        shift
-        ;;
-    profiled)
-        shift
-        ;;
-    scenario-b|scenario-c)
-        CAMPAIGN_TYPE="standard"
-        ;;
-    *)
-        echo "Usage:" >&2
-        echo "  $0 legacy scenario-b|scenario-c" >&2
-        echo "  $0 integrated scenario-c|scenario-e [profile]" >&2
-        exit 2
-        ;;
-esac
-
-case "$CAMPAIGN_TYPE" in
-    standard)
         (
 set -Eeuo pipefail
 ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
