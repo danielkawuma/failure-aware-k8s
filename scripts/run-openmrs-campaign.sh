@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-# Unified OpenMRS campaign entry point.
+# OpenMRS experimental campaign runner.
 #
-# Original campaign implementations are preserved below.
+# Executes scenario-specific experimental campaigns.
 #
 # Usage:
 #   run-openmrs-campaign.sh legacy scenario-b|scenario-c
@@ -16,17 +16,55 @@ set -Eeuo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-CAMPAIGN_TYPE="${1:-}"
+SCENARIO="${1:-}"
+PROFILE="${2:-}"
+
+case "$SCENARIO" in
+    scenario-b)
+        CAMPAIGN_TYPE="standard"
+        ;;
+    scenario-c)
+        case "$PROFILE" in
+            ""|standard)
+                CAMPAIGN_TYPE="standard"
+                ;;
+            network)
+                CAMPAIGN_TYPE="profiled"
+                ;;
+            *)
+                echo "Usage: $0 scenario-c [standard|network]" >&2
+                exit 2
+                ;;
+        esac
+        ;;
+    scenario-e)
+        CAMPAIGN_TYPE="profiled"
+        PROFILE="${PROFILE:-mild}"
+        ;;
+    *)
+        echo "Usage:" >&2
+        echo "  $0 scenario-b" >&2
+        echo "  $0 scenario-c [standard|network]" >&2
+        echo "  $0 scenario-e [mild|moderate|severe]" >&2
+        exit 2
+        ;;
+esac
+
+if [[ "$CAMPAIGN_TYPE" == "profiled" ]]; then
+    set -- "$SCENARIO" "$PROFILE"
+else
+    set -- "$SCENARIO"
+fi
 
 case "$CAMPAIGN_TYPE" in
-    legacy)
+    standard)
         shift
         ;;
-    integrated)
+    profiled)
         shift
         ;;
     scenario-b|scenario-c)
-        CAMPAIGN_TYPE="legacy"
+        CAMPAIGN_TYPE="standard"
         ;;
     *)
         echo "Usage:" >&2
@@ -37,7 +75,7 @@ case "$CAMPAIGN_TYPE" in
 esac
 
 case "$CAMPAIGN_TYPE" in
-    legacy)
+    standard)
         (
 set -Eeuo pipefail
 ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
@@ -78,7 +116,7 @@ done
 
         )
         ;;
-    integrated)
+    profiled)
         (
 set -Eeuo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
