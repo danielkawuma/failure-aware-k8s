@@ -4,7 +4,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 cd "$ROOT"
 : "${SSH_KEY:=$HOME/.ssh/k8s-aware}"
 [[ -f "$SSH_KEY" ]] || { echo 'SSH key missing' >&2; exit 1; }
-[[ -x scripts/fault.sh && -x scripts/run-openmrs-integrated.sh ]] || { echo 'Required scripts missing/not executable' >&2; exit 1; }
+[[ -x scripts/fault.sh && -x scripts/openmrs/backend/run-openmrs-integrated.sh ]] || { echo 'Required scripts missing/not executable' >&2; exit 1; }
 [[ -f harness/config/openmrs-scenario-e.json ]] || { echo 'Harness config missing' >&2; exit 1; }
 echo '=== LEGACY SCENARIO E STATUS ==='
 output="$(timeout 25 scripts/fault.sh scenario-e show)" || { echo 'Fault status unavailable' >&2; exit 1; }

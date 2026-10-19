@@ -17,13 +17,13 @@ START="${START_RUN:-3}"
 PAUSE="${RESET_SECONDS:-60}"
 TIMEOUT="${RUN_TIMEOUT_SECONDS:-2400}"
 
-B_RUNNER="$ROOT/scripts/run-openmrs-experiment.sh"
-C_RUNNER="$ROOT/scripts/run-openmrs-integrated.sh"
-CD_RUNNER="$ROOT/scripts/run-openmrs-cd-campaign.sh"
-E_RUNNER="$ROOT/scripts/run-openmrs-e-campaign.sh"
+B_RUNNER="$ROOT/scripts/openmrs/backend/run-openmrs-experiment.sh"
+C_RUNNER="$ROOT/scripts/openmrs/backend/run-openmrs-integrated.sh"
+CD_RUNNER="$ROOT/scripts/openmrs/campaigns/run-openmrs-cd-campaign.sh"
+E_RUNNER="$ROOT/scripts/openmrs/campaigns/run-openmrs-e-campaign.sh"
 
-RESET="$ROOT/scripts/openmrs-backend-reset.sh"
-MODE_PREP="$ROOT/scripts/openmrs-mode-prepare.sh"
+RESET="$ROOT/scripts/openmrs/backend/openmrs-backend-reset.sh"
+MODE_PREP="$ROOT/scripts/openmrs/backend/openmrs-mode-prepare.sh"
 
 CAMPAIGN_BASE="$ROOT/experiments/evaluation/openmrs/campaigns"
 

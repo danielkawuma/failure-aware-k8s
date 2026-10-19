@@ -109,7 +109,7 @@ CONTROLLER="$ROOT/controller/target/debug/failure-aware-controller"
 CONFIG="$ROOT/controller/config/openmrs-backend.json"
 HARNESS_CONFIG="$ROOT/harness/config/openmrs-$SCENARIO.json"
 
-FAULT_C="$ROOT/scripts/openmrs-c-fault.sh"
+FAULT_C="$ROOT/scripts/openmrs/backend/openmrs-c-fault.sh"
 FAULT_E="$ROOT/scripts/fault.sh"
 
 # Use an unaffected worker for clinical verification.

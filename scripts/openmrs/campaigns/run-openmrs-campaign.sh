@@ -84,7 +84,7 @@ for ((i=0;i<RUNS_PER_MODE;i++)); do
     dir="$ROOT/experiments/evaluation/openmrs/$SCENARIO/$mode/run-$run_id"
     [[ ! -e "$dir" ]] || { echo "Refusing overwrite: $dir" >&2; exit 1; }
     start=$(date -u +%FT%TZ)
-    if "$ROOT/scripts/run-openmrs-experiment.sh" "$SCENARIO" "$mode" "$run_id"; then
+    if "$ROOT/scripts/openmrs/backend/run-openmrs-experiment.sh" "$SCENARIO" "$mode" "$run_id"; then
       rc=0
     else rc=$?; fi
     end=$(date -u +%FT%TZ)
@@ -114,7 +114,7 @@ for ((i=0;i<COUNT;i++)); do
  mapfile -t ORDER < <(printf '%s\n' "${MODES[@]}" | shuf)
  for MODE in "${ORDER[@]}"; do
   STARTED="$(date -u +%Y-%m-%dT%H:%M:%SZ)"; RESULT=FAILED
-  if "$ROOT/scripts/run-openmrs-integrated.sh" "$SCENARIO" "$MODE" "$RUN_ID" "$PROFILE" > "$CAMPAIGN/${SCENARIO}-${PROFILE}-${MODE}-${RUN_ID}.log" 2>&1; then RESULT=COMPLETE; fi
+  if "$ROOT/scripts/openmrs/backend/run-openmrs-integrated.sh" "$SCENARIO" "$MODE" "$RUN_ID" "$PROFILE" > "$CAMPAIGN/${SCENARIO}-${PROFILE}-${MODE}-${RUN_ID}.log" 2>&1; then RESULT=COMPLETE; fi
   FINISHED="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
   printf '%s,%s,%s,%s,%s,%s,%s\n' "$SCENARIO" "$PROFILE" "$MODE" "$RUN_ID" "$RESULT" "$STARTED" "$FINISHED" >> "$CAMPAIGN/attempts.csv"
   [[ "$RESULT" == COMPLETE ]] || { echo "Stopped at $MODE/$RUN_ID; inspect $CAMPAIGN" >&2; exit 1; }

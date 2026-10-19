@@ -293,7 +293,7 @@ while IFS=, read -r order mode run; do
     preflight
 
     if SCENARIO_A_HOLD_SECONDS="$HOLD" \
-       "$ROOT/scripts/scenario-a-run.sh" "$mode" "$run"; then
+       "$ROOT/scripts/scenario-a/scenario-a-run.sh" "$mode" "$run"; then
 
         if [[ -f "$dir/COMPLETE" ]]; then
             echo "$mode,$run,COMPLETE," >> "$SUMMARY"

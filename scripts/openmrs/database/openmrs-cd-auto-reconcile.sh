@@ -17,7 +17,7 @@ NS="${OPENMRS_CD_NAMESPACE:-openmrs37}"
 DEP="${OPENMRS_CD_DEPLOYMENT:-openmrs-mariadb}"
 SEL="${OPENMRS_CD_SELECTOR:-app=openmrs-mariadb}"
 
-VERIFY="$ROOT/scripts/openmrs-cd-sql-verify.sh"
+VERIFY="$ROOT/scripts/openmrs/diagnostics/openmrs-cd-sql-verify.sh"
 FENCE="$ROOT/scripts/openmrs-cd-fence-original.sh"
 
 REBOOT_WAIT="${OPENMRS_CD_REBOOT_WAIT_SECONDS:-600}"

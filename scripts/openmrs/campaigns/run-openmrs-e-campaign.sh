@@ -8,10 +8,10 @@ cd "$ROOT"
 # Configuration
 # ============================================================
 
-RUNNER="$ROOT/scripts/run-openmrs-integrated.sh"
+RUNNER="$ROOT/scripts/openmrs/backend/run-openmrs-integrated.sh"
 FAULT="$ROOT/scripts/fault.sh"
-RESET="$ROOT/scripts/openmrs-backend-reset.sh"
-MODE_PREP="$ROOT/scripts/openmrs-mode-prepare.sh"
+RESET="$ROOT/scripts/openmrs/backend/openmrs-backend-reset.sh"
+MODE_PREP="$ROOT/scripts/openmrs/backend/openmrs-mode-prepare.sh"
 
 MODES_CSV="${MODES:-V0,T5,T10,T30,FA1}"
 PROFILES_CSV="${OPENMRS_E_PROFILES:-mild,moderate,severe}"

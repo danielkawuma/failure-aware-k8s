@@ -24,9 +24,9 @@ NS="${OPENMRS_CD_NAMESPACE:-openmrs37}"
 DEP="${OPENMRS_CD_DEPLOYMENT:-openmrs-mariadb}"
 SEL="${OPENMRS_CD_SELECTOR:-app=openmrs-mariadb}"
 
-PILOT="$ROOT/scripts/run-openmrs-cd-live-pilot.sh"
-RESET="$ROOT/scripts/openmrs-cd-reset-placement.sh"
-RECONCILE="$ROOT/scripts/openmrs-cd-auto-reconcile.sh"
+PILOT="$ROOT/scripts/openmrs/campaigns/run-openmrs-cd-live-pilot.sh"
+RESET="$ROOT/scripts/openmrs/database/openmrs-cd-reset-placement.sh"
+RECONCILE="$ROOT/scripts/openmrs/database/openmrs-cd-auto-reconcile.sh"
 FENCE="$ROOT/scripts/storage-fence.sh"
 
 SSH_KEY="${SSH_KEY:-$HOME/.ssh/k8s-aware}"

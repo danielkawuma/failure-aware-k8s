@@ -33,7 +33,7 @@ CONTROLLER="$ROOT/controller/target/debug/failure-aware-controller"
 [[ -x "$CONTROLLER" ]] ||
     fail "Controller binary missing"
 
-python3 "$ROOT/scripts/openmrs-cd-prepare.py" \
+python3 "$ROOT/scripts/openmrs/database/openmrs-cd-prepare.py" \
     "$RUN/controller.json"
 
 read -r ORIGINAL IP CANDIDATE POD_IP < <(
@@ -165,7 +165,7 @@ trap cleanup EXIT
 trap 'exit 130' INT
 trap 'exit 143' TERM
 
-python3 "$ROOT/scripts/openmrs-db-probe.py" \
+python3 "$ROOT/scripts/openmrs/diagnostics/openmrs-db-probe.py" \
     --host "$POD_IP" \
     --port "${OPENMRS_DB_PORT:-3306}" \
     --verifier-host "$VERIFIER_IP" \
@@ -193,7 +193,7 @@ PRE_STATE="$(probe_state)" ||
 
 RECOVERY_PORT="${OPENMRS_CD_RECOVERY_PROBE_PORT:-18087}"
 
-python3 "$ROOT/scripts/openmrs-recovery-probe.py" \
+python3 "$ROOT/scripts/openmrs/diagnostics/openmrs-recovery-probe.py" \
     --namespace "$NS" \
     --selector "$SEL" \
     --original-node "$ORIGINAL" \

@@ -4,7 +4,7 @@ set -Eeuo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 cd "$ROOT"
 
-RUNNER="$ROOT/scripts/run-openmrs-experiment.sh"
+RUNNER="$ROOT/scripts/openmrs/backend/run-openmrs-experiment.sh"
 FAULT="$ROOT/scripts/fault.sh"
 
 SCENARIO="scenario-b"
