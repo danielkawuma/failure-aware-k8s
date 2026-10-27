@@ -1,0 +1,87 @@
+{
+  "pipeline": "failure-aware-results-reproduction",
+  "pipeline_version": "stage-2",
+  "started_utc": "2026-10-19T06:00:23.520+00:00",
+  "completed_utc": "2026-10-19T06:00:34.303+00:00",
+  "git_revision": "e2595c423b8fb419499b418f4c138ba53999810a",
+  "overall_status": "PASS",
+  "raw_evidence_modified": false,
+  "experiments_executed": false,
+  "stages": {
+    "evidence_integrity": {
+      "status": "PASS",
+      "evidence_files": 8551,
+      "csv_files": 2973,
+      "run_directories": 287,
+      "complete_runs": 269,
+      "incomplete_runs": 17,
+      "errors": []
+    },
+    "network_baseline": {
+      "status": "PASS",
+      "exit_code": 0,
+      "script": "analysis/scenarios/network.py",
+      "command_arguments": [
+        "--output",
+        "/home/daniel/failure-aware-k8s/analysis/results/reproduced/network-baseline.csv"
+      ],
+      "stdout": "NETWORK_BASELINE_REPRODUCED\nRecords: 14\nOutput: /home/daniel/failure-aware-k8s/analysis/results/reproduced/network-baseline.csv\nPING: 5\nTCP: 6\nUDP: 3\n",
+      "stderr": ""
+    },
+    "openmrs_scenario_c_recovery": {
+      "status": "PASS",
+      "exit_code": 0,
+      "script": "analysis/scenarios/openmrs_recovery.py",
+      "command_arguments": [
+        "--output",
+        "/home/daniel/failure-aware-k8s/analysis/results/reproduced/openmrs-scenario-c-recovery-durations.csv",
+        "--reference",
+        "/home/daniel/failure-aware-k8s/analysis/reference/openmrs-scenario-c-recovery-durations.csv"
+      ],
+      "stdout": "OPENMRS_SCENARIO_C_RECOVERY_REPRODUCED\nHistorical records: 12\nSupplementary records: 12\nHistorical output: /home/daniel/failure-aware-k8s/analysis/results/reproduced/openmrs-scenario-c-recovery-durations.csv\nSupplementary output: /home/daniel/failure-aware-k8s/analysis/results/reproduced/openmrs-scenario-c-replacement-observations.csv\nREFERENCE_COMPARISON_PASSED\n",
+      "stderr": ""
+    },
+    "scenario_a": {
+      "status": "PASS",
+      "exit_code": 0,
+      "script": "analysis/scenarios/scenario_a.py",
+      "command_arguments": [
+        "--output",
+        "/home/daniel/failure-aware-k8s/analysis/results/reproduced"
+      ],
+      "stdout": "SCENARIO_A_REPRODUCTION_COMPLETE\nAll attempts: 13\nNative included: 5\nFailure-Aware included: 5\nValidation records: 3\nOutput: /home/daniel/failure-aware-k8s/analysis/results/reproduced\n",
+      "stderr": ""
+    },
+    "nginx_scenarios_b_c": {
+      "status": "PASS",
+      "exit_code": 0,
+      "script": "analysis/scenarios/nginx.py",
+      "command_arguments": [
+        "--output",
+        "/home/daniel/failure-aware-k8s/analysis/results/reproduced"
+      ],
+      "stdout": "NGINX_BC_REPRODUCTION_COMPLETE\nManuscript FA1 runs: 33\nHistorical FA1 runs: 37\nCurrent FA1 runs: 52\nHistorical metric differences: 0\nOutput: /home/daniel/failure-aware-k8s/analysis/results/reproduced\nNGINX_BC_HISTORICAL_VALIDATION_PASSED\n",
+      "stderr": ""
+    },
+    "remaining_manuscript_analyses": {
+      "status": "PASS",
+      "exit_code": 0,
+      "script": "analysis/scenarios/manuscript_analyses.py",
+      "command_arguments": [
+        "--output",
+        "/home/daniel/failure-aware-k8s/analysis/results/reproduced"
+      ],
+      "stdout": "\n============================================================\nSTAGE: scenario_d_e\n============================================================\nScenario D rows: 32\nScenario E rows: 26\nTotal rows: 58\nOutput: /tmp/fa-de-a499fgj3/analysis/results/new-experiment-d-e-results.csv\nscenario_d_e PASS\n\n============================================================\nSTAGE: openmrs_clinical\n============================================================\nClinical runs analyzed: 42\nOutput: /home/daniel/failure-aware-k8s/analysis/results/reproduced/openmrs-stage/clinical-metrics.csv\nopenmrs_clinical PASS\n\n============================================================\nSTAGE: openmrs_fencing\n============================================================\nC+D logical runs analyzed: 12\nPost-fence commit counts remain NOT_MEASURED.\nopenmrs_fencing PASS\n\n============================================================\nSTAGE: openmrs_phase2\n============================================================\nscenario-b: 15/15 complete\nscenario-c: 10/10 complete\nscenario-c-d: 0/2 complete\nscenario-e: 14/30 complete\nQuality warnings: 8\nGrouped statistics: 68\nOutput: /home/daniel/failure-aware-k8s/analysis/results/reproduced/openmrs-phase2\nopenmrs_phase2 PASS\n\n============================================================\nSTAGE: openmrs_statistics\n============================================================\nGrouped statistics: 38\nOutput: /home/daniel/failure-aware-k8s/analysis/results/reproduced/openmrs-stage/grouped-summary.csv\nopenmrs_statistics PASS\n\n============================================================\nSTAGE: controller_overhead\n============================================================\nPer-run results: /tmp/fa-overhead-vl_mq08n/runs.csv\nSummary results: /tmp/fa-overhead-vl_mq08n/summary.csv\ncontroller_overhead PASS\n\n============================================================\nSTAGE: http_latency\n============================================================\nSource files discovered : 126\nSource files included   : 127\nSource files skipped    : 57\nHTTP observations       : 19486\nCombined observations   : /tmp/fa-http-latency-im4v7_kc/analysis/results/http_latency_observations.csv\nPer-run summary         : /tmp/fa-http-latency-im4v7_kc/analysis/results/http_latency_by_run.csv\nOverall summary         : /tmp/fa-http-latency-im4v7_kc/analysis/results/http_latency_summary.csv\nHTTP_LATENCY_SOURCE_FILES: 184\nHTTP_LATENCY_PHASE_INPUTS_RESTORED\nhttp_latency PASS\n\nMANUSCRIPT_ANALYSIS_STATUS: PASS\nCompleted: 7\nFailed: 0\nNo experiments executed.\nMANUSCRIPT_ANALYSES_EXECUTED\n",
+      "stderr": ""
+    }
+  },
+  "pending_analysis": [
+    "nginx_scenarios_b_c",
+    "scenario_a_final",
+    "scenario_d_e",
+    "openmrs_clinical",
+    "openmrs_fencing",
+    "controller_overhead",
+    "historical_manuscript_cohort_validation"
+  ]
+}

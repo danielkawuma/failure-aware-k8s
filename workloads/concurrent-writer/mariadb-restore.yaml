@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mariadb-restore
+  namespace: failure-aware-writer-test
+  labels:
+    app: mariadb-restore
+    failure-aware.io/experiment: concurrent-writer
+spec:
+  restartPolicy: Never
+  terminationGracePeriodSeconds: 60
+  nodeSelector:
+    kubernetes.io/hostname: k3s-worker1
+  securityContext:
+    runAsUser: 999
+    runAsGroup: 999
+  containers:
+    - name: mariadb
+      image: mariadb:10.11.19
+      command:
+        - sh
+        - -ec
+        - |
+          exec mariadbd \
+            --datadir=/var/lib/mysql \
+            --socket=/tmp/mariadb.sock \
+            --pid-file=/tmp/mariadb.pid \
+            --skip-networking \
+            --innodb-flush-log-at-trx-commit=1
+      resources:
+        requests:
+          cpu: 100m
+          memory: 256Mi
+        limits:
+          memory: 1Gi
+      volumeMounts:
+        - name: database
+          mountPath: /var/lib/mysql
+  volumes:
+    - name: database
+      nfs:
+        server: 102.34.160.36
+        path: /srv/failure-aware/concurrent-writer/database/restore-001
+        readOnly: false

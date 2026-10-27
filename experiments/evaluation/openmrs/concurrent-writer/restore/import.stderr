@@ -1,0 +1,19 @@
+--------------
+CREATE TABLE `address_hierarchy_address_to_entry_map` (
+  `address_to_entry_map_id` int(11) NOT NULL AUTO_INCREMENT,
+  `address_id` int(11) NOT NULL,
+  `entry_id` int(11) NOT NULL,
+  `uuid` char(38) NOT NULL,
+  PRIMARY KEY (`address_to_entry_map_id`),
+  KEY `address_id_to_person_address_table` (`address_id`),
+  KEY `entry_id_to_address_hierarchy_table` (`entry_id`),
+  CONSTRAINT `address_id_to_person_address_table` FOREIGN KEY (`address_id`) REFERENCES `person_address` (`person_address_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `entry_id_to_address_hierarchy_table` FOREIGN KEY (`entry_id`) REFERENCES `address_hierarchy_entry` (`address_hierarchy_entry_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+--------------
+
+ERROR 1005 (HY000) at line 11: Can't create table `openmrs`.`address_hierarchy_address_to_entry_map` (errno: 150 "Foreign key constraint is incorrectly formed")
+E1019 16:42:38.434074   29439 v2.go:167] "Unhandled Error" err="next reader: read tcp 172.19.164.251:45702->102.34.160.89:6443: i/o timeout"
+E1019 16:42:38.434164   29439 v2.go:150] "Unhandled Error" err="next reader: read tcp 172.19.164.251:45702->102.34.160.89:6443: i/o timeout"
+E1019 16:42:38.434086   29439 v2.go:129] "Unhandled Error" err="next reader: read tcp 172.19.164.251:45702->102.34.160.89:6443: i/o timeout"
+error: error reading from error stream: next reader: read tcp 172.19.164.251:45702->102.34.160.89:6443: i/o timeout

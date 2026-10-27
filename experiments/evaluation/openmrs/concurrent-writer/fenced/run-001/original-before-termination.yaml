@@ -1,0 +1,147 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","kind":"Pod","metadata":{"annotations":{},"labels":{"arm":"fenced","experiment":"concurrent-writer"},"name":"w2-original","namespace":"failure-aware-writer-test"},"spec":{"containers":[{"command":["sh","-ec","exec mariadbd             --datadir=/var/lib/mysql             --socket=/tmp/mariadb.sock             --pid-file=/tmp/mariadb.pid             --skip-networking             --innodb-flush-log-at-trx-commit=1\n"],"image":"mariadb:10.11.19","name":"mariadb","volumeMounts":[{"mountPath":"/var/lib/mysql","name":"database"}]}],"nodeSelector":{"kubernetes.io/hostname":"k3s-worker1"},"restartPolicy":"Never","securityContext":{"runAsGroup":999,"runAsUser":999},"terminationGracePeriodSeconds":30,"volumes":[{"name":"database","nfs":{"path":"/srv/failure-aware/concurrent-writer/database/w2-001","server":"102.34.160.36"}}]}}
+  creationTimestamp: "2026-10-19T14:22:44Z"
+  deletionGracePeriodSeconds: 30
+  deletionTimestamp: "2026-10-19T14:34:59Z"
+  generation: 2
+  labels:
+    arm: fenced
+    experiment: concurrent-writer
+  name: w2-original
+  namespace: failure-aware-writer-test
+  resourceVersion: "2504965"
+  uid: 4f835ddf-fb4f-4ef1-9d1a-4b4a4e3f16c8
+spec:
+  containers:
+  - command:
+    - sh
+    - -ec
+    - |
+      exec mariadbd             --datadir=/var/lib/mysql             --socket=/tmp/mariadb.sock             --pid-file=/tmp/mariadb.pid             --skip-networking             --innodb-flush-log-at-trx-commit=1
+    image: mariadb:10.11.19
+    imagePullPolicy: IfNotPresent
+    name: mariadb
+    resources: {}
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /var/lib/mysql
+      name: database
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-6lpjn
+      readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  nodeName: k3s-worker1
+  nodeSelector:
+    kubernetes.io/hostname: k3s-worker1
+  preemptionPolicy: PreemptLowerPriority
+  priority: 0
+  restartPolicy: Never
+  schedulerName: default-scheduler
+  securityContext:
+    runAsGroup: 999
+    runAsUser: 999
+  serviceAccount: default
+  serviceAccountName: default
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+  volumes:
+  - name: database
+    nfs:
+      path: /srv/failure-aware/concurrent-writer/database/w2-001
+      server: 102.34.160.36
+  - name: kube-api-access-6lpjn
+    projected:
+      defaultMode: 420
+      sources:
+      - serviceAccountToken:
+          expirationSeconds: 3607
+          path: token
+      - configMap:
+          items:
+          - key: ca.crt
+            path: ca.crt
+          name: kube-root-ca.crt
+      - downwardAPI:
+          items:
+          - fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+            path: namespace
+status:
+  conditions:
+  - lastProbeTime: null
+    lastTransitionTime: "2026-10-19T14:22:45Z"
+    observedGeneration: 2
+    status: "True"
+    type: PodReadyToStartContainers
+  - lastProbeTime: null
+    lastTransitionTime: "2026-10-19T14:22:44Z"
+    observedGeneration: 2
+    status: "True"
+    type: Initialized
+  - lastProbeTime: null
+    lastTransitionTime: "2026-10-19T14:22:45Z"
+    observedGeneration: 2
+    status: "True"
+    type: Ready
+  - lastProbeTime: null
+    lastTransitionTime: "2026-10-19T14:22:45Z"
+    observedGeneration: 2
+    status: "True"
+    type: ContainersReady
+  - lastProbeTime: null
+    lastTransitionTime: "2026-10-19T14:22:44Z"
+    observedGeneration: 2
+    status: "True"
+    type: PodScheduled
+  containerStatuses:
+  - containerID: containerd://e412e8d629ec03be29700171542856ab7a446c448d32e3f2f52c919ad394b772
+    image: docker.io/library/mariadb:10.11.19
+    imageID: docker.io/library/mariadb@sha256:7db29378d4fdab73f8123bbc2b48905c90d1a4b00cf848b028f1e81e623257f2
+    lastState: {}
+    name: mariadb
+    ready: true
+    resources: {}
+    restartCount: 0
+    started: true
+    state:
+      running:
+        startedAt: "2026-10-19T14:22:45Z"
+    user:
+      linux:
+        gid: 999
+        supplementalGroups:
+        - 999
+        uid: 999
+    volumeMounts:
+    - mountPath: /var/lib/mysql
+      name: database
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-6lpjn
+      readOnly: true
+      recursiveReadOnly: Disabled
+  hostIP: 102.34.160.87
+  hostIPs:
+  - ip: 102.34.160.87
+  observedGeneration: 2
+  phase: Running
+  podIP: 10.42.1.123
+  podIPs:
+  - ip: 10.42.1.123
+  qosClass: BestEffort
+  resources: {}
+  startTime: "2026-10-19T14:22:44Z"

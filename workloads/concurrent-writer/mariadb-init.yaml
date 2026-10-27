@@ -1,0 +1,70 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mariadb-init
+  namespace: failure-aware-writer-test
+  labels:
+    app: mariadb-init
+    failure-aware.io/experiment: concurrent-writer
+spec:
+  restartPolicy: Never
+  terminationGracePeriodSeconds: 30
+
+  nodeSelector:
+    kubernetes.io/hostname: k3s-worker1
+
+  securityContext:
+    runAsUser: 999
+    runAsGroup: 999
+    supplementalGroups:
+      - 999
+
+  containers:
+    - name: mariadb-init
+      image: mariadb:10.11.19
+
+      command:
+        - sh
+        - -ec
+        - |
+          echo "=== DATABASE INITIALIZATION ==="
+
+          echo "Process identity:"
+          id
+
+          echo "Database directory:"
+          stat -c '%n uid=%u gid=%g mode=%a' /var/lib/mysql
+
+          if [ -e /var/lib/mysql/ibdata1 ] ||
+             [ -d /var/lib/mysql/mysql ]; then
+              echo "ERROR: Database directory already initialized"
+              exit 1
+          fi
+
+          mariadb-install-db \
+            --user=mysql \
+            --datadir=/var/lib/mysql \
+            --auth-root-authentication-method=normal \
+            --skip-test-db
+
+          test -d /var/lib/mysql/mysql
+
+          echo "MARIADB_INITIALIZATION_COMPLETE"
+
+      volumeMounts:
+        - name: database
+          mountPath: /var/lib/mysql
+
+      resources:
+        requests:
+          cpu: 100m
+          memory: 256Mi
+        limits:
+          memory: 1Gi
+
+  volumes:
+    - name: database
+      nfs:
+        server: 102.34.160.36
+        path: /srv/failure-aware/concurrent-writer/database/restore-001
+        readOnly: false
