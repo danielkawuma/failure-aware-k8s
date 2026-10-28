@@ -1,0 +1,56 @@
+# FA1: non-expiring NoExecute tolerations; the Failure-Aware controller runs during the experiment.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: baseline-web
+  namespace: failure-aware
+  labels:
+    failure-aware.io/ladder-arm: fa1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: baseline-web
+  template:
+    metadata:
+      labels:
+        app: baseline-web
+        failure-aware.io/ladder-arm: fa1
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - k3s-worker1
+      tolerations:
+        - key: node.kubernetes.io/unreachable
+          operator: Exists
+          effect: NoExecute
+        - key: node.kubernetes.io/not-ready
+          operator: Exists
+          effect: NoExecute
+      containers:
+        - name: nginx
+          image: nginx:alpine
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: baseline-web
+  namespace: failure-aware
+spec:
+  selector:
+    app: baseline-web
+  type: NodePort
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+      nodePort: 30364
