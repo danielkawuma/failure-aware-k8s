@@ -1,0 +1,125 @@
+[2026-10-12T11:42:08Z] Generating campaign plan
+[2026-10-12T11:42:08Z] Campaign plan: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/20261012T114208Z-298065/plan.csv
+[2026-10-12T11:42:08Z] Planned logical rows: 2
+[2026-10-12T11:42:08Z] ==============================================
+[2026-10-12T11:42:08Z] Starting scenario: scenario-e
+[2026-10-12T11:42:08Z] ==============================================
+[2026-10-12T11:42:08Z] START dedicated Scenario E campaign
+[2026-10-12T11:42:08Z] Generating Scenario E campaign plan
+[2026-10-12T11:42:08Z] Scenario E plan: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/e-20261012T114208Z-298080/plan.csv
+[2026-10-12T11:42:08Z] Planned experiments: 30
+[2026-10-12T11:42:10Z] ==============================================
+[2026-10-12T11:42:10Z] PREPARING mild/T5/003
+[2026-10-12T11:42:10Z] ==============================================
+[MODE] Applying T5 tolerations (5)
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[MODE] Deployment template verified: T5
+[MODE] VERIFIED T5: Ready Pod and tolerations correct
+[BACKEND RESET] Current nodeSelector: <none>
+[BACKEND RESET] Temporarily pinning backend to k3s-worker1
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] Removing temporary hostname selector; retaining required worker affinity
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] READY: backend on k3s-worker1, no hostname pin, clinical health OK
+[MODE] T5 tolerations already configured; no rollout needed
+[MODE] Deployment template verified: T5
+[MODE] VERIFIED T5: Ready Pod and tolerations correct
+[2026-10-12T12:08:56Z] START mild/T5/003
+[2026-10-12T12:09:14.534851482Z] Fault active: scenario-e T5
+[2026-10-12T12:11:16.586530444Z] Clearing fault: FIXED_DURATION
+[2026-10-12T12:11:18.153283794Z] Fault cleared and verified: FIXED_DURATION
+[2026-10-12T12:11:53.416484823Z] Observation completed; readiness and clinical results recorded
+[2026-10-12T12:11:54.997680597Z] Results: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/scenario-e/mild/T5/run-003 (exit=0)
+[2026-10-12T12:11:55Z] COMPLETE mild/T5/003
+[2026-10-12T12:13:03Z] ==============================================
+[2026-10-12T12:13:03Z] PREPARING moderate/T5/003
+[2026-10-12T12:13:03Z] ==============================================
+[MODE] T5 tolerations already configured; no rollout needed
+[MODE] Deployment template verified: T5
+[MODE] VERIFIED T5: Ready Pod and tolerations correct
+[BACKEND RESET] Current nodeSelector: <none>
+[BACKEND RESET] Temporarily pinning backend to k3s-worker1
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] Removing temporary hostname selector; retaining required worker affinity
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] READY: backend on k3s-worker1, no hostname pin, clinical health OK
+[MODE] T5 tolerations already configured; no rollout needed
+[MODE] Deployment template verified: T5
+[MODE] VERIFIED T5: Ready Pod and tolerations correct
+[2026-10-12T12:31:05Z] START moderate/T5/003
+[2026-10-12T12:31:24.451935148Z] Fault active: scenario-e T5
+[2026-10-12T12:33:26.482474410Z] Clearing fault: FIXED_DURATION
+[2026-10-12T12:33:28.049572598Z] Fault cleared and verified: FIXED_DURATION
+[2026-10-12T12:34:03.069122934Z] Observation completed; readiness and clinical results recorded
+[2026-10-12T12:34:04.396587185Z] Results: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/scenario-e/moderate/T5/run-003 (exit=0)
+[2026-10-12T12:34:04Z] COMPLETE moderate/T5/003
+[2026-10-12T12:35:13Z] ==============================================
+[2026-10-12T12:35:13Z] PREPARING severe/T5/003
+[2026-10-12T12:35:13Z] ==============================================
+[MODE] T5 tolerations already configured; no rollout needed
+[MODE] Deployment template verified: T5
+[MODE] VERIFIED T5: Ready Pod and tolerations correct
+[BACKEND RESET] Current nodeSelector: <none>
+[BACKEND RESET] Temporarily pinning backend to k3s-worker1
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] Removing temporary hostname selector; retaining required worker affinity
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] READY: backend on k3s-worker1, no hostname pin, clinical health OK
+[MODE] T5 tolerations already configured; no rollout needed
+[MODE] Deployment template verified: T5
+[MODE] VERIFIED T5: Ready Pod and tolerations correct
+[2026-10-12T12:53:11Z] START severe/T5/003
+[2026-10-12T12:53:31.324777607Z] Fault active: scenario-e T5
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+[2026-10-12T12:55:32.597820850Z] Clearing fault: FIXED_DURATION
+[2026-10-12T12:55:34.424394432Z] Fault cleared and verified: FIXED_DURATION
+curl: (28) Operation timed out after 8040 milliseconds with 0 bytes received
+curl: (22) The requested URL returned error: 502
+[2026-10-12T12:56:15.760691313Z] ERROR: Clinical service unhealthy at end
+[2026-10-12T12:56:17.148579653Z] Results: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/scenario-e/severe/T5/run-003 (exit=1)
+[2026-10-12T12:56:17Z] ERROR: Run failed: severe/T5/003 (exit=1)
+[2026-10-12T12:56:17Z] ERROR: Scenario E campaign failed

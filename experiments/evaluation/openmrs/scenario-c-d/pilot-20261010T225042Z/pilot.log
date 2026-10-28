@@ -1,0 +1,21 @@
+[2026-10-10T22:50:42.702837017Z] Discovering original MariaDB authority
+CONFIG=/home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/scenario-c-d/pilot-20261010T225042Z/controller.json
+ORIGINAL=k3s-worker2 102.34.160.103
+CANDIDATE=k3s-worker3
+NO_FAULT_APPLIED
+[2026-10-10T22:50:44.339369507Z] Original worker: k3s-worker2
+[2026-10-10T22:50:44.341051628Z] Original IP: 102.34.160.103
+[2026-10-10T22:50:44.342808584Z] Original database Pod IP: 10.42.2.151
+[2026-10-10T22:50:44.344434586Z] Recovery candidate: k3s-worker3
+[2026-10-10T22:50:44.346764956Z] Checking database placement configuration
+[2026-10-10T22:50:44.503467128Z] Checking initial NFS fence state
+[2026-10-10T22:50:47.876769793Z] NFS fence confirmed inactive
+[2026-10-10T22:50:47.877912574Z] Checking original worker SSH access
+[2026-10-10T22:50:49.037632399Z] Checking remote fault mechanism
+[2026-10-10T22:50:50.215539812Z] Starting independent MariaDB TCP probe
+curl: (22) The requested URL returned error: 503
+[2026-10-10T22:50:53.761983339Z] ERROR: Original MariaDB is not reachable before fault
+[2026-10-10T22:50:53.763749113Z] Starting pilot cleanup
+[2026-10-10T22:50:55.208055904Z] NFS fence retained if active
+[2026-10-10T22:50:55.209614453Z] Old-writer reconciliation required before unfencing
+[2026-10-10T22:50:55.212399457Z] Results: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/scenario-c-d/pilot-20261010T225042Z (exit=1)

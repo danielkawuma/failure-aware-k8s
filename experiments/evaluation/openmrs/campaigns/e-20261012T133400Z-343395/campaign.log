@@ -1,0 +1,32 @@
+[2026-10-12T13:34:00Z] Generating Scenario E campaign plan
+[2026-10-12T13:34:00Z] Scenario E plan: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/e-20261012T133400Z-343395/plan.csv
+[2026-10-12T13:34:00Z] Planned experiments: 30
+[2026-10-12T13:34:00Z] SKIP completed: mild/T5/003
+[2026-10-12T13:34:00Z] SKIP completed: moderate/T5/003
+[2026-10-12T13:34:01Z] ==============================================
+[2026-10-12T13:34:01Z] PREPARING severe/T5/003
+[2026-10-12T13:34:01Z] ==============================================
+[MODE] T5 tolerations already configured; no rollout needed
+[MODE] Deployment template verified: T5
+[MODE] VERIFIED T5: Ready Pod and tolerations correct
+[BACKEND RESET] Current nodeSelector: <none>
+[BACKEND RESET] Temporarily pinning backend to k3s-worker1
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] Removing temporary hostname selector; retaining required worker affinity
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] READY: backend on k3s-worker1, no hostname pin, clinical health OK
+[MODE] T5 tolerations already configured; no rollout needed
+[MODE] Deployment template verified: T5
+[MODE] VERIFIED T5: Ready Pod and tolerations correct
+[2026-10-12T13:52:00Z] START severe/T5/003
+[2026-10-12T13:56:48.169082823Z] ERROR: Fault injection failed
+[2026-10-12T13:56:48.170692103Z] Emergency fault cleanup
+[2026-10-12T13:56:52.717239020Z] Results: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/scenario-e/severe/T5/run-003 (exit=1)
+[2026-10-12T13:56:52Z] ERROR: Run failed: severe/T5/003 (exit=1)

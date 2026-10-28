@@ -1,0 +1,63 @@
+[RECONCILE] 2026-10-17T12:29:55Z Original=k3s-worker3 Candidate=k3s-worker2
+SQL_VERIFIED: authenticated query and core tables present
+[RECONCILE] 2026-10-17T12:29:58Z Pre-reconciliation checks passed
+node/k3s-worker3 cordoned
+[RECONCILE] 2026-10-17T12:29:58Z Previous state=NEW
+[RECONCILE] 2026-10-17T12:29:59Z STATE=REBOOT_REQUESTED
+[RECONCILE] 2026-10-17T12:30:00Z Initiating SSH reboot
+[RECONCILE] 2026-10-17T12:37:54Z STATE=REBOOT_VERIFIED
+[RECONCILE] 2026-10-17T12:37:54Z REBOOT_VERIFIED old=9e4688ff-31d0-4b5d-8fb1-eb997ed15356 new=0d64543f-34fd-4176-9fe3-ed697a0482bb
+[RECONCILE] 2026-10-17T12:37:54Z Waiting for K3s/containerd readiness
+RUNTIME_READY
+[RECONCILE] 2026-10-17T12:38:00Z RUNTIME_READY
+[RECONCILE] 2026-10-17T12:38:00Z STATE=RUNTIME_READY
+NO_ACTIVE_MARIADB_CONTAINER
+OLD_WRITER_ABSENT
+[RECONCILE] 2026-10-17T12:38:03Z BLOCKED: Old writer absence or replacement authority not verified
+[RECONCILE] 2026-10-17T14:33:45Z Original=k3s-worker3 Candidate=k3s-worker2
+SQL_VERIFIED: authenticated query and core tables present
+[RECONCILE] 2026-10-17T14:33:47Z Pre-reconciliation checks passed
+node/k3s-worker3 already cordoned
+[RECONCILE] 2026-10-17T14:33:48Z Previous state=RUNTIME_READY
+[RECONCILE] 2026-10-17T14:33:48Z Resuming after previously verified reboot
+[RECONCILE] 2026-10-17T14:33:49Z Waiting for K3s/containerd readiness
+RUNTIME_READY
+[RECONCILE] 2026-10-17T14:33:49Z RUNTIME_READY
+[RECONCILE] 2026-10-17T14:33:49Z STATE=RUNTIME_READY
+NO_ACTIVE_MARIADB_CONTAINER
+OLD_WRITER_ABSENT
+SQL_VERIFIED: authenticated query and core tables present
+[RECONCILE] 2026-10-17T14:33:52Z STATE=OLD_WRITER_ABSENT
+[RECONCILE] 2026-10-17T14:33:52Z POST_REBOOT_WRITER_ABSENT
+NO_ACTIVE_MARIADB_CONTAINER
+OLD_WRITER_ABSENT
+SQL_VERIFIED: authenticated query and core tables present
+[RECONCILE] 2026-10-17T14:33:54Z Releasing NFS fence
+[FENCE ORCHESTRATOR] action=unfence
+[FENCE ORCHESTRATOR] mode=nfs
+[FENCE ORCHESTRATOR] remote=ubuntu@102.34.160.89
+[FENCING] Removing legacy NFS fence
+[FENCING] Legacy NFS fence removed
+[FENCE ORCHESTRATOR] action=unfence completed successfully
+[RECONCILE] 2026-10-17T14:33:55Z STATE=FENCE_RELEASED
+NO_ACTIVE_MARIADB_CONTAINER
+OLD_WRITER_ABSENT
+SQL_VERIFIED: authenticated query and core tables present
+[RECONCILE] 2026-10-17T14:33:57Z Monitoring post-release stability
+NO_ACTIVE_MARIADB_CONTAINER
+OLD_WRITER_ABSENT
+SQL_VERIFIED: authenticated query and core tables present
+NO_ACTIVE_MARIADB_CONTAINER
+OLD_WRITER_ABSENT
+SQL_VERIFIED: authenticated query and core tables present
+NO_ACTIVE_MARIADB_CONTAINER
+OLD_WRITER_ABSENT
+SQL_VERIFIED: authenticated query and core tables present
+NO_ACTIVE_MARIADB_CONTAINER
+OLD_WRITER_ABSENT
+SQL_VERIFIED: authenticated query and core tables present
+[RECONCILE] 2026-10-17T14:34:28Z STATE=RECONCILIATION_VERIFIED
+[RECONCILE] 2026-10-17T14:34:28Z RECONCILIATION_VERIFIED
+[RECONCILE] 2026-10-17T14:34:28Z Original worker remains cordoned pending experiment reset
+[RECONCILE] 2026-10-17T14:34:55Z Original=k3s-worker3 Candidate=k3s-worker2
+[RECONCILE] 2026-10-17T14:34:56Z BLOCKED: Original NFS fence not positively verified

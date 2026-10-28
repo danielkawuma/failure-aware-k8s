@@ -1,0 +1,14 @@
+Scenario E plan: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/e-20261011T062702Z-330020/plan.csv
+PREPARING backend: mild/T10/901
+[BACKEND RESET] Current nodeSelector: {"kubernetes.io/hostname":"k3s-worker1"}
+[BACKEND RESET] Temporarily pinning backend to k3s-worker1
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] Removing temporary hostname selector; retaining required worker affinity
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] READY: backend on k3s-worker1, no hostname pin, clinical health OK
+[2026-10-11T06:36:21.536293323Z] ERROR: Expected 10 second tolerations, found 300. Prepare mode before run.
+[2026-10-11T06:36:23.301034519Z] Results: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/scenario-e/mild/T10/run-901 (exit=1)
+ERROR: Run failed: mild/T10/901

@@ -1,0 +1,129 @@
+[2026-10-12T20:40:23Z] Generating Scenario E campaign plan
+[2026-10-12T20:40:23Z] Scenario E plan: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/e-20261012T204023Z-508211/plan.csv
+[2026-10-12T20:40:23Z] Planned experiments: 30
+[2026-10-12T20:40:25Z] ==============================================
+[2026-10-12T20:40:25Z] PREPARING mild/T10/003
+[2026-10-12T20:40:25Z] ==============================================
+[MODE] Applying T10 tolerations (10)
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[MODE] Deployment template verified: T10
+[MODE] VERIFIED T10: Ready Pod and tolerations correct
+[BACKEND RESET] Current nodeSelector: <none>
+[BACKEND RESET] Temporarily pinning backend to k3s-worker1
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] Removing temporary hostname selector; retaining required worker affinity
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] READY: backend on k3s-worker1, no hostname pin, clinical health OK
+[MODE] T10 tolerations already configured; no rollout needed
+[MODE] Deployment template verified: T10
+[MODE] VERIFIED T10: Ready Pod and tolerations correct
+[2026-10-12T21:07:23Z] START mild/T10/003
+[FAULT ORCHESTRATOR] action=show
+[FAULT ORCHESTRATOR] remote=ubuntu@102.34.160.87
+[FAULT ORCHESTRATOR] timeout=30s
+[FAULT ORCHESTRATOR] action completed successfully
+[2026-10-12T21:07:43.799469779Z] Fault active: scenario-e T10
+[2026-10-12T21:09:43.928407749Z] Clearing fault: FIXED_DURATION
+[FAULT ORCHESTRATOR] action=show
+[FAULT ORCHESTRATOR] remote=ubuntu@102.34.160.87
+[FAULT ORCHESTRATOR] timeout=30s
+[FAULT ORCHESTRATOR] action completed successfully
+[2026-10-12T21:09:45.979837536Z] Fault cleared and verified: FIXED_DURATION
+[2026-10-12T21:10:16.009673943Z] Scenario E clinical health stable for 30s after clearance
+[2026-10-12T21:10:16.011776789Z] Scenario E observation outcome: NO_OBSERVED_CLINICAL_OUTAGE
+[2026-10-12T21:10:16.906861212Z] Observation completed; readiness and clinical results recorded
+[FAULT ORCHESTRATOR] action=show
+[FAULT ORCHESTRATOR] remote=ubuntu@102.34.160.87
+[FAULT ORCHESTRATOR] timeout=30s
+[FAULT ORCHESTRATOR] action completed successfully
+[2026-10-12T21:10:18.414872541Z] Results: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/scenario-e/mild/T10/run-003 (exit=0)
+[2026-10-12T21:10:18Z] COMPLETE mild/T10/003
+[2026-10-12T21:11:20Z] ==============================================
+[2026-10-12T21:11:20Z] PREPARING moderate/T10/003
+[2026-10-12T21:11:20Z] ==============================================
+[MODE] T10 tolerations already configured; no rollout needed
+[MODE] Deployment template verified: T10
+[MODE] VERIFIED T10: Ready Pod and tolerations correct
+[BACKEND RESET] Current nodeSelector: <none>
+[BACKEND RESET] Temporarily pinning backend to k3s-worker1
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] Removing temporary hostname selector; retaining required worker affinity
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] READY: backend on k3s-worker1, no hostname pin, clinical health OK
+[MODE] T10 tolerations already configured; no rollout needed
+[MODE] Deployment template verified: T10
+[MODE] VERIFIED T10: Ready Pod and tolerations correct
+[2026-10-12T21:29:22Z] START moderate/T10/003
+[FAULT ORCHESTRATOR] action=show
+[FAULT ORCHESTRATOR] remote=ubuntu@102.34.160.87
+[FAULT ORCHESTRATOR] timeout=30s
+[FAULT ORCHESTRATOR] action completed successfully
+[2026-10-12T21:29:42.166909972Z] Fault active: scenario-e T10
+[2026-10-12T21:31:43.938783705Z] Clearing fault: FIXED_DURATION
+[FAULT ORCHESTRATOR] action=show
+[FAULT ORCHESTRATOR] remote=ubuntu@102.34.160.87
+[FAULT ORCHESTRATOR] timeout=30s
+[FAULT ORCHESTRATOR] action completed successfully
+[2026-10-12T21:31:45.678277426Z] Fault cleared and verified: FIXED_DURATION
+[2026-10-12T21:32:15.946898940Z] Scenario E clinical health stable for 30s after clearance
+[2026-10-12T21:32:15.949609537Z] Scenario E observation outcome: NO_OBSERVED_CLINICAL_OUTAGE
+[2026-10-12T21:32:16.630661569Z] Observation completed; readiness and clinical results recorded
+[FAULT ORCHESTRATOR] action=show
+[FAULT ORCHESTRATOR] remote=ubuntu@102.34.160.87
+[FAULT ORCHESTRATOR] timeout=30s
+[FAULT ORCHESTRATOR] action completed successfully
+[2026-10-12T21:32:18.001257320Z] Results: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/scenario-e/moderate/T10/run-003 (exit=0)
+[2026-10-12T21:32:18Z] COMPLETE moderate/T10/003
+[2026-10-12T21:33:19Z] ==============================================
+[2026-10-12T21:33:19Z] PREPARING severe/T10/003
+[2026-10-12T21:33:19Z] ==============================================
+[MODE] T10 tolerations already configured; no rollout needed
+[MODE] Deployment template verified: T10
+[MODE] VERIFIED T10: Ready Pod and tolerations correct
+[BACKEND RESET] Current nodeSelector: <none>
+[BACKEND RESET] Temporarily pinning backend to k3s-worker1
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] Removing temporary hostname selector; retaining required worker affinity
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] READY: backend on k3s-worker1, no hostname pin, clinical health OK
+[MODE] T10 tolerations already configured; no rollout needed
+[MODE] Deployment template verified: T10
+[MODE] VERIFIED T10: Ready Pod and tolerations correct
+[2026-10-12T21:51:08Z] START severe/T10/003
+[FAULT ORCHESTRATOR] action=show
+[FAULT ORCHESTRATOR] remote=ubuntu@102.34.160.87
+[FAULT ORCHESTRATOR] timeout=30s
+[FAULT ORCHESTRATOR] action completed successfully
+[2026-10-12T21:51:41.828997273Z] ERROR: Fault injection failed
+[2026-10-12T21:51:41.830373478Z] Emergency fault cleanup
+[FAULT ORCHESTRATOR] action=show
+[FAULT ORCHESTRATOR] remote=ubuntu@102.34.160.87
+[FAULT ORCHESTRATOR] timeout=30s
+[FAULT ORCHESTRATOR] action completed successfully
+[2026-10-12T21:51:43.450605669Z] Results: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/scenario-e/severe/T10/run-003 (exit=1)
+[2026-10-12T21:51:43Z] ERROR: Run failed: severe/T10/003 (exit=1)

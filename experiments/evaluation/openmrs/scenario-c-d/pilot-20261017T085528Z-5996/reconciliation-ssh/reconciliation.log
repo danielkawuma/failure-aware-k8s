@@ -1,0 +1,11 @@
+[RECONCILE] 2026-10-17T09:30:15Z Original=k3s-worker3 Candidate=k3s-worker2
+SQL_VERIFIED: authenticated query and core tables present
+[RECONCILE] 2026-10-17T09:30:19Z Pre-reconciliation checks passed
+node/k3s-worker3 cordoned
+[RECONCILE] 2026-10-17T09:30:19Z Original worker cordoned
+[RECONCILE] 2026-10-17T09:30:20Z Original boot ID: 362d56d4-be93-4646-bccc-b39216a05f2a
+[RECONCILE] 2026-10-17T09:30:21Z Initiating SSH reboot
+[RECONCILE] 2026-10-17T09:38:11Z REBOOT_VERIFIED old=362d56d4-be93-4646-bccc-b39216a05f2a new=9e4688ff-31d0-4b5d-8fb1-eb997ed15356
+W1017 09:38:12.321000    1010 logging.go:55] [core] [Channel #1 SubChannel #2] grpc: addrConn.createTransport failed to connect to {Addr: "/run/k3s/containerd/containerd.sock", ServerName: "localhost", }. Err: connection error: desc = "transport: Error while dialing: dial unix /run/k3s/containerd/containerd.sock: connect: no such file or directory"
+time="2026-10-17T09:38:12Z" level=fatal msg="validate service connection: validate CRI v1 runtime API for endpoint \"unix:///run/k3s/containerd/containerd.sock\": rpc error: code = Unavailable desc = connection error: desc = \"transport: Error while dialing: dial unix /run/k3s/containerd/containerd.sock: connect: no such file or directory\""
+[RECONCILE] 2026-10-17T09:38:12Z BLOCKED: Old writer or container remains after reboot

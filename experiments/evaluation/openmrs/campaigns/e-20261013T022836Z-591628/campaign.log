@@ -1,0 +1,113 @@
+[2026-10-13T02:28:36Z] Generating Scenario E campaign plan
+[2026-10-13T02:28:36Z] Scenario E plan: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/e-20261013T022836Z-591628/plan.csv
+[2026-10-13T02:28:36Z] Planned experiments: 2
+[2026-10-13T02:28:36Z] ==============================================
+[2026-10-13T02:28:36Z] PREPARING moderate/V0/003
+[2026-10-13T02:28:36Z] ==============================================
+[MODE] Applying V0 tolerations (300)
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[MODE] Deployment template verified: V0
+[MODE] VERIFIED V0: Ready Pod and tolerations correct
+[BACKEND RESET] Current nodeSelector: <none>
+[BACKEND RESET] Temporarily pinning backend to k3s-worker1
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] Removing temporary hostname selector; retaining required worker affinity
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] READY: backend on k3s-worker1, no hostname pin, clinical health OK
+[MODE] V0 tolerations already configured; no rollout needed
+[MODE] Deployment template verified: V0
+[MODE] VERIFIED V0: Ready Pod and tolerations correct
+[2026-10-13T02:55:05Z] START moderate/V0/003
+[FAULT ORCHESTRATOR] action=show
+[FAULT ORCHESTRATOR] remote=ubuntu@102.34.160.87
+[FAULT ORCHESTRATOR] timeout=30s
+[FAULT ORCHESTRATOR] action completed successfully
+[2026-10-13T02:55:24.834206998Z] Fault active: scenario-e V0
+[2026-10-13T02:57:25.971723562Z] Clearing fault: FIXED_DURATION
+[FAULT ORCHESTRATOR] action=show
+[FAULT ORCHESTRATOR] remote=ubuntu@102.34.160.87
+[FAULT ORCHESTRATOR] timeout=30s
+[FAULT ORCHESTRATOR] action completed successfully
+[2026-10-13T02:57:27.674578784Z] Fault cleared and verified: FIXED_DURATION
+[2026-10-13T02:57:58.987457003Z] Scenario E clinical health stable for 30s after clearance
+[2026-10-13T02:57:58.989802516Z] Scenario E observation outcome: NO_OBSERVED_CLINICAL_OUTAGE
+[2026-10-13T02:57:59.440042568Z] Observation completed; readiness and clinical results recorded
+[FAULT ORCHESTRATOR] action=show
+[FAULT ORCHESTRATOR] remote=ubuntu@102.34.160.87
+[FAULT ORCHESTRATOR] timeout=30s
+[FAULT ORCHESTRATOR] action completed successfully
+[2026-10-13T02:58:00.636335279Z] Results: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/scenario-e/moderate/V0/run-003 (exit=0)
+[2026-10-13T02:58:01Z] COMPLETE moderate/V0/003
+[2026-10-13T02:59:02Z] ==============================================
+[2026-10-13T02:59:02Z] PREPARING moderate/FA1/003
+[2026-10-13T02:59:02Z] ==============================================
+[MODE] Applying FA1 tolerations (indefinite)
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+W1013 06:06:51.495200  606346 reflector.go:492] k8s.io/client-go/tools/watch/informerwatcher.go:146: watch of *unstructured.Unstructured ended with: an error on the server ("unable to decode an event from the watch stream: http2: client connection lost") has prevented the request from succeeding
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[MODE] Deployment template verified: FA1
+[MODE] VERIFIED FA1: Ready Pod and tolerations correct
+[BACKEND RESET] Current nodeSelector: <none>
+[BACKEND RESET] Temporarily pinning backend to k3s-worker1
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] Removing temporary hostname selector; retaining required worker affinity
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] READY: backend on k3s-worker1, no hostname pin, clinical health OK
+[MODE] FA1 tolerations already configured; no rollout needed
+[MODE] Deployment template verified: FA1
+[MODE] VERIFIED FA1: Ready Pod and tolerations correct
+[2026-10-13T03:25:49Z] START moderate/FA1/003
+[FAULT ORCHESTRATOR] action=show
+[FAULT ORCHESTRATOR] remote=ubuntu@102.34.160.87
+[FAULT ORCHESTRATOR] timeout=30s
+[FAULT ORCHESTRATOR] action completed successfully
+[2026-10-13T03:26:13.988599346Z] Fault active: scenario-e FA1
+[2026-10-13T03:28:16.706361958Z] Clearing fault: FIXED_DURATION
+[FAULT ORCHESTRATOR] action=show
+[FAULT ORCHESTRATOR] remote=ubuntu@102.34.160.87
+[FAULT ORCHESTRATOR] timeout=30s
+[FAULT ORCHESTRATOR] action completed successfully
+[2026-10-13T03:28:20.034882011Z] Fault cleared and verified: FIXED_DURATION
+[2026-10-13T03:28:53.393052138Z] Scenario E clinical health stable for 30s after clearance
+[2026-10-13T03:28:53.396182033Z] Scenario E observation outcome: NO_OBSERVED_CLINICAL_OUTAGE
+[2026-10-13T03:28:56.189519307Z] Observation completed; readiness and clinical results recorded
+[FAULT ORCHESTRATOR] action=show
+[FAULT ORCHESTRATOR] remote=ubuntu@102.34.160.87
+[FAULT ORCHESTRATOR] timeout=30s
+[FAULT ORCHESTRATOR] action completed successfully
+[2026-10-13T03:28:59.385445073Z] Results: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/scenario-e/moderate/FA1/run-003 (exit=0)
+[2026-10-13T03:29:00Z] COMPLETE moderate/FA1/003
+[2026-10-13T03:30:00Z] ==============================================
+[2026-10-13T03:30:00Z] FINAL SCENARIO E COMPLETION AUDIT
+[2026-10-13T03:30:00Z] ==============================================
+[2026-10-13T03:30:00Z] Planned: 2
+[2026-10-13T03:30:00Z] Audited: 2
+[2026-10-13T03:30:00Z] Completed: 2
+[2026-10-13T03:30:00Z] Missing/incomplete: 0
+[2026-10-13T03:30:02Z] ==============================================
+[2026-10-13T03:30:02Z] SCENARIO E VERIFIED COMPLETE
+[2026-10-13T03:30:02Z] ==============================================
+[2026-10-13T03:30:02Z] Campaign observations complete: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/e-20261013T022836Z-591628
+[2026-10-13T03:30:02Z] Campaign plan: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/e-20261013T022836Z-591628/plan.csv
+[2026-10-13T03:30:02Z] Campaign summary: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/e-20261013T022836Z-591628/summary.csv

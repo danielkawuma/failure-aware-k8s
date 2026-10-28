@@ -1,0 +1,32 @@
+Starting Failure-Aware Controller
+Target node: k3s-worker1
+Native suspicion trigger: Ready=Unknown
+Verification URL: ssh-pod://102.34.160.104/openmrs37/k3s-worker1/app=openmrs-backend
+Verification timeout: 3000 ms
+Verification attempts: 3
+Verification interval: 500 ms
+Workload: openmrs-backend
+Workload type: Stateless
+Duplication sensitive: false
+Namespace: openmrs37
+Pod label selector: app=openmrs-backend
+Recovery candidate: k3s-worker2
+Required recovery CPU: 300m
+Required recovery memory: 512 MiB
+Required recovery node labels: {"failure-aware.io/role": "recovery-candidate"}
+Kubernetes API timeout: 3000 ms
+Resource evaluation timeout: 10000 ms
+Enforcement timeout: 15000 ms
+Fencing timeout: 30000 ms
+Fencing supported: false
+Fencing command configured: false
+[HISTORY] Runtime history file: /home/daniel/failure-aware-k8s/controller/config/node-history-runtime.json
+Connected to Kubernetes API
+[HISTORY] Background collection task started
+[LISTENER] Watching node=k3s-worker1 for Ready=Unknown
+[HISTORY] Dynamic node-history collector started
+[LISTENER] Initializing node watch
+[INITIAL STATE] node=k3s-worker1 | Ready=Some("True")
+[LISTENER] Initial node state synchronized
+[HISTORY] 2026-10-13T03:48:16.127598129+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-13T03:48:46.318581549+00:00 | nodes=5 | history_updated=true

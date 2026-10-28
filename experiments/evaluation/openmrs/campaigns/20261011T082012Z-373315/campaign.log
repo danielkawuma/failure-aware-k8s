@@ -1,0 +1,31 @@
+Campaign plan: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/20261011T082012Z-373315/plan.csv
+SKIP completed: scenario-b/T5/003
+PREPARING scenario-b/FA1/003
+[MODE] Applying FA1 (300 seconds) to openmrs37/openmrs-backend
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[MODE] VERIFIED FA1: effective backend tolerations 300s
+[BACKEND RESET] Current nodeSelector: <none>
+[BACKEND RESET] Temporarily pinning backend to k3s-worker1
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] Removing temporary hostname selector; retaining required worker affinity
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] READY: backend on k3s-worker1, no hostname pin, clinical health OK
+[MODE] FA1 tolerations already configured; no rollout needed
+[MODE] VERIFIED FA1: effective backend tolerations 300s
+[2026-10-11T08:47:00.164438071Z] OpenMRS experiment: scenario-b / FA1 / 003
+[2026-10-11T08:47:01.906044521Z] Original Pod: openmrs-backend-7bd876ddcf-gqt4w
+[2026-10-11T08:47:01.907484767Z] Original Node: k3s-worker1
+[2026-10-11T08:47:02.279782132Z] Baseline observation: 15s
+[2026-10-11T08:47:17.285698342Z] Injecting scenario-b fault
+[2026-10-11T08:47:18.454842225Z] Observing partition for 120s
+[2026-10-11T08:49:20.900945800Z] Post-fault observation: 15s
+[2026-10-11T08:49:37.285067313Z] Experiment observation completed
+[2026-10-11T08:49:38.706699202Z] RUN COMPLETE: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/scenario-b/FA1/run-003
+Campaign observations complete: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/20261011T082012Z-373315

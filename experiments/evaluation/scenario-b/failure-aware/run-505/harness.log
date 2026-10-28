@@ -1,0 +1,316 @@
+Starting harness for scenario: scenario-b
+Target node: k3s-worker1
+Namespace: failure-aware
+Pod label selector: app=baseline-web
+Service targets:
+  k3s-worker1 -> http://102.34.160.87:30364
+  k3s-worker2 -> http://102.34.160.103:30364
+Run ID: run-20261018T123540Z
+Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline/scenario-b/runs/run-20261018T123540Z
+[EVENT] 2026-10-18T12:35:40.445527482+00:00 | type=Normal | reason=NodeHasSufficientMemory | object=Node/k3s-worker1 | message=Node k3s-worker1 status is now: NodeHasSufficientMemory
+[NODE] 2026-10-18T12:35:40.418026350+00:00 | k3s-worker1 | Ready=True
+[EVENT] 2026-10-18T12:35:40.445527482+00:00 | type=Normal | reason=NodeHasNoDiskPressure | object=Node/k3s-worker1 | message=Node k3s-worker1 status is now: NodeHasNoDiskPressure
+[EVENT] 2026-10-18T12:35:40.445527482+00:00 | type=Normal | reason=NodeHasSufficientPID | object=Node/k3s-worker1 | message=Node k3s-worker1 status is now: NodeHasSufficientPID
+[EVENT] 2026-10-18T12:35:40.445527482+00:00 | type=Normal | reason=NodeReady | object=Node/k3s-worker1 | message=Node k3s-worker1 status is now: NodeReady
+[EVENT] 2026-10-18T12:35:40.445527482+00:00 | type=Normal | reason=NodeNotReady | object=Node/k3s-worker1 | message=Node k3s-worker1 status is now: NodeNotReady
+[TAINT] 2026-10-18T12:35:40.465190607+00:00 | k3s-worker1 | taints=<none>
+[LEASE] 2026-10-18T12:35:40.418523839+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:38.331223Z
+[POD] 2026-10-18T12:35:40.465499986+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[HTTP] 2026-10-18T12:35:41.061981625+00:00 | node=k3s-worker1 | status=200 | latency=84.024ms | success=true | placement=KNOWN | placement_error= | error=
+[NODE] 2026-10-18T12:35:44.315716663+00:00 | k3s-worker1 | Ready=True
+[TAINT] 2026-10-18T12:35:44.315378783+00:00 | k3s-worker1 | taints=<none>
+[LEASE] 2026-10-18T12:35:44.361371731+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:38.331223Z
+[POD] 2026-10-18T12:35:47.044591719+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[HTTP] 2026-10-18T12:35:47.044446314+00:00 | node=k3s-worker1 | status=200 | latency=20.241ms | success=true | placement=KNOWN | placement_error= | error=
+[NODE] 2026-10-18T12:35:48.045692742+00:00 | k3s-worker1 | Ready=True
+[LEASE] 2026-10-18T12:35:49.286266950+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[TAINT] 2026-10-18T12:35:49.286518936+00:00 | k3s-worker1 | taints=<none>
+[POD] 2026-10-18T12:35:50.287544291+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[HTTP] 2026-10-18T12:35:51.066121741+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[NODE] 2026-10-18T12:35:52.067636414+00:00 | k3s-worker1 | Ready=True
+[LEASE] 2026-10-18T12:35:53.703677732+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[TAINT] 2026-10-18T12:35:53.704119567+00:00 | k3s-worker1 | taints=<none>
+[POD] 2026-10-18T12:35:54.704712578+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[HTTP] 2026-10-18T12:35:55.239818268+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[NODE] 2026-10-18T12:35:56.241969802+00:00 | k3s-worker1 | Ready=True
+[HTTP] 2026-10-18T12:35:59.819014269+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[LEASE] 2026-10-18T12:35:57.099891361+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[TAINT] 2026-10-18T12:35:58.817023230+00:00 | k3s-worker1 | taints=<none>
+[POD] 2026-10-18T12:35:59.819080693+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[HTTP] 2026-10-18T12:36:02.254777228+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[NODE] 2026-10-18T12:36:01.429743065+00:00 | k3s-worker1 | Ready=True
+[HTTP] 2026-10-18T12:36:06.972465496+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[TAINT] 2026-10-18T12:36:05.970804043+00:00 | k3s-worker1 | taints=<none>
+[POD] 2026-10-18T12:36:06.972634881+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[LEASE] 2026-10-18T12:36:03.312236184+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[NODE] 2026-10-18T12:36:09.993521685+00:00 | k3s-worker1 | Ready=True
+[HTTP] 2026-10-18T12:36:10.977784026+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[TAINT] 2026-10-18T12:36:11.939527081+00:00 | k3s-worker1 | taints=<none>
+[HTTP] 2026-10-18T12:36:15.093749048+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[POD] 2026-10-18T12:36:14.048209828+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[NODE] 2026-10-18T12:36:15.094195544+00:00 | k3s-worker1 | Ready=True
+[HTTP] 2026-10-18T12:36:20.842873482+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[LEASE] 2026-10-18T12:36:14.048370395+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[POD] 2026-10-18T12:36:21.844139242+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-10-18T12:36:19.959474540+00:00 | k3s-worker1 | taints=<none>
+[NODE] 2026-10-18T12:36:24.830572824+00:00 | k3s-worker1 | Ready=True
+[LEASE] 2026-10-18T12:36:27.923244477+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[HTTP] 2026-10-18T12:36:26.920216442+00:00 | node=k3s-worker1 | status=200 | latency=68.383ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-10-18T12:36:29.320674066+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-10-18T12:36:30.382914348+00:00 | k3s-worker1 | taints=<none>
+[LEASE] 2026-10-18T12:36:31.384699191+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[NODE] 2026-10-18T12:36:30.382665287+00:00 | k3s-worker1 | Ready=True
+[HTTP] 2026-10-18T12:36:31.881241439+00:00 | node=k3s-worker1 | status=200 | latency=24.910ms | success=true | placement=KNOWN | placement_error= | error=
+[TAINT] 2026-10-18T12:36:32.570103178+00:00 | k3s-worker1 | taints=<none>
+[POD] 2026-10-18T12:36:33.131278997+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[LEASE] 2026-10-18T12:36:33.077833231+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[NODE] 2026-10-18T12:36:34.424827497+00:00 | k3s-worker1 | Ready=True
+[HTTP] 2026-10-18T12:36:36.297400561+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[LEASE] 2026-10-18T12:36:38.784874827+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[POD] 2026-10-18T12:36:38.785082468+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-10-18T12:36:37.299074793+00:00 | k3s-worker1 | taints=<none>
+[NODE] 2026-10-18T12:36:39.787452098+00:00 | k3s-worker1 | Ready=Unknown
+[HTTP] 2026-10-18T12:36:42.080151054+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[EVENT] 2026-10-18T12:36:42.079912140+00:00 | type=Normal | reason=NodeNotReady | object=Node/k3s-worker1 | message=Node k3s-worker1 status is now: NodeNotReady
+[LEASE] 2026-10-18T12:36:43.082515259+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[POD] 2026-10-18T12:36:46.177848889+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[HTTP] 2026-10-18T12:36:47.178655954+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[TAINT] 2026-10-18T12:36:46.177973425+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[NODE] 2026-10-18T12:36:47.178705361+00:00 | k3s-worker1 | Ready=Unknown
+[LEASE] 2026-10-18T12:36:50.193374466+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[HTTP] 2026-10-18T12:36:51.951641277+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[POD] 2026-10-18T12:36:51.194224982+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-10-18T12:36:51.951556940+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[NODE] 2026-10-18T12:36:52.953291313+00:00 | k3s-worker1 | Ready=Unknown
+[LEASE] 2026-10-18T12:36:56.404654677+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[HTTP] 2026-10-18T12:36:56.404599883+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[POD] 2026-10-18T12:36:56.746082437+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-10-18T12:36:57.474814787+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[NODE] 2026-10-18T12:36:58.544351897+00:00 | k3s-worker1 | Ready=Unknown
+[LEASE] 2026-10-18T12:37:00.667290854+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[HTTP] 2026-10-18T12:37:00.667187030+00:00 | node=k3s-worker1 | status=200 | latency=18.665ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-10-18T12:37:01.434694624+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-10-18T12:37:02.317929252+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[NODE] 2026-10-18T12:37:03.038204694+00:00 | k3s-worker1 | Ready=Unknown
+[HTTP] 2026-10-18T12:37:04.234913453+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[LEASE] 2026-10-18T12:37:03.238909623+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[TAINT] 2026-10-18T12:37:05.237186702+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[POD] 2026-10-18T12:37:04.234573957+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[NODE] 2026-10-18T12:37:07.931608619+00:00 | k3s-worker1 | Ready=Unknown
+[HTTP] 2026-10-18T12:37:08.693870416+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[LEASE] 2026-10-18T12:37:09.696209033+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[TAINT] 2026-10-18T12:37:11.292308268+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[POD] 2026-10-18T12:37:12.293046816+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[NODE] 2026-10-18T12:37:13.147324099+00:00 | k3s-worker1 | Ready=Unknown
+[HTTP] 2026-10-18T12:37:13.715982712+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[LEASE] 2026-10-18T12:37:14.745434358+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[TAINT] 2026-10-18T12:37:15.747596639+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[POD] 2026-10-18T12:37:16.749446446+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[NODE] 2026-10-18T12:37:17.635436697+00:00 | k3s-worker1 | Ready=Unknown
+[HTTP] 2026-10-18T12:37:18.688128259+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[LEASE] 2026-10-18T12:37:18.687065515+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[TAINT] 2026-10-18T12:37:19.688117291+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[POD] 2026-10-18T12:37:22.490183609+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[NODE] 2026-10-18T12:37:23.491028049+00:00 | k3s-worker1 | Ready=Unknown
+[LEASE] 2026-10-18T12:37:24.287603814+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[TAINT] 2026-10-18T12:37:25.288944885+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[HTTP] 2026-10-18T12:37:24.287740338+00:00 | node=k3s-worker1 | status=200 | latency=26.989ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-10-18T12:37:26.224071883+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[LEASE] 2026-10-18T12:37:27.700245024+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[NODE] 2026-10-18T12:37:27.700839654+00:00 | k3s-worker1 | Ready=Unknown
+[TAINT] 2026-10-18T12:37:28.702480822+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[HTTP] 2026-10-18T12:37:29.117742118+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[POD] 2026-10-18T12:37:29.165047706+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[LEASE] 2026-10-18T12:37:31.944606238+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[NODE] 2026-10-18T12:37:32.429281396+00:00 | k3s-worker1 | Ready=Unknown
+[TAINT] 2026-10-18T12:37:32.970469373+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[POD] 2026-10-18T12:37:33.524507517+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[HTTP] 2026-10-18T12:37:33.481334722+00:00 | node=k3s-worker1 | status=200 | latency=19.298ms | success=true | placement=KNOWN | placement_error= | error=
+[LEASE] 2026-10-18T12:37:33.514893776+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[NODE] 2026-10-18T12:37:33.847270251+00:00 | k3s-worker1 | Ready=Unknown
+[TAINT] 2026-10-18T12:37:34.515798059+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[POD] 2026-10-18T12:37:35.374416739+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[HTTP] 2026-10-18T12:37:35.374256223+00:00 | node=k3s-worker1 | status=200 | latency=15.257ms | success=true | placement=KNOWN | placement_error= | error=
+[LEASE] 2026-10-18T12:37:36.886688759+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[NODE] 2026-10-18T12:37:38.053903245+00:00 | k3s-worker1 | Ready=Unknown
+[TAINT] 2026-10-18T12:37:38.053259090+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[POD] 2026-10-18T12:37:39.055490725+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[LEASE] 2026-10-18T12:37:40.019480911+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[HTTP] 2026-10-18T12:37:39.832902860+00:00 | node=k3s-worker1 | status=200 | latency=35.061ms | success=true | placement=KNOWN | placement_error= | error=
+[NODE] 2026-10-18T12:37:40.833925758+00:00 | k3s-worker1 | Ready=Unknown
+[TAINT] 2026-10-18T12:37:41.537048470+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[POD] 2026-10-18T12:37:42.539559485+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[LEASE] 2026-10-18T12:37:43.435066451+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[HTTP] 2026-10-18T12:37:43.435155422+00:00 | node=k3s-worker1 | status=200 | latency=20.351ms | success=true | placement=KNOWN | placement_error= | error=
+[NODE] 2026-10-18T12:37:44.436024506+00:00 | k3s-worker1 | Ready=Unknown
+[TAINT] 2026-10-18T12:37:45.479383967+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[LEASE] 2026-10-18T12:37:46.937328392+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[POD] 2026-10-18T12:37:46.481171261+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[HTTP] 2026-10-18T12:37:46.937110237+00:00 | node=k3s-worker1 | status=200 | latency=23.525ms | success=true | placement=KNOWN | placement_error= | error=
+[NODE] 2026-10-18T12:37:48.315226159+00:00 | k3s-worker1 | Ready=Unknown
+[TAINT] 2026-10-18T12:37:49.316098966+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[POD] 2026-10-18T12:37:51.602660322+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[LEASE] 2026-10-18T12:37:51.602521262+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[NODE] 2026-10-18T12:37:52.603512796+00:00 | k3s-worker1 | Ready=Unknown
+[HTTP] 2026-10-18T12:37:51.602415868+00:00 | node=k3s-worker1 | status=200 | latency=9.510ms | success=true | placement=KNOWN | placement_error= | error=
+[TAINT] 2026-10-18T12:37:53.439161814+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[LEASE] 2026-10-18T12:37:55.172384276+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[POD] 2026-10-18T12:37:55.081129851+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[NODE] 2026-10-18T12:37:56.081888438+00:00 | k3s-worker1 | Ready=Unknown
+[HTTP] 2026-10-18T12:37:57.078592409+00:00 | node=k3s-worker1 | status=200 | latency=11.521ms | success=true | placement=KNOWN | placement_error= | error=
+[TAINT] 2026-10-18T12:37:57.078532505+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[POD] 2026-10-18T12:37:58.816883699+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[LEASE] 2026-10-18T12:37:58.816996696+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[HTTP] 2026-10-18T12:38:00.174825656+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[NODE] 2026-10-18T12:37:59.818386847+00:00 | k3s-worker1 | Ready=Unknown
+[TAINT] 2026-10-18T12:38:00.895764668+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[LEASE] 2026-10-18T12:38:04.910938561+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[POD] 2026-10-18T12:38:03.630899393+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[HTTP] 2026-10-18T12:38:04.911153602+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[NODE] 2026-10-18T12:38:04.910660091+00:00 | k3s-worker1 | Ready=Unknown
+[TAINT] 2026-10-18T12:38:05.913435976+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[LEASE] 2026-10-18T12:38:07.942942341+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[HTTP] 2026-10-18T12:38:08.927605229+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[POD] 2026-10-18T12:38:08.487993328+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[NODE] 2026-10-18T12:38:09.488901163+00:00 | k3s-worker1 | Ready=Unknown
+[TAINT] 2026-10-18T12:38:09.920448743+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[LEASE] 2026-10-18T12:38:14.420016010+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[POD] 2026-10-18T12:38:15.368163929+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-10-18T12:38:18.221944732+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[HTTP] 2026-10-18T12:38:15.315486767+00:00 | node=k3s-worker1 | status=200 | latency=647.982ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-10-18T12:38:19.233677872+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[LEASE] 2026-10-18T12:38:19.234210662+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[HTTP] 2026-10-18T12:38:25.055097244+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[NODE] 2026-10-18T12:38:16.680448303+00:00 | k3s-worker1 | Ready=Unknown
+[POD] 2026-10-18T12:38:26.056102607+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-10-18T12:38:25.055752952+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[LEASE] 2026-10-18T12:38:33.825985188+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[HTTP] 2026-10-18T12:38:33.825914711+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[POD] 2026-10-18T12:38:35.361051918+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-10-18T12:38:35.428280628+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[HTTP] 2026-10-18T12:38:38.610895534+00:00 | node=k3s-worker1 | status=200 | latency=10.031ms | success=true | placement=KNOWN | placement_error= | error=
+[NODE] 2026-10-18T12:38:34.741539791+00:00 | k3s-worker1 | Ready=Unknown
+[LEASE] 2026-10-18T12:38:36.429260891+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[POD] 2026-10-18T12:38:39.611306072+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-10-18T12:38:40.904205707+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[HTTP] 2026-10-18T12:38:43.481565082+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[NODE] 2026-10-18T12:38:44.483181853+00:00 | k3s-worker1 | Ready=Unknown
+[LEASE] 2026-10-18T12:38:45.319639388+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[POD] 2026-10-18T12:38:45.860132121+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-10-18T12:38:46.862326852+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[NODE] 2026-10-18T12:38:48.924863751+00:00 | k3s-worker1 | Ready=Unknown
+[HTTP] 2026-10-18T12:38:47.924013346+00:00 | node=k3s-worker1 | status=200 | latency=8.945ms | success=true | placement=KNOWN | placement_error= | error=
+[LEASE] 2026-10-18T12:38:49.805667883+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[POD] 2026-10-18T12:38:50.672529522+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[NODE] 2026-10-18T12:38:52.984213335+00:00 | k3s-worker1 | Ready=Unknown
+[LEASE] 2026-10-18T12:38:53.698589309+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[HTTP] 2026-10-18T12:38:53.698953747+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[NODE] 2026-10-18T12:38:56.438919942+00:00 | k3s-worker1 | Ready=Unknown
+[LEASE] 2026-10-18T12:38:56.796435248+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[TAINT] 2026-10-18T12:38:51.981562174+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[HTTP] 2026-10-18T12:38:58.345961312+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[NODE] 2026-10-18T12:38:59.347137510+00:00 | k3s-worker1 | Ready=Unknown
+[LEASE] 2026-10-18T12:39:00.407129883+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[POD] 2026-10-18T12:38:53.775782697+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-10-18T12:39:02.280935741+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[LEASE] 2026-10-18T12:39:04.633499329+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[HTTP] 2026-10-18T12:39:02.826121002+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[NODE] 2026-10-18T12:39:03.215001132+00:00 | k3s-worker1 | Ready=Unknown
+[POD] 2026-10-18T12:39:05.634197789+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-10-18T12:39:07.542757586+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[LEASE] 2026-10-18T12:39:08.545450051+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[HTTP] 2026-10-18T12:39:08.545162598+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[NODE] 2026-10-18T12:39:09.034435313+00:00 | k3s-worker1 | Ready=Unknown
+[TAINT] 2026-10-18T12:39:13.104501824+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[HTTP] 2026-10-18T12:39:14.105902514+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[POD] 2026-10-18T12:39:11.355669643+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[LEASE] 2026-10-18T12:39:14.105972519+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[NODE] 2026-10-18T12:39:15.353640355+00:00 | k3s-worker1 | Ready=Unknown
+[HTTP] 2026-10-18T12:39:19.424022561+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[POD] 2026-10-18T12:39:19.942398286+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-10-18T12:39:19.423515941+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[LEASE] 2026-10-18T12:39:23.605086857+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[HTTP] 2026-10-18T12:39:24.607545949+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[NODE] 2026-10-18T12:39:24.607717096+00:00 | k3s-worker1 | Ready=Unknown
+[HTTP] 2026-10-18T12:39:29.062180861+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[TAINT] 2026-10-18T12:39:28.053662667+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[LEASE] 2026-10-18T12:39:29.062200985+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[NODE] 2026-10-18T12:39:41.356996132+00:00 | k3s-worker1 | Ready=Unknown
+[HTTP] 2026-10-18T12:39:42.430515426+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[POD] 2026-10-18T12:39:27.346364490+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[LEASE] 2026-10-18T12:39:46.325638635+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[HTTP] 2026-10-18T12:39:47.927093310+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[HTTP] 2026-10-18T12:39:51.996614657+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[TAINT] 2026-10-18T12:39:44.554101445+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[POD] 2026-10-18T12:39:50.995061226+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-10-18T12:39:56.674140647+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[HTTP] 2026-10-18T12:39:56.001254174+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[LEASE] 2026-10-18T12:39:51.996752228+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[POD] 2026-10-18T12:39:57.882516131+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-10-18T12:40:08.453253539+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[HTTP] 2026-10-18T12:40:09.025929839+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[NODE] 2026-10-18T12:39:47.927349254+00:00 | k3s-worker1 | Ready=Unknown
+[LEASE] 2026-10-18T12:40:09.025785339+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[POD] 2026-10-18T12:40:10.118822102+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[HTTP] 2026-10-18T12:40:14.252390092+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[NODE] 2026-10-18T12:40:14.384596172+00:00 | k3s-worker1 | Ready=Unknown
+[HTTP] 2026-10-18T12:40:18.347787205+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[POD] 2026-10-18T12:40:18.348263611+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[LEASE] 2026-10-18T12:40:18.348472708+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[TAINT] 2026-10-18T12:40:14.252551755+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[HTTP] 2026-10-18T12:40:41.581544827+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[NODE] 2026-10-18T12:40:19.359650196+00:00 | k3s-worker1 | Ready=Unknown
+[LEASE] 2026-10-18T12:40:41.581293543+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[POD] 2026-10-18T12:40:41.581841279+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-10-18T12:40:44.853941908+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[HTTP] 2026-10-18T12:40:56.055049137+00:00 | node=k3s-worker1 | status=200 | latency=52.823ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-10-18T12:41:00.286870699+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[HTTP] 2026-10-18T12:41:01.498405208+00:00 | node=k3s-worker1 | status=200 | latency=19.917ms | success=true | placement=KNOWN | placement_error= | error=
+[NODE] 2026-10-18T12:40:57.057621415+00:00 | k3s-worker1 | Ready=Unknown
+[POD] 2026-10-18T12:41:03.592801415+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[LEASE] 2026-10-18T12:40:57.920033612+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[TAINT] 2026-10-18T12:41:01.295230082+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[LEASE] 2026-10-18T12:41:07.947782130+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[HTTP] 2026-10-18T12:41:05.673896489+00:00 | node=k3s-worker1 | status=200 | latency=10.893ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-10-18T12:41:06.674230666+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[NODE] 2026-10-18T12:41:05.673803863+00:00 | k3s-worker1 | Ready=Unknown
+[POD] 2026-10-18T12:41:15.715091815+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[HTTP] 2026-10-18T12:41:15.715313997+00:00 | node=k3s-worker1 | status=200 | latency=99.306ms | success=true | placement=KNOWN | placement_error= | error=
+[NODE] 2026-10-18T12:41:17.860986493+00:00 | k3s-worker1 | Ready=Unknown
+[TAINT] 2026-10-18T12:41:12.977466101+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[LEASE] 2026-10-18T12:41:13.978082689+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[HTTP] 2026-10-18T12:41:20.387088474+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[HTTP] 2026-10-18T12:41:24.795381765+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[NODE] 2026-10-18T12:41:23.793883824+00:00 | k3s-worker1 | Ready=Unknown
+[HTTP] 2026-10-18T12:41:33.665485833+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[LEASE] 2026-10-18T12:41:24.795557464+00:00 | k3s-worker1 | renewTime=2026-10-18T12:35:48.490068Z
+[POD] 2026-10-18T12:41:20.107922530+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-10-18T12:41:23.793935114+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoExecute;
+[EVENT] 2026-10-18T12:41:20.510663967+00:00 | type=Normal | reason=NodeHasSufficientMemory | object=Node/k3s-worker1 | message=Node k3s-worker1 status is now: NodeHasSufficientMemory
+[EVENT] 2026-10-18T12:41:20.510663967+00:00 | type=Normal | reason=NodeHasNoDiskPressure | object=Node/k3s-worker1 | message=Node k3s-worker1 status is now: NodeHasNoDiskPressure
+[EVENT] 2026-10-18T12:41:20.510663967+00:00 | type=Normal | reason=NodeHasSufficientPID | object=Node/k3s-worker1 | message=Node k3s-worker1 status is now: NodeHasSufficientPID
+[EVENT] 2026-10-18T12:41:20.510663967+00:00 | type=Normal | reason=NodeReady | object=Node/k3s-worker1 | message=Node k3s-worker1 status is now: NodeReady
+[NODE] 2026-10-18T12:41:37.557449217+00:00 | k3s-worker1 | Ready=True
+[HTTP] 2026-10-18T12:41:41.270209746+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[TAINT] 2026-10-18T12:41:41.269724652+00:00 | k3s-worker1 | taints=<none>
+[LEASE] 2026-10-18T12:41:41.269921926+00:00 | k3s-worker1 | renewTime=2026-10-18T12:41:40.118967Z
+[POD] 2026-10-18T12:41:41.270043980+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[HTTP] 2026-10-18T12:41:47.059755156+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[TAINT] 2026-10-18T12:41:47.059898212+00:00 | k3s-worker1 | taints=<none>
+[LEASE] 2026-10-18T12:41:47.059581519+00:00 | k3s-worker1 | renewTime=2026-10-18T12:41:50.351715Z
+[NODE] 2026-10-18T12:41:44.908189701+00:00 | k3s-worker1 | Ready=True
+[HTTP] 2026-10-18T12:41:51.209031608+00:00 | node=k3s-worker1 | status=200 | latency=48.217ms | success=true | placement=KNOWN | placement_error= | error=
+[TAINT] 2026-10-18T12:41:52.210066504+00:00 | k3s-worker1 | taints=<none>
+[POD] 2026-10-18T12:41:50.658327001+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[HTTP] 2026-10-18T12:41:59.594326023+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[NODE] 2026-10-18T12:41:57.114468901+00:00 | k3s-worker1 | Ready=True
+[LEASE] 2026-10-18T12:41:52.595319219+00:00 | k3s-worker1 | renewTime=2026-10-18T12:42:00.563850Z
+[LEASE] 2026-10-18T12:42:04.049036598+00:00 | k3s-worker1 | renewTime=2026-10-18T12:42:00.563850Z
+[HTTP] 2026-10-18T12:42:04.049170701+00:00 | node= | status=0 | latency=0.000ms | success=false | placement=UNKNOWN | placement_error=placement lookup failed: kubectl discovery timed out | error=placement lookup failed: kubectl discovery timed out
+[NODE] 2026-10-18T12:42:04.049478680+00:00 | k3s-worker1 | Ready=True
+
+Shutdown requested.
+Harness stopped. Results saved under:
+/home/daniel/failure-aware-k8s/harness/../experiments/baseline/scenario-b/runs/run-20261018T123540Z
+[POD] 2026-10-18T12:42:03.093085896+00:00 | baseline-web-75c79699bc-88x2c | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-10-18T12:41:59.594032572+00:00 | k3s-worker1 | taints=<none>

@@ -1,0 +1,39 @@
+Campaign plan: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/20261011T123044Z-594061/plan.csv
+SKIP completed: scenario-b/T5/003
+SKIP completed: scenario-b/V0/003
+SKIP completed: scenario-b/FA1/003
+SKIP completed: scenario-b/T10/003
+SKIP completed: scenario-b/T30/003
+PREPARING scenario-b/FA1/004
+[MODE] Applying FA1 (300 seconds) to openmrs37/openmrs-backend
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[MODE] VERIFIED FA1: effective backend tolerations 300s
+[BACKEND RESET] Current nodeSelector: <none>
+[BACKEND RESET] Temporarily pinning backend to k3s-worker1
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] Removing temporary hostname selector; retaining required worker affinity
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] READY: backend on k3s-worker1, no hostname pin, clinical health OK
+[MODE] FA1 tolerations already configured; no rollout needed
+[MODE] VERIFIED FA1: effective backend tolerations 300s
+[2026-10-11T12:57:44.954927603Z] OpenMRS experiment: scenario-b / FA1 / 004
+[2026-10-11T12:57:48.253853315Z] Original Pod: openmrs-backend-7bd876ddcf-x4h84
+[2026-10-11T12:57:48.256515606Z] Original Node: k3s-worker1
+[2026-10-11T12:57:48.917962388Z] Baseline observation: 15s
+[2026-10-11T12:58:03.925223030Z] Injecting scenario-b fault
+[2026-10-11T12:58:06.315807075Z] Observing partition for 900s
+[2026-10-11T13:13:08.450780160Z] Post-fault observation: 30s
+[2026-10-11T13:13:39.933155147Z] Experiment observation completed
+[2026-10-11T13:13:41.757413015Z] RUN COMPLETE: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/scenario-b/FA1/run-004
+Campaign observations complete: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/20261011T123044Z-594061

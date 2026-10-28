@@ -1,0 +1,53 @@
+Starting Failure-Aware Controller
+Target node: k3s-worker1
+Native suspicion trigger: Ready=Unknown
+Verification URL: http://102.34.160.87:30364
+Verification timeout: 3000 ms
+Verification attempts: 3
+Verification interval: 500 ms
+Workload: baseline-web
+Workload type: Stateless
+Duplication sensitive: false
+Namespace: failure-aware
+Pod label selector: app=baseline-web
+Recovery candidate: k3s-worker2
+Required recovery CPU: 100m
+Required recovery memory: 128 MiB
+Required recovery node labels: {"failure-aware.io/role": "recovery-candidate"}
+Kubernetes API timeout: 3000 ms
+Resource evaluation timeout: 10000 ms
+Enforcement timeout: 15000 ms
+Fencing timeout: 30000 ms
+Fencing supported: false
+Fencing command configured: false
+[HISTORY] Runtime history file: /home/daniel/failure-aware-k8s/controller/config/node-history-runtime.json
+Connected to Kubernetes API
+[HISTORY] Background collection task started
+[LISTENER] Watching node=k3s-worker1 for Ready=Unknown
+[LISTENER] Initializing node watch
+[HISTORY] Dynamic node-history collector started
+[INITIAL STATE] node=k3s-worker1 | Ready=Some("True")
+[LISTENER] Initial node state synchronized
+[HISTORY] 2026-10-14T13:46:56.653250639+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-14T13:47:26.851459948+00:00 | nodes=5 | history_updated=true
+[SUSPICION] 2026-10-14T13:47:52.790252321+00:00 | node=k3s-worker1 | Ready=Some("True") -> Unknown
+[VERIFY] attempt=1/3 | reachable=true | HTTP=Some(200) | latency=15.985 ms | error=None
+[VERIFY] attempt=2/3 | reachable=true | HTTP=Some(200) | latency=18.496 ms | error=None
+[VERIFY] attempt=3/3 | reachable=true | HTTP=Some(200) | latency=21.585 ms | error=None
+[VERIFICATION] node=k3s-worker1 | state=ReachableOutsideControlPlane | attempts=3 | successes=3 | failures=0
+[SHORT CIRCUIT] node=k3s-worker1 | candidate_evaluation=skipped | workload_discovery=skipped | reason=reachable
+[DECISION] 2026-10-14T13:47:53.851140576+00:00 | node=k3s-worker1 | decision=Preserve | fencing_required=false | selected_candidate=None | reason=workload remains reachable outside the control-plane path; unnecessary recovery is avoided
+[ENFORCEMENT] node=k3s-worker1 | action=PreserveExisting | no disruptive action
+[HISTORY] 2026-10-14T13:47:56.933902007+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-14T13:48:27.028016898+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-14T13:48:57.113878539+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-14T13:49:27.169646702+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-14T13:49:57.198571270+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-14T13:50:27.252179005+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-14T13:50:57.343442514+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-14T13:51:27.958216308+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-14T13:51:58.031969245+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-14T13:52:28.128561349+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-14T13:52:58.208784380+00:00 | nodes=5 | history_updated=true
+[RECOVERED] 2026-10-14T13:53:11.515263261+00:00 | node=k3s-worker1 | Ready=Unknown -> True
+[HISTORY] 2026-10-14T13:53:28.846946688+00:00 | nodes=5 | history_updated=true

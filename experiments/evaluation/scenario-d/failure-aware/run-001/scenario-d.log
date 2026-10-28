@@ -1,0 +1,98 @@
+==================================================
+Scenario D - Stateful Storage Fencing
+Run: 001
+==================================================
+
+[1/11] Checking experiment environment
+Worker nodes found
+
+[2/11] Clearing stale storage fence
+[STORAGE FENCE] restoring Worker1 NFS access
+[STORAGE FENCE] Worker1 storage access restored
+
+[3/11] Applying Scenario D workload
+persistentvolume/postgres-fencing-pv unchanged
+persistentvolumeclaim/postgres-fencing-pvc unchanged
+deployment.apps/fenced-postgres configured
+service/fenced-postgres unchanged
+Waiting for deployment "fenced-postgres" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "fenced-postgres" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "fenced-postgres" rollout to finish: 1 old replicas are pending termination...
+deployment "fenced-postgres" successfully rolled out
+
+[4/11] Recording original workload
+Original Pod : fenced-postgres-5444fb4696-jt7rt
+Original Node: k3s-worker1
+
+[5/11] Verifying PostgreSQL readiness
+/var/run/postgresql:5432 - accepting connections
+
+[6/11] Verifying pre-fence storage authority
+NOTICE:  relation "fence_test" already exists, skipping
+CREATE TABLE
+INSERT 0 1
+Pre-fence write completed:
+  k3s-worker1-before-fence-run-001
+
+[7/11] Applying storage fence
+[STORAGE FENCE] blocking Worker1 from NFS storage
+[STORAGE FENCE] Worker1 storage access blocked
+Storage fence applied
+
+[8/11] Testing old storage authority
+Old-authority write exit code: 124
+Old-authority write blocked beyond 10-second observation window.
+Deleting old PostgreSQL Pod while Worker1 remains fenced
+Warning: Immediate deletion does not wait for confirmation that the running resource has been terminated. The resource may continue to run on the cluster indefinitely.
+pod "fenced-postgres-5444fb4696-jt7rt" force deleted
+Switching PostgreSQL placement to k3s-worker2
+deployment.apps/fenced-postgres patched
+
+[9/11] Waiting for PostgreSQL recovery on k3s-worker2
+Replacement Pod detected:
+  Pod : fenced-postgres-676db6cf55-vrvwh
+  Node: k3s-worker2
+
+Waiting for PostgreSQL readiness inside replacement Pod
+
+[10/11] Verifying storage-authority exclusion
+ id  |              writer              |          written_at           
+-----+----------------------------------+-------------------------------
+   1 | worker1-before-fence             | 2026-09-22 11:32:01.044375+00
+   2 | worker1-before-fence             | 2026-09-22 11:42:38.864388+00
+   3 | worker1-before-fence             | 2026-09-22 11:42:38.870487+00
+   4 | worker1-after-fence              | 2026-09-22 11:42:38.874127+00
+   5 | worker1-after-fence              | 2026-09-22 11:42:44.159785+00
+   6 | worker1-before-fence             | 2026-09-22 13:29:58.12186+00
+   7 | scenario-d-pre-fence-test        | 2026-09-22 17:28:47.408498+00
+   8 | scenario-d-post-fence-test       | 2026-09-22 17:33:23.078489+00
+   9 | worker1-before-fence-run-001     | 2026-09-22 17:52:07.530735+00
+  41 | k3s-worker1-before-fence-run-001 | 2026-09-22 17:57:18.594318+00
+  74 | k3s-worker1-before-fence-run-001 | 2026-09-22 18:01:42.66409+00
+ 107 | k3s-worker1-before-fence-run-001 | 2026-09-22 18:12:17.68173+00
+ 140 | k3s-worker1-before-fence-run-001 | 2026-09-22 18:25:07.806843+00
+(13 rows)
+
+Pre-fence marker count : 4
+Post-fence marker count: 0
+Storage-authority exclusion verified:
+  pre-fence write persisted
+  post-fence Worker1 write did not commit
+
+[11/11] Verifying new storage authority
+INSERT 0 1
+
+==================================================
+SCENARIO D COMPLETE
+
+Old authority : k3s-worker1
+New authority : k3s-worker2
+Fence         : verified
+Pre-fence row : preserved
+Post-fence row: absent
+Recovery write: persisted
+
+/home/daniel/failure-aware-k8s/experiments/evaluation/scenario-d/failure-aware/run-001
+==================================================
+
+[CLEANUP] Restoring storage access

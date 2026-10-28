@@ -1,0 +1,54 @@
+[2026-10-12T09:23:17Z] Generating campaign plan
+[2026-10-12T09:23:17Z] Campaign plan: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/20261012T092317Z-198843/plan.csv
+[2026-10-12T09:23:17Z] Planned logical rows: 1
+[2026-10-12T09:23:17Z] ==============================================
+[2026-10-12T09:23:17Z] Starting scenario: scenario-b
+[2026-10-12T09:23:17Z] ==============================================
+[2026-10-12T09:23:17Z] ==============================================
+[2026-10-12T09:23:17Z] PREPARING scenario-b/FA1/006
+[2026-10-12T09:23:17Z] ==============================================
+[MODE] Applying FA1 tolerations (indefinite)
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[MODE] Deployment template verified: FA1
+[MODE] VERIFIED FA1: Ready Pod and tolerations correct
+[BACKEND RESET] Current nodeSelector: <none>
+[BACKEND RESET] Temporarily pinning backend to k3s-worker1
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] Removing temporary hostname selector; retaining required worker affinity
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] READY: backend on k3s-worker1, no hostname pin, clinical health OK
+[MODE] FA1 tolerations already configured; no rollout needed
+[MODE] Deployment template verified: FA1
+[MODE] VERIFIED FA1: Ready Pod and tolerations correct
+[2026-10-12T09:50:02Z] START scenario-b/FA1/006
+[2026-10-12T09:50:02.144123643Z] OpenMRS experiment: scenario-b / FA1 / 006
+[2026-10-12T09:50:03.342610133Z] Original Pod: openmrs-backend-c56bcf795-f94jt
+[2026-10-12T09:50:03.344174372Z] Original Node: k3s-worker1
+[2026-10-12T09:50:04.434378034Z] Baseline observation: 15s
+[2026-10-12T09:50:19.440708400Z] Injecting scenario-b fault
+[2026-10-12T09:50:20.874768111Z] Observing partition for 420s
+[2026-10-12T09:58:08.820897401Z] Post-fault observation: 30s
+[2026-10-12T09:58:43.214936139Z] Experiment observation completed
+[2026-10-12T09:58:43.848846115Z] RUN COMPLETE: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/scenario-b/FA1/run-006
+[2026-10-12T09:58:43Z] COMPLETE scenario-b/FA1/006
+[2026-10-12T09:59:51Z] Auditing completed runs for scenario-b
+[2026-10-12T09:59:51Z] scenario-b completed: 1/1
+[2026-10-12T09:59:51Z] SCENARIO VERIFIED COMPLETE: scenario-b
+[2026-10-12T09:59:51Z] ==============================================
+[2026-10-12T09:59:51Z] CAMPAIGN COMPLETED SUCCESSFULLY
+[2026-10-12T09:59:51Z] ==============================================
+[2026-10-12T09:59:51Z] Campaign directory: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/20261012T092317Z-198843
+[2026-10-12T09:59:51Z] Campaign plan: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/20261012T092317Z-198843/plan.csv
+[2026-10-12T09:59:51Z] Campaign summary: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/20261012T092317Z-198843/summary.csv

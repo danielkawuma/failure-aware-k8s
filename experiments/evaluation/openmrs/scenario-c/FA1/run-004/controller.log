@@ -1,0 +1,79 @@
+Starting Failure-Aware Controller
+Target node: k3s-worker1
+Native suspicion trigger: Ready=Unknown
+Verification URL: http://102.34.160.87:30366/openmrs/health/started
+Verification timeout: 3000 ms
+Verification attempts: 3
+Verification interval: 500 ms
+Workload: openmrs-backend
+Workload type: Stateless
+Duplication sensitive: false
+Namespace: openmrs37
+Pod label selector: app=openmrs-backend
+Recovery candidate: k3s-worker2
+Required recovery CPU: 300m
+Required recovery memory: 512 MiB
+Required recovery node labels: {"failure-aware.io/role": "recovery-candidate"}
+Kubernetes API timeout: 3000 ms
+Resource evaluation timeout: 10000 ms
+Enforcement timeout: 15000 ms
+Fencing timeout: 30000 ms
+Fencing supported: false
+Fencing command configured: false
+[HISTORY] Runtime history file: /home/daniel/failure-aware-k8s/controller/config/node-history-runtime.json
+Connected to Kubernetes API
+[HISTORY] Background collection task started
+[HISTORY] Dynamic node-history collector started
+[LISTENER] Watching node=k3s-worker1 for Ready=Unknown
+[LISTENER] Initializing node watch
+[INITIAL STATE] node=k3s-worker1 | Ready=Some("True")
+[LISTENER] Initial node state synchronized
+[HISTORY] 2026-10-12T05:42:47.585813026+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T05:43:18.045354006+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T05:43:51.242743176+00:00 | nodes=5 | history_updated=true
+[SUSPICION] 2026-10-12T05:43:58.197260827+00:00 | node=k3s-worker1 | Ready=Some("True") -> Unknown
+[VERIFY] attempt=1/3 | reachable=false | HTTP=None | latency=3002.555 ms | error=Some("error sending request for url (http://102.34.160.87:30366/openmrs/health/started)")
+[VERIFY] attempt=2/3 | reachable=false | HTTP=None | latency=3001.596 ms | error=Some("error sending request for url (http://102.34.160.87:30366/openmrs/health/started)")
+[VERIFY] attempt=3/3 | reachable=false | HTTP=None | latency=3002.223 ms | error=Some("error sending request for url (http://102.34.160.87:30366/openmrs/health/started)")
+[VERIFICATION] node=k3s-worker1 | state=Unreachable | attempts=3 | successes=0 | failures=3
+[WORKLOAD] name=openmrs-backend | target_node=k3s-worker1 | duplication_sensitive=false
+[WORKLOAD] node=k3s-worker1 | name=openmrs-backend | type=Stateless | duplication_sensitive=false
+[RECOVERY SAFETY] state=Safe | fencing_required=false | fencing_supported=false
+[CANDIDATE] node=k3s-worker2 | eligible=true | Ready=true | schedulable=true | labels_match=true | alloc_cpu=4000m | requested_cpu=300m | remaining_cpu=3700m | required_cpu=300m | alloc_memory=3916Mi | requested_memory=512Mi | remaining_memory=3404Mi | required_memory=512Mi | reliability=0.925000
+[CANDIDATE] node=k3s-worker3 | eligible=true | Ready=true | schedulable=true | labels_match=true | alloc_cpu=2000m | requested_cpu=300m | remaining_cpu=1700m | required_cpu=300m | alloc_memory=1968Mi | requested_memory=512Mi | remaining_memory=1456Mi | required_memory=512Mi | reliability=0.925000
+[CANDIDATE] node=k3s-worker4 | eligible=true | Ready=true | schedulable=true | labels_match=true | alloc_cpu=2000m | requested_cpu=300m | remaining_cpu=1700m | required_cpu=300m | alloc_memory=1968Mi | requested_memory=512Mi | remaining_memory=1456Mi | required_memory=512Mi | reliability=0.925000
+[SELECTION] selected=k3s-worker2 | reason=highest_reliability_among_eligible | reliability=0.925000 | remaining_cpu=3700m | remaining_memory=3404Mi
+[RESOURCE] candidate=k3s-worker2 | state=Available | Ready=true | schedulable=true | remaining_cpu=3700m | remaining_memory=3404Mi | reliability=0.925000
+[DECISION] 2026-10-12T05:44:08.473641970+00:00 | node=k3s-worker1 | decision=Recover | fencing_required=false | selected_candidate=Some("k3s-worker2") | reason=workload is unreachable, recovery capacity is available, and recovery is safe
+[PLACEMENT] 2026-10-12T05:44:08.734308021+00:00 | workload=Deployment/openmrs-backend | candidate=k3s-worker2 | cleanup=pending
+[HISTORY] 2026-10-12T05:44:24.435500338+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T05:44:57.500809383+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T05:45:30.516286026+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T05:46:04.077564016+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T05:46:37.147767229+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T05:47:10.340427533+00:00 | nodes=5 | history_updated=true
+[RECOVERY UNVERIFIED] Replacement readiness verification timed out
+[ENFORCEMENT] 2026-10-12T05:47:25.689251606+00:00 | node=k3s-worker1 | action=RecoveryReleased | enforced=false | message=Recovery initiated but not verified: Replacement readiness verification timed out
+[HISTORY] 2026-10-12T05:47:43.310423553+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T05:48:16.277443893+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T05:48:49.881249431+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T05:49:23.047002215+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T05:49:56.272906007+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T05:50:29.345570702+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T05:51:02.407096413+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T05:51:35.828749495+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T05:52:06.072711812+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T05:52:39.062153709+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T05:53:12.436248805+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T05:53:45.577632056+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T05:54:18.858930338+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T05:54:51.983965907+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T05:55:25.098277862+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T05:55:58.344041544+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T05:56:31.543055449+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T05:57:04.686000725+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T05:57:37.673462099+00:00 | nodes=5 | history_updated=true
+[RECOVERED] 2026-10-12T05:58:05.643528283+00:00 | node=k3s-worker1 | Ready=Unknown -> True
+[HISTORY] 2026-10-12T05:58:10.736584971+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T05:58:44.316732720+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T05:59:17.300653524+00:00 | nodes=5 | history_updated=true

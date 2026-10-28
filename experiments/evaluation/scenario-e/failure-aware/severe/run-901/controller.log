@@ -1,0 +1,40 @@
+Starting Failure-Aware Controller
+Target node: k3s-worker1
+Native suspicion trigger: Ready=Unknown
+Verification URL: http://102.34.160.87:30364
+Verification timeout: 3000 ms
+Verification attempts: 3
+Verification interval: 500 ms
+Workload: baseline-web
+Workload type: Stateless
+Duplication sensitive: false
+Service criticality: Medium
+Namespace: failure-aware
+Pod label selector: app=baseline-web
+Recovery candidate: k3s-worker2
+Required recovery CPU: 100m
+Required recovery memory: 128 MiB
+Required recovery node labels: {"failure-aware.io/role": "recovery-candidate"}
+Fencing supported: false
+Fencing command: <none>
+Connected to Kubernetes API
+[LISTENER] Watching node=k3s-worker1 for Ready=Unknown
+[LISTENER] Initializing node watch
+[INITIAL STATE] node=k3s-worker1 | Ready=Some("True")
+[LISTENER] Initial node state synchronized
+[SUSPICION] 2026-10-04T20:18:59.755913613+00:00 | node=k3s-worker1 | Ready=Some("True") -> Unknown
+[VERIFY] 2026-10-04T20:18:59.755984545+00:00 | starting bounded verification against http://102.34.160.87:30364
+[VERIFY] attempt=1/3 | reachable=true | HTTP=Some(200) | latency=15.007 ms | error=None
+[VERIFY] attempt=2/3 | reachable=true | HTTP=Some(200) | latency=15.152 ms | error=None
+[VERIFY] attempt=3/3 | reachable=true | HTTP=Some(200) | latency=13.481 ms | error=None
+[RELIABILITY] loaded node history from controller/config/node-history.json
+[CANDIDATE] node=k3s-worker2 | eligible=true | Ready=true | schedulable=true | labels_match=true | alloc_cpu=4000m | requested_cpu=0m | remaining_cpu=4000m | required_cpu=100m | alloc_memory=3916Mi | requested_memory=0Mi | remaining_memory=3916Mi | required_memory=128Mi | reliability=0.798667
+[CANDIDATE] node=k3s-worker3 | eligible=true | Ready=true | schedulable=true | labels_match=true | alloc_cpu=2000m | requested_cpu=0m | remaining_cpu=2000m | required_cpu=100m | alloc_memory=1968Mi | requested_memory=0Mi | remaining_memory=1968Mi | required_memory=128Mi | reliability=0.997000
+[CANDIDATE] node=k3s-worker4 | eligible=true | Ready=true | schedulable=true | labels_match=true | alloc_cpu=2000m | requested_cpu=0m | remaining_cpu=2000m | required_cpu=100m | alloc_memory=1968Mi | requested_memory=0Mi | remaining_memory=1968Mi | required_memory=128Mi | reliability=0.866000
+[SELECTION] selected=k3s-worker3 | reason=highest_reliability_among_eligible | reliability=0.997000 | remaining_cpu=2000m | remaining_memory=1968Mi
+[RESOURCE] 2026-10-04T20:19:01.348865607+00:00 | candidate=k3s-worker3 | state=Available | Ready=true | labels_match=true | CPU=2000m required=100m | memory=1968Mi required=128Mi
+[RECOVERY SAFETY] 2026-10-04T20:19:01.348878650+00:00 | state=Safe | fencing_required=false | fencing_supported=false
+[AWARENESS] 2026-10-04T20:19:01.348882528+00:00 | node=k3s-worker1 | operational_state=ReachableOutsideControlPlane | workload=baseline-web | workload_type=Stateless | duplication_sensitive=false | service_criticality=Medium | resource_state=Available | recovery_candidate=k3s-worker3 | recovery_safety=Safe | fencing_required=false | attempts=3 | successes=3 | failures=0
+[DECISION] 2026-10-04T20:19:01.348889135+00:00 | node=k3s-worker1 | decision=Preserve | fencing_required=false | reason=workload remains reachable outside the control-plane path; unnecessary recovery is avoided
+[ENFORCEMENT] 2026-10-04T20:19:01.348900425+00:00 | node=k3s-worker1 | action=PreserveExisting | enforced=true | message=existing workload remains bound; no recovery action initiated
+[RECOVERED] 2026-10-04T20:25:13.558870361+00:00 | node=k3s-worker1 | Ready=Unknown -> True

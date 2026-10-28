@@ -1,0 +1,24 @@
+RUN_ID=20261014T060451Z
+OUT=experiments/evaluation/openmrs/scenario-c-d/preflight-run004-20261014T060451Z
+
+=== Original runtime (read only) ===
+1551862 1551812 Ds      15:02:12 mariadbd        [mariadbd]
+
+=== Pods ===
+NAME                               READY   STATUS    RESTARTS   AGE   IP            NODE          NOMINATED NODE   READINESS GATES
+openmrs-mariadb-6455d5fcc9-mqmjr   1/1     Running   0          15h   10.42.2.185   k3s-worker2   <none>           <none>
+
+=== Placement ===
+{"kubernetes.io/hostname":"k3s-worker2"}
+
+=== Fence ===
+[FENCE ORCHESTRATOR] action=status
+[FENCE ORCHESTRATOR] mode=nfs
+[FENCE ORCHESTRATOR] remote=ubuntu@102.34.160.89
+FENCED
+[FENCE ORCHESTRATOR] action=status completed successfully
+FENCE_EXIT_CODE=0
+
+=== Decision ===
+BLOCKED: Original database runtime remains on worker3.
+Do not remove the fence or start the next fault run.

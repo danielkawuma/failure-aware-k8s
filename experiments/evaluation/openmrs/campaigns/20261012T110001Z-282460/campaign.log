@@ -1,0 +1,47 @@
+[2026-10-12T11:00:01Z] Generating campaign plan
+[2026-10-12T11:00:01Z] Campaign plan: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/20261012T110001Z-282460/plan.csv
+[2026-10-12T11:00:01Z] Planned logical rows: 2
+[2026-10-12T11:00:01Z] ==============================================
+[2026-10-12T11:00:01Z] Starting scenario: scenario-e
+[2026-10-12T11:00:01Z] ==============================================
+[2026-10-12T11:00:01Z] START dedicated Scenario E campaign
+Scenario E plan: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/e-20261012T110001Z-282475/plan.csv
+PREPARING backend: mild/V0/003
+[MODE] Applying V0 tolerations (300)
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[MODE] Deployment template verified: V0
+[MODE] VERIFIED V0: Ready Pod and tolerations correct
+[BACKEND RESET] Current nodeSelector: <none>
+[BACKEND RESET] Temporarily pinning backend to k3s-worker1
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] Removing temporary hostname selector; retaining required worker affinity
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] READY: backend on k3s-worker1, no hostname pin, clinical health OK
+[MODE] V0 tolerations already configured; no rollout needed
+[MODE] Deployment template verified: V0
+[MODE] VERIFIED V0: Ready Pod and tolerations correct
+[2026-10-12T11:27:09.454011069Z] Fault active: scenario-e V0
+[2026-10-12T11:29:11.865941557Z] Clearing fault: FIXED_DURATION
+[2026-10-12T11:29:13.523433295Z] Fault cleared and verified: FIXED_DURATION
+[2026-10-12T11:29:47.652463292Z] Observation completed; readiness and clinical results recorded
+[2026-10-12T11:29:48.687705347Z] Results: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/scenario-e/mild/V0/run-003 (exit=0)
+Campaign observations complete: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/e-20261012T110001Z-282475
+[2026-10-12T11:30:56Z] COMPLETE dedicated Scenario E campaign
+[2026-10-12T11:30:56Z] ==============================================
+[2026-10-12T11:30:56Z] CAMPAIGN COMPLETED SUCCESSFULLY
+[2026-10-12T11:30:56Z] ==============================================
+[2026-10-12T11:30:56Z] Campaign directory: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/20261012T110001Z-282460
+[2026-10-12T11:30:56Z] Campaign plan: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/20261012T110001Z-282460/plan.csv
+[2026-10-12T11:30:56Z] Campaign summary: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/20261012T110001Z-282460/summary.csv

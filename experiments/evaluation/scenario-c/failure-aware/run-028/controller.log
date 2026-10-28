@@ -1,0 +1,36 @@
+Starting Failure-Aware Controller
+Target node: k3s-worker1
+Native suspicion trigger: Ready=Unknown
+Verification URL: http://102.34.160.87:30364
+Verification timeout: 3000 ms
+Verification attempts: 3
+Verification interval: 500 ms
+Workload: baseline-web
+Workload type: Stateless
+Duplication sensitive: false
+Service criticality: Medium
+Namespace: failure-aware
+Pod label selector: app=baseline-web
+Recovery candidate: k3s-worker2
+Required recovery CPU: 100m
+Required recovery memory: 128 MiB
+Required recovery node labels: {}
+Fencing supported: false
+Fencing command: <none>
+Connected to Kubernetes API
+[LISTENER] Watching node=k3s-worker1 for Ready=Unknown
+[LISTENER] Initializing node watch
+[INITIAL STATE] node=k3s-worker1 | Ready=Some("True")
+[LISTENER] Initial node state synchronized
+[SUSPICION] 2026-09-22T08:14:57.011149166+00:00 | node=k3s-worker1 | Ready=Some("True") -> Unknown
+[VERIFY] 2026-09-22T08:14:57.011222411+00:00 | starting bounded verification against http://102.34.160.87:30364
+[VERIFY] attempt=1/3 | reachable=false | HTTP=None | latency=3001.622 ms | error=Some("error sending request for url (http://102.34.160.87:30364/)")
+[VERIFY] attempt=2/3 | reachable=false | HTTP=None | latency=3002.153 ms | error=Some("error sending request for url (http://102.34.160.87:30364/)")
+[VERIFY] attempt=3/3 | reachable=false | HTTP=None | latency=3002.153 ms | error=Some("error sending request for url (http://102.34.160.87:30364/)")
+[RESOURCE] 2026-09-22T08:15:09.221726935+00:00 | candidate=k3s-worker2 | state=Available | Ready=true | labels_match=true | CPU=4000m required=100m | memory=3915Mi required=128Mi
+[RECOVERY SAFETY] 2026-09-22T08:15:09.221825211+00:00 | state=Safe | fencing_required=false | fencing_supported=false
+[AWARENESS] 2026-09-22T08:15:09.221844139+00:00 | node=k3s-worker1 | operational_state=Unreachable | workload=baseline-web | workload_type=Stateless | duplication_sensitive=false | service_criticality=Medium | resource_state=Available | recovery_candidate=k3s-worker2 | recovery_safety=Safe | fencing_required=false | attempts=3 | successes=0 | failures=3
+[DECISION] 2026-09-22T08:15:09.221858231+00:00 | node=k3s-worker1 | decision=Recover | fencing_required=false | reason=workload is unreachable, recovery capacity is available, and recovery is safe
+[RECOVERY RELEASE] 2026-09-22T08:15:09.239680603+00:00 | deleting preserved pod=baseline-web-5f5bbfb459-6lwx8 | node=k3s-worker1
+[ENFORCEMENT] 2026-09-22T08:15:09.257486029+00:00 | node=k3s-worker1 | action=RecoveryReleased | enforced=true | message=preserved pod baseline-web-5f5bbfb459-6lwx8 released after recovery safety requirements were satisfied
+[RECOVERED] 2026-09-22T08:15:15.706625658+00:00 | node=k3s-worker1 | Ready=Unknown -> True

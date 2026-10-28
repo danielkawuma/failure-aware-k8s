@@ -1,0 +1,253 @@
+[2026-10-11T22:08:44Z] Generating campaign plan
+[2026-10-11T22:08:44Z] Campaign plan: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/20261011T220844Z-1046/plan.csv
+[2026-10-11T22:08:44Z] Planned logical rows: 15
+[2026-10-11T22:08:44Z] ==============================================
+[2026-10-11T22:08:44Z] Starting scenario: scenario-b
+[2026-10-11T22:08:44Z] ==============================================
+[2026-10-11T22:08:44Z] SKIP completed: scenario-b/T30/003
+[2026-10-11T22:08:44Z] SKIP completed: scenario-b/FA1/003
+[2026-10-11T22:08:44Z] SKIP completed: scenario-b/V0/003
+[2026-10-11T22:08:44Z] SKIP completed: scenario-b/T5/003
+[2026-10-11T22:08:44Z] SKIP completed: scenario-b/T10/003
+[2026-10-11T22:08:44Z] SKIP completed: scenario-b/T5/004
+[2026-10-11T22:08:44Z] ==============================================
+[2026-10-11T22:08:44Z] PREPARING scenario-b/T30/004
+[2026-10-11T22:08:44Z] ==============================================
+[MODE] Applying T30 (30 seconds) to openmrs37/openmrs-backend
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[MODE] VERIFIED T30: effective backend tolerations 30s
+[BACKEND RESET] Current nodeSelector: <none>
+[BACKEND RESET] Temporarily pinning backend to k3s-worker1
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] Removing temporary hostname selector; retaining required worker affinity
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] READY: backend on k3s-worker1, no hostname pin, clinical health OK
+[MODE] T30 tolerations already configured; no rollout needed
+[MODE] VERIFIED T30: effective backend tolerations 30s
+[2026-10-11T22:35:34Z] START scenario-b/T30/004
+[2026-10-11T22:35:34.305087087Z] OpenMRS experiment: scenario-b / T30 / 004
+[2026-10-11T22:35:35.363914707Z] Original Pod: openmrs-backend-5bc8f97f45-qzwfq
+[2026-10-11T22:35:35.365043314Z] Original Node: k3s-worker1
+deployment.apps/openmrs-backend patched (no change)
+deployment "openmrs-backend" successfully rolled out
+[2026-10-11T22:35:35.919970842Z] Baseline observation: 15s
+[2026-10-11T22:35:53.853931451Z] Injecting scenario-b fault
+[2026-10-11T22:35:55.848310840Z] Observing partition for 420s
+[2026-10-11T22:43:35.601124057Z] Post-fault observation: 30s
+[2026-10-11T22:44:09.150422818Z] Experiment observation completed
+[2026-10-11T22:44:10.320612229Z] RUN COMPLETE: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/scenario-b/T30/run-004
+[2026-10-11T22:44:10Z] COMPLETE scenario-b/T30/004
+[2026-10-11T22:45:16Z] SKIP completed: scenario-b/FA1/004
+[2026-10-11T22:45:16Z] SKIP completed: scenario-b/V0/004
+[2026-10-11T22:45:16Z] SKIP completed: scenario-b/T10/004
+[2026-10-11T22:45:16Z] ==============================================
+[2026-10-11T22:45:16Z] PREPARING scenario-b/T10/005
+[2026-10-11T22:45:16Z] ==============================================
+[MODE] Applying T10 (10 seconds) to openmrs37/openmrs-backend
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[MODE] VERIFIED T10: effective backend tolerations 10s
+[BACKEND RESET] Current nodeSelector: <none>
+[BACKEND RESET] Temporarily pinning backend to k3s-worker1
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] Removing temporary hostname selector; retaining required worker affinity
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] READY: backend on k3s-worker1, no hostname pin, clinical health OK
+[MODE] T10 tolerations already configured; no rollout needed
+[MODE] VERIFIED T10: effective backend tolerations 10s
+[2026-10-11T23:11:59Z] START scenario-b/T10/005
+[2026-10-11T23:11:59.517303349Z] OpenMRS experiment: scenario-b / T10 / 005
+[2026-10-11T23:12:00.385363368Z] Original Pod: openmrs-backend-dd8485cc7-d7njw
+[2026-10-11T23:12:00.386423165Z] Original Node: k3s-worker1
+deployment.apps/openmrs-backend patched (no change)
+deployment "openmrs-backend" successfully rolled out
+[2026-10-11T23:12:00.848200533Z] Baseline observation: 15s
+[2026-10-11T23:12:18.786513541Z] Injecting scenario-b fault
+[2026-10-11T23:12:21.824303028Z] Observing partition for 420s
+[2026-10-11T23:19:59.810919834Z] Post-fault observation: 30s
+[2026-10-11T23:20:33.338340639Z] Experiment observation completed
+[2026-10-11T23:20:34.605811663Z] RUN COMPLETE: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/scenario-b/T10/run-005
+[2026-10-11T23:20:34Z] COMPLETE scenario-b/T10/005
+[2026-10-11T23:21:41Z] ==============================================
+[2026-10-11T23:21:41Z] PREPARING scenario-b/FA1/005
+[2026-10-11T23:21:41Z] ==============================================
+[MODE] Applying FA1 (300 seconds) to openmrs37/openmrs-backend
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[MODE] VERIFIED FA1: effective backend tolerations 300s
+[BACKEND RESET] Current nodeSelector: <none>
+[BACKEND RESET] Temporarily pinning backend to k3s-worker1
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] Removing temporary hostname selector; retaining required worker affinity
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] READY: backend on k3s-worker1, no hostname pin, clinical health OK
+[MODE] FA1 tolerations already configured; no rollout needed
+[MODE] VERIFIED FA1: effective backend tolerations 300s
+[2026-10-11T23:48:28Z] START scenario-b/FA1/005
+[2026-10-11T23:48:28.649123210Z] OpenMRS experiment: scenario-b / FA1 / 005
+[2026-10-11T23:48:29.938997596Z] Original Pod: openmrs-backend-7bd876ddcf-lthbp
+[2026-10-11T23:48:29.939891939Z] Original Node: k3s-worker1
+[2026-10-11T23:48:30.691296417Z] Baseline observation: 15s
+[2026-10-11T23:48:45.694998297Z] Injecting scenario-b fault
+[2026-10-11T23:48:47.767107249Z] Observing partition for 420s
+[2026-10-11T23:56:36.155713791Z] Post-fault observation: 30s
+[2026-10-11T23:57:10.434399086Z] Experiment observation completed
+[2026-10-11T23:57:12.035549713Z] RUN COMPLETE: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/scenario-b/FA1/run-005
+[2026-10-11T23:57:12Z] COMPLETE scenario-b/FA1/005
+[2026-10-11T23:58:19Z] ==============================================
+[2026-10-11T23:58:19Z] PREPARING scenario-b/T5/005
+[2026-10-11T23:58:19Z] ==============================================
+[MODE] Applying T5 (5 seconds) to openmrs37/openmrs-backend
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[MODE] VERIFIED T5: effective backend tolerations 5s
+[BACKEND RESET] Current nodeSelector: <none>
+[BACKEND RESET] Temporarily pinning backend to k3s-worker1
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] Removing temporary hostname selector; retaining required worker affinity
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] READY: backend on k3s-worker1, no hostname pin, clinical health OK
+[MODE] T5 tolerations already configured; no rollout needed
+[MODE] VERIFIED T5: effective backend tolerations 5s
+[2026-10-12T00:22:52Z] START scenario-b/T5/005
+[2026-10-12T00:22:52.723601613Z] OpenMRS experiment: scenario-b / T5 / 005
+[2026-10-12T00:22:54.888352527Z] Original Pod: openmrs-backend-7444f6dff9-vj7sh
+[2026-10-12T00:22:54.889315090Z] Original Node: k3s-worker1
+deployment.apps/openmrs-backend patched (no change)
+deployment "openmrs-backend" successfully rolled out
+[2026-10-12T00:22:55.509490256Z] Baseline observation: 15s
+[2026-10-12T00:23:14.098446063Z] Injecting scenario-b fault
+[2026-10-12T00:23:15.959948721Z] Observing partition for 420s
+[2026-10-12T00:31:04.170957905Z] Post-fault observation: 30s
+[2026-10-12T00:31:38.432003203Z] Experiment observation completed
+[2026-10-12T00:31:39.710000681Z] RUN COMPLETE: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/scenario-b/T5/run-005
+[2026-10-12T00:31:39Z] COMPLETE scenario-b/T5/005
+[2026-10-12T00:32:46Z] ==============================================
+[2026-10-12T00:32:46Z] PREPARING scenario-b/T30/005
+[2026-10-12T00:32:46Z] ==============================================
+[MODE] Applying T30 (30 seconds) to openmrs37/openmrs-backend
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[MODE] VERIFIED T30: effective backend tolerations 30s
+[BACKEND RESET] Current nodeSelector: <none>
+[BACKEND RESET] Temporarily pinning backend to k3s-worker1
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] Removing temporary hostname selector; retaining required worker affinity
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] READY: backend on k3s-worker1, no hostname pin, clinical health OK
+[MODE] T30 tolerations already configured; no rollout needed
+[MODE] VERIFIED T30: effective backend tolerations 30s
+[2026-10-12T00:59:39Z] START scenario-b/T30/005
+[2026-10-12T00:59:39.049254269Z] OpenMRS experiment: scenario-b / T30 / 005
+[2026-10-12T00:59:41.177570855Z] Original Pod: openmrs-backend-5bc8f97f45-tjfbv
+[2026-10-12T00:59:41.178516374Z] Original Node: k3s-worker1
+deployment.apps/openmrs-backend patched (no change)
+deployment "openmrs-backend" successfully rolled out
+[2026-10-12T00:59:41.600645259Z] Baseline observation: 15s
+[2026-10-12T00:59:56.607077949Z] Injecting scenario-b fault
+[2026-10-12T00:59:57.473713321Z] Observing partition for 420s
+[2026-10-12T01:07:49.407910541Z] Post-fault observation: 30s
+[2026-10-12T01:08:23.916249799Z] Experiment observation completed
+[2026-10-12T01:08:25.064812826Z] RUN COMPLETE: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/scenario-b/T30/run-005
+[2026-10-12T01:08:25Z] COMPLETE scenario-b/T30/005
+[2026-10-12T01:09:28Z] ==============================================
+[2026-10-12T01:09:28Z] PREPARING scenario-b/V0/005
+[2026-10-12T01:09:28Z] ==============================================
+[MODE] Applying V0 (300 seconds) to openmrs37/openmrs-backend
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[MODE] VERIFIED V0: effective backend tolerations 300s
+[BACKEND RESET] Current nodeSelector: <none>
+[BACKEND RESET] Temporarily pinning backend to k3s-worker1
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] Removing temporary hostname selector; retaining required worker affinity
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] READY: backend on k3s-worker1, no hostname pin, clinical health OK
+[MODE] V0 tolerations already configured; no rollout needed
+[MODE] VERIFIED V0: effective backend tolerations 300s
+[2026-10-12T01:35:58Z] START scenario-b/V0/005
+[2026-10-12T01:35:58.165907629Z] OpenMRS experiment: scenario-b / V0 / 005
+[2026-10-12T01:35:58.979770424Z] Original Pod: openmrs-backend-7bd876ddcf-mdgrm
+[2026-10-12T01:35:58.980707494Z] Original Node: k3s-worker1
+deployment.apps/openmrs-backend patched (no change)
+deployment "openmrs-backend" successfully rolled out
+[2026-10-12T01:35:59.752975780Z] Baseline observation: 15s
+[2026-10-12T01:36:14.759980662Z] Injecting scenario-b fault
+[2026-10-12T01:36:16.730732863Z] Observing partition for 420s
+[2026-10-12T01:43:56.189263524Z] Post-fault observation: 30s
+[2026-10-12T01:44:30.451007216Z] Experiment observation completed
+[2026-10-12T01:44:31.149901484Z] RUN COMPLETE: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/scenario-b/V0/run-005
+[2026-10-12T01:44:31Z] COMPLETE scenario-b/V0/005
+[2026-10-12T01:45:36Z] Auditing completed runs for scenario-b
+[2026-10-12T01:45:36Z] scenario-b completed: 15/15
+[2026-10-12T01:45:36Z] SCENARIO VERIFIED COMPLETE: scenario-b
+[2026-10-12T01:45:36Z] ==============================================
+[2026-10-12T01:45:36Z] CAMPAIGN COMPLETED SUCCESSFULLY
+[2026-10-12T01:45:36Z] ==============================================
+[2026-10-12T01:45:36Z] Campaign directory: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/20261011T220844Z-1046
+[2026-10-12T01:45:36Z] Campaign plan: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/20261011T220844Z-1046/plan.csv
+[2026-10-12T01:45:36Z] Campaign summary: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/20261011T220844Z-1046/summary.csv

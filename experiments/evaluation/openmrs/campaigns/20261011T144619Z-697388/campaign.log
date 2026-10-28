@@ -1,0 +1,38 @@
+Campaign plan: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/20261011T144619Z-697388/plan.csv
+SKIP completed: scenario-b/T10/003
+SKIP completed: scenario-b/V0/003
+SKIP completed: scenario-b/FA1/003
+SKIP completed: scenario-b/T30/003
+SKIP completed: scenario-b/T5/003
+PREPARING scenario-b/T10/004
+[MODE] Applying T10 (10 seconds) to openmrs37/openmrs-backend
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[MODE] VERIFIED T10: effective backend tolerations 10s
+[BACKEND RESET] Current nodeSelector: {"kubernetes.io/hostname":"k3s-worker1"}
+[BACKEND RESET] Temporarily pinning backend to k3s-worker1
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] Removing temporary hostname selector; retaining required worker affinity
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] READY: backend on k3s-worker1, no hostname pin, clinical health OK
+[MODE] T10 tolerations already configured; no rollout needed
+[MODE] VERIFIED T10: effective backend tolerations 10s
+[2026-10-11T15:04:24.943267621Z] OpenMRS experiment: scenario-b / T10 / 004
+[2026-10-11T15:04:30.084455316Z] Original Pod: openmrs-backend-dd8485cc7-9jnd4
+[2026-10-11T15:04:30.087197870Z] Original Node: k3s-worker1
+deployment.apps/openmrs-backend patched (no change)
+deployment "openmrs-backend" successfully rolled out
+[2026-10-11T15:04:31.791180100Z] Baseline observation: 15s
+[2026-10-11T15:04:46.808564101Z] Injecting scenario-b fault
+[2026-10-11T15:04:49.531160343Z] Observing partition for 420s
+[2026-10-11T15:11:51.627233636Z] Post-fault observation: 30s
+[2026-10-11T15:12:23.397468285Z] Experiment observation completed
+[2026-10-11T15:12:26.055184169Z] RUN COMPLETE: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/scenario-b/T10/run-004
+Campaign observations complete: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/20261011T144619Z-697388

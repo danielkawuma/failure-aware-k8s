@@ -1,0 +1,37 @@
+[2026-10-13T03:30:02Z] Generating Scenario E campaign plan
+[2026-10-13T03:30:02Z] Scenario E plan: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/e-20261013T033002Z-620030/plan.csv
+[2026-10-13T03:30:02Z] Planned experiments: 2
+[2026-10-13T03:30:04Z] ==============================================
+[2026-10-13T03:30:04Z] PREPARING severe/FA1/003
+[2026-10-13T03:30:04Z] ==============================================
+[MODE] FA1 tolerations already configured; no rollout needed
+[MODE] Deployment template verified: FA1
+[MODE] VERIFIED FA1: Ready Pod and tolerations correct
+[BACKEND RESET] Current nodeSelector: <none>
+[BACKEND RESET] Temporarily pinning backend to k3s-worker1
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] Removing temporary hostname selector; retaining required worker affinity
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+W1013 06:45:24.774311  621832 reflector.go:492] k8s.io/client-go/tools/watch/informerwatcher.go:146: watch of *unstructured.Unstructured ended with: an error on the server ("unable to decode an event from the watch stream: http2: client connection lost") has prevented the request from succeeding
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] READY: backend on k3s-worker1, no hostname pin, clinical health OK
+[MODE] FA1 tolerations already configured; no rollout needed
+[MODE] Deployment template verified: FA1
+[MODE] VERIFIED FA1: Ready Pod and tolerations correct
+[2026-10-13T03:48:09Z] START severe/FA1/003
+[FAULT ORCHESTRATOR] action=show
+[FAULT ORCHESTRATOR] remote=ubuntu@102.34.160.87
+[FAULT ORCHESTRATOR] timeout=30s
+[FAULT ORCHESTRATOR] action completed successfully
+[2026-10-13T03:48:45.828861052Z] ERROR: Fault injection failed
+[2026-10-13T03:48:45.831288288Z] Emergency fault cleanup
+[FAULT ORCHESTRATOR] action=show
+[FAULT ORCHESTRATOR] remote=ubuntu@102.34.160.87
+[FAULT ORCHESTRATOR] timeout=30s
+[FAULT ORCHESTRATOR] action completed successfully
+[2026-10-13T03:48:49.109821031Z] Results: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/scenario-e/severe/FA1/run-003 (exit=1)
+[2026-10-13T03:48:49Z] ERROR: Run failed: severe/FA1/003 (exit=1)

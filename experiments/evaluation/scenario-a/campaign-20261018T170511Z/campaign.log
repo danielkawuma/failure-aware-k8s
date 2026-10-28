@@ -1,0 +1,76 @@
+[SCENARIO-A-CAMPAIGN] 2026-10-18T17:05:11.926Z Starting Scenario A campaign
+[SCENARIO-A-CAMPAIGN] 2026-10-18T17:05:11.928Z Target per mode: 5
+[SCENARIO-A-CAMPAIGN] 2026-10-18T17:05:11.930Z Hold duration: 480 seconds
+[SCENARIO-A-CAMPAIGN] 2026-10-18T17:05:11.938Z Existing Native COMPLETE: 2
+[SCENARIO-A-CAMPAIGN] 2026-10-18T17:05:11.940Z Existing FA1 COMPLETE: 1
+[SCENARIO-A-CAMPAIGN] 2026-10-18T17:05:11.983Z Campaign plan:
+order,arm,run
+1,failure-aware,004
+2,failure-aware,005
+3,native,004
+4,failure-aware,006
+5,native,005
+6,failure-aware,007
+7,native,006
+[SCENARIO-A-CAMPAIGN] 2026-10-18T17:05:11.989Z ========================================
+[SCENARIO-A-CAMPAIGN] 2026-10-18T17:05:11.990Z Starting failure-aware run-004
+[SCENARIO-A-CAMPAIGN] 2026-10-18T17:05:11.992Z ========================================
+[SCENARIO-A-CAMPAIGN] 2026-10-18T17:05:11.993Z Checking cluster before next experiment
+[SCENARIO-A-CAMPAIGN] 2026-10-18T17:05:17.522Z Preflight passed
+[SCENARIO-A] 2026-10-18T17:05:17.539Z Starting failure-aware run-004
+[SCENARIO-A] 2026-10-18T17:05:17.543Z Checking workers and standalone service
+[SCENARIO-A] 2026-10-18T17:05:23.280Z Preparing Kubernetes Nginx
+deployment.apps/baseline-web scaled
+pod/baseline-web-5f5bbfb459-2766t condition met
+deployment.apps/baseline-web configured
+service/baseline-web unchanged
+deployment.apps/baseline-web patched (no change)
+deployment.apps/baseline-web scaled
+deployment "baseline-web" successfully rolled out
+[SCENARIO-A] 2026-10-18T17:05:39.251Z CLEAN_NGINX_VERIFIED
+INITIAL_WORKLOAD_VERIFIED
+ORIGINAL_POD baseline-web-5f5bbfb459-jlq25
+ORIGINAL_UID 88bc4e40-14b7-48df-a884-02e9877ce0cc
+[SCENARIO-A] 2026-10-18T17:05:40.574Z Starting measurement observers
+[SCENARIO-A] 2026-10-18T17:05:55.581Z Requesting SSH guest shutdown
+[SCENARIO-A] 2026-10-18T17:06:04.189Z Network-observed Worker1 loss verified
+[SCENARIO-A] 2026-10-18T17:06:04.190Z Holding Worker1 offline for 480s
+[SCENARIO-A] 2026-10-18T17:14:06.637Z Offline observation completed
+
+==========================================
+START WORKER1 THROUGH OPENSTACK HORIZON
+The runner will detect its return.
+==========================================
+[SCENARIO-A] 2026-10-18T17:15:49.347Z Observing post-return period for 60s
+[SCENARIO-A] 2026-10-18T17:16:48.478Z Stopping observers and preserving evidence
+RECOVERY_OUTCOME NO_REPLACEMENT
+REPLACEMENT_POD None
+REPLACEMENT_NODE None
+[SCENARIO-A] 2026-10-18T17:16:51.254Z Restoring controlled starting placement
+deployment.apps/baseline-web scaled
+pod/baseline-web-5f5bbfb459-jlq25 condition met
+deployment.apps/baseline-web patched (no change)
+deployment.apps/baseline-web scaled
+Waiting for deployment "baseline-web" rollout to finish: 0 of 1 updated replicas are available...
+deployment "baseline-web" successfully rolled out
+[SCENARIO-A] 2026-10-18T17:17:07.040Z CLEAN_NGINX_VERIFIED
+[SCENARIO-A] 2026-10-18T17:17:07.041Z Verifying final service stability
+[SCENARIO-A] 2026-10-18T17:17:06.503Z Waiting for stable HTTP: final-standalone-http
+[SCENARIO-A] 2026-10-18T17:17:06.788Z final-standalone-http HTTP success 1/3
+[SCENARIO-A] 2026-10-18T17:17:09.077Z final-standalone-http HTTP success 2/3
+[SCENARIO-A] 2026-10-18T17:17:11.295Z final-standalone-http HTTP success 3/3
+[SCENARIO-A] 2026-10-18T17:17:11.298Z final-standalone-http_HTTP_STABLE
+[SCENARIO-A] 2026-10-18T17:17:11.301Z Waiting for stable HTTP: final-kubernetes-http
+[SCENARIO-A] 2026-10-18T17:17:11.611Z final-kubernetes-http HTTP success 1/3
+[SCENARIO-A] 2026-10-18T17:17:13.860Z final-kubernetes-http HTTP success 2/3
+[SCENARIO-A] 2026-10-18T17:17:16.211Z final-kubernetes-http HTTP success 3/3
+[SCENARIO-A] 2026-10-18T17:17:16.214Z final-kubernetes-http_HTTP_STABLE
+[SCENARIO-A] 2026-10-18T17:17:21.450Z SCENARIO_A_RUN_COMPLETE failure-aware 004
+[SCENARIO-A-CAMPAIGN] 2026-10-18T17:17:23.476Z failure-aware run-004 COMPLETE
+[SCENARIO-A-CAMPAIGN] 2026-10-18T17:17:23.479Z Waiting 20 seconds before next experiment
+[SCENARIO-A-CAMPAIGN] 2026-10-18T17:17:42.820Z ========================================
+[SCENARIO-A-CAMPAIGN] 2026-10-18T17:17:42.822Z SCENARIO_A_CAMPAIGN_FINISHED
+[SCENARIO-A-CAMPAIGN] 2026-10-18T17:17:42.823Z ========================================
+[SCENARIO-A-CAMPAIGN] 2026-10-18T17:17:42.826Z Final Native COMPLETE: 2
+[SCENARIO-A-CAMPAIGN] 2026-10-18T17:17:42.828Z Final FA1 COMPLETE: 2
+[SCENARIO-A-CAMPAIGN] 2026-10-18T17:17:42.831Z Summary: /home/daniel/failure-aware-k8s/experiments/evaluation/scenario-a/campaign-20261018T170511Z/summary.csv

@@ -1,0 +1,22 @@
+[2026-10-10T22:40:50.027372668Z] Discovering original MariaDB authority
+CONFIG=/home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/scenario-c-d/pilot-20261010T224050Z/controller.json
+ORIGINAL=k3s-worker2 102.34.160.103
+CANDIDATE=k3s-worker3
+NO_FAULT_APPLIED
+[2026-10-10T22:40:51.624095781Z] Original worker: k3s-worker2
+[2026-10-10T22:40:51.626827050Z] Original IP: 102.34.160.103
+[2026-10-10T22:40:51.629415111Z] Original database Pod IP: 10.42.2.151
+[2026-10-10T22:40:51.631808362Z] Recovery candidate: k3s-worker3
+[2026-10-10T22:40:51.634990265Z] Checking database placement configuration
+[2026-10-10T22:40:51.889288365Z] Checking initial NFS fence state
+[FENCE ORCHESTRATOR] action=status
+[FENCE ORCHESTRATOR] mode=nfs
+[FENCE ORCHESTRATOR] remote=ubuntu@102.34.160.89
+/home/daniel/failure-aware-k8s/scripts/storage-fence.sh: line 210: 211739 Killed                  timeout --signal=TERM --kill-after=5s "${SSH_COMMAND_TIMEOUT}s" ssh -i "${SSH_KEY}" -o BatchMode=yes -o ConnectTimeout="${SSH_CONNECT_TIMEOUT}" -o ServerAliveInterval=5 -o ServerAliveCountMax=2 "${REMOTE_HOST}" "${REMOTE_COMMAND}"
+[FENCE ORCHESTRATOR] action=status failed with exit code 137
+[FENCE ORCHESTRATOR] Remote operation timed out; fencing outcome is unverified
+[2026-10-10T22:41:44.742383359Z] ERROR: NFS fence state UNKNOWN; refusing fault injection
+[2026-10-10T22:41:44.743771107Z] Starting pilot cleanup
+[2026-10-10T22:42:37.572453487Z] NFS fence retained if active
+[2026-10-10T22:42:37.573846694Z] Old-writer reconciliation required before unfencing
+[2026-10-10T22:42:37.577807588Z] Results: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/scenario-c-d/pilot-20261010T224050Z (exit=1)

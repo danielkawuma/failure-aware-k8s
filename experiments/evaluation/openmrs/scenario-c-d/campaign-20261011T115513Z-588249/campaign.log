@@ -1,0 +1,26 @@
+[CD] 2026-10-11T11:55:13Z Generating resumable C+D campaign plan
+run,action
+003,EXECUTE
+004,EXECUTE
+[CD] 2026-10-11T11:55:13Z ========================================
+[CD] 2026-10-11T11:55:13Z Starting C+D logical run 003
+[CD] 2026-10-11T11:55:13Z ========================================
+[CD] 2026-10-11T11:55:14Z Preparing MariaDB placement
+[RESET] Recreating openmrs-mariadb on eligible workers; preferred=k3s-worker3
+deployment.apps/openmrs-mariadb scaled
+pod/openmrs-mariadb-6d54dc7dcd-vjvzj condition met
+deployment.apps/openmrs-mariadb patched (no change)
+deployment.apps/openmrs-mariadb scaled
+Waiting for deployment "openmrs-mariadb" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-mariadb" successfully rolled out
+RESET_READY openmrs-mariadb-6d54dc7dcd-55dp8 k3s-worker3
+[RESET] Placement reset complete. Evidence: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/scenario-c-d/reset-20261011T115514Z-588290
+[CD] 2026-10-11T11:55:33Z Executing live C+D pilot
+CONFIG=/home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/scenario-c-d/pilot-20261011T115533Z/controller.json
+ORIGINAL=k3s-worker3 102.34.160.36
+CANDIDATE=k3s-worker2
+NO_FAULT_APPLIED
+[2026-10-11T11:55:35.178040678Z] Independent verifier: k3s-worker2 (102.34.160.103)
+[2026-10-11T11:55:36.330087626Z] Initial NFS fence confirmed inactive
+[2026-10-11T11:55:38.560330016Z] ERROR: Remote fault script unavailable
+[CD] 2026-10-11T11:55:38Z ERROR: Pilot failed for run 003 (exit=1)

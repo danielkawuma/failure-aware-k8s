@@ -1,0 +1,171 @@
+[2026-10-13T07:49:55Z] Generating campaign plan
+[2026-10-13T07:49:55Z] Campaign plan: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/20261013T074955Z-668812/plan.csv
+[2026-10-13T07:49:55Z] Planned logical rows: 1
+[2026-10-13T07:49:55Z] ==============================================
+[2026-10-13T07:49:55Z] Starting scenario: scenario-e
+[2026-10-13T07:49:55Z] ==============================================
+[2026-10-13T07:49:55Z] START dedicated Scenario E campaign
+[2026-10-13T07:49:55Z] Generating Scenario E campaign plan
+[2026-10-13T07:49:55Z] Scenario E plan: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/e-20261013T074955Z-668826/plan.csv
+[2026-10-13T07:49:55Z] Planned experiments: 2
+[2026-10-13T07:49:56Z] ==============================================
+[2026-10-13T07:49:56Z] PREPARING severe/V0/003
+[2026-10-13T07:49:56Z] ==============================================
+[MODE] Applying V0 tolerations (300)
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[MODE] Deployment template verified: V0
+[MODE] VERIFIED V0: Ready Pod and tolerations correct
+[BACKEND RESET] Current nodeSelector: <none>
+[BACKEND RESET] Temporarily pinning backend to k3s-worker1
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] Removing temporary hostname selector; retaining required worker affinity
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] READY: backend on k3s-worker1, no hostname pin, clinical health OK
+[MODE] V0 tolerations already configured; no rollout needed
+[MODE] Deployment template verified: V0
+[MODE] VERIFIED V0: Ready Pod and tolerations correct
+[2026-10-13T08:16:49Z] START severe/V0/003
+[FAULT ORCHESTRATOR] action=show
+[FAULT ORCHESTRATOR] remote=ubuntu@102.34.160.87
+[FAULT ORCHESTRATOR] timeout=30s
+[FAULT ORCHESTRATOR] action completed successfully
+[2026-10-13T08:17:11.099095486Z] Fault active: scenario-e V0
+curl: (28) Failed to connect to 102.34.160.104 port 30366 after 2008 ms: Timeout was reached
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+[2026-10-13T08:19:13.428230252Z] Clearing fault: FIXED_DURATION
+[FAULT ORCHESTRATOR] action=show
+[FAULT ORCHESTRATOR] remote=ubuntu@102.34.160.87
+[FAULT ORCHESTRATOR] timeout=30s
+[FAULT ORCHESTRATOR] action completed successfully
+[2026-10-13T08:19:15.638657056Z] Fault cleared and verified: FIXED_DURATION
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+[2026-10-13T08:19:57.747898573Z] Scenario E clinical health stable for 30s after clearance
+[2026-10-13T08:19:57.751898045Z] Scenario E observation outcome: CLINICAL_RESTORED_STABLE
+[2026-10-13T08:20:00.144172927Z] Observation completed; readiness and clinical results recorded
+[FAULT ORCHESTRATOR] action=show
+[FAULT ORCHESTRATOR] remote=ubuntu@102.34.160.87
+[FAULT ORCHESTRATOR] timeout=30s
+[FAULT ORCHESTRATOR] action completed successfully
+[2026-10-13T08:20:03.188580616Z] Results: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/scenario-e/severe/V0/run-003 (exit=0)
+[2026-10-13T08:20:03Z] COMPLETE severe/V0/003
+[2026-10-13T08:21:05Z] ==============================================
+[2026-10-13T08:21:05Z] PREPARING severe/FA1/003
+[2026-10-13T08:21:05Z] ==============================================
+[MODE] Applying FA1 tolerations (indefinite)
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[MODE] Deployment template verified: FA1
+[MODE] VERIFIED FA1: Ready Pod and tolerations correct
+[BACKEND RESET] Current nodeSelector: <none>
+[BACKEND RESET] Temporarily pinning backend to k3s-worker1
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] Removing temporary hostname selector; retaining required worker affinity
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] READY: backend on k3s-worker1, no hostname pin, clinical health OK
+[MODE] FA1 tolerations already configured; no rollout needed
+[MODE] Deployment template verified: FA1
+[MODE] VERIFIED FA1: Ready Pod and tolerations correct
+[2026-10-13T08:47:50Z] START severe/FA1/003
+[FAULT ORCHESTRATOR] action=show
+[FAULT ORCHESTRATOR] remote=ubuntu@102.34.160.87
+[FAULT ORCHESTRATOR] timeout=30s
+[FAULT ORCHESTRATOR] action completed successfully
+[2026-10-13T08:48:12.195771514Z] Fault active: scenario-e FA1
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+[2026-10-13T08:50:14.454371383Z] Clearing fault: FIXED_DURATION
+[FAULT ORCHESTRATOR] action=show
+[FAULT ORCHESTRATOR] remote=ubuntu@102.34.160.87
+[FAULT ORCHESTRATOR] timeout=30s
+[FAULT ORCHESTRATOR] action completed successfully
+[2026-10-13T08:50:17.093752376Z] Fault cleared and verified: FIXED_DURATION
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+curl: (22) The requested URL returned error: 502
+[2026-10-13T08:51:00.004324464Z] Scenario E clinical health stable for 30s after clearance
+[2026-10-13T08:51:00.006469566Z] Scenario E observation outcome: CLINICAL_RESTORED_STABLE
+[2026-10-13T08:51:00.951346415Z] Observation completed; readiness and clinical results recorded
+[FAULT ORCHESTRATOR] action=show
+[FAULT ORCHESTRATOR] remote=ubuntu@102.34.160.87
+[FAULT ORCHESTRATOR] timeout=30s
+[FAULT ORCHESTRATOR] action completed successfully
+[2026-10-13T08:51:03.289012491Z] Results: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/scenario-e/severe/FA1/run-003 (exit=0)
+[2026-10-13T08:51:04Z] COMPLETE severe/FA1/003
+[2026-10-13T08:52:04Z] ==============================================
+[2026-10-13T08:52:04Z] FINAL SCENARIO E COMPLETION AUDIT
+[2026-10-13T08:52:04Z] ==============================================
+[2026-10-13T08:52:04Z] Planned: 2
+[2026-10-13T08:52:04Z] Audited: 2
+[2026-10-13T08:52:04Z] Completed: 2
+[2026-10-13T08:52:04Z] Missing/incomplete: 0
+[2026-10-13T08:52:05Z] ==============================================
+[2026-10-13T08:52:05Z] SCENARIO E VERIFIED COMPLETE
+[2026-10-13T08:52:05Z] ==============================================
+[2026-10-13T08:52:05Z] Campaign observations complete: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/e-20261013T074955Z-668826
+[2026-10-13T08:52:05Z] Campaign plan: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/e-20261013T074955Z-668826/plan.csv
+[2026-10-13T08:52:05Z] Campaign summary: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/e-20261013T074955Z-668826/summary.csv
+[2026-10-13T08:52:05Z] COMPLETE dedicated Scenario E campaign
+[2026-10-13T08:52:06Z] ==============================================
+[2026-10-13T08:52:06Z] CAMPAIGN COMPLETED SUCCESSFULLY
+[2026-10-13T08:52:06Z] ==============================================
+[2026-10-13T08:52:06Z] Campaign directory: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/20261013T074955Z-668812
+[2026-10-13T08:52:06Z] Campaign plan: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/20261013T074955Z-668812/plan.csv
+[2026-10-13T08:52:06Z] Campaign summary: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/20261013T074955Z-668812/summary.csv

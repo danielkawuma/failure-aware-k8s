@@ -1,0 +1,57 @@
+Starting Failure-Aware Controller
+Target node: k3s-worker3
+Native suspicion trigger: Ready=Unknown
+Verification URL: http://127.0.0.1:18086/health
+Verification timeout: 2000 ms
+Verification attempts: 3
+Verification interval: 500 ms
+Workload: openmrs-mariadb
+Workload type: Stateless
+Duplication sensitive: true
+Namespace: openmrs37
+Pod label selector: app=openmrs-mariadb
+Recovery candidate: k3s-worker2
+Required recovery CPU: 300m
+Required recovery memory: 512 MiB
+Required recovery node labels: {"failure-aware.io/role": "recovery-candidate"}
+Kubernetes API timeout: 3000 ms
+Resource evaluation timeout: 10000 ms
+Enforcement timeout: 15000 ms
+Fencing timeout: 120000 ms
+Fencing supported: true
+Fencing command configured: true
+[HISTORY] Runtime history file: /home/daniel/failure-aware-k8s/controller/config/node-history-runtime.json
+Connected to Kubernetes API
+[HISTORY] Background collection task started
+[LISTENER] Watching node=k3s-worker3 for Ready=Unknown
+[LISTENER] Initializing node watch
+[HISTORY] Dynamic node-history collector started
+[INITIAL STATE] node=k3s-worker3 | Ready=Some("True")
+[LISTENER] Initial node state synchronized
+[HISTORY] 2026-10-17T19:00:41.322164403+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T19:01:11.470813465+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T19:01:41.517966799+00:00 | nodes=5 | history_updated=true
+[SUSPICION] 2026-10-17T19:01:44.307112370+00:00 | node=k3s-worker3 | Ready=Some("True") -> Unknown
+[VERIFY] attempt=1/3 | reachable=false | HTTP=None | latency=2004.294 ms | error=Some("error sending request for url (http://127.0.0.1:18086/health)")
+[VERIFY] attempt=2/3 | reachable=false | HTTP=None | latency=2002.375 ms | error=Some("error sending request for url (http://127.0.0.1:18086/health)")
+[VERIFY] attempt=3/3 | reachable=false | HTTP=None | latency=2002.164 ms | error=Some("error sending request for url (http://127.0.0.1:18086/health)")
+[VERIFICATION] node=k3s-worker3 | state=Unreachable | attempts=3 | successes=0 | failures=3
+[WORKLOAD] name=openmrs-mariadb | target_node=k3s-worker3 | duplication_sensitive=true
+[WORKLOAD] node=k3s-worker3 | name=openmrs-mariadb | type=Stateless | duplication_sensitive=true
+[RECOVERY SAFETY] state=FencingRequired | fencing_required=true | fencing_supported=true
+[CANDIDATE] node=k3s-worker2 | eligible=true | Ready=true | schedulable=true | labels_match=true | alloc_cpu=4000m | requested_cpu=300m | remaining_cpu=3700m | required_cpu=300m | alloc_memory=3916Mi | requested_memory=512Mi | remaining_memory=3404Mi | required_memory=512Mi | reliability=1.000000
+[CANDIDATE] node=k3s-worker3 | eligible=false | Ready=false | schedulable=true | labels_match=true | alloc_cpu=2000m | requested_cpu=300m | remaining_cpu=1700m | required_cpu=300m | alloc_memory=1968Mi | requested_memory=512Mi | remaining_memory=1456Mi | required_memory=512Mi | reliability=0.925000
+[CANDIDATE] node=k3s-worker4 | eligible=true | Ready=true | schedulable=true | labels_match=true | alloc_cpu=2000m | requested_cpu=500m | remaining_cpu=1500m | required_cpu=300m | alloc_memory=1968Mi | requested_memory=704Mi | remaining_memory=1264Mi | required_memory=512Mi | reliability=0.925000
+[SELECTION] selected=k3s-worker2 | reason=highest_reliability_among_eligible | reliability=1.000000 | remaining_cpu=3700m | remaining_memory=3404Mi
+[RESOURCE] candidate=k3s-worker2 | state=Available | Ready=true | schedulable=true | remaining_cpu=3700m | remaining_memory=3404Mi | reliability=1.000000
+[DECISION] 2026-10-17T19:01:51.458889878+00:00 | node=k3s-worker3 | decision=Recover | fencing_required=true | selected_candidate=Some("k3s-worker2") | reason=workload is unreachable and recovery is viable, but fencing must complete before replacement
+[FENCING] 2026-10-17T19:01:51.458917521+00:00 | starting fencing command | timeout_ms=120000
+[FENCING RESULT] 2026-10-17T19:01:53.220228983+00:00 | state=Succeeded
+[FENCING VERIFIED] 2026-10-17T19:01:53.220292246+00:00 | node=k3s-worker3
+[PLACEMENT] 2026-10-17T19:01:53.274466529+00:00 | workload=Deployment/openmrs-mariadb | candidate=k3s-worker2 | cleanup=pending
+[HISTORY] 2026-10-17T19:02:11.639131849+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T19:02:41.677540586+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T19:03:11.802903673+00:00 | nodes=5 | history_updated=true
+[RECOVERY VERIFIED] 2026-10-17T19:03:40.224754591+00:00 | replacement=openmrs-mariadb-67d976cb7d-v4bl4
+[ENFORCEMENT] 2026-10-17T19:03:40.226663318+00:00 | node=k3s-worker3 | action=RecoveryReleased | enforced=true | message=Replacement openmrs-mariadb-67d976cb7d-v4bl4 verified Ready and application reachable; placement cleanup pending
+[HISTORY] 2026-10-17T19:03:41.867629452+00:00 | nodes=5 | history_updated=true

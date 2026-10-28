@@ -1,0 +1,28 @@
+Starting harness for scenario: scenario-b
+Target node: k3s-worker1
+Namespace: failure-aware
+Pod label selector: app=baseline-web
+Service targets:
+  k3s-worker1 -> http://102.34.160.87:30364
+  k3s-worker2 -> http://102.34.160.103:30364
+Run ID: run-20260922T113851Z
+Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline/scenario-b/runs/run-20260922T113851Z
+[LEASE] 2026-09-22T11:38:51.334497047+00:00 | k3s-worker1 | renewTime=2026-09-22T11:38:51.314050Z
+[TAINT] 2026-09-22T11:38:51.336182470+00:00 | k3s-worker1 | taints=<none>
+[EVENT] 2026-09-22T11:38:51.335756165+00:00 | type=Normal | reason=NodeHasSufficientMemory | object=Node/k3s-worker1 | message=Node k3s-worker1 status is now: NodeHasSufficientMemory
+[EVENT] 2026-09-22T11:38:51.335756165+00:00 | type=Normal | reason=NodeHasNoDiskPressure | object=Node/k3s-worker1 | message=Node k3s-worker1 status is now: NodeHasNoDiskPressure
+[EVENT] 2026-09-22T11:38:51.335756165+00:00 | type=Normal | reason=NodeHasSufficientPID | object=Node/k3s-worker1 | message=Node k3s-worker1 status is now: NodeHasSufficientPID
+[EVENT] 2026-09-22T11:38:51.335756165+00:00 | type=Normal | reason=NodeReady | object=Node/k3s-worker1 | message=Node k3s-worker1 status is now: NodeReady
+[EVENT] 2026-09-22T11:38:51.335756165+00:00 | type=Normal | reason=NodeNotReady | object=Node/k3s-worker1 | message=Node k3s-worker1 status is now: NodeNotReady
+[NODE] 2026-09-22T11:38:51.333478260+00:00 | k3s-worker1 | Ready=True
+[POD] 2026-09-22T11:38:51.335114985+00:00 | baseline-web-5f5bbfb459-x5rhw | phase=Running | node=k3s-worker1 | deletion=
+[HTTP] 2026-09-22T11:38:51.465062306+00:00 | node=k3s-worker1 | target=http://102.34.160.87:30364 | status=200 | latency=60.108 ms | success=true
+[LEASE] 2026-09-22T11:38:52.705478152+00:00 | k3s-worker1 | renewTime=2026-09-22T11:38:51.314050Z
+[NODE] 2026-09-22T11:38:53.003189438+00:00 | k3s-worker1 | Ready=True
+[TAINT] 2026-09-22T11:38:53.003470286+00:00 | k3s-worker1 | taints=<none>
+[POD] 2026-09-22T11:38:53.003247203+00:00 | baseline-web-5f5bbfb459-x5rhw | phase=Running | node=k3s-worker1 | deletion=
+[HTTP] 2026-09-22T11:38:53.002978997+00:00 | node=k3s-worker1 | target=http://102.34.160.87:30364 | status=200 | latency=24.111 ms | success=true
+
+Shutdown requested.
+Harness stopped. Results saved under:
+/home/daniel/failure-aware-k8s/harness/../experiments/baseline/scenario-b/runs/run-20260922T113851Z

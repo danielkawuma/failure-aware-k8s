@@ -1,0 +1,101 @@
+[CD] 2026-10-17T16:40:44Z Generating campaign plan
+run,action
+011,EXECUTE
+[CD] 2026-10-17T16:40:44Z ========================================
+[CD] 2026-10-17T16:40:44Z Starting logical run 011
+[CD] 2026-10-17T16:40:44Z ========================================
+[CD] 2026-10-17T16:40:45Z Resetting database placement to k3s-worker3
+[RESET] 2026-10-17T16:40:50Z Current=k3s-worker2 Original=k3s-worker3 Candidate=k3s-worker2
+{
+    "pod_uid": "3724b814-4eeb-4a23-a2d3-a7ed7433845c",
+    "container_id": "f806e23b2e72ac3162b12074afff4f65287695450fa782751947c2f1f693b9e2",
+    "pid": 3295618,
+    "cgroup": "0::/kubepods.slice/kubepods-burstable.slice/kubepods-burstable-pod3724b814_4eeb_4a23_a2d3_a7ed7433845c.slice/cri-containerd-f806e23b2e72ac3162b12074afff4f65287695450fa782751947c2f1f693b9e2.scope"
+}
+[RESET] 2026-10-17T16:40:55Z Scaling experimental MariaDB to zero
+deployment.apps/openmrs-mariadb scaled
+pod/openmrs-mariadb-67d976cb7d-2qbm4 condition met
+[RESET] 2026-10-17T16:40:57Z Waiting for previous writer retirement
+EXPERIMENTAL_SANDBOX_REMAINS
+EXPERIMENTAL_SANDBOX_REMAINS
+RUNTIME_RETIRED
+deployment.apps/openmrs-mariadb patched
+deployment.apps/openmrs-mariadb scaled
+Waiting for deployment "openmrs-mariadb" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-mariadb" successfully rolled out
+RESET_READY openmrs-mariadb-5d647d66c5-bst82 k3s-worker3
+[RESET] 2026-10-17T16:41:37Z Placement reset complete. Evidence: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/scenario-c-d/reset-20261017T164045Z-92720
+[CD] 2026-10-17T16:41:40Z Executing C+D pilot
+CONFIG=/home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/scenario-c-d/pilot-20261017T164140Z-93195/controller.json
+ORIGINAL=k3s-worker3 102.34.160.36
+CANDIDATE=k3s-worker2
+NO_FAULT_APPLIED
+[2026-10-17T16:41:44.805506978Z] Initial fault and storage fence verified inactive
+[2026-10-17T16:42:00.405104471Z] Applying Scenario C+D fault
+[2026-10-17T16:42:06.230876064Z] Independent database unreachability verified
+[2026-10-17T16:44:58.484177148Z] Recovery verified
+[2026-10-17T16:44:58.485356938Z] Clearing network fault; preserving storage fence
+[2026-10-17T16:44:59.856072220Z] Pilot observation completed
+[2026-10-17T16:44:59.857735662Z] Storage fence intentionally retained
+NFS fence retained pending independent reconciliation
+[2026-10-17T16:45:02.395946587Z] Results: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/scenario-c-d/pilot-20261017T164140Z-93195 (exit=0)
+[CD] 2026-10-17T16:45:02Z Starting SSH reconciliation
+[RECONCILE] 2026-10-17T16:45:02Z Original=k3s-worker3 Candidate=k3s-worker2
+[RECONCILE] 2026-10-17T16:45:02Z Previous state=NEW
+SQL_VERIFIED: authenticated query and core tables present
+node/k3s-worker3 cordoned
+[RECONCILE] 2026-10-17T16:45:08Z STATE=REBOOT_REQUESTED
+[RECONCILE] 2026-10-17T16:45:08Z Initiating SSH reboot
+[RECONCILE] 2026-10-17T16:51:32Z STATE=REBOOT_VERIFIED
+RUNTIME_READY
+[RECONCILE] 2026-10-17T16:51:39Z RUNTIME_READY
+[RECONCILE] 2026-10-17T16:51:39Z STATE=RUNTIME_READY
+OLD_SANDBOX_PRESENT
+OLD_SANDBOX_PRESENT
+OLD_SANDBOX_PRESENT
+OLD_SANDBOX_PRESENT
+OLD_SANDBOX_PRESENT
+OLD_SANDBOX_PRESENT
+OLD_SANDBOX_PRESENT
+OLD_SANDBOX_PRESENT
+OLD_SANDBOX_PRESENT
+NO_OLD_CONTAINER_OR_SANDBOX
+OLD_WRITER_ABSENT
+SQL_VERIFIED: authenticated query and core tables present
+[RECONCILE] 2026-10-17T16:52:41Z STATE=OLD_WRITER_ABSENT
+NO_OLD_CONTAINER_OR_SANDBOX
+OLD_WRITER_ABSENT
+SQL_VERIFIED: authenticated query and core tables present
+[RECONCILE] 2026-10-17T16:52:46Z Releasing NFS fence
+[FENCE ORCHESTRATOR] action=unfence
+[FENCE ORCHESTRATOR] mode=nfs
+[FENCE ORCHESTRATOR] remote=ubuntu@102.34.160.89
+[FENCING] Removing legacy NFS fence
+[FENCING] Legacy NFS fence removed
+[FENCE ORCHESTRATOR] action=unfence completed successfully
+[RECONCILE] 2026-10-17T16:52:47Z STATE=FENCE_RELEASED
+NO_OLD_CONTAINER_OR_SANDBOX
+OLD_WRITER_ABSENT
+SQL_VERIFIED: authenticated query and core tables present
+[RECONCILE] 2026-10-17T16:52:51Z Monitoring post-release stability
+NO_OLD_CONTAINER_OR_SANDBOX
+OLD_WRITER_ABSENT
+SQL_VERIFIED: authenticated query and core tables present
+NO_OLD_CONTAINER_OR_SANDBOX
+OLD_WRITER_ABSENT
+SQL_VERIFIED: authenticated query and core tables present
+NO_OLD_CONTAINER_OR_SANDBOX
+OLD_WRITER_ABSENT
+SQL_VERIFIED: authenticated query and core tables present
+NO_OLD_CONTAINER_OR_SANDBOX
+OLD_WRITER_ABSENT
+SQL_VERIFIED: authenticated query and core tables present
+[RECONCILE] 2026-10-17T16:53:27Z STATE=RECONCILIATION_VERIFIED
+[RECONCILE] 2026-10-17T16:53:27Z RECONCILIATION_VERIFIED
+[RECONCILE] 2026-10-17T16:53:27Z Original worker remains cordoned pending reset
+[CD] 2026-10-17T16:53:29Z Logical run 011 COMPLETE
+node/k3s-worker3 uncordoned
+[CD] 2026-10-17T16:53:59Z ========================================
+[CD] 2026-10-17T16:53:59Z C+D CAMPAIGN FINISHED
+[CD] 2026-10-17T16:53:59Z Results: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/scenario-c-d/campaign-20261017T164044Z-92681
+[CD] 2026-10-17T16:53:59Z ========================================

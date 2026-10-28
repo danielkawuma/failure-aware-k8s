@@ -1,0 +1,130 @@
+Starting Failure-Aware Controller
+Target node: k3s-worker3
+Native suspicion trigger: Ready=Unknown
+Verification URL: http://127.0.0.1:18086/health
+Verification timeout: 2000 ms
+Verification attempts: 3
+Verification interval: 500 ms
+Workload: openmrs-mariadb
+Workload type: Stateless
+Duplication sensitive: true
+Namespace: openmrs37
+Pod label selector: app=openmrs-mariadb
+Recovery candidate: k3s-worker2
+Required recovery CPU: 300m
+Required recovery memory: 512 MiB
+Required recovery node labels: {"failure-aware.io/role": "recovery-candidate"}
+Kubernetes API timeout: 3000 ms
+Resource evaluation timeout: 10000 ms
+Enforcement timeout: 15000 ms
+Fencing timeout: 120000 ms
+Fencing supported: true
+Fencing command configured: true
+[HISTORY] Runtime history file: /home/daniel/failure-aware-k8s/controller/config/node-history-runtime.json
+Connected to Kubernetes API
+[HISTORY] Background collection task started
+[LISTENER] Watching node=k3s-worker3 for Ready=Unknown
+[LISTENER] Initializing node watch
+[HISTORY] Dynamic node-history collector started
+[HISTORY] 2026-10-17T17:28:45.402810635+00:00 | nodes=5 | history_updated=true
+[INITIAL STATE] node=k3s-worker3 | Ready=Some("True")
+[LISTENER] Initial node state synchronized
+[HISTORY] 2026-10-17T17:29:15.834820521+00:00 | nodes=5 | history_updated=true
+[SUSPICION] 2026-10-17T17:29:42.897433698+00:00 | node=k3s-worker3 | Ready=Some("True") -> Unknown
+[VERIFY] attempt=1/3 | reachable=false | HTTP=None | latency=2005.659 ms | error=Some("error sending request for url (http://127.0.0.1:18086/health)")
+[HISTORY] 2026-10-17T17:29:46.116228941+00:00 | nodes=5 | history_updated=true
+[VERIFY] attempt=2/3 | reachable=false | HTTP=None | latency=2002.313 ms | error=Some("error sending request for url (http://127.0.0.1:18086/health)")
+[VERIFY] attempt=3/3 | reachable=false | HTTP=None | latency=2001.562 ms | error=Some("error sending request for url (http://127.0.0.1:18086/health)")
+[VERIFICATION] node=k3s-worker3 | state=Unreachable | attempts=3 | successes=0 | failures=3
+[WORKLOAD] name=openmrs-mariadb | target_node=k3s-worker3 | duplication_sensitive=true
+[WORKLOAD] node=k3s-worker3 | name=openmrs-mariadb | type=Stateless | duplication_sensitive=true
+[RECOVERY SAFETY] state=FencingRequired | fencing_required=true | fencing_supported=true
+[CANDIDATE] node=k3s-worker2 | eligible=true | Ready=true | schedulable=true | labels_match=true | alloc_cpu=4000m | requested_cpu=300m | remaining_cpu=3700m | required_cpu=300m | alloc_memory=3916Mi | requested_memory=512Mi | remaining_memory=3404Mi | required_memory=512Mi | reliability=1.000000
+[CANDIDATE] node=k3s-worker3 | eligible=false | Ready=false | schedulable=true | labels_match=true | alloc_cpu=2000m | requested_cpu=300m | remaining_cpu=1700m | required_cpu=300m | alloc_memory=1968Mi | requested_memory=512Mi | remaining_memory=1456Mi | required_memory=512Mi | reliability=0.925000
+[CANDIDATE] node=k3s-worker4 | eligible=true | Ready=true | schedulable=true | labels_match=true | alloc_cpu=2000m | requested_cpu=500m | remaining_cpu=1500m | required_cpu=300m | alloc_memory=1968Mi | requested_memory=704Mi | remaining_memory=1264Mi | required_memory=512Mi | reliability=0.925000
+[SELECTION] selected=k3s-worker2 | reason=highest_reliability_among_eligible | reliability=1.000000 | remaining_cpu=3700m | remaining_memory=3404Mi
+[RESOURCE] candidate=k3s-worker2 | state=Available | Ready=true | schedulable=true | remaining_cpu=3700m | remaining_memory=3404Mi | reliability=1.000000
+[DECISION] 2026-10-17T17:29:51.172147705+00:00 | node=k3s-worker3 | decision=Recover | fencing_required=true | selected_candidate=Some("k3s-worker2") | reason=workload is unreachable and recovery is viable, but fencing must complete before replacement
+[FENCING] 2026-10-17T17:29:51.172192606+00:00 | starting fencing command | timeout_ms=120000
+[FENCING RESULT] 2026-10-17T17:29:53.782981225+00:00 | state=Succeeded
+[FENCING VERIFIED] 2026-10-17T17:29:53.783059544+00:00 | node=k3s-worker3
+[PLACEMENT] 2026-10-17T17:29:54.174872963+00:00 | workload=Deployment/openmrs-mariadb | candidate=k3s-worker2 | cleanup=pending
+[HISTORY] 2026-10-17T17:30:16.858858794+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:30:47.779336337+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:31:19.861095317+00:00 | nodes=5 | history_updated=true
+[RECOVERY VERIFIED] 2026-10-17T17:31:41.166132143+00:00 | replacement=openmrs-mariadb-67d976cb7d-5vtj7
+[ENFORCEMENT] 2026-10-17T17:31:41.169915458+00:00 | node=k3s-worker3 | action=RecoveryReleased | enforced=true | message=Replacement openmrs-mariadb-67d976cb7d-5vtj7 verified Ready and application reachable; placement cleanup pending
+[HISTORY] 2026-10-17T17:31:50.188142488+00:00 | nodes=5 | history_updated=true
+[RECOVERED] 2026-10-17T17:31:56.154834454+00:00 | node=k3s-worker3 | Ready=Unknown -> True
+[HISTORY] 2026-10-17T17:32:20.617822846+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:32:50.949920617+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:33:21.180825602+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:33:51.415302293+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:34:22.019953685+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:34:53.278209610+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:35:23.612800164+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:35:53.944850364+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:36:24.232365942+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:36:54.952157039+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:37:25.805764501+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:37:56.606864494+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:38:27.162212361+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:38:57.665426895+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:39:28.079186306+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:39:59.001515958+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:40:29.334072758+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:41:00.094883502+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:41:30.655952126+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:42:02.575626574+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:42:33.084858627+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:43:03.442465582+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:43:33.921391534+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:44:04.138811134+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:44:35.075602081+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:45:06.577838441+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:45:38.090914568+00:00 | nodes=5 | history_updated=true
+[HISTORY ERROR] 2026-10-17T17:46:11.095014194+00:00 | node-history Node listing timed out after 3000 ms
+[HISTORY] 2026-10-17T17:46:41.825879650+00:00 | nodes=5 | history_updated=true
+[HISTORY ERROR] 2026-10-17T17:47:14.829200738+00:00 | node-history Node listing timed out after 3000 ms
+[HISTORY] 2026-10-17T17:47:45.006668140+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:48:15.375784121+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:48:45.469401228+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:49:15.535046395+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:49:45.576612120+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:50:15.712461967+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:50:45.789723669+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:51:15.848416809+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:51:45.898875087+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:52:15.992111220+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:52:46.095435484+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:53:16.140393160+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:53:46.248903631+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:54:16.296421899+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:54:46.770549519+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:55:16.843970442+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:55:46.969532741+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:56:17.720920270+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:56:47.771989357+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:57:17.844109004+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:57:47.940628288+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:58:18.024300364+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:58:48.082715474+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:59:18.172046845+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T17:59:48.324351545+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T18:00:18.710933804+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T18:00:48.820107658+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T18:01:18.926990365+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T18:01:48.982821312+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T18:02:19.582318231+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T18:02:49.624458502+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T18:03:19.834975472+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T18:03:50.786787412+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T18:04:20.876371801+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T18:04:50.939589348+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T18:05:21.019416898+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T18:05:51.061686139+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T18:06:21.094081474+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T18:06:51.169312923+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T18:07:21.712558512+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T18:07:51.804178195+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-17T18:08:22.709939549+00:00 | nodes=5 | history_updated=true

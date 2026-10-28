@@ -1,0 +1,56 @@
+Starting Failure-Aware Controller
+Target node: k3s-worker1
+Native suspicion trigger: Ready=Unknown
+Verification URL: ssh-pod://102.34.160.104/openmrs37/k3s-worker1/app=openmrs-backend
+Verification timeout: 3000 ms
+Verification attempts: 3
+Verification interval: 500 ms
+Workload: openmrs-backend
+Workload type: Stateless
+Duplication sensitive: false
+Namespace: openmrs37
+Pod label selector: app=openmrs-backend
+Recovery candidate: k3s-worker2
+Required recovery CPU: 300m
+Required recovery memory: 512 MiB
+Required recovery node labels: {"failure-aware.io/role": "recovery-candidate"}
+Kubernetes API timeout: 3000 ms
+Resource evaluation timeout: 10000 ms
+Enforcement timeout: 15000 ms
+Fencing timeout: 30000 ms
+Fencing supported: false
+Fencing command configured: false
+[HISTORY] Runtime history file: /home/daniel/failure-aware-k8s/controller/config/node-history-runtime.json
+Connected to Kubernetes API
+[HISTORY] Background collection task started
+[LISTENER] Watching node=k3s-worker1 for Ready=Unknown
+[HISTORY] Dynamic node-history collector started
+[LISTENER] Initializing node watch
+[INITIAL STATE] node=k3s-worker1 | Ready=Some("True")
+[LISTENER] Initial node state synchronized
+[HISTORY] 2026-10-12T09:50:04.680544266+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T09:50:38.325816637+00:00 | nodes=5 | history_updated=true
+[SUSPICION] 2026-10-12T09:51:03.659163305+00:00 | node=k3s-worker1 | Ready=Some("True") -> Unknown
+[VERIFY TARGET] pod=openmrs-backend-c56bcf795-f94jt uid=c8224dcf-cd4e-4e9a-b94e-ead6b499b484 node=k3s-worker1 ip=10.42.1.198 verifier=102.34.160.104
+[VERIFY] attempt=1/3 | reachable=true | HTTP=Some(200) | latency=933.813 ms | error=None
+[VERIFY] attempt=2/3 | reachable=true | HTTP=Some(200) | latency=361.638 ms | error=None
+[VERIFY] attempt=3/3 | reachable=true | HTTP=Some(200) | latency=333.758 ms | error=None
+[VERIFICATION] node=k3s-worker1 | state=ReachableOutsideControlPlane | attempts=3 | successes=3 | failures=0
+[SHORT CIRCUIT] node=k3s-worker1 | candidate_evaluation=skipped | workload_discovery=skipped | reason=reachable
+[DECISION] 2026-10-12T09:51:07.104416042+00:00 | node=k3s-worker1 | decision=Preserve | fencing_required=false | selected_candidate=None | reason=workload remains reachable outside the control-plane path; unnecessary recovery is avoided
+[ENFORCEMENT] node=k3s-worker1 | action=PreserveExisting | no disruptive action
+[HISTORY] 2026-10-12T09:51:11.947944391+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T09:51:42.004813556+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T09:52:15.650806084+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T09:52:49.405092689+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T09:53:23.119514182+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T09:53:56.804747844+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T09:54:30.571548511+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T09:55:04.252359470+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T09:55:38.046465716+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T09:56:11.755453339+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T09:56:45.520018812+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T09:57:19.713410137+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-12T09:57:53.493756655+00:00 | nodes=5 | history_updated=true
+[RECOVERED] 2026-10-12T09:58:09.137804421+00:00 | node=k3s-worker1 | Ready=Unknown -> True
+[HISTORY] 2026-10-12T09:58:27.190521508+00:00 | nodes=5 | history_updated=true

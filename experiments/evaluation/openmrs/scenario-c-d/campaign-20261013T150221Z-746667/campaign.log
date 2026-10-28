@@ -1,0 +1,37 @@
+[CD] 2026-10-13T15:02:21Z Generating resumable C+D campaign plan
+run,action
+003,EXECUTE
+[CD] 2026-10-13T15:02:21Z ========================================
+[CD] 2026-10-13T15:02:21Z Starting C+D logical run 003
+[CD] 2026-10-13T15:02:21Z ========================================
+[CD] 2026-10-13T15:02:24Z Preparing MariaDB placement
+[RESET] Recreating openmrs-mariadb on eligible workers; preferred=k3s-worker3
+deployment.apps/openmrs-mariadb scaled
+pod/openmrs-mariadb-6d54dc7dcd-55dp8 condition met
+deployment.apps/openmrs-mariadb patched (no change)
+deployment.apps/openmrs-mariadb scaled
+Waiting for deployment "openmrs-mariadb" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-mariadb" successfully rolled out
+RESET_READY openmrs-mariadb-6d54dc7dcd-6zvd4 k3s-worker3
+[RESET] Placement reset complete. Evidence: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/scenario-c-d/reset-20261013T150224Z-746715
+[CD] 2026-10-13T15:02:51Z Executing live C+D pilot
+CONFIG=/home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/scenario-c-d/pilot-20261013T150251Z/controller.json
+ORIGINAL=k3s-worker3 102.34.160.36
+CANDIDATE=k3s-worker2
+NO_FAULT_APPLIED
+[2026-10-13T15:02:54.545956204Z] Independent verifier: k3s-worker2 (102.34.160.103)
+[2026-10-13T15:02:57.083457512Z] Initial NFS fence confirmed inactive
+[2026-10-13T15:03:06.389341761Z] Original database reachable through independent verifier
+[2026-10-13T15:03:06.391275962Z] Starting replacement-specific recovery verification adapter
+[2026-10-13T15:03:08.397812628Z] Starting controller before fault
+[2026-10-13T15:03:18.402676820Z] Applying control-plane partition to k3s-worker3
+[2026-10-13T15:06:17.500193856Z] Controller reported recovery verified
+[2026-10-13T15:06:17.505757252Z] Clearing network fault (NOT the NFS fence)
+[2026-10-13T15:06:18.174476874Z] Pilot observation finished; inspect controller, NFS fence and clinical integrity before any unfence
+NFS fence state recorded. Never automatically unfence after a live writer test.
+[2026-10-13T15:06:20.835445853Z] Results: /home/daniel/failure-aware-k8s/experiments/evaluation/openmrs/scenario-c-d/pilot-20261013T150251Z (exit=0)
+[CD] 2026-10-13T15:06:20Z Reconciling original database authority
+[RECONCILE] Original=k3s-worker3 Pod=openmrs-mariadb-6d54dc7dcd-6zvd4 Candidate=k3s-worker2
+UNKNOWN ACTIVE 1406e74be97b7887171a59d75e84989dac8291d46685529c6c317ec516b49293 1551862 D mariadbd
+[RECONCILE] BLOCKED: Original runtime cannot be safely inspected
+[CD] 2026-10-13T15:06:26Z ERROR: Reconciliation failed for run 003
