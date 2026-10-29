@@ -179,3 +179,23 @@ Rules:
 - A run in which the controller never reaches a decision (no
   `Ready=Unknown`, or no decision record) is reported as a non-event or
   missing, never as a correct decision.
+
+## Addendum, 29 October 2026: extension sweep (exploratory)
+
+Added after the main ladder campaign had started and before any run of
+the extension. It does not change H1 to H5, their rules, or the
+campaigns they are decided on; those verdicts come from the main ladder
+campaign alone.
+
+Two further campaigns run after the main ladder and live-writer
+campaigns, with the same runner, harness, observers and analysis script:
+
+| Campaign | Arms | Reachable partitions | UW hold | Repetitions |
+|---|---|---|---|---|
+| E1, tuned tolerations | T5 (`nginx-t5.yaml`), T30 (`nginx-t30.yaml`) | 120 s, 600 s | none | 5 |
+| E2, duration sweep | V0, T10, NX, FA1 | 15 s, 60 s, 300 s | none | 3 |
+
+Run order is shuffled with a fresh logged seed per campaign. Results are
+reported descriptively (replacement counts with Clopper-Pearson
+intervals, medians) as an extension of the ladder, not as tests of
+H1 to H5.

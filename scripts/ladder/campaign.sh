@@ -32,7 +32,7 @@ CURRENT_LINK="${CAMPAIGN_ROOT}/CURRENT"
 
 ARMS="${ARMS:-v0 t10 nx r2 fa1}"
 RP_DURATIONS="${RP_DURATIONS:-120 600}"
-UW_HOLD_SECONDS="${UW_HOLD_SECONDS:-480}"
+UW_HOLD_SECONDS="${UW_HOLD_SECONDS:-480}"   # 0 leaves the UW condition out of the plan
 REPS="${REPS:-5}"
 LADDER_BASELINE_SECONDS="${LADDER_BASELINE_SECONDS:-10}"
 LADDER_POST_CLEAR_SECONDS="${LADDER_POST_CLEAR_SECONDS:-60}"
@@ -74,7 +74,8 @@ cells = []
 for arm in arms.split():
     for dur in rp.split():
         cells.append((arm, "rp", int(dur)))
-    cells.append((arm, "uw", int(uw)))
+    if int(uw) > 0:
+        cells.append((arm, "uw", int(uw)))
 rows = [(a, c, t, r) for (a, c, t) in cells for r in range(1, int(reps) + 1)]
 rng.shuffle(rows)
 with open(f"{d}/ladder-plan.csv", "w", newline="") as f:
