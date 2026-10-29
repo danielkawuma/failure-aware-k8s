@@ -33,7 +33,8 @@ def ts(value):
     m = _TS.search(value or "")
     if not m:
         return None
-    frac = (m.group(2) or ".0")[:7]
+    # Python 3.10 accepts only 3 or 6 fractional digits; pad to 6.
+    frac = "." + (m.group(2) or ".")[1:7].ljust(6, "0")
     return datetime.fromisoformat(m.group(1) + frac + "+00:00").timestamp()
 
 
