@@ -13,8 +13,12 @@ For each completed run, from the rows read back by the verifier:
 
 Standard library only.
 
+Each run is assigned to the arm it actually executed: a run is fenced
+only if its fence was verified (fence-verified-time.txt); the planned arm
+is reported alongside. Several campaigns can be analysed together.
+
 Usage:
-    python3 analysis/analyze-live-writer.py experiments/evaluation/live-writer/CURRENT \
+    python3 analysis/analyze-live-writer.py experiments/evaluation/live-writer/campaign-* \
         --output analysis/results/live-writer
 """
 
@@ -136,21 +140,31 @@ def analyse(rdir, arm):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("campaign")
+    ap.add_argument("campaigns", nargs="+")
     ap.add_argument("--output", default="analysis/results/live-writer")
     a = ap.parse_args()
-    cdir = Path(a.campaign).resolve()
     out = Path(a.output)
     out.mkdir(parents=True, exist_ok=True)
 
-    plan = list(csv.DictReader((cdir / "plan.csv").open()))
-    inventory, results = [], []
-    for p in plan:
-        rdir = cdir / "runs" / p["run_id"]
-        status = "COMPLETE" if (rdir / "COMPLETE").exists() else ("ABORTED" if (rdir / "ABORTED").exists() else "NOT_STARTED")
-        inventory.append({**p, "status": status, "abort_reason": text(rdir / "ABORTED")})
-        if status == "COMPLETE":
-            results.append(analyse(rdir, p["arm"]))
+    inventory, results, seeds = [], [], {}
+    for campaign in a.campaigns:
+        cdir = Path(campaign).resolve()
+        seeds[cdir.name] = text(cdir / "seed.txt")
+        with (cdir / "plan.csv").open(newline="") as f:
+            plan = [{k: (v or "").strip() for k, v in r.items()} for r in csv.DictReader(f)]
+        for p in plan:
+            rdir = cdir / "runs" / p["run_id"]
+            status = "COMPLETE" if (rdir / "COMPLETE").exists() else ("ABORTED" if (rdir / "ABORTED").exists() else "NOT_STARTED")
+            executed = ""
+            if status == "COMPLETE":
+                executed = "fenced" if (rdir / "fence-verified-time.txt").exists() else "unfenced"
+            inventory.append({"campaign": cdir.name, **p, "executed_arm": executed,
+                              "status": status, "abort_reason": text(rdir / "ABORTED")})
+            if status == "COMPLETE":
+                r = analyse(rdir, executed)
+                r["campaign"] = cdir.name
+                r["planned_arm"] = p["arm"]
+                results.append(r)
 
     for name, rows in (("live-writer-inventory.csv", inventory), ("live-writer-runs.csv", results)):
         if rows:
@@ -159,24 +173,25 @@ def main():
                 w.writeheader()
                 w.writerows(rows)
 
-    summary = {"campaign": cdir.name, "seed": text(cdir / "seed.txt")}
+    summary = {"campaigns": seeds,
+               "runs_where_executed_arm_differs_from_plan": sum(1 for r in results if r["arm"] != r["planned_arm"])}
     for arm in ("fenced", "unfenced"):
         rs = [r for r in results if r["arm"] == arm]
         violating = sum(1 for r in rs if r["original_commits_after_cutoff"] > 0)
         summary[arm] = {
             "runs_complete": len(rs),
-            "runs_aborted": sum(1 for i in inventory if i["arm"] == arm and i["status"] == "ABORTED"),
             "runs_with_original_commit_after_cutoff": violating,
-            "upper_95_rate": beta_upper(violating, len(rs)),
+            "upper_95_rate": beta_upper(violating, len(rs)) if rs else None,
             "original_commits_after_cutoff_total": sum(r["original_commits_after_cutoff"] for r in rs),
             "replacement_ready_runs": sum(1 for r in rs if r["replacement_ready"]),
-            "runs_with_acked_write_missing": sum(1 for r in rs if r["original_acked_but_not_committed"] > 0),
+            "replacement_commits_total": sum(r["replacement_commits"] for r in rs),
             "runs_with_overlapping_writers": sum(1 for r in rs if r["writers_overlapped_in_time"]),
         }
+    summary["runs_aborted"] = sum(1 for i in inventory if i["status"] == "ABORTED")
 
     f, u = summary["fenced"], summary["unfenced"]
     if f["runs_complete"] == 0:
-        h3 = "NOT TESTED"
+        h3 = "NOT TESTED (no run executed the fence)"
     elif f["runs_with_original_commit_after_cutoff"] > 0:
         h3 = "REJECTED"
     elif u["runs_with_original_commit_after_cutoff"] == 0:

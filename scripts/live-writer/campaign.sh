@@ -44,6 +44,7 @@ BASELINE_DATADIR="${NFS_ROOT}/baseline-001"
 FENCE_HELPER="/usr/local/sbin/fa-writer-fence-w2"
 
 RUNS_PER_ARM="${RUNS_PER_ARM:-10}"
+LW_ARMS="${LW_ARMS:-fenced unfenced}"
 POST_FENCE_SECONDS="${POST_FENCE_SECONDS:-120}"
 UNFENCED_FAULT_SECONDS="${UNFENCED_FAULT_SECONDS:-180}"
 REPLACEMENT_WAIT_SECONDS="${REPLACEMENT_WAIT_SECONDS:-240}"
@@ -68,13 +69,14 @@ campaign_dir() {
     mkdir -p "${dir}"
     echo "${seed}" > "${dir}/seed.txt"
     ln -s "${id}" "${CURRENT_LINK}"
-    python3 - "${dir}" "${seed}" "${RUNS_PER_ARM}" <<'PY'
+    python3 - "${dir}" "${seed}" "${RUNS_PER_ARM}" "${LW_ARMS}" <<'PY'
 import csv, random, sys
 d, seed, n = sys.argv[1], int(sys.argv[2]), int(sys.argv[3])
-rows = [(arm, i) for arm in ("fenced", "unfenced") for i in range(1, n + 1)]
+arms = sys.argv[4].split()
+rows = [(arm, i) for arm in arms for i in range(1, n + 1)]
 random.Random(seed).shuffle(rows)
 with open(f"{d}/plan.csv", "w", newline="") as f:
-    w = csv.writer(f)
+    w = csv.writer(f, lineterminator="\n")
     w.writerow(["order", "run_id", "arm"])
     for k, (arm, i) in enumerate(rows, 1):
         w.writerow([k, f"r{k:03d}-{arm}", arm])
@@ -84,6 +86,7 @@ PY
         echo "created_utc=$(utc_now)"
         echo "seed=${seed}"
         echo "git_commit=$(git -C "${REPO_ROOT}" rev-parse HEAD)"
+        echo "arms=${LW_ARMS}"
         echo "runs_per_arm=${RUNS_PER_ARM}"
         echo "post_fence_seconds=${POST_FENCE_SECONDS}"
         echo "unfenced_fault_seconds=${UNFENCED_FAULT_SECONDS}"
@@ -367,7 +370,9 @@ one_run() {
 run_all() {
     local dir plan line _order run_id arm rc
     dir="$(campaign_dir)"
-    mapfile -t plan < <(tail -n +2 "${dir}/plan.csv")
+    # Strip carriage returns: a plan written with CRLF line endings would
+    # otherwise leave "fenced\r" in the arm field and select the wrong branch.
+    mapfile -t plan < <(tail -n +2 "${dir}/plan.csv" | tr -d '\r')
     for line in "${plan[@]}"; do
         IFS=',' read -r _order run_id arm <<< "${line}"
         [[ -f "${dir}/runs/${run_id}/COMPLETE" ]] && continue

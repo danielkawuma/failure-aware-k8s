@@ -1,0 +1,75 @@
+LAST SEEN   TYPE      REASON                 OBJECT                               MESSAGE
+20m         Normal    Scheduled              pod/baseline-web-6d9944dc64-4q6kt    Successfully assigned failure-aware/baseline-web-6d9944dc64-4q6kt to k3s-worker1
+19m         Normal    Scheduled              pod/baseline-web-6d9944dc64-lsr92    Successfully assigned failure-aware/baseline-web-6d9944dc64-lsr92 to k3s-worker3
+31m         Normal    Scheduled              pod/baseline-web-76c9977f7-g6v5k     Successfully assigned failure-aware/baseline-web-76c9977f7-g6v5k to k3s-worker3
+27m         Normal    Scheduled              pod/fa-ladder-client                 Successfully assigned failure-aware/fa-ladder-client to k3s-worker2
+24m         Normal    Scheduled              pod/baseline-web-fd5b65856-tjm7t     Successfully assigned failure-aware/baseline-web-fd5b65856-tjm7t to k3s-worker1
+26m         Normal    Scheduled              pod/baseline-web-55cf7899fc-fmftr    Successfully assigned failure-aware/baseline-web-55cf7899fc-fmftr to k3s-worker3
+24m         Normal    Scheduled              pod/baseline-web-fd5b65856-9pq2k     Successfully assigned failure-aware/baseline-web-fd5b65856-9pq2k to k3s-worker3
+19m         Normal    Scheduled              pod/baseline-web-55b9bf7755-zdg9z    Successfully assigned failure-aware/baseline-web-55b9bf7755-zdg9z to k3s-worker2
+11m         Normal    Scheduled              pod/baseline-web-6d9944dc64-zgbsl    Successfully assigned failure-aware/baseline-web-6d9944dc64-zgbsl to k3s-worker1
+27m         Normal    Scheduled              pod/baseline-web-55cf7899fc-frq7f    Successfully assigned failure-aware/baseline-web-55cf7899fc-frq7f to k3s-worker1
+36m         Warning   NodeNotReady           pod/baseline-web-76c9977f7-tbqnm     Node is not ready
+31m         Normal    TaintManagerEviction   pod/baseline-web-76c9977f7-tbqnm     Marking for deletion Pod failure-aware/baseline-web-76c9977f7-tbqnm
+31m         Normal    SuccessfulCreate       replicaset/baseline-web-76c9977f7    Created pod: baseline-web-76c9977f7-g6v5k
+31m         Normal    Started                pod/baseline-web-76c9977f7-g6v5k     Container started
+31m         Normal    Created                pod/baseline-web-76c9977f7-g6v5k     Container created
+31m         Normal    Pulled                 pod/baseline-web-76c9977f7-g6v5k     Container image "nginx:alpine" already present on machine and can be accessed by the pod
+31m         Warning   FailedMount            pod/baseline-web-76c9977f7-tbqnm     MountVolume.SetUp failed for volume "kube-api-access-67gvc" : object "failure-aware"/"kube-root-ca.crt" not registered
+27m         Normal    Pulled                 pod/fa-ladder-client                 Container image "busybox:1.36" already present on machine and can be accessed by the pod
+27m         Normal    Created                pod/fa-ladder-client                 Container created
+27m         Normal    Started                pod/fa-ladder-client                 Container started
+27m         Normal    Killing                pod/baseline-web-76c9977f7-g6v5k     Stopping container nginx
+27m         Normal    SuccessfulCreate       replicaset/baseline-web-55cf7899fc   Created pod: baseline-web-55cf7899fc-frq7f
+27m         Normal    ScalingReplicaSet      deployment/baseline-web              Scaled up replica set baseline-web-55cf7899fc from 0 to 1
+27m         Normal    Pulled                 pod/baseline-web-55cf7899fc-frq7f    Container image "nginx:alpine" already present on machine and can be accessed by the pod
+27m         Normal    Created                pod/baseline-web-55cf7899fc-frq7f    Container created
+27m         Normal    Started                pod/baseline-web-55cf7899fc-frq7f    Container started
+26m         Warning   NodeNotReady           pod/baseline-web-55cf7899fc-frq7f    Node is not ready
+26m         Normal    SuccessfulCreate       replicaset/baseline-web-55cf7899fc   Created pod: baseline-web-55cf7899fc-fmftr
+26m         Normal    TaintManagerEviction   pod/baseline-web-55cf7899fc-frq7f    Marking for deletion Pod failure-aware/baseline-web-55cf7899fc-frq7f
+26m         Normal    Started                pod/baseline-web-55cf7899fc-fmftr    Container started
+26m         Normal    Created                pod/baseline-web-55cf7899fc-fmftr    Container created
+26m         Normal    Pulled                 pod/baseline-web-55cf7899fc-fmftr    Container image "nginx:alpine" already present on machine and can be accessed by the pod
+25m         Normal    Killing                pod/baseline-web-55cf7899fc-frq7f    Stopping container nginx
+24m         Normal    Killing                pod/baseline-web-55cf7899fc-fmftr    Stopping container nginx
+24m         Normal    ScalingReplicaSet      deployment/baseline-web              Scaled up replica set baseline-web-fd5b65856 from 0 to 2
+24m         Normal    SuccessfulCreate       replicaset/baseline-web-fd5b65856    Created pod: baseline-web-fd5b65856-tjm7t
+24m         Normal    SuccessfulCreate       replicaset/baseline-web-fd5b65856    Created pod: baseline-web-fd5b65856-9pq2k
+24m         Normal    NoPods                 poddisruptionbudget/baseline-web     No matching pods found
+24m         Normal    Pulled                 pod/baseline-web-fd5b65856-tjm7t     Container image "nginx:alpine" already present on machine and can be accessed by the pod
+24m         Normal    Started                pod/baseline-web-fd5b65856-tjm7t     Container started
+24m         Normal    Created                pod/baseline-web-fd5b65856-tjm7t     Container created
+24m         Normal    Started                pod/baseline-web-fd5b65856-9pq2k     Container started
+24m         Normal    Created                pod/baseline-web-fd5b65856-9pq2k     Container created
+24m         Normal    Pulled                 pod/baseline-web-fd5b65856-9pq2k     Container image "nginx:alpine" already present on machine and can be accessed by the pod
+23m         Warning   NodeNotReady           pod/baseline-web-fd5b65856-tjm7t     Node is not ready
+21m         Normal    TaintManagerEviction   pod/baseline-web-fd5b65856-tjm7t     Cancelling deletion of Pod failure-aware/baseline-web-fd5b65856-tjm7t
+20m         Normal    Killing                pod/baseline-web-fd5b65856-9pq2k     Stopping container nginx
+20m         Normal    Killing                pod/baseline-web-fd5b65856-tjm7t     Stopping container nginx
+20m         Normal    SuccessfulCreate       replicaset/baseline-web-6d9944dc64   Created pod: baseline-web-6d9944dc64-4q6kt
+20m         Normal    ScalingReplicaSet      deployment/baseline-web              Scaled up replica set baseline-web-6d9944dc64 from 0 to 1
+20m         Normal    Started                pod/baseline-web-6d9944dc64-4q6kt    Container started
+20m         Normal    Created                pod/baseline-web-6d9944dc64-4q6kt    Container created
+20m         Normal    Pulled                 pod/baseline-web-6d9944dc64-4q6kt    Container image "nginx:alpine" already present on machine and can be accessed by the pod
+19m         Warning   NodeNotReady           pod/baseline-web-6d9944dc64-4q6kt    Node is not ready
+19m         Normal    ScalingReplicaSet      deployment/baseline-web              Scaled up replica set baseline-web-55b9bf7755 from 0 to 1
+19m         Normal    SuccessfulCreate       replicaset/baseline-web-6d9944dc64   Created pod: baseline-web-6d9944dc64-lsr92
+19m         Normal    SuccessfulCreate       replicaset/baseline-web-55b9bf7755   Created pod: baseline-web-55b9bf7755-zdg9z
+19m         Normal    Created                pod/baseline-web-6d9944dc64-lsr92    Container created
+19m         Normal    SuccessfulDelete       replicaset/baseline-web-6d9944dc64   Deleted pod: baseline-web-6d9944dc64-lsr92
+19m         Normal    Pulled                 pod/baseline-web-6d9944dc64-lsr92    Container image "nginx:alpine" already present on machine and can be accessed by the pod
+19m         Normal    Pulled                 pod/baseline-web-55b9bf7755-zdg9z    Container image "nginx:alpine" already present on machine and can be accessed by the pod
+19m         Normal    Created                pod/baseline-web-55b9bf7755-zdg9z    Container created
+19m         Normal    Started                pod/baseline-web-6d9944dc64-lsr92    Container started
+19m         Normal    ScalingReplicaSet      deployment/baseline-web              Scaled down replica set baseline-web-6d9944dc64 from 1 to 0
+19m         Normal    Started                pod/baseline-web-55b9bf7755-zdg9z    Container started
+19m         Normal    Killing                pod/baseline-web-6d9944dc64-lsr92    Stopping container nginx
+12m         Normal    Killing                pod/baseline-web-6d9944dc64-4q6kt    Stopping container nginx
+11m         Normal    Killing                pod/baseline-web-55b9bf7755-zdg9z    Stopping container nginx
+11m         Normal    ScalingReplicaSet      deployment/baseline-web              Scaled up replica set baseline-web-6d9944dc64 from 0 to 1
+11m         Normal    SuccessfulCreate       replicaset/baseline-web-6d9944dc64   Created pod: baseline-web-6d9944dc64-zgbsl
+11m         Normal    Pulled                 pod/baseline-web-6d9944dc64-zgbsl    Container image "nginx:alpine" already present on machine and can be accessed by the pod
+11m         Normal    Created                pod/baseline-web-6d9944dc64-zgbsl    Container created
+11m         Normal    Started                pod/baseline-web-6d9944dc64-zgbsl    Container started
+10m         Warning   NodeNotReady           pod/baseline-web-6d9944dc64-zgbsl    Node is not ready

@@ -1,0 +1,19 @@
+{
+  "scenario": "scenario-b",
+  "target_node": "k3s-worker1",
+  "namespace": "failure-aware",
+  "pod_label_selector": "app=baseline-web",
+  "request_interval_ms": 1000,
+  "request_timeout_ms": 3000,
+  "service_targets": [
+    {
+      "node": "k3s-worker1",
+      "url": "http://102.34.160.87:30364"
+    },
+    {
+      "node": "k3s-worker2",
+      "url": "http://102.34.160.103:30364"
+    }
+  ],
+  "measurement_url": "http://102.34.160.103:30364"
+}

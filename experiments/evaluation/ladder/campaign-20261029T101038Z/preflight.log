@@ -1,0 +1,37 @@
+preflight_utc=2026-10-29T10:10:44.236Z
+git_commit=4ce8078948747e599175c941529ec9d02c088705
+controller_sha256=7490cc7b635eb1d7fdecd00c31eac7abc0ffbd1baeaa51509eb3fd38e54dab43
+harness_sha256=91e23f98c2b3980103d30cfdcd44a4ce82bff020c70c3a0468d0f9d1b7bf2ffc
+rustc=rustc 1.97.1 (8bab26f4f 2026-07-14)
+NAME          STATUS   ROLES           AGE   VERSION        INTERNAL-IP      EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION              CONTAINER-RUNTIME
+k3s-server    Ready    control-plane   42d   v1.36.4+k3s1   102.34.160.89    <none>        Ubuntu 24.04.5 LTS   6.8.0-59-generic (amd64)    containerd://2.3.4-k3s1.36
+k3s-worker1   Ready    <none>          42d   v1.36.4+k3s1   102.34.160.87    <none>        Ubuntu 24.04.5 LTS   6.8.0-147-generic (amd64)   containerd://2.3.4-k3s1.36
+k3s-worker2   Ready    <none>          42d   v1.36.4+k3s1   102.34.160.103   <none>        Ubuntu 24.04.5 LTS   6.8.0-59-generic (amd64)    containerd://2.3.4-k3s1.36
+k3s-worker3   Ready    <none>          25d   v1.36.4+k3s1   102.34.160.36    <none>        Ubuntu 24.04.5 LTS   6.8.0-147-generic (amd64)   containerd://2.3.4-k3s1.36
+k3s-worker4   Ready    <none>          25d   v1.36.4+k3s1   102.34.160.104   <none>        Ubuntu 24.04.5 LTS   6.8.0-59-generic (amd64)    containerd://2.3.4-k3s1.36
+NAMESPACE               NAME                                                              READY   STATUS      RESTARTS         AGE     IP            NODE          NOMINATED NODE   READINESS GATES
+failure-aware-db-test   fenced-mariadb-5955b78688-5cv7d                                   1/1     Running     0                18d     10.42.4.3     k3s-worker4   <none>           <none>
+failure-aware           baseline-web-76c9977f7-g6v5k                                      1/1     Running     0                4m20s   10.42.3.58    k3s-worker3   <none>           <none>
+failure-aware           fenced-postgres-558494f744-ks9f2                                  1/1     Running     0                24d     10.42.2.139   k3s-worker2   <none>           <none>
+failure-aware           postgres-client-56bc94b556-dd8qv                                  1/1     Running     0                18d     10.42.0.9     k3s-server    <none>           <none>
+kube-system             coredns-54996dc9b4-9499t                                          1/1     Running     0                42d     10.42.0.5     k3s-server    <none>           <none>
+kube-system             helm-install-traefik-crd-qnqvx                                    0/1     Completed   0                42d     10.42.0.3     k3s-server    <none>           <none>
+kube-system             helm-install-traefik-l8j2j                                        0/1     Completed   2 (42d ago)      42d     10.42.0.2     k3s-server    <none>           <none>
+kube-system             local-path-provisioner-77b9867795-w85jt                           1/1     Running     0                42d     10.42.0.6     k3s-server    <none>           <none>
+kube-system             metrics-server-6dc596dfb8-gd4sg                                   1/1     Running     0                42d     10.42.0.4     k3s-server    <none>           <none>
+kube-system             svclb-traefik-4652a1e7-7cfz7                                      2/2     Running     0                42d     10.42.0.7     k3s-server    <none>           <none>
+kube-system             svclb-traefik-4652a1e7-b267b                                      2/2     Running     30 (11d ago)     25d     10.42.3.46    k3s-worker3   <none>           <none>
+kube-system             svclb-traefik-4652a1e7-l9n8s                                      2/2     Running     26 (3m41s ago)   42d     10.42.1.124   k3s-worker1   <none>           <none>
+kube-system             svclb-traefik-4652a1e7-q8cb6                                      2/2     Running     0                25d     10.42.4.2     k3s-worker4   <none>           <none>
+kube-system             svclb-traefik-4652a1e7-qhrld                                      2/2     Running     0                42d     10.42.2.2     k3s-worker2   <none>           <none>
+kube-system             traefik-59b7647586-qmxgn                                          1/1     Running     0                42d     10.42.0.8     k3s-server    <none>           <none>
+nfs-provisioner         nfs-provisioner-nfs-subdir-external-provisioner-7bd87bf7ccb56dn   1/1     Running     0                18d     10.42.2.153   k3s-worker2   <none>           <none>
+openmrs                 openmrs-backend-588d5d4d88-zs4sm                                  0/1     Running     0                4m20s   10.42.1.127   k3s-worker1   <none>           <none>
+openmrs                 openmrs-frontend-5c586c56ff-jq2w8                                 1/1     Running     0                4m20s   10.42.1.126   k3s-worker1   <none>           <none>
+openmrs                 openmrs-gateway-7995b88dd7-lsghn                                  1/1     Running     0                4m20s   10.42.1.125   k3s-worker1   <none>           <none>
+openmrs                 openmrs-mariadb-7645bb895c-t5vdj                                  1/1     Running     0                18d     10.42.2.152   k3s-worker2   <none>           <none>
+k3s-server 
+k3s-worker1 fault-target
+k3s-worker2 recovery-candidate
+k3s-worker3 recovery-candidate
+k3s-worker4 recovery-candidate

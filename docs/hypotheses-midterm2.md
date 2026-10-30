@@ -211,3 +211,16 @@ NodePort filter selects (`scripts/ladder/probe_grid.py`). The states,
 trial counts, classification rule and H4 decision rule are unchanged.
 The probe grid and the overhead windows were run after the live-writer
 test, in the same campaign directory and with the same seed.
+
+## Correction, 30 October 2026: live-writer arm assignment
+
+The first live-writer campaign (`campaign-20261029T201737Z`, 20 runs)
+wrote its plan with CRLF line endings, so the arm field read as
+"fenced\r" and every run took the no-fence branch: the replacement was
+released 10 s after suspicion and no fence was installed. All 20 runs
+therefore executed the unfenced procedure; they are reported as the
+unfenced arm, and none of them counts towards the fenced arm. The runner
+now strips carriage returns and writes the plan with LF endings, and the
+analysis assigns each run to the arm it executed (a run is fenced only if
+its fence was verified). The fenced arm is run in a second campaign with
+`LW_ARMS=fenced` and ten runs, under the same H3 rule.
