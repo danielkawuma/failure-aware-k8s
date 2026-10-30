@@ -86,11 +86,17 @@ class Remote:
         if netem is None:
             return
         i = self.interface()
+        # A fourth band is added and no traffic is mapped to it by default
+        # (the priomap uses bands 1:1-1:3 only), so the impairment reaches
+        # only packets the filter selects: the workload's replies from the
+        # NodePort. With the default three bands, bulk-class traffic such as
+        # non-interactive SSH falls into the impaired band.
         self.run(
-            f"sudo -n tc qdisc add dev {i} root handle 1: prio && "
-            f"sudo -n tc qdisc add dev {i} parent 1:3 handle 30: netem {netem} && "
+            f"sudo -n tc qdisc add dev {i} root handle 1: prio bands 4 "
+            f"priomap 1 2 2 2 1 2 0 0 1 1 1 1 1 1 1 1 && "
+            f"sudo -n tc qdisc add dev {i} parent 1:4 handle 40: netem {netem} && "
             f"sudo -n tc filter add dev {i} protocol ip parent 1:0 prio 3 u32 "
-            f"match ip sport {self.nodeport} 0xffff flowid 1:3"
+            f"match ip sport {self.nodeport} 0xffff flowid 1:4"
         )
 
     def show(self):

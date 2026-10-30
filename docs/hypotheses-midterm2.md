@@ -199,3 +199,15 @@ Run order is shuffled with a fresh logged seed per campaign. Results are
 reported descriptively (replacement counts with Clopper-Pearson
 intervals, medians) as an extension of the ladder, not as tests of
 H1 to H5.
+
+## Correction, 30 October 2026: probe-grid impairment
+
+The probe grid did not start on 29 October: its self-test applied the
+impairment with a three-band `prio` qdisc, whose default priority map
+also sends bulk-class traffic to the impaired band, so the SSH command
+that installs the impairment was itself dropped and timed out. No trial
+was recorded. The impairment now uses a fourth band that only the
+NodePort filter selects (`scripts/ladder/probe_grid.py`). The states,
+trial counts, classification rule and H4 decision rule are unchanged.
+The probe grid and the overhead windows were run after the live-writer
+test, in the same campaign directory and with the same seed.
