@@ -1,0 +1,205 @@
+<mxfile host="app.diagrams.net" agent="OpenAI">
+  <diagram id="editable-14_Chronos_Kubernetes_Scheduler" name="Architecture">
+    <mxGraphModel dx="2580" dy="1703" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2400" pageHeight="1350" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="t2" parent="1" style="text;html=1;strokeColor=none;fillColor=none;whiteSpace=wrap;fontColor=#000000;fontSize=22;fontStyle=1;align=center;verticalAlign=middle;spacing=2;" value="Chronos Customizable Kubernetes Scheduler" vertex="1">
+          <mxGeometry height="75.6" width="2291.4" x="54" y="10.8" as="geometry" />
+        </mxCell>
+        <mxCell id="v3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;dashed=0;fontColor=#000000;fontSize=22;fontStyle=0;align=center;verticalAlign=middle;spacing=6;" value="" vertex="1">
+          <mxGeometry height="81" width="882" x="648" y="99" as="geometry" />
+        </mxCell>
+        <mxCell id="t4" parent="1" style="text;html=1;strokeColor=none;fillColor=none;whiteSpace=wrap;fontColor=#000000;fontSize=15;fontStyle=1;align=center;verticalAlign=middle;spacing=2;" value="User creates Pod&lt;br&gt;kubectl apply / YAML" vertex="1">
+          <mxGeometry height="70.2" width="860.4" x="658.8" y="104.4" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" style="edgeStyle=none;html=1;rounded=0;orthogonalLoop=1;jettySize=auto;strokeColor=#000000;strokeWidth=2;dashed=0;startArrow=none;startFill=1;endArrow=classic;endFill=1;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1089" y="180" as="sourcePoint" />
+            <mxPoint x="1089" y="201.6" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="v6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;dashed=0;fontColor=#000000;fontSize=22;fontStyle=0;align=center;verticalAlign=middle;spacing=6;" value="" vertex="1">
+          <mxGeometry height="81" width="882" x="648" y="201.6" as="geometry" />
+        </mxCell>
+        <mxCell id="t7" parent="1" style="text;html=1;strokeColor=none;fillColor=none;whiteSpace=wrap;fontColor=#000000;fontSize=15;fontStyle=1;align=center;verticalAlign=middle;spacing=2;" value="Kubernetes API server&lt;br&gt;Pod recorded, remains Pending (schedulerName: chronos)" vertex="1">
+          <mxGeometry height="70.2" width="860.4" x="658.8" y="207" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="1" style="edgeStyle=none;html=1;rounded=0;orthogonalLoop=1;jettySize=auto;strokeColor=#000000;strokeWidth=2;dashed=0;startArrow=none;startFill=1;endArrow=classic;endFill=1;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1089" y="282.6" as="sourcePoint" />
+            <mxPoint x="1089" y="304.2" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="v9" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;dashed=0;fontColor=#000000;fontSize=22;fontStyle=0;align=center;verticalAlign=middle;spacing=6;" value="" vertex="1">
+          <mxGeometry height="81" width="882" x="648" y="304.2" as="geometry" />
+        </mxCell>
+        <mxCell id="t10" parent="1" style="text;html=1;strokeColor=none;fillColor=none;whiteSpace=wrap;fontColor=#000000;fontSize=15;fontStyle=1;align=center;verticalAlign=middle;spacing=2;" value="Kubernetes informer&lt;br&gt;Watches for new Pods needing scheduling, notifies Chronos" vertex="1">
+          <mxGeometry height="70.2" width="860.4" x="658.8" y="309.6" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" edge="1" parent="1" style="edgeStyle=none;html=1;rounded=0;orthogonalLoop=1;jettySize=auto;strokeColor=#000000;strokeWidth=2;dashed=0;startArrow=none;startFill=1;endArrow=classic;endFill=1;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1089" y="385.2" as="sourcePoint" />
+            <mxPoint x="1089" y="406.8" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t12" parent="1" style="text;html=1;strokeColor=none;fillColor=none;whiteSpace=wrap;fontColor=#000000;fontSize=14;fontStyle=1;align=center;verticalAlign=middle;spacing=2;" value="CHRONOS SCHEDULING ENGINE" vertex="1">
+          <mxGeometry height="39.6" width="892.8" x="642.6" y="414" as="geometry" />
+        </mxCell>
+        <mxCell id="v13" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;dashed=0;fontColor=#000000;fontSize=22;fontStyle=0;align=center;verticalAlign=middle;spacing=6;" value="" vertex="1">
+          <mxGeometry height="75.6" width="882" x="648" y="460.8" as="geometry" />
+        </mxCell>
+        <mxCell id="t14" parent="1" style="text;html=1;strokeColor=none;fillColor=none;whiteSpace=wrap;fontColor=#000000;fontSize=14;fontStyle=1;align=center;verticalAlign=middle;spacing=2;" value="A.  YAML template engine&lt;br&gt;Parses admin policy; determines scoring metrics" vertex="1">
+          <mxGeometry height="64.8" width="860.4" x="658.8" y="466.2" as="geometry" />
+        </mxCell>
+        <mxCell id="e15" edge="1" parent="1" style="edgeStyle=none;html=1;rounded=0;orthogonalLoop=1;jettySize=auto;strokeColor=#000000;strokeWidth=2;dashed=0;startArrow=none;startFill=1;endArrow=classic;endFill=1;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1089" y="536.4" as="sourcePoint" />
+            <mxPoint x="1089" y="554.4" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="v16" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;dashed=0;fontColor=#000000;fontSize=22;fontStyle=0;align=center;verticalAlign=middle;spacing=6;" value="" vertex="1">
+          <mxGeometry height="75.6" width="882" x="648" y="554.4" as="geometry" />
+        </mxCell>
+        <mxCell id="t17" parent="1" style="text;html=1;strokeColor=none;fillColor=none;whiteSpace=wrap;fontColor=#000000;fontSize=14;fontStyle=1;align=center;verticalAlign=middle;spacing=2;" value="B.  Resource query system&lt;br&gt;Checks node CPU/RAM; queries InfluxDB for telemetry" vertex="1">
+          <mxGeometry height="64.8" width="860.4" x="658.8" y="559.8" as="geometry" />
+        </mxCell>
+        <mxCell id="e18" edge="1" parent="1" style="edgeStyle=none;html=1;rounded=0;orthogonalLoop=1;jettySize=auto;strokeColor=#000000;strokeWidth=2;dashed=0;startArrow=none;startFill=1;endArrow=classic;endFill=1;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1089" y="630" as="sourcePoint" />
+            <mxPoint x="1089" y="648" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="v19" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;dashed=0;fontColor=#000000;fontSize=22;fontStyle=0;align=center;verticalAlign=middle;spacing=6;" value="" vertex="1">
+          <mxGeometry height="75.6" width="882" x="648" y="648" as="geometry" />
+        </mxCell>
+        <mxCell id="t20" parent="1" style="text;html=1;strokeColor=none;fillColor=none;whiteSpace=wrap;fontColor=#000000;fontSize=14;fontStyle=1;align=center;verticalAlign=middle;spacing=2;" value="C.  Node selection logic&lt;br&gt;Ranks candidates by metric; selects the best node" vertex="1">
+          <mxGeometry height="64.8" width="860.4" x="658.8" y="653.4" as="geometry" />
+        </mxCell>
+        <mxCell id="e21" edge="1" parent="1" style="edgeStyle=none;html=1;rounded=0;orthogonalLoop=1;jettySize=auto;strokeColor=#000000;strokeWidth=2;dashed=0;startArrow=none;startFill=1;endArrow=classic;endFill=1;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1089" y="723.6" as="sourcePoint" />
+            <mxPoint x="1089" y="741.6" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="v22" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;dashed=0;fontColor=#000000;fontSize=22;fontStyle=0;align=center;verticalAlign=middle;spacing=6;" value="" vertex="1">
+          <mxGeometry height="75.6" width="882" x="648" y="741.6" as="geometry" />
+        </mxCell>
+        <mxCell id="t23" parent="1" style="text;html=1;strokeColor=none;fillColor=none;whiteSpace=wrap;fontColor=#000000;fontSize=15;fontStyle=1;align=center;verticalAlign=middle;spacing=2;" value="Selected node&lt;br&gt;Best node chosen for the Pod" vertex="1">
+          <mxGeometry height="64.8" width="860.4" x="658.8" y="747" as="geometry" />
+        </mxCell>
+        <mxCell id="e24" edge="1" parent="1" style="edgeStyle=none;html=1;rounded=0;orthogonalLoop=1;jettySize=auto;strokeColor=#000000;strokeWidth=2;dashed=0;startArrow=none;startFill=1;endArrow=classic;endFill=1;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1089" y="844.2" as="sourcePoint" />
+            <mxPoint x="1089" y="865.8" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t25" parent="1" style="text;html=1;strokeColor=none;fillColor=none;whiteSpace=wrap;fontColor=#000000;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=2;" value="bind Pod (selected node)" vertex="1">
+          <mxGeometry height="36" width="468" x="1116" y="837" as="geometry" />
+        </mxCell>
+        <mxCell id="v26" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;dashed=0;fontColor=#000000;fontSize=22;fontStyle=0;align=center;verticalAlign=middle;spacing=6;" value="" vertex="1">
+          <mxGeometry height="81" width="882" x="648" y="865.8" as="geometry" />
+        </mxCell>
+        <mxCell id="t27" parent="1" style="text;html=1;strokeColor=none;fillColor=none;whiteSpace=wrap;fontColor=#000000;fontSize=15;fontStyle=1;align=center;verticalAlign=middle;spacing=2;" value="Kubernetes API server&lt;br&gt;Pod is bound to the selected node" vertex="1">
+          <mxGeometry height="70.2" width="860.4" x="658.8" y="871.2" as="geometry" />
+        </mxCell>
+        <mxCell id="e28" edge="1" parent="1" style="edgeStyle=none;html=1;rounded=0;orthogonalLoop=1;jettySize=auto;strokeColor=#000000;strokeWidth=2;dashed=0;startArrow=none;startFill=1;endArrow=classic;endFill=1;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1089" y="946.8" as="sourcePoint" />
+            <mxPoint x="1089" y="968.4" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="v29" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;dashed=0;fontColor=#000000;fontSize=22;fontStyle=0;align=center;verticalAlign=middle;spacing=6;" value="" vertex="1">
+          <mxGeometry height="81" width="882" x="648" y="968.4" as="geometry" />
+        </mxCell>
+        <mxCell id="t30" parent="1" style="text;html=1;strokeColor=none;fillColor=none;whiteSpace=wrap;fontColor=#000000;fontSize=15;fontStyle=1;align=center;verticalAlign=middle;spacing=2;" value="Target node&lt;br&gt;Kubelet on the node receives the Pod specification" vertex="1">
+          <mxGeometry height="70.2" width="860.4" x="658.8" y="973.8" as="geometry" />
+        </mxCell>
+        <mxCell id="e31" edge="1" parent="1" style="edgeStyle=none;html=1;rounded=0;orthogonalLoop=1;jettySize=auto;strokeColor=#000000;strokeWidth=2;dashed=0;startArrow=none;startFill=1;endArrow=classic;endFill=1;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1089" y="1049.4" as="sourcePoint" />
+            <mxPoint x="1089" y="1071" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="v32" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;dashed=0;fontColor=#000000;fontSize=22;fontStyle=0;align=center;verticalAlign=middle;spacing=6;" value="" vertex="1">
+          <mxGeometry height="81" width="882" x="648" y="1071" as="geometry" />
+        </mxCell>
+        <mxCell id="t33" parent="1" style="text;html=1;strokeColor=none;fillColor=none;whiteSpace=wrap;fontColor=#000000;fontSize=15;fontStyle=1;align=center;verticalAlign=middle;spacing=2;" value="Kubelet&lt;br&gt;Instantiates the container" vertex="1">
+          <mxGeometry height="70.2" width="860.4" x="658.8" y="1076.4" as="geometry" />
+        </mxCell>
+        <mxCell id="e34" edge="1" parent="1" style="edgeStyle=none;html=1;rounded=0;orthogonalLoop=1;jettySize=auto;strokeColor=#000000;strokeWidth=2;dashed=0;startArrow=none;startFill=1;endArrow=classic;endFill=1;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1089" y="1152" as="sourcePoint" />
+            <mxPoint x="1089" y="1173.6" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="v35" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;dashed=0;fontColor=#000000;fontSize=22;fontStyle=0;align=center;verticalAlign=middle;spacing=6;" value="" vertex="1">
+          <mxGeometry height="81" width="882" x="648" y="1173.6" as="geometry" />
+        </mxCell>
+        <mxCell id="t36" parent="1" style="text;html=1;strokeColor=none;fillColor=none;whiteSpace=wrap;fontColor=#000000;fontSize=15;fontStyle=1;align=center;verticalAlign=middle;spacing=2;" value="Pod running&lt;br&gt;Container created and started on the target node" vertex="1">
+          <mxGeometry height="70.2" width="860.4" x="658.8" y="1179" as="geometry" />
+        </mxCell>
+        <mxCell id="v37" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;dashed=0;fontColor=#000000;fontSize=22;fontStyle=0;align=center;verticalAlign=middle;spacing=6;" value="" vertex="1">
+          <mxGeometry height="189" width="414" x="72" y="433.8" as="geometry" />
+        </mxCell>
+        <mxCell id="t38" parent="1" style="text;html=1;strokeColor=none;fillColor=none;whiteSpace=wrap;fontColor=#000000;fontSize=15;fontStyle=1;align=center;verticalAlign=middle;spacing=2;" value="Administrator&lt;br&gt;Provides YAML scheduling policy — “what should matter for this application?”" vertex="1">
+          <mxGeometry height="178.2" width="392.4" x="82.8" y="439.2" as="geometry" />
+        </mxCell>
+        <mxCell id="e39" edge="1" parent="1" style="edgeStyle=none;html=1;rounded=0;orthogonalLoop=1;jettySize=auto;strokeColor=#000000;strokeWidth=2;dashed=0;startArrow=none;startFill=1;endArrow=classic;endFill=1;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="486" y="528.3" as="sourcePoint" />
+            <mxPoint x="648" y="528.3" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t40" parent="1" style="text;html=1;strokeColor=none;fillColor=none;whiteSpace=wrap;fontColor=#000000;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=2;" value="policy&lt;br&gt;config" vertex="1">
+          <mxGeometry height="54" width="144" x="495" y="467.1" as="geometry" />
+        </mxCell>
+        <mxCell id="v41" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;dashed=0;fontColor=#000000;fontSize=22;fontStyle=0;align=center;verticalAlign=middle;spacing=6;" value="" vertex="1">
+          <mxGeometry height="171" width="594" x="1692" y="545.4" as="geometry" />
+        </mxCell>
+        <mxCell id="t42" parent="1" style="text;html=1;strokeColor=none;fillColor=none;whiteSpace=wrap;fontColor=#000000;fontSize=15;fontStyle=1;align=center;verticalAlign=middle;spacing=2;" value="InfluxDB&lt;br&gt;Stores historical / real-time node metrics" vertex="1">
+          <mxGeometry height="160.2" width="572.4" x="1702.8" y="550.8" as="geometry" />
+        </mxCell>
+        <mxCell id="e43" edge="1" parent="1" style="edgeStyle=none;html=1;rounded=0;orthogonalLoop=1;jettySize=auto;strokeColor=#000000;strokeWidth=2;dashed=0;startArrow=none;startFill=1;endArrow=classic;endFill=1;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1530" y="578.59" as="sourcePoint" />
+            <mxPoint x="1692" y="578.59" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t44" parent="1" style="text;html=1;strokeColor=none;fillColor=none;whiteSpace=wrap;fontColor=#000000;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=2;" value="query&lt;br&gt;metrics" vertex="1">
+          <mxGeometry height="54" width="144" x="1539" y="513.79" as="geometry" />
+        </mxCell>
+        <mxCell id="e45" edge="1" parent="1" style="edgeStyle=none;html=1;rounded=0;orthogonalLoop=1;jettySize=auto;strokeColor=#000000;strokeWidth=2;dashed=0;startArrow=none;startFill=1;endArrow=classic;endFill=1;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1692" y="608.83" as="sourcePoint" />
+            <mxPoint x="1530" y="608.83" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t46" parent="1" style="text;html=1;strokeColor=none;fillColor=none;whiteSpace=wrap;fontColor=#000000;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=2;" value="telemetry&lt;br&gt;data" vertex="1">
+          <mxGeometry height="54" width="144" x="1539" y="617.83" as="geometry" />
+        </mxCell>
+        <mxCell id="v47" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;dashed=0;fontColor=#000000;fontSize=22;fontStyle=0;align=center;verticalAlign=middle;spacing=6;" value="" vertex="1">
+          <mxGeometry height="153" width="594" x="1692" y="797.4" as="geometry" />
+        </mxCell>
+        <mxCell id="t48" parent="1" style="text;html=1;strokeColor=none;fillColor=none;whiteSpace=wrap;fontColor=#000000;fontSize=14;fontStyle=1;align=center;verticalAlign=middle;spacing=2;" value="Monitoring stack (on each node)&lt;br&gt;Node Exporter → Telegraf → InfluxDB" vertex="1">
+          <mxGeometry height="142.2" width="572.4" x="1702.8" y="802.8" as="geometry" />
+        </mxCell>
+        <mxCell id="e49" edge="1" parent="1" style="edgeStyle=none;html=1;rounded=0;orthogonalLoop=1;jettySize=auto;strokeColor=#000000;strokeWidth=2;dashed=0;startArrow=none;startFill=1;endArrow=classic;endFill=1;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1989" y="797.4" as="sourcePoint" />
+            <mxPoint x="1989" y="716.4" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t50" parent="1" style="text;html=1;strokeColor=none;fillColor=none;whiteSpace=wrap;fontColor=#000000;fontSize=14;fontStyle=0;align=center;verticalAlign=middle;spacing=2;" value="collect node metrics (CPU, network, disk, etc.)" vertex="1">
+          <mxGeometry height="36" width="630" x="1674" y="736.2" as="geometry" />
+        </mxCell>
+        <mxCell id="v51" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;dashed=0;fontColor=#000000;fontSize=22;fontStyle=0;align=center;verticalAlign=middle;spacing=6;" value="" vertex="1">
+          <mxGeometry height="436.03" width="937.8" x="624.29" y="404.77" as="geometry" />
+        </mxCell>
+        <mxCell id="gap52" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;strokeWidth=8;dashed=0;pointerEvents=0;" value="" vertex="1">
+          <mxGeometry height="1073.6" width="970" x="615" y="86.4" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
