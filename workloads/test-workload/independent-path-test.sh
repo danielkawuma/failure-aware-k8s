@@ -1,6 +1,6 @@
 #!/bin/sh
 
-URL="http://102.34.160.87:30364"
+URL="http://10.10.0.11:30364"
 
 while true; do
 
