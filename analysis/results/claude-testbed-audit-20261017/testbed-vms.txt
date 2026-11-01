@@ -1,6 +1,6 @@
 
 ========================================
-NODE=k3s-server IP=102.34.160.89
+NODE=k3s-server IP=10.10.0.10
 ========================================
 HOSTNAME:
 k3s-server
@@ -22,7 +22,7 @@ vda      100G disk
 └─vda16  913M part /boot
 INTERFACES:
 lo               UNKNOWN        127.0.0.1/8 ::1/128 
-ens3             UP             102.34.160.89/24 metric 100 fe80::f816:3eff:fe1d:6a18/64 
+ens3             UP             10.10.0.10/24 metric 100 fe80::f816:3eff:fe1d:6a18/64 
 flannel.1        UNKNOWN        10.42.0.0/32 fe80::389c:f6ff:fe05:2fc6/64 
 cni0             UP             10.42.0.1/24 fe80::3cc8:b0ff:fe21:9aff/64 
 veth14cea15f@if2 UP             fe80::e444:4dff:fe98:df5e/64 
@@ -32,18 +32,18 @@ veth1dd8252a@if2 UP             fe80::cc95:5eff:feb1:af3a/64
 veth4337f8c1@if2 UP             fe80::74a0:eff:febd:524f/64 
 veth55c0ed6e@if2 UP             fe80::d4eb:6fff:fe48:3cba/64 
 ROUTES:
-default via 102.34.160.1 dev ens3 proto dhcp src 102.34.160.89 metric 100 
+default via 10.10.0.1 dev ens3 proto dhcp src 10.10.0.10 metric 100 
 10.42.0.0/24 dev cni0 proto kernel scope link src 10.42.0.1 
 10.42.1.0/24 via 10.42.1.0 dev flannel.1 onlink 
 10.42.2.0/24 via 10.42.2.0 dev flannel.1 onlink 
 10.42.3.0/24 via 10.42.3.0 dev flannel.1 onlink 
 10.42.4.0/24 via 10.42.4.0 dev flannel.1 onlink 
-102.34.160.0/24 dev ens3 proto kernel scope link src 102.34.160.89 metric 100 
-102.34.160.1 dev ens3 proto dhcp scope link src 102.34.160.89 metric 100 
-102.34.160.3 dev ens3 proto dhcp scope link src 102.34.160.89 metric 100 
-169.254.169.254 via 102.34.160.3 dev ens3 proto dhcp src 102.34.160.89 metric 100 
-196.43.185.3 via 102.34.160.1 dev ens3 proto dhcp src 102.34.160.89 metric 100 
-196.43.185.35 via 102.34.160.1 dev ens3 proto dhcp src 102.34.160.89 metric 100 
+10.10.0.0/24 dev ens3 proto kernel scope link src 10.10.0.10 metric 100 
+10.10.0.1 dev ens3 proto dhcp scope link src 10.10.0.10 metric 100 
+10.10.0.3 dev ens3 proto dhcp scope link src 10.10.0.10 metric 100 
+169.254.169.254 via 10.10.0.3 dev ens3 proto dhcp src 10.10.0.10 metric 100 
+10.20.0.3 via 10.10.0.1 dev ens3 proto dhcp src 10.10.0.10 metric 100 
+10.20.0.35 via 10.10.0.1 dev ens3 proto dhcp src 10.10.0.10 metric 100 
 BRIDGES:
 cni0             UP             3e:c8:b0:21:9a:ff <BROADCAST,MULTICAST,UP,LOWER_UP> 
 OS:
@@ -55,7 +55,7 @@ VERSION_CODENAME=noble
 ID=ubuntu
 
 ========================================
-NODE=k3s-worker1 IP=102.34.160.87
+NODE=k3s-worker1 IP=10.10.0.11
 ========================================
 HOSTNAME:
 k3s-worker1
@@ -79,7 +79,7 @@ vda      100G disk
 └─vda16  913M part /boot
 INTERFACES:
 lo               UNKNOWN        127.0.0.1/8 ::1/128 
-ens3             UP             102.34.160.87/24 metric 100 fe80::f816:3eff:fe03:5061/64 
+ens3             UP             10.10.0.11/24 metric 100 fe80::f816:3eff:fe03:5061/64 
 flannel.1        UNKNOWN        10.42.1.0/32 fe80::f888:cbff:fe7f:8995/64 
 cni0             UP             10.42.1.1/24 fe80::84ef:8bff:fe6f:f6b3/64 
 veth495695c0@if2 UP             fe80::ecd9:a6ff:feb5:ff8f/64 
@@ -89,18 +89,18 @@ veth37e110e7@if2 UP             fe80::44b3:30ff:fe55:d12c/64
 veth0e4f0fea@if2 UP             fe80::2033:2aff:fe90:e608/64 
 veth6891968e@if2 UP             fe80::cc2f:f7ff:fe91:5ed0/64 
 ROUTES:
-default via 102.34.160.1 dev ens3 proto dhcp src 102.34.160.87 metric 100 
+default via 10.10.0.1 dev ens3 proto dhcp src 10.10.0.11 metric 100 
 10.42.0.0/24 via 10.42.0.0 dev flannel.1 onlink 
 10.42.1.0/24 dev cni0 proto kernel scope link src 10.42.1.1 
 10.42.2.0/24 via 10.42.2.0 dev flannel.1 onlink 
 10.42.3.0/24 via 10.42.3.0 dev flannel.1 onlink 
 10.42.4.0/24 via 10.42.4.0 dev flannel.1 onlink 
-102.34.160.0/24 dev ens3 proto kernel scope link src 102.34.160.87 metric 100 
-102.34.160.1 dev ens3 proto dhcp scope link src 102.34.160.87 metric 100 
-102.34.160.4 dev ens3 proto dhcp scope link src 102.34.160.87 metric 100 
-169.254.169.254 via 102.34.160.4 dev ens3 proto dhcp src 102.34.160.87 metric 100 
-196.43.185.3 via 102.34.160.1 dev ens3 proto dhcp src 102.34.160.87 metric 100 
-196.43.185.35 via 102.34.160.1 dev ens3 proto dhcp src 102.34.160.87 metric 100 
+10.10.0.0/24 dev ens3 proto kernel scope link src 10.10.0.11 metric 100 
+10.10.0.1 dev ens3 proto dhcp scope link src 10.10.0.11 metric 100 
+10.10.0.4 dev ens3 proto dhcp scope link src 10.10.0.11 metric 100 
+169.254.169.254 via 10.10.0.4 dev ens3 proto dhcp src 10.10.0.11 metric 100 
+10.20.0.3 via 10.10.0.1 dev ens3 proto dhcp src 10.10.0.11 metric 100 
+10.20.0.35 via 10.10.0.1 dev ens3 proto dhcp src 10.10.0.11 metric 100 
 BRIDGES:
 cni0             UP             86:ef:8b:6f:f6:b3 <BROADCAST,MULTICAST,UP,LOWER_UP> 
 OS:
@@ -112,7 +112,7 @@ VERSION_CODENAME=noble
 ID=ubuntu
 
 ========================================
-NODE=k3s-worker2 IP=102.34.160.103
+NODE=k3s-worker2 IP=10.10.0.12
 ========================================
 HOSTNAME:
 k3s-worker2
@@ -135,7 +135,7 @@ vda      100G disk
 └─vda16  913M part /boot
 INTERFACES:
 lo               UNKNOWN        127.0.0.1/8 ::1/128 
-ens3             UP             102.34.160.103/24 metric 100 fe80::f816:3eff:fe34:c0f4/64 
+ens3             UP             10.10.0.12/24 metric 100 fe80::f816:3eff:fe34:c0f4/64 
 flannel.1        UNKNOWN        10.42.2.0/32 fe80::30b2:48ff:fe5d:a51/64 
 cni0             UP             10.42.2.1/24 fe80::bc78:a5ff:fedf:ba95/64 
 veth3006ceb0@if2 UP             fe80::5cb4:58ff:fec6:cd8c/64 
@@ -144,18 +144,18 @@ veth3c1d0ad2@if2 UP             fe80::20e4:e2ff:fee9:1cc0/64
 vethfe881461@if2 UP             fe80::8076:c4ff:fee6:3b3/64 
 veth9f5ab1dc@if2 UP             fe80::c2c:bfff:fe75:b4fb/64 
 ROUTES:
-default via 102.34.160.1 dev ens3 proto dhcp src 102.34.160.103 metric 100 
+default via 10.10.0.1 dev ens3 proto dhcp src 10.10.0.12 metric 100 
 10.42.0.0/24 via 10.42.0.0 dev flannel.1 onlink 
 10.42.1.0/24 via 10.42.1.0 dev flannel.1 onlink 
 10.42.2.0/24 dev cni0 proto kernel scope link src 10.42.2.1 
 10.42.3.0/24 via 10.42.3.0 dev flannel.1 onlink 
 10.42.4.0/24 via 10.42.4.0 dev flannel.1 onlink 
-102.34.160.0/24 dev ens3 proto kernel scope link src 102.34.160.103 metric 100 
-102.34.160.1 dev ens3 proto dhcp scope link src 102.34.160.103 metric 100 
-102.34.160.4 dev ens3 proto dhcp scope link src 102.34.160.103 metric 100 
-169.254.169.254 via 102.34.160.4 dev ens3 proto dhcp src 102.34.160.103 metric 100 
-196.43.185.3 via 102.34.160.1 dev ens3 proto dhcp src 102.34.160.103 metric 100 
-196.43.185.35 via 102.34.160.1 dev ens3 proto dhcp src 102.34.160.103 metric 100 
+10.10.0.0/24 dev ens3 proto kernel scope link src 10.10.0.12 metric 100 
+10.10.0.1 dev ens3 proto dhcp scope link src 10.10.0.12 metric 100 
+10.10.0.4 dev ens3 proto dhcp scope link src 10.10.0.12 metric 100 
+169.254.169.254 via 10.10.0.4 dev ens3 proto dhcp src 10.10.0.12 metric 100 
+10.20.0.3 via 10.10.0.1 dev ens3 proto dhcp src 10.10.0.12 metric 100 
+10.20.0.35 via 10.10.0.1 dev ens3 proto dhcp src 10.10.0.12 metric 100 
 BRIDGES:
 cni0             UP             be:78:a5:df:ba:95 <BROADCAST,MULTICAST,UP,LOWER_UP> 
 OS:
@@ -167,7 +167,7 @@ VERSION_CODENAME=noble
 ID=ubuntu
 
 ========================================
-NODE=k3s-worker3 IP=102.34.160.36
+NODE=k3s-worker3 IP=10.10.0.13
 ========================================
 HOSTNAME:
 k3s-worker3
@@ -189,23 +189,23 @@ vda       50G disk
 └─vda16  913M part /boot
 INTERFACES:
 lo               UNKNOWN        127.0.0.1/8 ::1/128 
-ens3             UP             102.34.160.36/24 metric 100 fe80::f816:3eff:fef4:be46/64 
+ens3             UP             10.10.0.13/24 metric 100 fe80::f816:3eff:fef4:be46/64 
 flannel.1        UNKNOWN        10.42.3.0/32 fe80::c4cf:ebff:febc:895b/64 
 cni0             UP             10.42.3.1/24 fe80::b84d:ebff:fe41:6c73/64 
 vethd03e2792@if2 UP             fe80::5cc3:ecff:fec7:aa8d/64 
 ROUTES:
-default via 102.34.160.1 dev ens3 proto dhcp src 102.34.160.36 metric 100 
+default via 10.10.0.1 dev ens3 proto dhcp src 10.10.0.13 metric 100 
 10.42.0.0/24 via 10.42.0.0 dev flannel.1 onlink 
 10.42.1.0/24 via 10.42.1.0 dev flannel.1 onlink 
 10.42.2.0/24 via 10.42.2.0 dev flannel.1 onlink 
 10.42.3.0/24 dev cni0 proto kernel scope link src 10.42.3.1 
 10.42.4.0/24 via 10.42.4.0 dev flannel.1 onlink 
-102.34.160.0/24 dev ens3 proto kernel scope link src 102.34.160.36 metric 100 
-102.34.160.1 dev ens3 proto dhcp scope link src 102.34.160.36 metric 100 
-102.34.160.4 dev ens3 proto dhcp scope link src 102.34.160.36 metric 100 
-169.254.169.254 via 102.34.160.4 dev ens3 proto dhcp src 102.34.160.36 metric 100 
-196.43.185.3 via 102.34.160.1 dev ens3 proto dhcp src 102.34.160.36 metric 100 
-196.43.185.35 via 102.34.160.1 dev ens3 proto dhcp src 102.34.160.36 metric 100 
+10.10.0.0/24 dev ens3 proto kernel scope link src 10.10.0.13 metric 100 
+10.10.0.1 dev ens3 proto dhcp scope link src 10.10.0.13 metric 100 
+10.10.0.4 dev ens3 proto dhcp scope link src 10.10.0.13 metric 100 
+169.254.169.254 via 10.10.0.4 dev ens3 proto dhcp src 10.10.0.13 metric 100 
+10.20.0.3 via 10.10.0.1 dev ens3 proto dhcp src 10.10.0.13 metric 100 
+10.20.0.35 via 10.10.0.1 dev ens3 proto dhcp src 10.10.0.13 metric 100 
 BRIDGES:
 cni0             UP             ba:4d:eb:41:6c:73 <BROADCAST,MULTICAST,UP,LOWER_UP> 
 OS:
@@ -217,7 +217,7 @@ VERSION_CODENAME=noble
 ID=ubuntu
 
 ========================================
-NODE=k3s-worker4 IP=102.34.160.104
+NODE=k3s-worker4 IP=10.10.0.14
 ========================================
 HOSTNAME:
 k3s-worker4
@@ -240,7 +240,7 @@ vda       50G disk
 └─vda16  913M part /boot
 INTERFACES:
 lo               UNKNOWN        127.0.0.1/8 ::1/128 
-ens3             UP             102.34.160.104/24 metric 100 fe80::f816:3eff:fe8f:7a61/64 
+ens3             UP             10.10.0.14/24 metric 100 fe80::f816:3eff:fe8f:7a61/64 
 flannel.1        UNKNOWN        10.42.4.0/32 fe80::c0ff:5aff:fee5:6c98/64 
 cni0             UP             10.42.4.1/24 fe80::28a2:8ff:fe8b:f18e/64 
 vethb4a3c8bd@if2 UP             fe80::2c90:bbff:fee4:5b31/64 
@@ -248,18 +248,18 @@ vethdc41a82b@if2 UP             fe80::b844:dff:fe7f:2d22/64
 veth9f98b2f4@if2 UP             fe80::643c:bbff:fe78:5a66/64 
 veth5e97cc94@if2 UP             fe80::149c:99ff:fe44:f3b9/64 
 ROUTES:
-default via 102.34.160.1 dev ens3 proto dhcp src 102.34.160.104 metric 100 
+default via 10.10.0.1 dev ens3 proto dhcp src 10.10.0.14 metric 100 
 10.42.0.0/24 via 10.42.0.0 dev flannel.1 onlink 
 10.42.1.0/24 via 10.42.1.0 dev flannel.1 onlink 
 10.42.2.0/24 via 10.42.2.0 dev flannel.1 onlink 
 10.42.3.0/24 via 10.42.3.0 dev flannel.1 onlink 
 10.42.4.0/24 dev cni0 proto kernel scope link src 10.42.4.1 
-102.34.160.0/24 dev ens3 proto kernel scope link src 102.34.160.104 metric 100 
-102.34.160.1 dev ens3 proto dhcp scope link src 102.34.160.104 metric 100 
-102.34.160.3 dev ens3 proto dhcp scope link src 102.34.160.104 metric 100 
-169.254.169.254 via 102.34.160.3 dev ens3 proto dhcp src 102.34.160.104 metric 100 
-196.43.185.3 via 102.34.160.1 dev ens3 proto dhcp src 102.34.160.104 metric 100 
-196.43.185.35 via 102.34.160.1 dev ens3 proto dhcp src 102.34.160.104 metric 100 
+10.10.0.0/24 dev ens3 proto kernel scope link src 10.10.0.14 metric 100 
+10.10.0.1 dev ens3 proto dhcp scope link src 10.10.0.14 metric 100 
+10.10.0.3 dev ens3 proto dhcp scope link src 10.10.0.14 metric 100 
+169.254.169.254 via 10.10.0.3 dev ens3 proto dhcp src 10.10.0.14 metric 100 
+10.20.0.3 via 10.10.0.1 dev ens3 proto dhcp src 10.10.0.14 metric 100 
+10.20.0.35 via 10.10.0.1 dev ens3 proto dhcp src 10.10.0.14 metric 100 
 BRIDGES:
 cni0             UP             2a:a2:08:8b:f1:8e <BROADCAST,MULTICAST,UP,LOWER_UP> 
 OS:

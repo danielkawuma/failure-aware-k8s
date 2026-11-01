@@ -127,7 +127,7 @@ scenario,mode,run,valid,invalid_reason,fault_time,suspicion_time,decision_time,r
 scenario-b,native,run-001,True,,2026-09-21T11:45:30.301000+00:00,,,2026-09-21T11:51:19.610628+00:00,2026-09-21T11:51:22.323620+00:00,,2026-09-21T11:52:01.307000+00:00,,,,349.309628,352.02262,,4.885538,baseline-web-76c9977f7-wcnvr,baseline-web-76c9977f7-775k4,k3s-worker1,k3s-worker2,True,,2026-09-21T11:51:22.323469+00:00,2026-09-21T11:51:27.209007+00:00,
 FILE=analysis/results/http_latency_observations.csv
 scenario,mode,run,phase,timestamp_utc,node,target_url,status,latency_ms,success,error,source_file
-scenario-b,failure-aware,run-001,pre_fault,2026-09-21T11:53:40.839964711+00:00,k3s-worker1,http://102.34.160.87:30364,200,24.701744,True,,experiments/evaluation/scenario-b/failure-aware/run-001/http-observations.csv
+scenario-b,failure-aware,run-001,pre_fault,2026-09-21T11:53:40.839964711+00:00,k3s-worker1,http://10.10.0.11:30364,200,24.701744,True,,experiments/evaluation/scenario-b/failure-aware/run-001/http-observations.csv
 FILE=analysis/results/http_latency_by_run.csv
 scenario,mode,run,phase,total_requests,successful_requests,failed_requests,success_rate_percent,failure_rate_percent,latency_mean_ms,latency_median_ms,latency_p95_ms,latency_p99_ms,latency_min_ms,latency_max_ms,latency_stddev_ms
 scenario-b,failure-aware,run-001,fault_window,226,226,0,100.0,0.0,33.2187645,9.8104045,222.43116175,330.3508645,4.489274,779.158425,82.25899123754904

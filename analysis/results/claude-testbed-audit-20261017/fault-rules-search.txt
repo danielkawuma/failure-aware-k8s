@@ -62,7 +62,7 @@ scripts/scenario-d-config.sh
 scripts/storage-fence.sh
 
 === IPTABLES AND NETWORK RULES ===
-scripts/openmrs-c-fault.sh:15:    "sudo -n test ! -e /run/openmrs-backend-fault-ip && ! sudo -n iptables -C OUTPUT -p tcp -d 102.34.160.89 --dport 6443 -j DROP 2>/dev/null"
+scripts/openmrs-c-fault.sh:15:    "sudo -n test ! -e /run/openmrs-backend-fault-ip && ! sudo -n iptables -C OUTPUT -p tcp -d 10.10.0.10 --dport 6443 -j DROP 2>/dev/null"
 scripts/prepare-scenario-d-run004.sh:42:  exit 22
 scripts/openmrs-cd-fault.remote:38:    iptables -w 5 "$1" OUTPUT \
 scripts/openmrs-cd-fault.remote:40:        -d "$API_IP" \
@@ -79,7 +79,7 @@ scripts/openmrs-cd-fault.remote:115:        grep -Fq -- "-d $API_IP/32"; then
 scripts/openmrs-cd-fault.remote:120:    if grep -E -- '-A FORWARD .*--dport 3306 .* -j DROP' \
 scripts/experiment-config.sh:33:API_SERVER_PORT="6443"
 scripts/run-openmrs-overnight.sh:67:        'if sudo -n iptables -C OUTPUT \
-scripts/run-openmrs-overnight.sh:68:             -p tcp -d 102.34.160.89 \
+scripts/run-openmrs-overnight.sh:68:             -p tcp -d 10.10.0.10 \
 scripts/run-openmrs-overnight.sh:69:             --dport 6443 -j DROP 2>/dev/null; then
 scripts/run-overhead-campaign.sh:24:RAW_OUTPUT="${RESULTS_DIR}/controller_overhead.csv"
 scripts/run-overhead-campaign.sh:25:RUN_OUTPUT="${RESULTS_DIR}/controller_overhead_runs.csv"
@@ -604,7 +604,7 @@ harness/Cargo.lock:1669:checksum = "34df6fc39dbd26ddc9c10e6a2984476e13acce22e64e
 harness/Cargo.lock:1680:checksum = "29666d0abbfad1e3dc4dcf6144730dd3a3ab225bbbdac83319345b1b44ccfc1b"
 
 === FAULT START AND HEALING ===
-scripts/openmrs-backend-reset.sh:8:HEALTH="${OPENMRS_HEALTH_URL:-http://102.34.160.87:30366/openmrs/health/started}"
+scripts/openmrs-backend-reset.sh:8:HEALTH="${OPENMRS_HEALTH_URL:-http://10.10.0.11:30366/openmrs/health/started}"
 scripts/openmrs-backend-reset.sh:56:  (( SECONDS < DEADLINE )) || fail 'Backend not healthy on target after flexible rollout; no fault should be injected'
 scripts/openmrs-backend-reset.sh:57:  sleep 5
 scripts/openmrs-backend-reset.sh:59:log "READY: backend on $TARGET, no hostname pin, clinical health OK"
@@ -618,7 +618,7 @@ scripts/run-scenario-e-campaign.sh:71:        sleep 5
 scripts/run-openmrs-overnight.sh:33:export FAULT_SECONDS="${FAULT_SECONDS:-360}"
 scripts/run-openmrs-overnight.sh:34:export POST_FAULT_SECONDS="${POST_FAULT_SECONDS:-30}"
 scripts/run-openmrs-overnight.sh:74:healthy() {
-scripts/run-openmrs-overnight.sh:95:        http://102.34.160.87:30366/openmrs/health/started \
+scripts/run-openmrs-overnight.sh:95:        http://10.10.0.11:30366/openmrs/health/started \
 scripts/run-openmrs-overnight.sh:99:wait_healthy() {
 scripts/run-openmrs-overnight.sh:103:        if healthy; then
 scripts/run-openmrs-overnight.sh:106:        sleep 5
@@ -665,7 +665,7 @@ scripts/run-scenario-e.sh:462:  "fault_duration_seconds": ${FAULT_SECONDS}
 scripts/run-scenario-e.sh:486:echo "[7/9] Holding degradation for ${FAULT_SECONDS}s"
 scripts/run-scenario-e.sh:488:sleep "${FAULT_SECONDS}"
 scripts/run-scenario-e.sh:511:sleep "${POST_CLEAR_SECONDS}"
-scripts/check-openmrs-e.sh:18:health="${OPENMRS_CLINICAL_URL:-http://102.34.160.87:30366/openmrs/health/started}"
+scripts/check-openmrs-e.sh:18:health="${OPENMRS_CLINICAL_URL:-http://10.10.0.11:30366/openmrs/health/started}"
 scripts/check-openmrs-e.sh:19:curl -fsS --connect-timeout 3 --max-time 10 "$health" >/dev/null
 scripts/run-openmrs-cd-live-pilot.sh:178:sleep 2
 scripts/run-openmrs-cd-live-pilot.sh:208:sleep 2
@@ -718,7 +718,7 @@ scripts/run-openmrs-integrated.sh:78:    "$C_MAX_FAULT_SECONDS" \
 scripts/run-openmrs-integrated.sh:80:    "$C_POST_FAULT_SECONDS" \
 scripts/run-openmrs-integrated.sh:92:(( C_MAX_FAULT_SECONDS > 0 )) || exit 2
 scripts/run-openmrs-integrated.sh:100:       C_MAX_FAULT_SECONDS + C_POST_FAULT_SECONDS )) || {
-scripts/run-openmrs-integrated.sh:117:TARGET_URL="${OPENMRS_CLINICAL_URL:-http://102.34.160.103:30366/openmrs/health/started}"
+scripts/run-openmrs-integrated.sh:117:TARGET_URL="${OPENMRS_CLINICAL_URL:-http://10.10.0.12:30366/openmrs/health/started}"
 scripts/run-openmrs-integrated.sh:193:clear_fault() {
 scripts/run-openmrs-integrated.sh:239:    clear_fault > "$RUN/fault-clear.log" 2>&1 ||
 scripts/run-openmrs-integrated.sh:265:        if clear_fault > "$RUN/emergency-clear.log" 2>&1 &&
@@ -762,30 +762,30 @@ scripts/openmrs-cd-auto-reconcile.sh.backup:148:  for _ in $(seq 1 30); do old_p
 scripts/openmrs-cd-auto-reconcile.sh.backup:165:  sleep 3
 scripts/openmrs-cd-auto-reconcile.sh.backup:183:  (( i == STABILITY_SECONDS )) || sleep 3
 scripts/openmrs-cd-auto-reconcile.sh.backup:192:  (( i == STABILITY_SECONDS )) || sleep 3
-harness/config/openmrs-pilot.json:11:      "url": "http://102.34.160.87:30366/openmrs/health/started"
-harness/config/openmrs-pilot.json:15:      "url": "http://102.34.160.87:30366/openmrs/health/started"
-harness/config/openmrs-pilot.json:19:      "url": "http://102.34.160.87:30366/openmrs/health/started"
-harness/config/openmrs-pilot.json:23:      "url": "http://102.34.160.87:30366/openmrs/health/started"
-harness/config/openmrs-scenario-c.json:11:      "url": "http://102.34.160.87:30366/openmrs/health/started"
-harness/config/openmrs-scenario-c.json:15:      "url": "http://102.34.160.103:30366/openmrs/health/started"
-harness/config/openmrs-scenario-c.json:19:      "url": "http://102.34.160.36:30366/openmrs/health/started"
-harness/config/openmrs-scenario-c.json:23:      "url": "http://102.34.160.104:30366/openmrs/health/started"
-harness/config/openmrs-scenario-b.json:11:      "url": "http://102.34.160.87:30366/openmrs/health/started"
-harness/config/openmrs-scenario-b.json:15:      "url": "http://102.34.160.103:30366/openmrs/health/started"
-harness/config/openmrs-scenario-b.json:19:      "url": "http://102.34.160.36:30366/openmrs/health/started"
-harness/config/openmrs-scenario-b.json:23:      "url": "http://102.34.160.104:30366/openmrs/health/started"
-harness/config/openmrs-scenario-e.json:8:  "measurement_url": "http://102.34.160.104:30366/openmrs/health/started",
-harness/config/openmrs-scenario-e.json:10:    {"node": "k3s-worker1", "url": "http://102.34.160.87:30366/openmrs/health/started"},
-harness/config/openmrs-scenario-e.json:11:    {"node": "k3s-worker2", "url": "http://102.34.160.103:30366/openmrs/health/started"},
-harness/config/openmrs-scenario-e.json:12:    {"node": "k3s-worker3", "url": "http://102.34.160.36:30366/openmrs/health/started"},
-harness/config/openmrs-scenario-e.json:13:    {"node": "k3s-worker4", "url": "http://102.34.160.104:30366/openmrs/health/started"}
+harness/config/openmrs-pilot.json:11:      "url": "http://10.10.0.11:30366/openmrs/health/started"
+harness/config/openmrs-pilot.json:15:      "url": "http://10.10.0.11:30366/openmrs/health/started"
+harness/config/openmrs-pilot.json:19:      "url": "http://10.10.0.11:30366/openmrs/health/started"
+harness/config/openmrs-pilot.json:23:      "url": "http://10.10.0.11:30366/openmrs/health/started"
+harness/config/openmrs-scenario-c.json:11:      "url": "http://10.10.0.11:30366/openmrs/health/started"
+harness/config/openmrs-scenario-c.json:15:      "url": "http://10.10.0.12:30366/openmrs/health/started"
+harness/config/openmrs-scenario-c.json:19:      "url": "http://10.10.0.13:30366/openmrs/health/started"
+harness/config/openmrs-scenario-c.json:23:      "url": "http://10.10.0.14:30366/openmrs/health/started"
+harness/config/openmrs-scenario-b.json:11:      "url": "http://10.10.0.11:30366/openmrs/health/started"
+harness/config/openmrs-scenario-b.json:15:      "url": "http://10.10.0.12:30366/openmrs/health/started"
+harness/config/openmrs-scenario-b.json:19:      "url": "http://10.10.0.13:30366/openmrs/health/started"
+harness/config/openmrs-scenario-b.json:23:      "url": "http://10.10.0.14:30366/openmrs/health/started"
+harness/config/openmrs-scenario-e.json:8:  "measurement_url": "http://10.10.0.14:30366/openmrs/health/started",
+harness/config/openmrs-scenario-e.json:10:    {"node": "k3s-worker1", "url": "http://10.10.0.11:30366/openmrs/health/started"},
+harness/config/openmrs-scenario-e.json:11:    {"node": "k3s-worker2", "url": "http://10.10.0.12:30366/openmrs/health/started"},
+harness/config/openmrs-scenario-e.json:12:    {"node": "k3s-worker3", "url": "http://10.10.0.13:30366/openmrs/health/started"},
+harness/config/openmrs-scenario-e.json:13:    {"node": "k3s-worker4", "url": "http://10.10.0.14:30366/openmrs/health/started"}
 
 === SSH MANAGEMENT PATH ===
 scripts/openmrs-c-fault.sh:6:SSH_KEY=${SSH_KEY:-$HOME/.ssh/k8s-aware}
 scripts/openmrs-c-fault.sh:14:  ssh -i "$SSH_KEY" -o BatchMode=yes -o ConnectTimeout=5 "$HOST" \
 scripts/openmrs-c-fault.sh:18:ssh -i "$SSH_KEY" -o BatchMode=yes -o ConnectTimeout=5 "$HOST" \
 scripts/prepare-scenario-d-run004.sh:11:export SSH_KEY="${SSH_KEY:-$HOME/.ssh/k8s-aware}"
-scripts/prepare-scenario-d-run004.sh:15:ssh -i "$SSH_KEY" -o BatchMode=yes -o ConnectTimeout=5 ubuntu@102.34.160.36 \
+scripts/prepare-scenario-d-run004.sh:15:ssh -i "$SSH_KEY" -o BatchMode=yes -o ConnectTimeout=5 ubuntu@10.10.0.13 \
 scripts/experiment-config.sh:19:SSH_KEY="${SSH_KEY:-}"
 scripts/experiment-config.sh:21:if [[ -z "${SSH_KEY}" ]]; then
 scripts/experiment-config.sh:22:    echo "ERROR: SSH_KEY is not configured."

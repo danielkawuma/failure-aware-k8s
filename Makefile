@@ -67,7 +67,7 @@ validate-ssh:
 		-i "$$SSH_KEY" \
 		-o BatchMode=yes \
 		-o ConnectTimeout=5 \
-		ubuntu@102.34.160.87 \
+		ubuntu@10.10.0.11 \
 		'sudo -n true && echo "SSH validation OK"'
 
 validate-k8s:
@@ -140,6 +140,8 @@ reproduce:
 	@echo "Failure-Aware Kubernetes: offline results reproduction"
 	@echo "No experiments will be executed."
 	python3 $(ANALYSIS_DIR)/reproduce.py
+	python3 $(ANALYSIS_DIR)/second-phase-check.py
+	python3 $(ANALYSIS_DIR)/review-counts.py
 
 # In 'make reproduce run', Make executes reproduce first,
 # followed by this explicitly guarded live experiment target.
@@ -175,3 +177,10 @@ clean-evaluation:
 	else \
 		echo "Cancelled."; \
 	fi
+
+
+review-counts:
+	python3 $(ANALYSIS_DIR)/review-counts.py
+
+second-phase-check:
+	python3 $(ANALYSIS_DIR)/second-phase-check.py

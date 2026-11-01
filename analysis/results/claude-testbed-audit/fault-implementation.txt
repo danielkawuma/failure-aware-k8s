@@ -1,11 +1,11 @@
 === FAULT RULES AND HEALING ===
 scripts/openmrs-c-fault.sh:6:SSH_KEY=${SSH_KEY:-$HOME/.ssh/k8s-aware}
 scripts/openmrs-c-fault.sh:14:  ssh -i "$SSH_KEY" -o BatchMode=yes -o ConnectTimeout=5 "$HOST" \
-scripts/openmrs-c-fault.sh:15:    "sudo -n test ! -e /run/openmrs-backend-fault-ip && ! sudo -n iptables -C OUTPUT -p tcp -d 102.34.160.89 --dport 6443 -j DROP 2>/dev/null"
+scripts/openmrs-c-fault.sh:15:    "sudo -n test ! -e /run/openmrs-backend-fault-ip && ! sudo -n iptables -C OUTPUT -p tcp -d 10.10.0.10 --dport 6443 -j DROP 2>/dev/null"
 scripts/openmrs-c-fault.sh:18:ssh -i "$SSH_KEY" -o BatchMode=yes -o ConnectTimeout=5 "$HOST" \
 scripts/prepare-scenario-d-run004.sh:11:export SSH_KEY="${SSH_KEY:-$HOME/.ssh/k8s-aware}"
-scripts/prepare-scenario-d-run004.sh:15:ssh -i "$SSH_KEY" -o BatchMode=yes -o ConnectTimeout=5 ubuntu@102.34.160.36 \
-scripts/openmrs-backend-reset.sh:8:HEALTH="${OPENMRS_HEALTH_URL:-http://102.34.160.87:30366/openmrs/health/started}"
+scripts/prepare-scenario-d-run004.sh:15:ssh -i "$SSH_KEY" -o BatchMode=yes -o ConnectTimeout=5 ubuntu@10.10.0.13 \
+scripts/openmrs-backend-reset.sh:8:HEALTH="${OPENMRS_HEALTH_URL:-http://10.10.0.11:30366/openmrs/health/started}"
 scripts/openmrs-backend-reset.sh:56:  (( SECONDS < DEADLINE )) || fail 'Backend not healthy on target after flexible rollout; no fault should be injected'
 scripts/openmrs-backend-reset.sh:59:log "READY: backend on $TARGET, no hostname pin, clinical health OK"
 scripts/openmrs-db-tcp-probe.sh:8:echo 'DATABASE_PROCESS_RESPONSIVE: not an independent partition probe.'
@@ -26,7 +26,7 @@ scripts/run-openmrs-overnight.sh:63:    ssh -i "$SSH_KEY" \
 scripts/run-openmrs-overnight.sh:67:        'if sudo -n iptables -C OUTPUT \
 scripts/run-openmrs-overnight.sh:69:             --dport 6443 -j DROP 2>/dev/null; then
 scripts/run-openmrs-overnight.sh:74:healthy() {
-scripts/run-openmrs-overnight.sh:95:        http://102.34.160.87:30366/openmrs/health/started \
+scripts/run-openmrs-overnight.sh:95:        http://10.10.0.11:30366/openmrs/health/started \
 scripts/run-openmrs-overnight.sh:99:wait_healthy() {
 scripts/run-openmrs-overnight.sh:103:        if healthy; then
 scripts/run-openmrs-overnight.sh:162:# Avoid starting with a stale partition.
@@ -105,7 +105,7 @@ scripts/openmrs-db-probe.py:91:    print(f'Probe original={a.host}:{a.port} veri
 scripts/run-scenario-e.sh:395:echo "[4/9] Verifying healthy initial state"
 scripts/run-scenario-e.sh:462:  "fault_duration_seconds": ${FAULT_SECONDS}
 scripts/check-openmrs-e.sh:5:: "${SSH_KEY:=$HOME/.ssh/k8s-aware}"
-scripts/check-openmrs-e.sh:18:health="${OPENMRS_CLINICAL_URL:-http://102.34.160.87:30366/openmrs/health/started}"
+scripts/check-openmrs-e.sh:18:health="${OPENMRS_CLINICAL_URL:-http://10.10.0.11:30366/openmrs/health/started}"
 scripts/check-openmrs-e.sh:19:curl -fsS --connect-timeout 3 --max-time 10 "$health" >/dev/null
 scripts/run-openmrs-cd-live-pilot.sh:7:export SSH_KEY="${SSH_KEY:-$HOME/.ssh/k8s-aware}"
 scripts/run-openmrs-cd-live-pilot.sh:97:    timeout 30 ssh \
@@ -159,7 +159,7 @@ scripts/openmrs-cd-auto-reconcile.sh:35:SSH_KEY="${SSH_KEY:-$HOME/.ssh/k8s-aware
 scripts/openmrs-cd-auto-reconcile.sh:51:EVIDENCE="${OPENMRS_CD_RECONCILE_EVIDENCE_DIR:-$(dirname "$AUTHORITY_FILE")/reconciliation-ssh}"
 scripts/openmrs-cd-auto-reconcile.sh:122:    timeout 30 ssh \
 scripts/run-openmrs-integrated.sh:54:SSH_KEY="${SSH_KEY:-$HOME/.ssh/k8s-aware}"
-scripts/run-openmrs-integrated.sh:117:TARGET_URL="${OPENMRS_CLINICAL_URL:-http://102.34.160.103:30366/openmrs/health/started}"
+scripts/run-openmrs-integrated.sh:117:TARGET_URL="${OPENMRS_CLINICAL_URL:-http://10.10.0.12:30366/openmrs/health/started}"
 scripts/run-openmrs-integrated.sh:248:    utc > "$RUN/fault-clear-time.txt"
 scripts/run-openmrs-integrated.sh:268:            utc > "$RUN/fault-clear-time.txt"
 scripts/run-openmrs-integrated.sh:340:    fail "Clinical service unhealthy before fault"
@@ -216,31 +216,31 @@ scripts/collect-overhead.sh:56:    timestamp="$(date --utc +%Y-%m-%dT%H:%M:%S.%N
 scripts/collect-overhead.sh:156:        >> "${OUTPUT}"
 scripts/openmrs-cd-auto-reconcile.sh.backup:7:SSH_KEY="${SSH_KEY:-$HOME/.ssh/k8s-aware}"
 scripts/openmrs-cd-auto-reconcile.sh.backup:32:remote(){ timeout 25 ssh -i "$SSH_KEY" -o BatchMode=yes -o ConnectTimeout=5 -o ServerAliveInterval=5 -o ServerAliveCountMax=2 "$SSH_USER@$IP" "$@"; }
-harness/config/openmrs-pilot.json:11:      "url": "http://102.34.160.87:30366/openmrs/health/started"
-harness/config/openmrs-pilot.json:15:      "url": "http://102.34.160.87:30366/openmrs/health/started"
-harness/config/openmrs-pilot.json:19:      "url": "http://102.34.160.87:30366/openmrs/health/started"
-harness/config/openmrs-pilot.json:23:      "url": "http://102.34.160.87:30366/openmrs/health/started"
-harness/config/openmrs-scenario-c.json:11:      "url": "http://102.34.160.87:30366/openmrs/health/started"
-harness/config/openmrs-scenario-c.json:15:      "url": "http://102.34.160.103:30366/openmrs/health/started"
-harness/config/openmrs-scenario-c.json:19:      "url": "http://102.34.160.36:30366/openmrs/health/started"
-harness/config/openmrs-scenario-c.json:23:      "url": "http://102.34.160.104:30366/openmrs/health/started"
-harness/config/openmrs-scenario-b.json:11:      "url": "http://102.34.160.87:30366/openmrs/health/started"
-harness/config/openmrs-scenario-b.json:15:      "url": "http://102.34.160.103:30366/openmrs/health/started"
-harness/config/openmrs-scenario-b.json:19:      "url": "http://102.34.160.36:30366/openmrs/health/started"
-harness/config/openmrs-scenario-b.json:23:      "url": "http://102.34.160.104:30366/openmrs/health/started"
-harness/config/openmrs-scenario-e.json:8:  "measurement_url": "http://102.34.160.104:30366/openmrs/health/started",
-harness/config/openmrs-scenario-e.json:10:    {"node": "k3s-worker1", "url": "http://102.34.160.87:30366/openmrs/health/started"},
-harness/config/openmrs-scenario-e.json:11:    {"node": "k3s-worker2", "url": "http://102.34.160.103:30366/openmrs/health/started"},
-harness/config/openmrs-scenario-e.json:12:    {"node": "k3s-worker3", "url": "http://102.34.160.36:30366/openmrs/health/started"},
-harness/config/openmrs-scenario-e.json:13:    {"node": "k3s-worker4", "url": "http://102.34.160.104:30366/openmrs/health/started"}
+harness/config/openmrs-pilot.json:11:      "url": "http://10.10.0.11:30366/openmrs/health/started"
+harness/config/openmrs-pilot.json:15:      "url": "http://10.10.0.11:30366/openmrs/health/started"
+harness/config/openmrs-pilot.json:19:      "url": "http://10.10.0.11:30366/openmrs/health/started"
+harness/config/openmrs-pilot.json:23:      "url": "http://10.10.0.11:30366/openmrs/health/started"
+harness/config/openmrs-scenario-c.json:11:      "url": "http://10.10.0.11:30366/openmrs/health/started"
+harness/config/openmrs-scenario-c.json:15:      "url": "http://10.10.0.12:30366/openmrs/health/started"
+harness/config/openmrs-scenario-c.json:19:      "url": "http://10.10.0.13:30366/openmrs/health/started"
+harness/config/openmrs-scenario-c.json:23:      "url": "http://10.10.0.14:30366/openmrs/health/started"
+harness/config/openmrs-scenario-b.json:11:      "url": "http://10.10.0.11:30366/openmrs/health/started"
+harness/config/openmrs-scenario-b.json:15:      "url": "http://10.10.0.12:30366/openmrs/health/started"
+harness/config/openmrs-scenario-b.json:19:      "url": "http://10.10.0.13:30366/openmrs/health/started"
+harness/config/openmrs-scenario-b.json:23:      "url": "http://10.10.0.14:30366/openmrs/health/started"
+harness/config/openmrs-scenario-e.json:8:  "measurement_url": "http://10.10.0.14:30366/openmrs/health/started",
+harness/config/openmrs-scenario-e.json:10:    {"node": "k3s-worker1", "url": "http://10.10.0.11:30366/openmrs/health/started"},
+harness/config/openmrs-scenario-e.json:11:    {"node": "k3s-worker2", "url": "http://10.10.0.12:30366/openmrs/health/started"},
+harness/config/openmrs-scenario-e.json:12:    {"node": "k3s-worker3", "url": "http://10.10.0.13:30366/openmrs/health/started"},
+harness/config/openmrs-scenario-e.json:13:    {"node": "k3s-worker4", "url": "http://10.10.0.14:30366/openmrs/health/started"}
 harness/target/.rustc_info.json:1:{"rustc_fingerprint":22991811304158572,"outputs":{"16479403414171101978":{"success":true,"status":"","code":0,"stdout":"rustc 1.97.1 (8bab26f4f 2026-07-14)\nbinary: rustc\ncommit-hash: 8bab26f4f68e0e26f0bb7960be334d5b520ea452\ncommit-date: 2026-07-14\nhost: x86_64-unknown-linux-gnu\nrelease: 1.97.1\nLLVM version: 22.1.6\n","stderr":""},"7971740275564407648":{"success":true,"status":"","code":0,"stdout":"___\nlib___.rlib\nlib___.so\nlib___.so\nlib___.a\nlib___.so\n/home/daniel/.rustup/toolchains/stable-x86_64-unknown-linux-gnu\noff\npacked\nunpacked\n___\ndebug_assertions\npanic=\"unwind\"\nproc_macro\ntarget_abi=\"\"\ntarget_arch=\"x86_64\"\ntarget_endian=\"little\"\ntarget_env=\"gnu\"\ntarget_family=\"unix\"\ntarget_feature=\"fxsr\"\ntarget_feature=\"sse\"\ntarget_feature=\"sse2\"\ntarget_has_atomic=\"16\"\ntarget_has_atomic=\"32\"\ntarget_has_atomic=\"64\"\ntarget_has_atomic=\"8\"\ntarget_has_atomic=\"ptr\"\ntarget_has_atomic_primitive_alignment=\"16\"\ntarget_has_atomic_primitive_alignment=\"32\"\ntarget_has_atomic_primitive_alignment=\"64\"\ntarget_has_atomic_primitive_alignment=\"8\"\ntarget_has_atomic_primitive_alignment=\"ptr\"\ntarget_os=\"linux\"\ntarget_pointer_width=\"64\"\ntarget_vendor=\"unknown\"\nunix\n","stderr":""}},"successes":{}}
 harness/target/debug/.fingerprint/openssl-sys-9ce07d3026df8c2e/run-build-script-build-script-main.json:1:{"rustc":12019306335353385202,"features":"","declared_features":"","target":0,"profile":0,"path":0,"deps":[[1107371471872099739,"build_script_main",false,1769145842817026808]],"local":[{"RerunIfChanged":{"output":"debug/build/openssl-sys-9ce07d3026df8c2e/output","paths":["build/expando.c"]}},{"RerunIfEnvChanged":{"var":"X86_64_UNKNOWN_LINUX_GNU_OPENSSL_LIB_DIR","val":null}},{"RerunIfEnvChanged":{"var":"OPENSSL_LIB_DIR","val":null}},{"RerunIfEnvChanged":{"var":"X86_64_UNKNOWN_LINUX_GNU_OPENSSL_INCLUDE_DIR","val":null}},{"RerunIfEnvChanged":{"var":"OPENSSL_INCLUDE_DIR","val":null}},{"RerunIfEnvChanged":{"var":"X86_64_UNKNOWN_LINUX_GNU_OPENSSL_DIR","val":null}},{"RerunIfEnvChanged":{"var":"OPENSSL_DIR","val":null}},{"RerunIfEnvChanged":{"var":"OPENSSL_NO_PKG_CONFIG","val":null}},{"RerunIfEnvChanged":{"var":"PKG_CONFIG_x86_64-unknown-linux-gnu","val":null}},{"RerunIfEnvChanged":{"var":"PKG_CONFIG_x86_64_unknown_linux_gnu","val":null}},{"RerunIfEnvChanged":{"var":"HOST_PKG_CONFIG","val":null}},{"RerunIfEnvChanged":{"var":"PKG_CONFIG","val":null}},{"RerunIfEnvChanged":{"var":"OPENSSL_STATIC","val":null}},{"RerunIfEnvChanged":{"var":"OPENSSL_DYNAMIC","val":null}},{"RerunIfEnvChanged":{"var":"PKG_CONFIG_ALL_STATIC","val":null}},{"RerunIfEnvChanged":{"var":"PKG_CONFIG_ALL_DYNAMIC","val":null}},{"RerunIfEnvChanged":{"var":"PKG_CONFIG_PATH_x86_64-unknown-linux-gnu","val":null}},{"RerunIfEnvChanged":{"var":"PKG_CONFIG_PATH_x86_64_unknown_linux_gnu","val":null}},{"RerunIfEnvChanged":{"var":"HOST_PKG_CONFIG_PATH","val":null}},{"RerunIfEnvChanged":{"var":"PKG_CONFIG_PATH","val":null}},{"RerunIfEnvChanged":{"var":"PKG_CONFIG_LIBDIR_x86_64-unknown-linux-gnu","val":null}},{"RerunIfEnvChanged":{"var":"PKG_CONFIG_LIBDIR_x86_64_unknown_linux_gnu","val":null}},{"RerunIfEnvChanged":{"var":"HOST_PKG_CONFIG_LIBDIR","val":null}},{"RerunIfEnvChanged":{"var":"PKG_CONFIG_LIBDIR","val":null}},{"RerunIfEnvChanged":{"var":"PKG_CONFIG_SYSROOT_DIR_x86_64-unknown-linux-gnu","val":null}},{"RerunIfEnvChanged":{"var":"PKG_CONFIG_SYSROOT_DIR_x86_64_unknown_linux_gnu","val":null}},{"RerunIfEnvChanged":{"var":"HOST_PKG_CONFIG_SYSROOT_DIR","val":null}},{"RerunIfEnvChanged":{"var":"PKG_CONFIG_SYSROOT_DIR","val":null}},{"RerunIfEnvChanged":{"var":"PKG_CONFIG_SYSROOT_DIR","val":null}},{"RerunIfEnvChanged":{"var":"SYSROOT","val":null}},{"RerunIfEnvChanged":{"var":"OPENSSL_STATIC","val":null}},{"RerunIfEnvChanged":{"var":"OPENSSL_DYNAMIC","val":null}},{"RerunIfEnvChanged":{"var":"PKG_CONFIG_ALL_STATIC","val":null}},{"RerunIfEnvChanged":{"var":"PKG_CONFIG_ALL_DYNAMIC","val":null}},{"RerunIfEnvChanged":{"var":"PKG_CONFIG_x86_64-unknown-linux-gnu","val":null}},{"RerunIfEnvChanged":{"var":"PKG_CONFIG_x86_64_unknown_linux_gnu","val":null}},{"RerunIfEnvChanged":{"var":"HOST_PKG_CONFIG","val":null}},{"RerunIfEnvChanged":{"var":"PKG_CONFIG","val":null}},{"RerunIfEnvChanged":{"var":"OPENSSL_STATIC","val":null}},{"RerunIfEnvChanged":{"var":"OPENSSL_DYNAMIC","val":null}},{"RerunIfEnvChanged":{"var":"PKG_CONFIG_ALL_STATIC","val":null}},{"RerunIfEnvChanged":{"var":"PKG_CONFIG_ALL_DYNAMIC","val":null}},{"RerunIfEnvChanged":{"var":"PKG_CONFIG_PATH_x86_64-unknown-linux-gnu","val":null}},{"RerunIfEnvChanged":{"var":"PKG_CONFIG_PATH_x86_64_unknown_linux_gnu","val":null}},{"RerunIfEnvChanged":{"var":"HOST_PKG_CONFIG_PATH","val":null}},{"RerunIfEnvChanged":{"var":"PKG_CONFIG_PATH","val":null}},{"RerunIfEnvChanged":{"var":"PKG_CONFIG_LIBDIR_x86_64-unknown-linux-gnu","val":null}},{"RerunIfEnvChanged":{"var":"PKG_CONFIG_LIBDIR_x86_64_unknown_linux_gnu","val":null}},{"RerunIfEnvChanged":{"var":"HOST_PKG_CONFIG_LIBDIR","val":null}},{"RerunIfEnvChanged":{"var":"PKG_CONFIG_LIBDIR","val":null}},{"RerunIfEnvChanged":{"var":"PKG_CONFIG_SYSROOT_DIR_x86_64-unknown-linux-gnu","val":null}},{"RerunIfEnvChanged":{"var":"PKG_CONFIG_SYSROOT_DIR_x86_64_unknown_linux_gnu","val":null}},{"RerunIfEnvChanged":{"var":"HOST_PKG_CONFIG_SYSROOT_DIR","val":null}},{"RerunIfEnvChanged":{"var":"PKG_CONFIG_SYSROOT_DIR","val":null}},{"RerunIfEnvChanged":{"var":"CC_x86_64-unknown-linux-gnu","val":null}},{"RerunIfEnvChanged":{"var":"CC_x86_64_unknown_linux_gnu","val":null}},{"RerunIfEnvChanged":{"var":"HOST_CC","val":null}},{"RerunIfEnvChanged":{"var":"CC","val":null}},{"RerunIfEnvChanged":{"var":"CC_ENABLE_DEBUG_OUTPUT","val":null}},{"RerunIfEnvChanged":{"var":"CRATE_CC_NO_DEFAULTS","val":null}},{"RerunIfEnvChanged":{"var":"CRATE_CC_NO_DEFAULTS","val":null}},{"RerunIfEnvChanged":{"var":"CFLAGS","val":null}},{"RerunIfEnvChanged":{"var":"HOST_CFLAGS","val":null}},{"RerunIfEnvChanged":{"var":"CFLAGS_x86_64_unknown_linux_gnu","val":null}},{"RerunIfEnvChanged":{"var":"CFLAGS_x86_64-unknown-linux-gnu","val":null}},{"RerunIfEnvChanged":{"var":"CFLAGS","val":null}},{"RerunIfEnvChanged":{"var":"HOST_CFLAGS","val":null}},{"RerunIfEnvChanged":{"var":"CFLAGS_x86_64_unknown_linux_gnu","val":null}},{"RerunIfEnvChanged":{"var":"CFLAGS_x86_64-unknown-linux-gnu","val":null}}],"rustflags":[],"config":0,"compile_kind":0}
 harness/target/debug/build/openssl-sys-9ce07d3026df8c2e/output:121:cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
 harness/Cargo.lock:110:checksum = "773648b94d0e5d620f64f280777445740e61fe701025087ec8b57f45c791888b"
-controller/config/openmrs-mariadb.STAGING.json:4:  "verification_url": "http://102.34.160.103:30366/openmrs/health/started",
+controller/config/openmrs-mariadb.STAGING.json:4:  "verification_url": "http://10.10.0.12:30366/openmrs/health/started",
 controller/config/openmrs-mariadb.STAGING.json:21:  "fencing_command": "SSH_KEY=\"$HOME/.ssh/k8s-aware\" /home/daniel/failure-aware-k8s/scripts/openmrs-mariadb-fence.sh fence"
-controller/config/openmrs-backend.json:4:  "verification_url": "ssh-pod://102.34.160.104/openmrs37/k3s-worker1/app=openmrs-backend",
-controller/config/openmrs-backend.json.bak-20261012T082400Z:4:  "verification_url": "http://102.34.160.87:30366/openmrs/health/started",
+controller/config/openmrs-backend.json:4:  "verification_url": "ssh-pod://10.10.0.14/openmrs37/k3s-worker1/app=openmrs-backend",
+controller/config/openmrs-backend.json.bak-20261012T082400Z:4:  "verification_url": "http://10.10.0.11:30366/openmrs/health/started",
 controller/src/resource.rs:348:    let recent_failure_health = 1.0 / (1.0 + history.recent_failures as f64);
 controller/src/resource.rs:358:    0.60 * uptime + 0.25 * recent_failure_health + 0.15 * recovery_stability
 controller/src/resource.rs:529:            let elapsed = (second.timestamp_utc - first.timestamp_utc).num_milliseconds();
@@ -280,7 +280,7 @@ controller/target/debug/.fingerprint/tower-http-01866b2db9c1c92a/lib-tower_http.
 controller/target/debug/.fingerprint/kube-client-211eec223cf2047c/lib-kube_client.json:1:{"rustc":12019306335353385202,"features":"[\"__non_core\", \"base64\", \"bytes\", \"client\", \"config\", \"either\", \"futures\", \"http-body\", \"http-body-util\", \"hyper\", \"hyper-rustls\", \"hyper-timeout\", \"hyper-util\", \"jiff\", \"jsonpatch\", \"jsonpath-rust\", \"pem\", \"ring\", \"rustls\", \"rustls-tls\", \"serde-saphyr\", \"tokio\", \"tokio-util\", \"tower\", \"tower-http\", \"tracing\"]","declared_features":"[\"__non_core\", \"admission\", \"aws-lc-rs\", \"base64\", \"bytes\", \"client\", \"config\", \"default\", \"either\", \"form_urlencoded\", \"futures\", \"gzip\", \"http-body\", \"http-body-util\", \"http-proxy\", \"hyper\", \"hyper-openssl\", \"hyper-rustls\", \"hyper-timeout\", \"hyper-util\", \"hyper-util-tracing\", \"jiff\", \"jsonpatch\", \"jsonpath-rust\", \"kubelet-debug\", \"oauth\", \"oidc\", \"openssl\", \"openssl-tls\", \"pem\", \"ring\", \"rustls\", \"rustls-tls\", \"serde-saphyr\", \"socks5\", \"tame-oauth\", \"tokio\", \"tokio-tungstenite\", \"tokio-util\", \"tower\", \"tower-http\", \"tracing\", \"unstable-client\", \"webpki-roots\", \"ws\"]","target":3818639395233006564,"profile":4219223703027960466,"path":14384444968262758318,"deps":[[927329442006724342,"http_body_util",false,16838323686532958204],[1264099202606790382,"pem",false,5233206026835778435],[1821923722828794727,"futures",false,17148144354901931903],[2145939652136225981,"tokio",false,7940792135466922998],[2707755659758455958,"secrecy",false,5518204640887199923],[2788412271010997089,"hyper_timeout",false,53185776770071456],[3632162862999675140,"tower",false,2183020720838124400],[4012234191921133045,"thiserror",false,17070816344633245369],[5330460842384404171,"serde_json",false,6078689736894620289],[6557439603276904804,"serde",false,9674152331828966575],[10598472717906767558,"hyper_rustls",false,14325417379291048238],[10713361075025112338,"k8s_openapi",false,1339067694432898570],[10817699367348596803,"hyper",false,7414643765875591827],[11356618350923079774,"kube_core",false,15542159851794669722],[11788942808017018293,"serde_saphyr",false,13922318982720986374],[11926622812581095017,"bytes",false,5102988750377530283],[11976082518617474977,"hyper_util",false,3286469628745677462],[12029383743811770701,"rustls",false,14703863991925824007],[12328341851100645683,"http",false,6653921420708298409],[12749568373164316625,"jiff",false,7221887605778877406],[13077212702700853852,"base64",false,5154462945598248210],[13370710369771896710,"either",false,12808914596172634853],[13456317631986937123,"tower_http",false,14889238370522647485],[13708883092485345026,"rustls_platform_verifier",false,16443602007076760316],[14757622794040968908,"tracing",false,5824745390970977878],[15185597481268666519,"jsonpath_rust",false,12896514482425079776],[17905774625381964326,"http_body",false,17299563048886705246],[18193492161279344325,"tokio_util",false,15668962282669740030]],"local":[{"CheckDepInfo":{"dep_info":"debug/.fingerprint/kube-client-211eec223cf2047c/dep-lib-kube_client","checksum":false}}],"rustflags":[],"config":9396254390672932401,"compile_kind":0}
 controller/target/debug/build/ring-b254da2910e1cf7f/output:22:cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
 controller/target/debug/build/ring-b254da2910e1cf7f/output:52:cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
-controller/backups/original-verifier-20261012T091659Z/openmrs-backend.json:4:  "verification_url": "ssh-pod://102.34.160.104/openmrs37/k3s-worker1/app=openmrs-backend",
+controller/backups/original-verifier-20261012T091659Z/openmrs-backend.json:4:  "verification_url": "ssh-pod://10.10.0.14/openmrs37/k3s-worker1/app=openmrs-backend",
 controller/backups/original-verifier-20261012T091659Z/verification.rs:44:fn parse_ssh_target(url: &str) -> Result<SshPodTarget> {
 controller/backups/original-verifier-20261012T091659Z/verification.rs:46:        .strip_prefix("ssh-pod://")
 controller/backups/original-verifier-20261012T091659Z/verification.rs:53:            "Expected ssh-pod://IP/namespace/node/selector"

@@ -214,7 +214,7 @@ FILE: scripts/openmrs-backend-fault.remote
      2	set -Eeuo pipefail
      3	ACTION=${1:?}; POD_IP=${2:-}
      4	STATE=/run/openmrs-backend-fault-ip
-     5	API_IP=${OPENMRS_API_IP:-102.34.160.89}
+     5	API_IP=${OPENMRS_API_IP:-10.10.0.10}
      6	IPT=/usr/sbin/iptables
      7	api() { "$IPT" "$1" OUTPUT -p tcp -d "$API_IP" --dport 6443 -j DROP; }
      8	backend() { "$IPT" "$1" FORWARD -p tcp -d "$POD_IP" --dport 8080 -j DROP; }
@@ -251,7 +251,7 @@ FILE: scripts/openmrs-c-fault.sh
      4	ACTION=${1:?Usage: openmrs-c-fault.sh apply|status|clear|absent [pod-ip]}
      5	POD_IP=${2:-}
      6	SSH_KEY=${SSH_KEY:-$HOME/.ssh/k8s-aware}
-     7	HOST=${OPENMRS_FAULT_HOST:-ubuntu@102.34.160.87}
+     7	HOST=${OPENMRS_FAULT_HOST:-ubuntu@10.10.0.11}
      8	REMOTE=${OPENMRS_REMOTE_FAULT:-/usr/local/sbin/openmrs-backend-fault}
      9	case "$ACTION" in apply|status|clear|absent) ;; *) exit 2;; esac
     10	if [[ "$ACTION" == apply ]]; then
@@ -259,7 +259,7 @@ FILE: scripts/openmrs-c-fault.sh
     12	fi
     13	if [[ "$ACTION" == absent ]]; then
     14	  ssh -i "$SSH_KEY" -o BatchMode=yes -o ConnectTimeout=5 "$HOST" \
-    15	    "sudo -n test ! -e /run/openmrs-backend-fault-ip && ! sudo -n iptables -C OUTPUT -p tcp -d 102.34.160.89 --dport 6443 -j DROP 2>/dev/null"
+    15	    "sudo -n test ! -e /run/openmrs-backend-fault-ip && ! sudo -n iptables -C OUTPUT -p tcp -d 10.10.0.10 --dport 6443 -j DROP 2>/dev/null"
     16	  exit $?
     17	fi
     18	ssh -i "$SSH_KEY" -o BatchMode=yes -o ConnectTimeout=5 "$HOST" \
@@ -274,7 +274,7 @@ FILE: scripts/openmrs-cd-fault.remote
      4	ACTION="${1:-}"
      5	POD_IP="${2:-}"
      6	
-     7	API_IP="${OPENMRS_CD_API_IP:-102.34.160.89}"
+     7	API_IP="${OPENMRS_CD_API_IP:-10.10.0.10}"
      8	STATE="/run/openmrs-cd-api-partition"
      9	TAG="failure-aware-openmrs-cd"
     10	
@@ -478,7 +478,7 @@ FILE: scripts/remote/failure-aware-fault.sh
      1	#!/usr/bin/env bash
      2	set -Eeuo pipefail
      3	
-     4	API_SERVER_IP="102.34.160.89"
+     4	API_SERVER_IP="10.10.0.10"
      5	API_SERVER_PORT="6443"
      6	NETWORK_INTERFACE="ens3"
      7	WORKLOAD_STATE_FILE="/run/failure-aware-fault-pod-ip"
@@ -629,7 +629,7 @@ FILE: scripts/remote/openmrs-backend-fault
      2	set -Eeuo pipefail
      3	ACTION=${1:?}; POD_IP=${2:-}
      4	STATE=/run/openmrs-backend-fault-ip
-     5	API_IP=${OPENMRS_API_IP:-102.34.160.89}
+     5	API_IP=${OPENMRS_API_IP:-10.10.0.10}
      6	IPT=/usr/sbin/iptables
      7	api() { "$IPT" "$1" OUTPUT -p tcp -d "$API_IP" --dport 6443 -j DROP; }
      8	backend() { "$IPT" "$1" FORWARD -p tcp -d "$POD_IP" --dport 8080 -j DROP; }
@@ -666,7 +666,7 @@ FILE: scripts/remote/openmrs-fault.sh
      4	ACTION="${1:-}"
      5	POD_IP="${2:-}"
      6	
-     7	API_IP="102.34.160.89"
+     7	API_IP="10.10.0.10"
      8	API_PORT="6443"
      9	BACKEND_PORT="8080"
     10	
