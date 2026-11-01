@@ -2,16 +2,16 @@ apiVersion: v1
 kind: Node
 metadata:
   annotations:
-    alpha.kubernetes.io/provided-node-ip: 102.34.160.87
+    alpha.kubernetes.io/provided-node-ip: 10.10.0.11
     flannel.alpha.coreos.com/backend-data: '{"VNI":1,"VtepMAC":"fa:88:cb:7f:89:95"}'
     flannel.alpha.coreos.com/backend-type: vxlan
     flannel.alpha.coreos.com/kube-subnet-manager: "true"
-    flannel.alpha.coreos.com/public-ip: 102.34.160.87
+    flannel.alpha.coreos.com/public-ip: 10.10.0.11
     k3s.io/hostname: k3s-worker1
-    k3s.io/internal-ip: 102.34.160.87
+    k3s.io/internal-ip: 10.10.0.11
     k3s.io/node-args: '["agent"]'
     k3s.io/node-config-hash: 5ONVHY3J5MSH7MMXCXJNCQHW3TOPWEWG5BYUZPG6AXWWG56DVP6Q====
-    k3s.io/node-env: '{"K3S_TOKEN":"********","K3S_URL":"https://102.34.160.89:6443"}'
+    k3s.io/node-env: '{"K3S_TOKEN":"********","K3S_URL":"https://10.10.0.10:6443"}'
     node.alpha.kubernetes.io/ttl: "0"
     volumes.kubernetes.io/controller-managed-attach-detach: "true"
   creationTimestamp: "2026-09-16T20:24:02Z"
@@ -43,7 +43,7 @@ spec:
     timeAdded: "2026-09-19T13:25:10Z"
 status:
   addresses:
-  - address: 102.34.160.87
+  - address: 10.10.0.11
     type: InternalIP
   - address: k3s-worker1
     type: Hostname

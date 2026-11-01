@@ -3,10 +3,10 @@ Target node: k3s-worker1
 Namespace: openmrs37
 Pod label selector: app=openmrs-backend
 Service targets:
-  k3s-worker1 -> http://102.34.160.87:30366/openmrs/health/started
-  k3s-worker2 -> http://102.34.160.103:30366/openmrs/health/started
-  k3s-worker3 -> http://102.34.160.36:30366/openmrs/health/started
-  k3s-worker4 -> http://102.34.160.104:30366/openmrs/health/started
+  k3s-worker1 -> http://10.10.0.11:30366/openmrs/health/started
+  k3s-worker2 -> http://10.10.0.12:30366/openmrs/health/started
+  k3s-worker3 -> http://10.10.0.13:30366/openmrs/health/started
+  k3s-worker4 -> http://10.10.0.14:30366/openmrs/health/started
 Run ID: run-20261011T153950Z
 Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline/openmrs-scenario-c/runs/run-20261011T153950Z
 [CLINICAL] Clinical-data probe started
@@ -108,12 +108,12 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [NODE] 2026-10-11T15:40:14.905996662+00:00 | k3s-worker1 | Ready=True
 [LEASE] 2026-10-11T15:40:14.906127938+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:40:14.906034698+00:00 | k3s-worker1 | taints=<none>
-[HTTP] 2026-10-11T15:40:05.674170131+00:00 | node=k3s-worker1 | status=0 | latency=10000.975ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:40:05.674170131+00:00 | node=k3s-worker1 | status=0 | latency=10000.975ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [POD] 2026-10-11T15:40:15.906767849+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [NODE] 2026-10-11T15:40:16.043221440+00:00 | k3s-worker1 | Ready=True
 [LEASE] 2026-10-11T15:40:16.177446288+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:40:16.177339998+00:00 | k3s-worker1 | taints=<none>
-[CLINICAL] 2026-10-11T15:40:06.944031148+00:00 | status=0 | latency=10001.381ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:40:06.944031148+00:00 | status=0 | latency=10001.381ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:40:17.017082383+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [NODE] 2026-10-11T15:40:17.266096535+00:00 | k3s-worker1 | Ready=True
 [LEASE] 2026-10-11T15:40:17.288097688+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
@@ -147,11 +147,11 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [TAINT] 2026-10-11T15:40:26.271793074+00:00 | k3s-worker1 | taints=<none>
 [NODE] 2026-10-11T15:40:26.271930334+00:00 | k3s-worker1 | Ready=True
 [POD] 2026-10-11T15:40:27.083347672+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
-[HTTP] 2026-10-11T15:40:16.907644137+00:00 | node=k3s-worker1 | status=0 | latency=10053.366ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:40:16.907644137+00:00 | node=k3s-worker1 | status=0 | latency=10053.366ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [LEASE] 2026-10-11T15:40:27.319380969+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:40:27.467998574+00:00 | k3s-worker1 | taints=<none>
 [NODE] 2026-10-11T15:40:27.505739611+00:00 | k3s-worker1 | Ready=True
-[CLINICAL] 2026-10-11T15:40:17.946945233+00:00 | status=0 | latency=10002.186ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:40:17.946945233+00:00 | status=0 | latency=10002.186ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:40:28.320219910+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [TAINT] 2026-10-11T15:40:28.815825200+00:00 | k3s-worker1 | taints=<none>
 [LEASE] 2026-10-11T15:40:28.815679774+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
@@ -183,9 +183,9 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [POD] 2026-10-11T15:40:38.323653279+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [LEASE] 2026-10-11T15:40:38.702256456+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:40:38.702384998+00:00 | k3s-worker1 | taints=<none>
-[CLINICAL] 2026-10-11T15:40:28.950589962+00:00 | status=0 | latency=10002.104ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:40:28.950589962+00:00 | status=0 | latency=10002.104ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [NODE] 2026-10-11T15:40:39.703342001+00:00 | k3s-worker1 | Ready=True
-[HTTP] 2026-10-11T15:40:28.815802694+00:00 | node=k3s-worker1 | status=0 | latency=10064.532ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:40:28.815802694+00:00 | node=k3s-worker1 | status=0 | latency=10064.532ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [POD] 2026-10-11T15:40:39.817665062+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [LEASE] 2026-10-11T15:40:39.932786669+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:40:39.932738053+00:00 | k3s-worker1 | taints=<none>
@@ -220,12 +220,12 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [NODE] 2026-10-11T15:40:49.422754683+00:00 | k3s-worker1 | Ready=True
 [LEASE] 2026-10-11T15:40:49.645056251+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:40:49.644914971+00:00 | k3s-worker1 | taints=<none>
-[CLINICAL] 2026-10-11T15:40:39.954032692+00:00 | status=0 | latency=10001.699ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:40:39.954032692+00:00 | status=0 | latency=10001.699ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:40:50.423320917+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [LEASE] 2026-10-11T15:40:50.911008139+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:40:50.911155891+00:00 | k3s-worker1 | taints=<none>
 [NODE] 2026-10-11T15:40:50.911089022+00:00 | k3s-worker1 | Ready=True
-[HTTP] 2026-10-11T15:40:40.980224924+00:00 | node=k3s-worker1 | status=0 | latency=10001.742ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:40:40.980224924+00:00 | node=k3s-worker1 | status=0 | latency=10001.742ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [POD] 2026-10-11T15:40:51.912667853+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [LEASE] 2026-10-11T15:40:52.065596442+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:40:52.183271264+00:00 | k3s-worker1 | taints=<none>
@@ -259,12 +259,12 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:41:00.515703014+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:41:00.666453286+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:41:00.666551209+00:00 | k3s-worker1 | Ready=Unknown
-[CLINICAL] 2026-10-11T15:40:50.957532626+00:00 | status=0 | latency=10002.377ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:40:50.957532626+00:00 | status=0 | latency=10002.377ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:41:01.516467361+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [LEASE] 2026-10-11T15:41:01.667515204+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:41:01.861648042+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:41:01.952516335+00:00 | k3s-worker1 | Ready=Unknown
-[HTTP] 2026-10-11T15:40:52.183112368+00:00 | node=k3s-worker1 | status=0 | latency=10001.602ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:40:52.183112368+00:00 | node=k3s-worker1 | status=0 | latency=10001.602ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [POD] 2026-10-11T15:41:02.662459877+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [LEASE] 2026-10-11T15:41:02.906741411+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:41:03.026628178+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -295,14 +295,14 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:41:10.784191871+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [POD] 2026-10-11T15:41:11.785229978+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [NODE] 2026-10-11T15:41:11.945274460+00:00 | k3s-worker1 | Ready=Unknown
-[CLINICAL] 2026-10-11T15:41:01.991207059+00:00 | status=0 | latency=10107.138ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:41:01.991207059+00:00 | status=0 | latency=10107.138ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [TAINT] 2026-10-11T15:41:11.945067111+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [LEASE] 2026-10-11T15:41:12.098294385+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [POD] 2026-10-11T15:41:12.921066899+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [TAINT] 2026-10-11T15:41:13.103042837+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:41:13.103131554+00:00 | k3s-worker1 | Ready=Unknown
 [LEASE] 2026-10-11T15:41:13.228664747+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
-[HTTP] 2026-10-11T15:41:03.335155046+00:00 | node=k3s-worker1 | status=0 | latency=10001.619ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:41:03.335155046+00:00 | node=k3s-worker1 | status=0 | latency=10001.619ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [POD] 2026-10-11T15:41:14.104774541+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [TAINT] 2026-10-11T15:41:14.594658816+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [LEASE] 2026-10-11T15:41:14.594755922+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
@@ -332,11 +332,11 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [NODE] 2026-10-11T15:41:22.452194863+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:41:22.452246801+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [POD] 2026-10-11T15:41:23.021473937+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
-[CLINICAL] 2026-10-11T15:41:13.102885815+00:00 | status=0 | latency=10366.930ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:41:13.102885815+00:00 | status=0 | latency=10366.930ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [LEASE] 2026-10-11T15:41:23.469551898+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:41:23.827700910+00:00 | k3s-worker1 | Ready=Unknown
 [POD] 2026-10-11T15:41:24.470276769+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
-[HTTP] 2026-10-11T15:41:14.594552539+00:00 | node=k3s-worker1 | status=0 | latency=10002.223ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:41:14.594552539+00:00 | node=k3s-worker1 | status=0 | latency=10002.223ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [LEASE] 2026-10-11T15:41:24.906001279+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:41:24.073069698+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:41:25.074881034+00:00 | k3s-worker1 | Ready=Unknown
@@ -367,13 +367,13 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:41:33.933388460+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [POD] 2026-10-11T15:41:34.325115732+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [TAINT] 2026-10-11T15:41:34.734340914+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
-[CLINICAL] 2026-10-11T15:41:24.906138162+00:00 | status=0 | latency=10079.439ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:41:24.906138162+00:00 | status=0 | latency=10079.439ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [NODE] 2026-10-11T15:41:34.985314153+00:00 | k3s-worker1 | Ready=Unknown
 [LEASE] 2026-10-11T15:41:35.284031840+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [POD] 2026-10-11T15:41:35.735688156+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [TAINT] 2026-10-11T15:41:36.041508756+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:41:36.203205546+00:00 | k3s-worker1 | Ready=Unknown
-[HTTP] 2026-10-11T15:41:26.111437902+00:00 | node=k3s-worker1 | status=0 | latency=10001.832ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:41:26.111437902+00:00 | node=k3s-worker1 | status=0 | latency=10001.832ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [LEASE] 2026-10-11T15:41:36.523836416+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [POD] 2026-10-11T15:41:37.042079827+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [NODE] 2026-10-11T15:41:37.906973082+00:00 | k3s-worker1 | Ready=Unknown
@@ -400,7 +400,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:41:44.802285614+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:41:44.931906253+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [POD] 2026-10-11T15:41:45.552128784+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
-[CLINICAL] 2026-10-11T15:41:36.041423685+00:00 | status=0 | latency=10002.005ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:41:36.041423685+00:00 | status=0 | latency=10002.005ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [NODE] 2026-10-11T15:41:46.089063627+00:00 | k3s-worker1 | Ready=Unknown
 [LEASE] 2026-10-11T15:41:46.268014687+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:41:46.267875184+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -409,7 +409,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:41:47.448514519+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:41:47.448426549+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [POD] 2026-10-11T15:41:48.059679808+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
-[HTTP] 2026-10-11T15:41:37.907186435+00:00 | node=k3s-worker1 | status=0 | latency=10146.452ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:41:37.907186435+00:00 | node=k3s-worker1 | status=0 | latency=10146.452ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [NODE] 2026-10-11T15:41:48.449758782+00:00 | k3s-worker1 | Ready=Unknown
 [LEASE] 2026-10-11T15:41:48.632045396+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:41:48.807931076+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -438,7 +438,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:41:55.909921016+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:41:56.002284545+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [POD] 2026-10-11T15:41:56.911340764+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
-[CLINICAL] 2026-10-11T15:41:47.058021673+00:00 | status=0 | latency=10051.744ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:41:47.058021673+00:00 | status=0 | latency=10051.744ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [LEASE] 2026-10-11T15:41:57.109528946+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:41:57.109737891+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:41:57.131217456+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -448,7 +448,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [NODE] 2026-10-11T15:41:58.317643714+00:00 | k3s-worker1 | Ready=Unknown
 [POD] 2026-10-11T15:41:59.318805972+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [TAINT] 2026-10-11T15:41:59.447088876+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
-[HTTP] 2026-10-11T15:41:49.234904505+00:00 | node=k3s-worker1 | status=0 | latency=10036.215ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:41:49.234904505+00:00 | node=k3s-worker1 | status=0 | latency=10036.215ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [LEASE] 2026-10-11T15:41:59.556641374+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:41:59.556536825+00:00 | k3s-worker1 | Ready=Unknown
 [POD] 2026-10-11T15:42:00.422447697+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
@@ -475,13 +475,13 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:42:07.681171342+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:42:07.681135767+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:42:07.681045375+00:00 | k3s-worker1 | Ready=Unknown
-[CLINICAL] 2026-10-11T15:41:58.317604203+00:00 | status=0 | latency=10001.941ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:41:58.317604203+00:00 | status=0 | latency=10001.941ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:42:08.682907830+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [NODE] 2026-10-11T15:42:08.902262451+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:42:08.902438773+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [LEASE] 2026-10-11T15:42:08.902577411+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [POD] 2026-10-11T15:42:09.903297809+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
-[HTTP] 2026-10-11T15:42:00.654480275+00:00 | node=k3s-worker1 | status=0 | latency=10003.856ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:42:00.654480275+00:00 | node=k3s-worker1 | status=0 | latency=10003.856ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [NODE] 2026-10-11T15:42:10.900585470+00:00 | k3s-worker1 | Ready=Unknown
 [LEASE] 2026-10-11T15:42:10.900645089+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:42:10.900512958+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -506,7 +506,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [NODE] 2026-10-11T15:42:18.281771974+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:42:18.281737352+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [POD] 2026-10-11T15:42:18.922504943+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
-[CLINICAL] 2026-10-11T15:42:09.321668141+00:00 | status=0 | latency=10586.744ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:42:09.321668141+00:00 | status=0 | latency=10586.744ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [LEASE] 2026-10-11T15:42:19.908200740+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:42:19.908344677+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:42:19.908385973+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -514,7 +514,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:42:21.114070681+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:42:21.128646231+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:42:21.137947311+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
-[HTTP] 2026-10-11T15:42:11.901525324+00:00 | node=k3s-worker1 | status=0 | latency=10001.179ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:42:11.901525324+00:00 | node=k3s-worker1 | status=0 | latency=10001.179ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [POD] 2026-10-11T15:42:22.129974190+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [TAINT] 2026-10-11T15:42:22.905434331+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:42:22.905319707+00:00 | k3s-worker1 | Ready=Unknown
@@ -539,13 +539,13 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [TAINT] 2026-10-11T15:42:30.027195534+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [LEASE] 2026-10-11T15:42:30.027263902+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:42:30.027077040+00:00 | k3s-worker1 | Ready=Unknown
-[CLINICAL] 2026-10-11T15:42:20.909865132+00:00 | status=0 | latency=10002.141ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:42:20.909865132+00:00 | status=0 | latency=10002.141ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:42:31.028397773+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [LEASE] 2026-10-11T15:42:31.940674084+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:42:31.940815629+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:42:31.940705419+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [POD] 2026-10-11T15:42:32.941636901+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
-[HTTP] 2026-10-11T15:42:23.109308435+00:00 | node=k3s-worker1 | status=0 | latency=10001.789ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:42:23.109308435+00:00 | node=k3s-worker1 | status=0 | latency=10001.789ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [LEASE] 2026-10-11T15:42:33.906350985+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:42:33.906410790+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:42:33.906298663+00:00 | k3s-worker1 | Ready=Unknown
@@ -570,7 +570,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [NODE] 2026-10-11T15:42:40.903446648+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:42:40.903596833+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [POD] 2026-10-11T15:42:41.904060455+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
-[CLINICAL] 2026-10-11T15:42:31.940518854+00:00 | status=0 | latency=10174.633ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:42:31.940518854+00:00 | status=0 | latency=10174.633ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [LEASE] 2026-10-11T15:42:42.114824075+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:42:42.115097636+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:42:42.115154374+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -583,7 +583,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [NODE] 2026-10-11T15:42:44.735411384+00:00 | k3s-worker1 | Ready=Unknown
 [POD] 2026-10-11T15:42:44.907040877+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [LEASE] 2026-10-11T15:42:45.559768293+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
-[HTTP] 2026-10-11T15:42:35.046297859+00:00 | node=k3s-worker1 | status=0 | latency=10133.838ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:42:35.046297859+00:00 | node=k3s-worker1 | status=0 | latency=10133.838ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [NODE] 2026-10-11T15:42:46.035843956+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:42:46.036008566+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [POD] 2026-10-11T15:42:46.044601018+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
@@ -606,7 +606,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:42:52.316772536+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:42:52.316642921+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:42:52.417377158+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
-[CLINICAL] 2026-10-11T15:42:43.115831626+00:00 | status=0 | latency=10001.464ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:42:43.115831626+00:00 | status=0 | latency=10001.464ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:42:53.317572025+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [NODE] 2026-10-11T15:42:53.905413570+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:42:53.905087735+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -619,7 +619,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:42:56.972313409+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:42:56.972212578+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:42:56.972043952+00:00 | k3s-worker1 | Ready=Unknown
-[HTTP] 2026-10-11T15:42:47.282769833+00:00 | node=k3s-worker1 | status=0 | latency=10001.935ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:42:47.282769833+00:00 | node=k3s-worker1 | status=0 | latency=10001.935ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [POD] 2026-10-11T15:42:57.973452745+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [LEASE] 2026-10-11T15:42:58.211388856+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:42:58.419078540+00:00 | k3s-worker1 | Ready=Unknown
@@ -640,7 +640,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [NODE] 2026-10-11T15:43:03.905695958+00:00 | k3s-worker1 | Ready=Unknown
 [LEASE] 2026-10-11T15:43:03.905794261+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:43:03.905739055+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
-[CLINICAL] 2026-10-11T15:42:54.118441293+00:00 | status=0 | latency=10001.982ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:42:54.118441293+00:00 | status=0 | latency=10001.982ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:43:04.905945704+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [NODE] 2026-10-11T15:43:05.063930309+00:00 | k3s-worker1 | Ready=Unknown
 [LEASE] 2026-10-11T15:43:05.198757039+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
@@ -654,7 +654,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [TAINT] 2026-10-11T15:43:07.903622473+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [LEASE] 2026-10-11T15:43:07.903442342+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [POD] 2026-10-11T15:43:08.904248054+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
-[HTTP] 2026-10-11T15:42:58.926681976+00:00 | node=k3s-worker1 | status=0 | latency=10010.200ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:42:58.926681976+00:00 | node=k3s-worker1 | status=0 | latency=10010.200ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [LEASE] 2026-10-11T15:43:09.124577345+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:43:09.124535353+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:43:09.124479178+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -676,7 +676,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [POD] 2026-10-11T15:43:14.206094794+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [LEASE] 2026-10-11T15:43:14.863011403+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:43:15.013254311+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
-[CLINICAL] 2026-10-11T15:43:05.198521380+00:00 | status=0 | latency=10042.441ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:43:05.198521380+00:00 | status=0 | latency=10042.441ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [NODE] 2026-10-11T15:43:15.240929693+00:00 | k3s-worker1 | Ready=Unknown
 [POD] 2026-10-11T15:43:15.372986416+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [LEASE] 2026-10-11T15:43:15.996491577+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
@@ -694,7 +694,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:43:19.909522631+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:43:19.909426424+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:43:20.253734256+00:00 | k3s-worker1 | Ready=Unknown
-[HTTP] 2026-10-11T15:43:10.125238342+00:00 | node=k3s-worker1 | status=0 | latency=10001.131ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:43:10.125238342+00:00 | node=k3s-worker1 | status=0 | latency=10001.131ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [POD] 2026-10-11T15:43:20.910294090+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [LEASE] 2026-10-11T15:43:21.118086750+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:43:21.117929967+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -711,7 +711,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:43:25.513074835+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:43:25.709168829+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:43:25.709121024+00:00 | k3s-worker1 | Ready=Unknown
-[CLINICAL] 2026-10-11T15:43:16.242624724+00:00 | status=0 | latency=10002.161ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:43:16.242624724+00:00 | status=0 | latency=10002.161ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:43:26.396083230+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [LEASE] 2026-10-11T15:43:26.710696162+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:43:26.884347440+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -732,7 +732,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:43:32.113021945+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:43:32.112887335+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:43:32.113072343+00:00 | k3s-worker1 | Ready=Unknown
-[HTTP] 2026-10-11T15:43:21.908413271+00:00 | node=k3s-worker1 | status=0 | latency=10002.189ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:43:21.908413271+00:00 | node=k3s-worker1 | status=0 | latency=10002.189ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [POD] 2026-10-11T15:43:33.113499585+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [LEASE] 2026-10-11T15:43:33.669739323+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:43:33.669600991+00:00 | k3s-worker1 | Ready=Unknown
@@ -745,7 +745,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:43:36.293331823+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:43:36.508579422+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:43:36.508714940+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
-[CLINICAL] 2026-10-11T15:43:27.246612525+00:00 | status=0 | latency=10001.755ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:43:27.246612525+00:00 | status=0 | latency=10001.755ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:43:37.291865059+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [LEASE] 2026-10-11T15:43:37.509722650+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:43:37.892529052+00:00 | k3s-worker1 | Ready=Unknown
@@ -771,7 +771,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [NODE] 2026-10-11T15:43:43.696412497+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:43:43.810975847+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [POD] 2026-10-11T15:43:44.410504522+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
-[HTTP] 2026-10-11T15:43:33.915769013+00:00 | node=k3s-worker1 | status=0 | latency=10000.887ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:43:33.915769013+00:00 | node=k3s-worker1 | status=0 | latency=10000.887ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [LEASE] 2026-10-11T15:43:44.902640045+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:43:44.902495712+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:43:44.914503978+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -783,7 +783,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:43:47.559589365+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:43:47.559679363+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:43:47.559632027+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
-[CLINICAL] 2026-10-11T15:43:38.249299839+00:00 | status=0 | latency=10001.535ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:43:38.249299839+00:00 | status=0 | latency=10001.535ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:43:48.560412778+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [LEASE] 2026-10-11T15:43:48.719154029+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:43:48.719019751+00:00 | k3s-worker1 | Ready=Unknown
@@ -808,7 +808,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [TAINT] 2026-10-11T15:43:55.902986777+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:43:55.902954149+00:00 | k3s-worker1 | Ready=Unknown
 [LEASE] 2026-10-11T15:43:55.903046900+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
-[HTTP] 2026-10-11T15:43:46.107881013+00:00 | node=k3s-worker1 | status=0 | latency=10001.325ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:43:46.107881013+00:00 | node=k3s-worker1 | status=0 | latency=10001.325ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [POD] 2026-10-11T15:43:56.904070524+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [TAINT] 2026-10-11T15:43:57.065437582+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [LEASE] 2026-10-11T15:43:57.212184891+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
@@ -818,7 +818,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:43:58.426187372+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:43:58.426246051+00:00 | k3s-worker1 | Ready=Unknown
 [POD] 2026-10-11T15:43:59.174591468+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
-[CLINICAL] 2026-10-11T15:43:49.252183717+00:00 | status=0 | latency=10187.949ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:43:49.252183717+00:00 | status=0 | latency=10187.949ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [TAINT] 2026-10-11T15:43:59.439919975+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [LEASE] 2026-10-11T15:43:59.629773548+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:43:59.807842826+00:00 | k3s-worker1 | Ready=Unknown
@@ -846,7 +846,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [POD] 2026-10-11T15:44:07.114076014+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [LEASE] 2026-10-11T15:44:07.283583253+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:44:07.410008500+00:00 | k3s-worker1 | Ready=Unknown
-[HTTP] 2026-10-11T15:43:57.285552521+00:00 | node=k3s-worker1 | status=0 | latency=10001.622ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:43:57.285552521+00:00 | node=k3s-worker1 | status=0 | latency=10001.622ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [TAINT] 2026-10-11T15:44:07.728530020+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [POD] 2026-10-11T15:44:08.227934787+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [LEASE] 2026-10-11T15:44:08.412000399+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
@@ -856,7 +856,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:44:09.537135333+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:44:09.714888766+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:44:10.147451217+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
-[CLINICAL] 2026-10-11T15:44:00.441293923+00:00 | status=0 | latency=10001.260ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:44:00.441293923+00:00 | status=0 | latency=10001.260ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:44:10.538805524+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [LEASE] 2026-10-11T15:44:10.920901071+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:44:11.116350412+00:00 | k3s-worker1 | Ready=Unknown
@@ -883,7 +883,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [POD] 2026-10-11T15:44:18.193107061+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [NODE] 2026-10-11T15:44:17.191718100+00:00 | k3s-worker1 | Ready=Unknown
 [LEASE] 2026-10-11T15:44:18.495322541+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
-[HTTP] 2026-10-11T15:44:08.654905816+00:00 | node=k3s-worker1 | status=0 | latency=10065.625ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:44:08.654905816+00:00 | node=k3s-worker1 | status=0 | latency=10065.625ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [TAINT] 2026-10-11T15:44:18.839007002+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [POD] 2026-10-11T15:44:19.344179791+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [NODE] 2026-10-11T15:44:19.525122929+00:00 | k3s-worker1 | Ready=Unknown
@@ -893,7 +893,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:44:20.902646946+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:44:20.902814983+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:44:21.186155030+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
-[CLINICAL] 2026-10-11T15:44:11.443854420+00:00 | status=0 | latency=10001.453ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:44:11.443854420+00:00 | status=0 | latency=10001.453ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:44:21.903749591+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [LEASE] 2026-10-11T15:44:22.127394333+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:44:22.127315486+00:00 | k3s-worker1 | Ready=Unknown
@@ -915,7 +915,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [NODE] 2026-10-11T15:44:29.373981874+00:00 | k3s-worker1 | Ready=Unknown
 [LEASE] 2026-10-11T15:44:29.374071618+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [POD] 2026-10-11T15:44:29.830099990+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
-[HTTP] 2026-10-11T15:44:19.850403412+00:00 | node=k3s-worker1 | status=0 | latency=10195.643ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:44:19.850403412+00:00 | node=k3s-worker1 | status=0 | latency=10195.643ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [LEASE] 2026-10-11T15:44:30.609406252+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:44:30.609487753+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:44:30.609685622+00:00 | k3s-worker1 | Ready=Unknown
@@ -923,7 +923,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:44:31.824018446+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:44:31.825320365+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:44:31.824085246+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
-[CLINICAL] 2026-10-11T15:44:22.468352895+00:00 | status=0 | latency=10001.022ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:44:22.468352895+00:00 | status=0 | latency=10001.022ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:44:32.925296949+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [NODE] 2026-10-11T15:44:33.220009544+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:44:33.220433796+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -951,11 +951,11 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:44:41.009254847+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:44:41.247334223+00:00 | k3s-worker1 | Ready=Unknown
 [POD] 2026-10-11T15:44:41.811332502+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
-[HTTP] 2026-10-11T15:44:31.611135928+00:00 | node=k3s-worker1 | status=0 | latency=10975.106ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:44:31.611135928+00:00 | node=k3s-worker1 | status=0 | latency=10975.106ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [LEASE] 2026-10-11T15:44:42.905150016+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:44:42.905241296+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:44:42.905196403+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
-[CLINICAL] 2026-10-11T15:44:33.470253381+00:00 | status=0 | latency=10002.114ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:44:33.470253381+00:00 | status=0 | latency=10002.114ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [LEASE] 2026-10-11T15:44:44.089017970+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:44:44.258113528+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:44:44.258180765+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -987,8 +987,8 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:44:54.276766276+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:44:54.276805694+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:44:54.276729351+00:00 | k3s-worker1 | Ready=Unknown
-[CLINICAL] 2026-10-11T15:44:44.473862898+00:00 | status=0 | latency=10001.557ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
-[HTTP] 2026-10-11T15:44:43.906529410+00:00 | node=k3s-worker1 | status=0 | latency=10002.143ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[CLINICAL] 2026-10-11T15:44:44.473862898+00:00 | status=0 | latency=10001.557ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[HTTP] 2026-10-11T15:44:43.906529410+00:00 | node=k3s-worker1 | status=0 | latency=10002.143ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [POD] 2026-10-11T15:44:55.277228679+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [LEASE] 2026-10-11T15:44:55.904212816+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:44:55.904138545+00:00 | k3s-worker1 | Ready=Unknown
@@ -1019,12 +1019,12 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:45:04.109002473+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:45:04.169541906+00:00 | k3s-worker1 | Ready=Unknown
 [POD] 2026-10-11T15:45:05.054362971+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
-[CLINICAL] 2026-10-11T15:44:55.904003510+00:00 | status=0 | latency=10001.420ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:44:55.904003510+00:00 | status=0 | latency=10001.420ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [LEASE] 2026-10-11T15:45:05.818363039+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:45:05.818402735+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:45:05.818441640+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [POD] 2026-10-11T15:45:06.819345321+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
-[HTTP] 2026-10-11T15:44:55.910494750+00:00 | node=k3s-worker1 | status=0 | latency=10120.912ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:44:55.910494750+00:00 | node=k3s-worker1 | status=0 | latency=10120.912ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [LEASE] 2026-10-11T15:45:07.083966313+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:45:07.227981232+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:45:07.227816684+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -1058,13 +1058,13 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [POD] 2026-10-11T15:45:16.447529156+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [LEASE] 2026-10-11T15:45:16.908808055+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:45:16.908897859+00:00 | k3s-worker1 | Ready=Unknown
-[CLINICAL] 2026-10-11T15:45:07.026077851+00:00 | status=0 | latency=10005.441ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:45:07.026077851+00:00 | status=0 | latency=10005.441ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [TAINT] 2026-10-11T15:45:16.914111040+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [POD] 2026-10-11T15:45:17.909419813+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [LEASE] 2026-10-11T15:45:18.032453245+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:45:18.032547280+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:45:18.044863952+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
-[HTTP] 2026-10-11T15:45:08.027163800+00:00 | node=k3s-worker1 | status=0 | latency=10001.145ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:45:08.027163800+00:00 | node=k3s-worker1 | status=0 | latency=10001.145ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [POD] 2026-10-11T15:45:19.009653050+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [LEASE] 2026-10-11T15:45:19.219404064+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:45:19.219309022+00:00 | k3s-worker1 | Ready=Unknown
@@ -1093,13 +1093,13 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:45:27.322301810+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:45:27.322212141+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:45:27.462886354+00:00 | k3s-worker1 | Ready=Unknown
-[CLINICAL] 2026-10-11T15:45:18.032390284+00:00 | status=0 | latency=10001.662ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:45:18.032390284+00:00 | status=0 | latency=10001.662ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:45:28.323271282+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [LEASE] 2026-10-11T15:45:28.825235454+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:45:28.825124135+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:45:28.825073582+00:00 | k3s-worker1 | Ready=Unknown
 [POD] 2026-10-11T15:45:29.825968129+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
-[HTTP] 2026-10-11T15:45:19.831067183+00:00 | node=k3s-worker1 | status=0 | latency=10006.056ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:45:19.831067183+00:00 | node=k3s-worker1 | status=0 | latency=10006.056ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [LEASE] 2026-10-11T15:45:30.030049404+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:45:30.030056333+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:45:30.029990575+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -1130,7 +1130,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:45:38.594714481+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:45:38.746288009+00:00 | k3s-worker1 | Ready=Unknown
 [POD] 2026-10-11T15:45:38.967889361+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
-[CLINICAL] 2026-10-11T15:45:29.035084606+00:00 | status=0 | latency=10045.845ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:45:29.035084606+00:00 | status=0 | latency=10045.845ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [TAINT] 2026-10-11T15:45:39.345348584+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [LEASE] 2026-10-11T15:45:39.709006109+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:45:39.858646391+00:00 | k3s-worker1 | Ready=Unknown
@@ -1138,7 +1138,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [TAINT] 2026-10-11T15:45:40.456688474+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [LEASE] 2026-10-11T15:45:40.816510842+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:45:40.960439329+00:00 | k3s-worker1 | Ready=Unknown
-[HTTP] 2026-10-11T15:45:31.031759819+00:00 | node=k3s-worker1 | status=0 | latency=10000.993ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:45:31.031759819+00:00 | node=k3s-worker1 | status=0 | latency=10000.993ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [POD] 2026-10-11T15:45:41.305597967+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [TAINT] 2026-10-11T15:45:41.560301873+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [LEASE] 2026-10-11T15:45:41.949643828+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
@@ -1167,7 +1167,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:45:49.265224823+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:45:49.408813138+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:45:49.408680252+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
-[CLINICAL] 2026-10-11T15:45:40.082366282+00:00 | status=0 | latency=10001.756ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:45:40.082366282+00:00 | status=0 | latency=10001.756ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:45:50.169862608+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
 [LEASE] 2026-10-11T15:45:50.409273997+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:45:50.570961152+00:00 | k3s-worker1 | Ready=Unknown
@@ -1177,7 +1177,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [NODE] 2026-10-11T15:45:51.740844668+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:45:51.997979257+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [POD] 2026-10-11T15:45:52.620043119+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=
-[HTTP] 2026-10-11T15:45:42.264387117+00:00 | node=k3s-worker1 | status=0 | latency=10002.130ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:45:42.264387117+00:00 | node=k3s-worker1 | status=0 | latency=10002.130ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [LEASE] 2026-10-11T15:45:52.905575579+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:45:52.905435317+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:45:53.144761189+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -1209,7 +1209,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [TAINT] 2026-10-11T15:46:00.485322841+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:46:00.485412059+00:00 | k3s-worker1 | Ready=Unknown
 [LEASE] 2026-10-11T15:46:00.485492628+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
-[CLINICAL] 2026-10-11T15:45:51.085549726+00:00 | status=0 | latency=10002.038ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:45:51.085549726+00:00 | status=0 | latency=10002.038ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:46:01.486621982+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:46:01.486621982+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [TAINT] 2026-10-11T15:46:01.848256678+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -1223,7 +1223,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [POD] 2026-10-11T15:46:04.050928952+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:46:04.050928952+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [NODE] 2026-10-11T15:46:04.198901509+00:00 | k3s-worker1 | Ready=Unknown
-[HTTP] 2026-10-11T15:45:54.152547906+00:00 | node=k3s-worker1 | status=0 | latency=10001.203ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:45:54.152547906+00:00 | node=k3s-worker1 | status=0 | latency=10001.203ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [LEASE] 2026-10-11T15:46:04.368636140+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:46:04.368552056+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [POD] 2026-10-11T15:46:05.186302667+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
@@ -1254,7 +1254,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [POD] 2026-10-11T15:46:11.917226980+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:46:11.917226980+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [TAINT] 2026-10-11T15:46:12.067158081+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
-[CLINICAL] 2026-10-11T15:46:02.089121488+00:00 | status=0 | latency=10119.505ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:46:02.089121488+00:00 | status=0 | latency=10119.505ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [LEASE] 2026-10-11T15:46:12.208842221+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:46:12.208819133+00:00 | k3s-worker1 | Ready=Unknown
 [POD] 2026-10-11T15:46:13.059281587+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
@@ -1267,7 +1267,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:46:15.133126172+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:46:15.133078259+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:46:15.133008816+00:00 | k3s-worker1 | Ready=Unknown
-[HTTP] 2026-10-11T15:46:05.535630313+00:00 | node=k3s-worker1 | status=0 | latency=10002.269ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:46:05.535630313+00:00 | node=k3s-worker1 | status=0 | latency=10002.269ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [POD] 2026-10-11T15:46:16.134862479+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:46:16.134862479+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [NODE] 2026-10-11T15:46:16.553957983+00:00 | k3s-worker1 | Ready=Unknown
@@ -1296,7 +1296,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [POD] 2026-10-11T15:46:22.775826554+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:46:22.775826554+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [NODE] 2026-10-11T15:46:23.115853908+00:00 | k3s-worker1 | Ready=Unknown
-[CLINICAL] 2026-10-11T15:46:13.916018797+00:00 | status=0 | latency=10001.874ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:46:13.916018797+00:00 | status=0 | latency=10001.874ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [LEASE] 2026-10-11T15:46:23.653904659+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:46:23.654499214+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [POD] 2026-10-11T15:46:24.117929912+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
@@ -1311,7 +1311,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [TAINT] 2026-10-11T15:46:26.404573887+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [POD] 2026-10-11T15:46:26.766169166+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:46:26.766169166+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
-[HTTP] 2026-10-11T15:46:16.686351484+00:00 | node=k3s-worker1 | status=0 | latency=10097.017ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:46:16.686351484+00:00 | node=k3s-worker1 | status=0 | latency=10097.017ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [NODE] 2026-10-11T15:46:27.031938581+00:00 | k3s-worker1 | Ready=Unknown
 [LEASE] 2026-10-11T15:46:27.385170778+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:46:27.584784859+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -1344,7 +1344,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [POD] 2026-10-11T15:46:34.236927900+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [NODE] 2026-10-11T15:46:34.533399544+00:00 | k3s-worker1 | Ready=Unknown
 [LEASE] 2026-10-11T15:46:34.768351389+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
-[CLINICAL] 2026-10-11T15:46:24.919020764+00:00 | status=0 | latency=10025.068ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:46:24.919020764+00:00 | status=0 | latency=10025.068ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [TAINT] 2026-10-11T15:46:34.944080961+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [POD] 2026-10-11T15:46:35.534628358+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:46:35.534628358+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
@@ -1359,7 +1359,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [POD] 2026-10-11T15:46:37.962720383+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:46:37.962720383+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [NODE] 2026-10-11T15:46:38.284145134+00:00 | k3s-worker1 | Ready=Unknown
-[HTTP] 2026-10-11T15:46:28.015968902+00:00 | node=k3s-worker1 | status=0 | latency=10080.653ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:46:28.015968902+00:00 | node=k3s-worker1 | status=0 | latency=10080.653ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [LEASE] 2026-10-11T15:46:38.470476848+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:46:38.569894681+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [POD] 2026-10-11T15:46:39.285798527+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
@@ -1389,7 +1389,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [NODE] 2026-10-11T15:46:44.601341458+00:00 | k3s-worker1 | Ready=Unknown
 [POD] 2026-10-11T15:46:45.602772931+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:46:45.602772931+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
-[CLINICAL] 2026-10-11T15:46:35.945881750+00:00 | status=0 | latency=10001.585ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:46:35.945881750+00:00 | status=0 | latency=10001.585ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [LEASE] 2026-10-11T15:46:45.839780385+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:46:45.839870322+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:46:45.839712202+00:00 | k3s-worker1 | Ready=Unknown
@@ -1405,7 +1405,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [TAINT] 2026-10-11T15:46:48.687963558+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [POD] 2026-10-11T15:46:49.557545508+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:46:49.557545508+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
-[HTTP] 2026-10-11T15:46:39.579971343+00:00 | node=k3s-worker1 | status=0 | latency=10001.033ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:46:39.579971343+00:00 | node=k3s-worker1 | status=0 | latency=10001.033ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [LEASE] 2026-10-11T15:46:49.902073145+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:46:50.088035826+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:46:50.087852182+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -1437,7 +1437,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [POD] 2026-10-11T15:46:56.882517409+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:46:56.882517409+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [LEASE] 2026-10-11T15:46:57.119294941+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
-[CLINICAL] 2026-10-11T15:46:47.269237853+00:00 | status=0 | latency=10001.767ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:46:47.269237853+00:00 | status=0 | latency=10001.767ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [NODE] 2026-10-11T15:46:57.291811327+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:46:57.677050829+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [POD] 2026-10-11T15:46:58.120809608+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
@@ -1452,7 +1452,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [NODE] 2026-10-11T15:47:00.096617487+00:00 | k3s-worker1 | Ready=Unknown
 [POD] 2026-10-11T15:47:01.097815666+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:47:01.097815666+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
-[HTTP] 2026-10-11T15:46:51.076173466+00:00 | node=k3s-worker1 | status=0 | latency=10006.370ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:46:51.076173466+00:00 | node=k3s-worker1 | status=0 | latency=10006.370ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [TAINT] 2026-10-11T15:47:01.334076702+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [LEASE] 2026-10-11T15:47:01.334220511+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:47:01.334177768+00:00 | k3s-worker1 | Ready=Unknown
@@ -1481,7 +1481,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:47:07.926184925+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:47:08.123467576+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:47:08.123412694+00:00 | k3s-worker1 | Ready=Unknown
-[CLINICAL] 2026-10-11T15:46:58.832316381+00:00 | status=0 | latency=10001.562ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:46:58.832316381+00:00 | status=0 | latency=10001.562ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:47:08.927234434+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:47:08.927234434+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [LEASE] 2026-10-11T15:47:09.124538005+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
@@ -1494,7 +1494,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [TAINT] 2026-10-11T15:47:10.920686883+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [POD] 2026-10-11T15:47:11.921241808+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:47:11.921241808+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
-[HTTP] 2026-10-11T15:47:02.335503108+00:00 | node=k3s-worker1 | status=0 | latency=10159.509ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:47:02.335503108+00:00 | node=k3s-worker1 | status=0 | latency=10159.509ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [NODE] 2026-10-11T15:47:12.912071347+00:00 | k3s-worker1 | Ready=Unknown
 [LEASE] 2026-10-11T15:47:12.912228037+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:47:12.912127704+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -1518,7 +1518,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [TAINT] 2026-10-11T15:47:18.022589580+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [POD] 2026-10-11T15:47:18.915554598+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:47:18.915554598+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
-[CLINICAL] 2026-10-11T15:47:09.835752753+00:00 | status=0 | latency=10077.625ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:47:09.835752753+00:00 | status=0 | latency=10077.625ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [LEASE] 2026-10-11T15:47:19.913548348+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:47:19.913425529+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:47:19.913464561+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -1538,7 +1538,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [POD] 2026-10-11T15:47:24.033436245+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:47:24.033436245+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [LEASE] 2026-10-11T15:47:24.522448225+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
-[HTTP] 2026-10-11T15:47:13.913799070+00:00 | node=k3s-worker1 | status=0 | latency=10022.801ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:47:13.913799070+00:00 | node=k3s-worker1 | status=0 | latency=10022.801ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [TAINT] 2026-10-11T15:47:24.942150943+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:47:24.942100823+00:00 | k3s-worker1 | Ready=Unknown
 [POD] 2026-10-11T15:47:25.317027065+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
@@ -1561,7 +1561,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [TAINT] 2026-10-11T15:47:30.016115475+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [LEASE] 2026-10-11T15:47:30.147848675+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:47:30.147782197+00:00 | k3s-worker1 | Ready=Unknown
-[CLINICAL] 2026-10-11T15:47:20.914472937+00:00 | status=0 | latency=10001.781ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:47:20.914472937+00:00 | status=0 | latency=10001.781ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:47:30.982497499+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:47:30.982497499+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [NODE] 2026-10-11T15:47:31.909576901+00:00 | k3s-worker1 | Ready=Unknown
@@ -1577,7 +1577,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:47:35.911368498+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:47:35.911292300+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:47:35.911328457+00:00 | k3s-worker1 | Ready=Unknown
-[HTTP] 2026-10-11T15:47:26.080747267+00:00 | node=k3s-worker1 | status=0 | latency=10001.835ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:47:26.080747267+00:00 | node=k3s-worker1 | status=0 | latency=10001.835ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [POD] 2026-10-11T15:47:36.912365859+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:47:36.912365859+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [LEASE] 2026-10-11T15:47:37.053829092+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
@@ -1598,7 +1598,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [TAINT] 2026-10-11T15:47:41.064485528+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [LEASE] 2026-10-11T15:47:41.064440653+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:47:41.064523825+00:00 | k3s-worker1 | Ready=Unknown
-[CLINICAL] 2026-10-11T15:47:31.916942137+00:00 | status=0 | latency=10001.581ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:47:31.916942137+00:00 | status=0 | latency=10001.581ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:47:42.065456499+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:47:42.065456499+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [NODE] 2026-10-11T15:47:42.837291871+00:00 | k3s-worker1 | Ready=Unknown
@@ -1619,7 +1619,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [NODE] 2026-10-11T15:47:47.145257501+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:47:47.274675058+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [LEASE] 2026-10-11T15:47:47.274758176+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
-[HTTP] 2026-10-11T15:47:37.406918187+00:00 | node=k3s-worker1 | status=0 | latency=10001.728ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:47:37.406918187+00:00 | node=k3s-worker1 | status=0 | latency=10001.728ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [POD] 2026-10-11T15:47:48.069531425+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:47:48.069531425+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [NODE] 2026-10-11T15:47:48.360359180+00:00 | k3s-worker1 | Ready=Unknown
@@ -1640,7 +1640,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [NODE] 2026-10-11T15:47:52.329209168+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:47:52.457133238+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [LEASE] 2026-10-11T15:47:52.457227798+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
-[CLINICAL] 2026-10-11T15:47:42.920150994+00:00 | status=0 | latency=10001.736ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:47:42.920150994+00:00 | status=0 | latency=10001.736ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:47:53.330804829+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:47:53.330804829+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [LEASE] 2026-10-11T15:47:53.929780160+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
@@ -1663,7 +1663,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [NODE] 2026-10-11T15:47:57.573805371+00:00 | k3s-worker1 | Ready=Unknown
 [POD] 2026-10-11T15:47:58.574324682+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:47:58.574324682+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
-[HTTP] 2026-10-11T15:47:48.736065007+00:00 | node=k3s-worker1 | status=0 | latency=10001.260ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:47:48.736065007+00:00 | node=k3s-worker1 | status=0 | latency=10001.260ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [NODE] 2026-10-11T15:47:58.809373421+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:47:58.809212767+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [LEASE] 2026-10-11T15:47:58.809172531+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
@@ -1684,7 +1684,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [TAINT] 2026-10-11T15:48:02.461366611+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [POD] 2026-10-11T15:48:03.324629133+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:48:03.324629133+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
-[CLINICAL] 2026-10-11T15:47:53.929531687+00:00 | status=0 | latency=10019.073ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:47:53.929531687+00:00 | status=0 | latency=10019.073ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [TAINT] 2026-10-11T15:48:03.948739913+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [LEASE] 2026-10-11T15:48:03.948665338+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:48:03.948786457+00:00 | k3s-worker1 | Ready=Unknown
@@ -1710,7 +1710,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:48:09.292871138+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [POD] 2026-10-11T15:48:10.294358772+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:48:10.294358772+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
-[HTTP] 2026-10-11T15:48:00.011817731+00:00 | node=k3s-worker1 | status=0 | latency=10005.914ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:48:00.011817731+00:00 | node=k3s-worker1 | status=0 | latency=10005.914ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [NODE] 2026-10-11T15:48:10.919102395+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:48:10.919174762+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [LEASE] 2026-10-11T15:48:10.919276854+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
@@ -1729,7 +1729,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:48:14.435922881+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:48:14.436070625+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:48:14.436024408+00:00 | k3s-worker1 | Ready=Unknown
-[CLINICAL] 2026-10-11T15:48:05.210577477+00:00 | status=0 | latency=10001.718ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:48:05.210577477+00:00 | status=0 | latency=10001.718ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:48:15.436363791+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:48:15.436363791+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [LEASE] 2026-10-11T15:48:15.928590272+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
@@ -1758,7 +1758,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [POD] 2026-10-11T15:48:21.912525901+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:48:21.912525901+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [TAINT] 2026-10-11T15:48:22.115351090+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
-[HTTP] 2026-10-11T15:48:11.921323458+00:00 | node=k3s-worker1 | status=0 | latency=10142.586ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:48:11.921323458+00:00 | node=k3s-worker1 | status=0 | latency=10142.586ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [NODE] 2026-10-11T15:48:22.115398440+00:00 | k3s-worker1 | Ready=Unknown
 [LEASE] 2026-10-11T15:48:22.261942584+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [POD] 2026-10-11T15:48:23.116519361+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
@@ -1776,7 +1776,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [NODE] 2026-10-11T15:48:25.791701209+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:48:25.791736326+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [LEASE] 2026-10-11T15:48:25.809925800+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
-[CLINICAL] 2026-10-11T15:48:16.213307349+00:00 | status=0 | latency=10000.813ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:48:16.213307349+00:00 | status=0 | latency=10000.813ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:48:26.792768409+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:48:26.792768409+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [NODE] 2026-10-11T15:48:26.961743966+00:00 | k3s-worker1 | Ready=Unknown
@@ -1805,7 +1805,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:48:33.341336463+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:48:33.341293320+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:48:33.341371151+00:00 | k3s-worker1 | Ready=Unknown
-[HTTP] 2026-10-11T15:48:23.270170287+00:00 | node=k3s-worker1 | status=0 | latency=10001.946ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:48:23.270170287+00:00 | node=k3s-worker1 | status=0 | latency=10001.946ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [POD] 2026-10-11T15:48:34.342270683+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:48:34.342270683+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [TAINT] 2026-10-11T15:48:34.912798453+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -1816,7 +1816,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:48:36.913308067+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:48:36.913493780+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:48:36.913576648+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
-[CLINICAL] 2026-10-11T15:48:27.214937714+00:00 | status=0 | latency=10001.920ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:48:27.214937714+00:00 | status=0 | latency=10001.920ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:48:37.915039329+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:48:37.915039329+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [LEASE] 2026-10-11T15:48:38.055112877+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
@@ -1845,7 +1845,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:48:44.529175904+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [POD] 2026-10-11T15:48:44.334400850+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:48:44.334400850+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
-[HTTP] 2026-10-11T15:48:34.912762330+00:00 | node=k3s-worker1 | status=0 | latency=10001.966ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:48:34.912762330+00:00 | node=k3s-worker1 | status=0 | latency=10001.966ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [NODE] 2026-10-11T15:48:45.500853487+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:48:45.500895428+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [LEASE] 2026-10-11T15:48:45.666370585+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
@@ -1859,7 +1859,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [NODE] 2026-10-11T15:48:47.751199970+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:48:47.863664502+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [LEASE] 2026-10-11T15:48:47.963682872+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
-[CLINICAL] 2026-10-11T15:48:38.218326019+00:00 | status=0 | latency=10001.053ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:48:38.218326019+00:00 | status=0 | latency=10001.053ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:48:48.237106870+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:48:48.237106870+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [NODE] 2026-10-11T15:48:48.863929462+00:00 | k3s-worker1 | Ready=Unknown
@@ -1893,7 +1893,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [POD] 2026-10-11T15:48:55.911958916+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:48:55.911958916+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [LEASE] 2026-10-11T15:48:56.074573538+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
-[HTTP] 2026-10-11T15:48:46.109461227+00:00 | node=k3s-worker1 | status=0 | latency=10001.819ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:48:46.109461227+00:00 | node=k3s-worker1 | status=0 | latency=10001.819ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [NODE] 2026-10-11T15:48:56.209024424+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:48:56.208770307+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [POD] 2026-10-11T15:48:57.061431162+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
@@ -1906,7 +1906,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:48:58.880974332+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:48:59.095893143+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:48:59.095805287+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
-[CLINICAL] 2026-10-11T15:48:49.309450720+00:00 | status=0 | latency=10002.247ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:48:49.309450720+00:00 | status=0 | latency=10002.247ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:48:59.678807605+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:48:59.678807605+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [LEASE] 2026-10-11T15:49:00.096022720+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
@@ -1941,7 +1941,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [POD] 2026-10-11T15:49:06.918199081+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [NODE] 2026-10-11T15:49:07.688874770+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:49:07.688940780+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
-[HTTP] 2026-10-11T15:48:57.437858173+00:00 | node=k3s-worker1 | status=0 | latency=10002.001ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:48:57.437858173+00:00 | node=k3s-worker1 | status=0 | latency=10002.001ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [LEASE] 2026-10-11T15:49:07.689000990+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [POD] 2026-10-11T15:49:08.690572534+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:49:08.690572534+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
@@ -1950,7 +1950,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:49:09.902700018+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [POD] 2026-10-11T15:49:10.044176593+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:49:10.044176593+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
-[CLINICAL] 2026-10-11T15:49:00.313752349+00:00 | status=0 | latency=10198.505ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:49:00.313752349+00:00 | status=0 | latency=10198.505ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [TAINT] 2026-10-11T15:49:10.512233002+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:49:10.512353846+00:00 | k3s-worker1 | Ready=Unknown
 [LEASE] 2026-10-11T15:49:11.045553607+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
@@ -1984,7 +1984,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [NODE] 2026-10-11T15:49:18.856889396+00:00 | k3s-worker1 | Ready=Unknown
 [LEASE] 2026-10-11T15:49:18.856846491+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:49:18.857093892+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
-[HTTP] 2026-10-11T15:49:09.053992881+00:00 | node=k3s-worker1 | status=0 | latency=10001.649ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:49:09.053992881+00:00 | node=k3s-worker1 | status=0 | latency=10001.649ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [POD] 2026-10-11T15:49:19.858345295+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:49:19.858345295+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [LEASE] 2026-10-11T15:49:20.247054535+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
@@ -1992,7 +1992,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [TAINT] 2026-10-11T15:49:20.247156873+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [POD] 2026-10-11T15:49:21.065722853+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:49:21.065722853+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
-[CLINICAL] 2026-10-11T15:49:11.513983697+00:00 | status=0 | latency=10001.865ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:49:11.513983697+00:00 | status=0 | latency=10001.865ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [NODE] 2026-10-11T15:49:21.448284634+00:00 | k3s-worker1 | Ready=Unknown
 [LEASE] 2026-10-11T15:49:21.448201713+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:49:21.448114371+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -2026,13 +2026,13 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:49:30.060324783+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:49:30.255949592+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:49:30.472694017+00:00 | k3s-worker1 | Ready=Unknown
-[HTTP] 2026-10-11T15:49:20.246980090+00:00 | node=k3s-worker1 | status=0 | latency=10001.773ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:49:20.246980090+00:00 | node=k3s-worker1 | status=0 | latency=10001.773ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [POD] 2026-10-11T15:49:31.061628628+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:49:31.061628628+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [LEASE] 2026-10-11T15:49:31.843189157+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:49:31.843259227+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:49:31.843228416+00:00 | k3s-worker1 | Ready=Unknown
-[CLINICAL] 2026-10-11T15:49:22.704932075+00:00 | status=0 | latency=10002.011ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:49:22.704932075+00:00 | status=0 | latency=10002.011ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:49:32.844697786+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:49:32.844697786+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [TAINT] 2026-10-11T15:49:33.092459572+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -2068,13 +2068,13 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:49:41.919524511+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:49:41.919419875+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:49:41.919435859+00:00 | k3s-worker1 | Ready=Unknown
-[HTTP] 2026-10-11T15:49:31.842907229+00:00 | node=k3s-worker1 | status=0 | latency=10001.868ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:49:31.842907229+00:00 | node=k3s-worker1 | status=0 | latency=10001.868ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [POD] 2026-10-11T15:49:42.921064407+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:49:42.921064407+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [LEASE] 2026-10-11T15:49:43.174303859+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:49:43.328135245+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:49:43.328175034+00:00 | k3s-worker1 | Ready=Unknown
-[CLINICAL] 2026-10-11T15:49:33.708872781+00:00 | status=0 | latency=10001.357ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:49:33.708872781+00:00 | status=0 | latency=10001.357ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:49:44.128212002+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:49:44.128212002+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [LEASE] 2026-10-11T15:49:44.914000860+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
@@ -2105,10 +2105,10 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [TAINT] 2026-10-11T15:49:52.914848141+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:49:52.915115094+00:00 | k3s-worker1 | Ready=Unknown
 [LEASE] 2026-10-11T15:49:52.914934933+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
-[HTTP] 2026-10-11T15:49:43.328001008+00:00 | node=k3s-worker1 | status=0 | latency=10000.900ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:49:43.328001008+00:00 | node=k3s-worker1 | status=0 | latency=10000.900ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [POD] 2026-10-11T15:49:53.916075929+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:49:53.916075929+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
-[CLINICAL] 2026-10-11T15:49:44.913901306+00:00 | status=0 | latency=10001.665ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:49:44.913901306+00:00 | status=0 | latency=10001.665ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [LEASE] 2026-10-11T15:49:54.911141985+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:49:54.911043151+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:49:54.911206563+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -2147,10 +2147,10 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:50:04.916209688+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:50:04.916141422+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:50:04.916248434+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
-[HTTP] 2026-10-11T15:49:54.910995095+00:00 | node=k3s-worker1 | status=0 | latency=10002.358ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:49:54.910995095+00:00 | node=k3s-worker1 | status=0 | latency=10002.358ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [POD] 2026-10-11T15:50:05.917540535+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:50:05.917540535+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
-[CLINICAL] 2026-10-11T15:49:56.182931027+00:00 | status=0 | latency=10001.432ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:49:56.182931027+00:00 | status=0 | latency=10001.432ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [LEASE] 2026-10-11T15:50:06.111873058+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:50:06.111793593+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:50:06.111824297+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -2191,11 +2191,11 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [NODE] 2026-10-11T15:50:15.484746+00:00 | k3s-worker1 | Ready=Unknown
 [POD] 2026-10-11T15:50:16.332851287+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:50:16.332851287+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
-[HTTP] 2026-10-11T15:50:06.151505051+00:00 | node=k3s-worker1 | status=0 | latency=10004.473ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:50:06.151505051+00:00 | node=k3s-worker1 | status=0 | latency=10004.473ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [LEASE] 2026-10-11T15:50:16.915113414+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:50:16.915303615+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:50:16.915252383+00:00 | k3s-worker1 | Ready=Unknown
-[CLINICAL] 2026-10-11T15:50:07.253709454+00:00 | status=0 | latency=10001.531ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:50:07.253709454+00:00 | status=0 | latency=10001.531ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:50:17.917069585+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:50:17.917069585+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [LEASE] 2026-10-11T15:50:18.039459441+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
@@ -2236,8 +2236,8 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [TAINT] 2026-10-11T15:50:27.443067250+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:50:27.556652711+00:00 | k3s-worker1 | Ready=Unknown
 [LEASE] 2026-10-11T15:50:27.677614113+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
-[HTTP] 2026-10-11T15:50:17.916855020+00:00 | node=k3s-worker1 | status=0 | latency=10002.230ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
-[CLINICAL] 2026-10-11T15:50:18.255888567+00:00 | status=0 | latency=10001.641ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[HTTP] 2026-10-11T15:50:17.916855020+00:00 | node=k3s-worker1 | status=0 | latency=10002.230ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
+[CLINICAL] 2026-10-11T15:50:18.255888567+00:00 | status=0 | latency=10001.641ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:50:28.414515325+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:50:28.414515325+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [NODE] 2026-10-11T15:50:28.853391036+00:00 | k3s-worker1 | Ready=Unknown
@@ -2282,8 +2282,8 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:50:38.406520304+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:50:38.520806901+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:50:38.520771032+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
-[CLINICAL] 2026-10-11T15:50:29.258827498+00:00 | status=0 | latency=10001.185ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
-[HTTP] 2026-10-11T15:50:29.067149032+00:00 | node=k3s-worker1 | status=0 | latency=10001.722ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[CLINICAL] 2026-10-11T15:50:29.258827498+00:00 | status=0 | latency=10001.185ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[HTTP] 2026-10-11T15:50:29.067149032+00:00 | node=k3s-worker1 | status=0 | latency=10001.722ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [POD] 2026-10-11T15:50:39.370767905+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:50:39.370767905+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [LEASE] 2026-10-11T15:50:39.916064267+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
@@ -2326,11 +2326,11 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [NODE] 2026-10-11T15:50:49.290919372+00:00 | k3s-worker1 | Ready=Unknown
 [POD] 2026-10-11T15:50:50.218048863+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:50:50.218048863+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
-[CLINICAL] 2026-10-11T15:50:40.262339210+00:00 | status=0 | latency=10190.328ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:50:40.262339210+00:00 | status=0 | latency=10190.328ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [TAINT] 2026-10-11T15:50:50.452424835+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [LEASE] 2026-10-11T15:50:50.452495606+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:50:50.505136042+00:00 | k3s-worker1 | Ready=Unknown
-[HTTP] 2026-10-11T15:50:40.261812860+00:00 | node=k3s-worker1 | status=0 | latency=10001.457ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:50:40.261812860+00:00 | node=k3s-worker1 | status=0 | latency=10001.457ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [POD] 2026-10-11T15:50:51.452951523+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:50:51.452951523+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [TAINT] 2026-10-11T15:50:51.911914018+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -2371,10 +2371,10 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:51:00.913353523+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:51:00.913305039+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:51:00.913263188+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
-[CLINICAL] 2026-10-11T15:50:51.911999460+00:00 | status=0 | latency=10001.907ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:50:51.911999460+00:00 | status=0 | latency=10001.907ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:51:01.914670260+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:51:01.914670260+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
-[HTTP] 2026-10-11T15:50:51.917345836+00:00 | node=k3s-worker1 | status=0 | latency=10010.822ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:50:51.917345836+00:00 | node=k3s-worker1 | status=0 | latency=10010.822ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [TAINT] 2026-10-11T15:51:02.126547013+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:51:02.126455067+00:00 | k3s-worker1 | Ready=Unknown
 [LEASE] 2026-10-11T15:51:02.126721225+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
@@ -2420,12 +2420,12 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [POD] 2026-10-11T15:51:12.272156854+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [TAINT] 2026-10-11T15:51:12.579171606+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [LEASE] 2026-10-11T15:51:12.775255335+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
-[CLINICAL] 2026-10-11T15:51:02.915207181+00:00 | status=0 | latency=10007.411ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:51:02.915207181+00:00 | status=0 | latency=10007.411ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [NODE] 2026-10-11T15:51:12.922168142+00:00 | k3s-worker1 | Ready=Unknown
 [POD] 2026-10-11T15:51:13.443766193+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:51:13.443766193+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [TAINT] 2026-10-11T15:51:13.913262152+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
-[HTTP] 2026-10-11T15:51:03.127404715+00:00 | node=k3s-worker1 | status=0 | latency=10127.293ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:51:03.127404715+00:00 | node=k3s-worker1 | status=0 | latency=10127.293ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [LEASE] 2026-10-11T15:51:14.044066269+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:51:14.043948455+00:00 | k3s-worker1 | Ready=Unknown
 [POD] 2026-10-11T15:51:14.914979850+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
@@ -2465,11 +2465,11 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:51:22.922553498+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [POD] 2026-10-11T15:51:23.923056419+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:51:23.923056419+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
-[CLINICAL] 2026-10-11T15:51:14.044187623+00:00 | status=0 | latency=10155.990ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:51:14.044187623+00:00 | status=0 | latency=10155.990ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [TAINT] 2026-10-11T15:51:24.295053142+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [LEASE] 2026-10-11T15:51:24.510606097+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:51:24.510731259+00:00 | k3s-worker1 | Ready=Unknown
-[HTTP] 2026-10-11T15:51:15.118197852+00:00 | node=k3s-worker1 | status=0 | latency=10001.161ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:51:15.118197852+00:00 | node=k3s-worker1 | status=0 | latency=10001.161ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [POD] 2026-10-11T15:51:25.201429529+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:51:25.201429529+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [TAINT] 2026-10-11T15:51:25.511629340+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -2511,11 +2511,11 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [TAINT] 2026-10-11T15:51:33.949785711+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [POD] 2026-10-11T15:51:34.950734230+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:51:34.950734230+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
-[CLINICAL] 2026-10-11T15:51:25.201268421+00:00 | status=0 | latency=10137.043ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:51:25.201268421+00:00 | status=0 | latency=10137.043ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [TAINT] 2026-10-11T15:51:35.338377389+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:51:35.338316189+00:00 | k3s-worker1 | Ready=Unknown
 [LEASE] 2026-10-11T15:51:35.338279313+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
-[HTTP] 2026-10-11T15:51:26.336327729+00:00 | node=k3s-worker1 | status=0 | latency=10002.320ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:51:26.336327729+00:00 | node=k3s-worker1 | status=0 | latency=10002.320ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [POD] 2026-10-11T15:51:36.339614638+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:51:36.339614638+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [LEASE] 2026-10-11T15:51:36.568098526+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
@@ -2556,13 +2556,13 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [TAINT] 2026-10-11T15:51:46.032609366+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [LEASE] 2026-10-11T15:51:46.032693650+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:51:46.038004047+00:00 | k3s-worker1 | Ready=Unknown
-[CLINICAL] 2026-10-11T15:51:36.339515049+00:00 | status=0 | latency=10002.075ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:51:36.339515049+00:00 | status=0 | latency=10002.075ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:51:46.567665335+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:51:46.567665335+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [TAINT] 2026-10-11T15:51:47.209490158+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [LEASE] 2026-10-11T15:51:47.209387044+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:51:47.244782394+00:00 | k3s-worker1 | Ready=Unknown
-[HTTP] 2026-10-11T15:51:37.575605073+00:00 | node=k3s-worker1 | status=0 | latency=10002.285ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:51:37.575605073+00:00 | node=k3s-worker1 | status=0 | latency=10002.285ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [POD] 2026-10-11T15:51:47.740395551+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:51:47.740395551+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [TAINT] 2026-10-11T15:51:48.426569968+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -2603,7 +2603,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:51:56.828084525+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:51:56.994972506+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:51:56.994778121+00:00 | k3s-worker1 | Ready=Unknown
-[CLINICAL] 2026-10-11T15:51:47.425150946+00:00 | status=0 | latency=10000.928ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:51:47.425150946+00:00 | status=0 | latency=10000.928ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:51:57.817149619+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:51:57.817149619+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [LEASE] 2026-10-11T15:51:57.996205327+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
@@ -2611,7 +2611,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [TAINT] 2026-10-11T15:51:58.161515645+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [POD] 2026-10-11T15:51:58.937317732+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:51:58.937317732+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
-[HTTP] 2026-10-11T15:51:48.716153384+00:00 | node=k3s-worker1 | status=0 | latency=10953.258ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:51:48.716153384+00:00 | node=k3s-worker1 | status=0 | latency=10953.258ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [LEASE] 2026-10-11T15:51:59.910013758+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:51:59.910054947+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:51:59.910159006+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -2643,7 +2643,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:52:07.665725494+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:52:07.665660451+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:52:07.665517973+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
-[CLINICAL] 2026-10-11T15:51:58.427490958+00:00 | status=0 | latency=10002.025ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:51:58.427490958+00:00 | status=0 | latency=10002.025ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:52:08.666040267+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:52:08.666040267+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [LEASE] 2026-10-11T15:52:08.883994457+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
@@ -2656,7 +2656,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [TAINT] 2026-10-11T15:52:10.144103694+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [POD] 2026-10-11T15:52:10.971327225+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:52:10.971327225+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
-[HTTP] 2026-10-11T15:52:00.911237329+00:00 | node=k3s-worker1 | status=0 | latency=10186.150ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:52:00.911237329+00:00 | node=k3s-worker1 | status=0 | latency=10186.150ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [TAINT] 2026-10-11T15:52:11.709836435+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [LEASE] 2026-10-11T15:52:11.709999359+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:52:11.709739112+00:00 | k3s-worker1 | Ready=Unknown
@@ -2682,7 +2682,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [NODE] 2026-10-11T15:52:17.934547924+00:00 | k3s-worker1 | Ready=Unknown
 [POD] 2026-10-11T15:52:18.935295711+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:52:18.935295711+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
-[CLINICAL] 2026-10-11T15:52:09.431863524+00:00 | status=0 | latency=10001.670ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:52:09.431863524+00:00 | status=0 | latency=10001.670ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [LEASE] 2026-10-11T15:52:19.396864948+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:52:19.396656030+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:52:19.396592396+00:00 | k3s-worker1 | Ready=Unknown
@@ -2698,7 +2698,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [NODE] 2026-10-11T15:52:22.407555188+00:00 | k3s-worker1 | Ready=Unknown
 [POD] 2026-10-11T15:52:23.120397665+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:52:23.120397665+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
-[HTTP] 2026-10-11T15:52:12.919914586+00:00 | node=k3s-worker1 | status=0 | latency=10003.108ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:52:12.919914586+00:00 | node=k3s-worker1 | status=0 | latency=10003.108ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [LEASE] 2026-10-11T15:52:23.917442514+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:52:23.917599950+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:52:23.917652449+00:00 | k3s-worker1 | Ready=Unknown
@@ -2722,7 +2722,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [NODE] 2026-10-11T15:52:29.706717131+00:00 | k3s-worker1 | Ready=Unknown
 [POD] 2026-10-11T15:52:30.708055507+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:52:30.708055507+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
-[CLINICAL] 2026-10-11T15:52:20.928313056+00:00 | status=0 | latency=10002.271ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:52:20.928313056+00:00 | status=0 | latency=10002.271ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [TAINT] 2026-10-11T15:52:30.914214710+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [LEASE] 2026-10-11T15:52:30.914094915+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:52:30.914030928+00:00 | k3s-worker1 | Ready=Unknown
@@ -2738,7 +2738,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [NODE] 2026-10-11T15:52:34.286352025+00:00 | k3s-worker1 | Ready=Unknown
 [POD] 2026-10-11T15:52:35.099991774+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:52:35.099991774+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
-[HTTP] 2026-10-11T15:52:24.918053015+00:00 | node=k3s-worker1 | status=0 | latency=10002.172ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:52:24.918053015+00:00 | node=k3s-worker1 | status=0 | latency=10002.172ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [LEASE] 2026-10-11T15:52:35.914008326+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:52:35.913859876+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:52:35.913802021+00:00 | k3s-worker1 | Ready=Unknown
@@ -2764,7 +2764,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [NODE] 2026-10-11T15:52:41.220358849+00:00 | k3s-worker1 | Ready=Unknown
 [POD] 2026-10-11T15:52:41.995683362+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:52:41.995683362+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
-[CLINICAL] 2026-10-11T15:52:32.946325269+00:00 | status=0 | latency=10001.331ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:52:32.946325269+00:00 | status=0 | latency=10001.331ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [NODE] 2026-10-11T15:52:42.918113056+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:52:42.917974498+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [LEASE] 2026-10-11T15:52:42.918018790+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
@@ -2783,7 +2783,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:52:47.249103596+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:52:47.422672118+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:52:47.422617679+00:00 | k3s-worker1 | Ready=Unknown
-[HTTP] 2026-10-11T15:52:37.096014006+00:00 | node=k3s-worker1 | status=0 | latency=10002.139ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:52:37.096014006+00:00 | node=k3s-worker1 | status=0 | latency=10002.139ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [POD] 2026-10-11T15:52:48.157927600+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:52:48.157927600+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [LEASE] 2026-10-11T15:52:48.423916326+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
@@ -2806,7 +2806,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [NODE] 2026-10-11T15:52:52.338677027+00:00 | k3s-worker1 | Ready=Unknown
 [POD] 2026-10-11T15:52:53.339303965+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:52:53.339303965+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
-[CLINICAL] 2026-10-11T15:52:44.118493924+00:00 | status=0 | latency=10002.401ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:52:44.118493924+00:00 | status=0 | latency=10002.401ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [LEASE] 2026-10-11T15:52:53.983267564+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:52:53.982927877+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:52:53.982854560+00:00 | k3s-worker1 | Ready=Unknown
@@ -2827,7 +2827,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [TAINT] 2026-10-11T15:52:58.281969660+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [POD] 2026-10-11T15:52:59.040238437+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:52:59.040238437+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
-[HTTP] 2026-10-11T15:52:48.917685633+00:00 | node=k3s-worker1 | status=0 | latency=10116.987ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:52:48.917685633+00:00 | node=k3s-worker1 | status=0 | latency=10116.987ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [LEASE] 2026-10-11T15:52:59.350064544+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:52:59.585763524+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:52:59.771936190+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -2849,7 +2849,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:53:04.135189477+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [POD] 2026-10-11T15:53:04.916317525+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:53:04.916317525+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
-[CLINICAL] 2026-10-11T15:52:55.414476962+00:00 | status=0 | latency=10031.261ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:52:55.414476962+00:00 | status=0 | latency=10031.261ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [LEASE] 2026-10-11T15:53:05.445872560+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:53:05.445702127+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:53:05.445742366+00:00 | k3s-worker1 | Ready=Unknown
@@ -2873,7 +2873,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:53:10.401385159+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:53:10.530576146+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:53:10.530526796+00:00 | k3s-worker1 | Ready=Unknown
-[HTTP] 2026-10-11T15:53:00.351026731+00:00 | node=k3s-worker1 | status=0 | latency=10001.938ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:53:00.351026731+00:00 | node=k3s-worker1 | status=0 | latency=10001.938ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [POD] 2026-10-11T15:53:11.402801371+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:53:11.402801371+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [TAINT] 2026-10-11T15:53:11.916437244+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -2894,7 +2894,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [TAINT] 2026-10-11T15:53:15.909645072+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [LEASE] 2026-10-11T15:53:15.909596823+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:53:15.909538408+00:00 | k3s-worker1 | Ready=Unknown
-[CLINICAL] 2026-10-11T15:53:06.662558564+00:00 | status=0 | latency=10001.904ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:53:06.662558564+00:00 | status=0 | latency=10001.904ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:53:16.910893515+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:53:16.910893515+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [TAINT] 2026-10-11T15:53:17.036993729+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -2917,7 +2917,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [TAINT] 2026-10-11T15:53:21.121903248+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [POD] 2026-10-11T15:53:22.122829515+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:53:22.122829515+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
-[HTTP] 2026-10-11T15:53:11.926825294+00:00 | node=k3s-worker1 | status=0 | latency=10175.686ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:53:11.926825294+00:00 | node=k3s-worker1 | status=0 | latency=10175.686ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [LEASE] 2026-10-11T15:53:22.334185638+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:53:22.334448214+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:53:22.334502863+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -2941,7 +2941,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [NODE] 2026-10-11T15:53:27.240027335+00:00 | k3s-worker1 | Ready=Unknown
 [POD] 2026-10-11T15:53:27.265330837+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:53:27.265330837+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
-[CLINICAL] 2026-10-11T15:53:17.666744891+00:00 | status=0 | latency=10001.631ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:53:17.666744891+00:00 | status=0 | latency=10001.631ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [LEASE] 2026-10-11T15:53:28.001347869+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:53:28.241813115+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:53:28.390056997+00:00 | k3s-worker1 | Ready=Unknown
@@ -2965,7 +2965,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:53:33.097091748+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:53:33.317552611+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:53:33.317511857+00:00 | k3s-worker1 | Ready=Unknown
-[HTTP] 2026-10-11T15:53:23.335586106+00:00 | node=k3s-worker1 | status=0 | latency=10002.613ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:53:23.335586106+00:00 | node=k3s-worker1 | status=0 | latency=10002.613ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [POD] 2026-10-11T15:53:34.098841527+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:53:34.098841527+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [TAINT] 2026-10-11T15:53:34.916259563+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -2981,7 +2981,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [NODE] 2026-10-11T15:53:38.118783034+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:53:38.118660223+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [LEASE] 2026-10-11T15:53:38.118723083+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
-[CLINICAL] 2026-10-11T15:53:28.669321384+00:00 | status=0 | latency=10000.945ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:53:28.669321384+00:00 | status=0 | latency=10000.945ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:53:39.119862634+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:53:39.119862634+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [LEASE] 2026-10-11T15:53:39.331811854+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
@@ -3007,7 +3007,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:53:44.914539015+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:53:44.914493746+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:53:44.914333371+00:00 | k3s-worker1 | Ready=Unknown
-[HTTP] 2026-10-11T15:53:34.916243121+00:00 | node=k3s-worker1 | status=0 | latency=10001.294ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:53:34.916243121+00:00 | node=k3s-worker1 | status=0 | latency=10001.294ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [POD] 2026-10-11T15:53:45.915340258+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:53:45.915340258+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [LEASE] 2026-10-11T15:53:46.121611638+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
@@ -3026,7 +3026,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [POD] 2026-10-11T15:53:49.459105807+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:53:49.459105807+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [LEASE] 2026-10-11T15:53:49.591875695+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
-[CLINICAL] 2026-10-11T15:53:39.671985286+00:00 | status=0 | latency=10031.348ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:53:39.671985286+00:00 | status=0 | latency=10031.348ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [NODE] 2026-10-11T15:53:49.707701372+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:53:49.707750712+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [POD] 2026-10-11T15:53:50.593069990+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
@@ -3054,7 +3054,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [TAINT] 2026-10-11T15:53:55.823811370+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:53:55.823894513+00:00 | k3s-worker1 | Ready=Unknown
 [LEASE] 2026-10-11T15:53:55.823848885+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
-[HTTP] 2026-10-11T15:53:46.121312887+00:00 | node=k3s-worker1 | status=0 | latency=10001.030ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:53:46.121312887+00:00 | node=k3s-worker1 | status=0 | latency=10001.030ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [POD] 2026-10-11T15:53:56.824264396+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:53:56.824264396+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [TAINT] 2026-10-11T15:53:57.091304633+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -3072,7 +3072,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [NODE] 2026-10-11T15:53:59.635456538+00:00 | k3s-worker1 | Ready=Unknown
 [POD] 2026-10-11T15:54:00.449206521+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:54:00.449206521+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
-[CLINICAL] 2026-10-11T15:53:50.914962420+00:00 | status=0 | latency=10001.893ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:53:50.914962420+00:00 | status=0 | latency=10001.893ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [LEASE] 2026-10-11T15:54:00.916897480+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:54:00.917054241+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:54:00.917014572+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -3101,7 +3101,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [TAINT] 2026-10-11T15:54:06.995332086+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [LEASE] 2026-10-11T15:54:07.139656921+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:54:07.293462876+00:00 | k3s-worker1 | Ready=Unknown
-[HTTP] 2026-10-11T15:53:57.263054425+00:00 | node=k3s-worker1 | status=0 | latency=10017.455ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:53:57.263054425+00:00 | node=k3s-worker1 | status=0 | latency=10017.455ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [POD] 2026-10-11T15:54:07.966232189+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:54:07.966232189+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [TAINT] 2026-10-11T15:54:08.192116997+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -3119,7 +3119,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [TAINT] 2026-10-11T15:54:10.993249013+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [POD] 2026-10-11T15:54:11.994272150+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:54:11.994272150+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
-[CLINICAL] 2026-10-11T15:54:02.174018992+00:00 | status=0 | latency=10042.071ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:54:02.174018992+00:00 | status=0 | latency=10042.071ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [NODE] 2026-10-11T15:54:12.226920334+00:00 | k3s-worker1 | Ready=Unknown
 [LEASE] 2026-10-11T15:54:12.226974099+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:54:12.366187497+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -3143,7 +3143,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:54:17.909735343+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:54:17.909791753+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:54:17.909696701+00:00 | k3s-worker1 | Ready=Unknown
-[HTTP] 2026-10-11T15:54:08.497378471+00:00 | node=k3s-worker1 | status=0 | latency=10002.286ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:54:08.497378471+00:00 | node=k3s-worker1 | status=0 | latency=10002.286ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [POD] 2026-10-11T15:54:18.910129721+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:54:18.910129721+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [LEASE] 2026-10-11T15:54:19.114236858+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
@@ -3157,7 +3157,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [POD] 2026-10-11T15:54:22.014049896+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:54:22.014049896+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [NODE] 2026-10-11T15:54:22.932563087+00:00 | k3s-worker1 | Ready=Unknown
-[CLINICAL] 2026-10-11T15:54:13.217468491+00:00 | status=0 | latency=10002.161ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:54:13.217468491+00:00 | status=0 | latency=10002.161ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [LEASE] 2026-10-11T15:54:22.932515208+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:54:22.931511136+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [POD] 2026-10-11T15:54:23.932272657+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
@@ -3177,7 +3177,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [TAINT] 2026-10-11T15:54:28.869848226+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [POD] 2026-10-11T15:54:29.870483204+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:54:29.870483204+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
-[HTTP] 2026-10-11T15:54:19.762695266+00:00 | node=k3s-worker1 | status=0 | latency=10227.425ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:54:19.762695266+00:00 | node=k3s-worker1 | status=0 | latency=10227.425ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [LEASE] 2026-10-11T15:54:30.118346061+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:54:30.118208225+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:54:30.118152977+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -3196,7 +3196,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-11T15:54:34.313056230+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:54:34.467477125+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-11T15:54:34.467537733+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
-[CLINICAL] 2026-10-11T15:54:25.047598716+00:00 | status=0 | latency=10002.246ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:54:25.047598716+00:00 | status=0 | latency=10002.246ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:54:35.147683001+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:54:35.147683001+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [LEASE] 2026-10-11T15:54:35.468889100+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
@@ -3219,7 +3219,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [TAINT] 2026-10-11T15:54:40.118314366+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [POD] 2026-10-11T15:54:41.119859781+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:54:41.119859781+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
-[HTTP] 2026-10-11T15:54:31.119198767+00:00 | node=k3s-worker1 | status=0 | latency=10001.378ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:54:31.119198767+00:00 | node=k3s-worker1 | status=0 | latency=10001.378ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [NODE] 2026-10-11T15:54:41.291733258+00:00 | k3s-worker1 | Ready=Unknown
 [LEASE] 2026-10-11T15:54:41.291794348+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [TAINT] 2026-10-11T15:54:41.298078516+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -3240,7 +3240,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [NODE] 2026-10-11T15:54:44.922147840+00:00 | k3s-worker1 | Ready=Unknown
 [POD] 2026-10-11T15:54:45.922520869+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:54:45.922520869+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
-[CLINICAL] 2026-10-11T15:54:36.051266839+00:00 | status=0 | latency=10861.929ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:54:36.051266839+00:00 | status=0 | latency=10861.929ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [TAINT] 2026-10-11T15:54:46.912930441+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:54:46.912808535+00:00 | k3s-worker1 | Ready=Unknown
 [LEASE] 2026-10-11T15:54:46.912883185+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
@@ -3264,7 +3264,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [NODE] 2026-10-11T15:54:51.933387921+00:00 | k3s-worker1 | Ready=Unknown
 [POD] 2026-10-11T15:54:52.329671643+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:54:52.329671643+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
-[HTTP] 2026-10-11T15:54:42.563585563+00:00 | node=k3s-worker1 | status=0 | latency=10001.280ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:54:42.563585563+00:00 | node=k3s-worker1 | status=0 | latency=10001.280ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [TAINT] 2026-10-11T15:54:52.934414193+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [LEASE] 2026-10-11T15:54:53.174058771+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:54:53.395056887+00:00 | k3s-worker1 | Ready=Unknown
@@ -3283,7 +3283,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [TAINT] 2026-10-11T15:54:56.918277531+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:54:56.918126261+00:00 | k3s-worker1 | Ready=Unknown
 [LEASE] 2026-10-11T15:54:56.918438226+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
-[CLINICAL] 2026-10-11T15:54:47.915027285+00:00 | status=0 | latency=10001.690ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:54:47.915027285+00:00 | status=0 | latency=10001.690ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:54:57.919533201+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:54:57.919533201+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [LEASE] 2026-10-11T15:54:58.149615865+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
@@ -3309,7 +3309,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [TAINT] 2026-10-11T15:55:03.982224530+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [LEASE] 2026-10-11T15:55:03.982266517+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
 [NODE] 2026-10-11T15:55:03.982379453+00:00 | k3s-worker1 | Ready=Unknown
-[HTTP] 2026-10-11T15:54:54.349026173+00:00 | node=k3s-worker1 | status=0 | latency=10002.224ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/health/started)
+[HTTP] 2026-10-11T15:54:54.349026173+00:00 | node=k3s-worker1 | status=0 | latency=10002.224ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/health/started)
 [POD] 2026-10-11T15:55:04.983833303+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:55:04.983833303+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [LEASE] 2026-10-11T15:55:05.276624411+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
@@ -3325,7 +3325,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [TAINT] 2026-10-11T15:55:08.194610987+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-11T15:55:08.194807950+00:00 | k3s-worker1 | Ready=Unknown
 [LEASE] 2026-10-11T15:55:08.194675248+00:00 | k3s-worker1 | renewTime=2026-10-11T15:40:05.580494Z
-[CLINICAL] 2026-10-11T15:54:58.918670241+00:00 | status=0 | latency=10001.793ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T15:54:58.918670241+00:00 | status=0 | latency=10001.793ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [POD] 2026-10-11T15:55:09.195473551+00:00 | openmrs-backend-7bd876ddcf-cfmbg | phase=Running | node=k3s-worker1 | deletion=2026-10-11T15:46:25Z
 [POD] 2026-10-11T15:55:09.195473551+00:00 | openmrs-backend-7bd876ddcf-pxgx2 | phase=Running | node=k3s-worker2 | deletion=
 [TAINT] 2026-10-11T15:55:09.427797552+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;

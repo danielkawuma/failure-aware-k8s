@@ -1,7 +1,7 @@
 Starting Failure-Aware Controller
 Target node: k3s-worker1
 Native suspicion trigger: Ready=Unknown
-Verification URL: http://102.34.160.87:30364
+Verification URL: http://10.10.0.11:30364
 Verification timeout: 3000 ms
 Verification attempts: 3
 Verification interval: 500 ms
@@ -23,10 +23,10 @@ Connected to Kubernetes API
 [INITIAL STATE] node=k3s-worker1 | Ready=Some("True")
 [LISTENER] Initial node state synchronized
 [SUSPICION] 2026-09-22T08:02:51.268704071+00:00 | node=k3s-worker1 | Ready=Some("True") -> Unknown
-[VERIFY] 2026-09-22T08:02:51.268818085+00:00 | starting bounded verification against http://102.34.160.87:30364
-[VERIFY] attempt=1/3 | reachable=false | HTTP=None | latency=3001.680 ms | error=Some("error sending request for url (http://102.34.160.87:30364/)")
-[VERIFY] attempt=2/3 | reachable=false | HTTP=None | latency=3001.870 ms | error=Some("error sending request for url (http://102.34.160.87:30364/)")
-[VERIFY] attempt=3/3 | reachable=false | HTTP=None | latency=3001.810 ms | error=Some("error sending request for url (http://102.34.160.87:30364/)")
+[VERIFY] 2026-09-22T08:02:51.268818085+00:00 | starting bounded verification against http://10.10.0.11:30364
+[VERIFY] attempt=1/3 | reachable=false | HTTP=None | latency=3001.680 ms | error=Some("error sending request for url (http://10.10.0.11:30364/)")
+[VERIFY] attempt=2/3 | reachable=false | HTTP=None | latency=3001.870 ms | error=Some("error sending request for url (http://10.10.0.11:30364/)")
+[VERIFY] attempt=3/3 | reachable=false | HTTP=None | latency=3001.810 ms | error=Some("error sending request for url (http://10.10.0.11:30364/)")
 [RESOURCE] 2026-09-22T08:03:04.206073545+00:00 | candidate=k3s-worker2 | state=Available | Ready=true | labels_match=true | CPU=4000m required=100m | memory=3915Mi required=128Mi
 [RECOVERY SAFETY] 2026-09-22T08:03:04.206146098+00:00 | state=Safe | fencing_required=false | fencing_supported=false
 [AWARENESS] 2026-09-22T08:03:04.206155848+00:00 | node=k3s-worker1 | operational_state=Unreachable | workload=baseline-web | workload_type=Stateless | duplication_sensitive=false | service_criticality=Medium | resource_state=Available | recovery_candidate=k3s-worker2 | recovery_safety=Safe | fencing_required=false | attempts=3 | successes=0 | failures=3

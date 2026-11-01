@@ -3,10 +3,10 @@ Target node: k3s-worker1
 Namespace: openmrs37
 Pod label selector: app=openmrs-backend
 Service targets:
-  k3s-worker1 -> http://102.34.160.87:30366/openmrs/health/started
-  k3s-worker2 -> http://102.34.160.103:30366/openmrs/health/started
-  k3s-worker3 -> http://102.34.160.36:30366/openmrs/health/started
-  k3s-worker4 -> http://102.34.160.104:30366/openmrs/health/started
+  k3s-worker1 -> http://10.10.0.11:30366/openmrs/health/started
+  k3s-worker2 -> http://10.10.0.12:30366/openmrs/health/started
+  k3s-worker3 -> http://10.10.0.13:30366/openmrs/health/started
+  k3s-worker4 -> http://10.10.0.14:30366/openmrs/health/started
 Run ID: run-20261011T072213Z
 Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline/openmrs-scenario-b/runs/run-20261011T072213Z
 [CLINICAL] Clinical-data probe started
@@ -552,7 +552,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [EVENT] 2026-10-11T07:24:43.115092167+00:00 | type=Normal | reason=NodeHasNoDiskPressure | object=Node/k3s-worker1 | message=Node k3s-worker1 status is now: NodeHasNoDiskPressure
 [EVENT] 2026-10-11T07:24:43.115092167+00:00 | type=Normal | reason=NodeHasSufficientPID | object=Node/k3s-worker1 | message=Node k3s-worker1 status is now: NodeHasSufficientPID
 [EVENT] 2026-10-11T07:24:43.115092167+00:00 | type=Normal | reason=NodeReady | object=Node/k3s-worker1 | message=Node k3s-worker1 status is now: NodeReady
-[CLINICAL] 2026-10-11T07:24:33.503177760+00:00 | status=0 | latency=10002.260ms | success=false | error=error sending request for url (http://102.34.160.87:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
+[CLINICAL] 2026-10-11T07:24:33.503177760+00:00 | status=0 | latency=10002.260ms | success=false | error=error sending request for url (http://10.10.0.11:30366/openmrs/ws/rest/v1/patient/50ecec96-8838-4b7c-85da-c091d5087aac)
 [LEASE] 2026-10-11T07:24:43.581402834+00:00 | k3s-worker1 | renewTime=2026-10-11T07:24:43.338971Z
 [POD] 2026-10-11T07:24:43.115184623+00:00 | openmrs-backend-7444f6dff9-n5s6s | phase=Running | node=k3s-worker2 | deletion=
 [NODE] 2026-10-11T07:24:44.115904992+00:00 | k3s-worker1 | Ready=True

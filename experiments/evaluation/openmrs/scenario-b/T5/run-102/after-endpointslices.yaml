@@ -1,0 +1,165 @@
+apiVersion: v1
+items:
+- addressType: IPv4
+  apiVersion: discovery.k8s.io/v1
+  endpoints:
+  - addresses:
+    - 10.42.2.82
+    conditions:
+      ready: true
+      serving: true
+      terminating: false
+    nodeName: k3s-worker2
+    targetRef:
+      kind: Pod
+      name: openmrs-backend-7444f6dff9-f8s82
+      namespace: openmrs37
+      uid: 7626435d-aa7a-43d9-bf34-2ee743f7ddb1
+  kind: EndpointSlice
+  metadata:
+    annotations:
+      endpoints.kubernetes.io/last-change-trigger-time: "2026-11-01T13:27:00Z"
+    creationTimestamp: "2026-10-07T20:46:23Z"
+    generateName: openmrs-backend-
+    generation: 1088
+    labels:
+      endpointslice.kubernetes.io/managed-by: endpointslice-controller.k8s.io
+      kubernetes.io/service-name: openmrs-backend
+    name: openmrs-backend-c7wmq
+    namespace: openmrs37
+    ownerReferences:
+    - apiVersion: v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Service
+      name: openmrs-backend
+      uid: 2be7051a-d25a-4dcf-8e1e-b30fe971e609
+    resourceVersion: "4029447"
+    uid: 4e56150c-8f03-40ea-bf7b-2cae274a366d
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+- addressType: IPv4
+  apiVersion: discovery.k8s.io/v1
+  endpoints:
+  - addresses:
+    - 10.42.4.19
+    conditions:
+      ready: true
+      serving: true
+      terminating: false
+    nodeName: k3s-worker4
+    targetRef:
+      kind: Pod
+      name: openmrs-frontend-6c76c4497d-cttkb
+      namespace: openmrs37
+      uid: 1bd91d9d-d054-4c34-9fcd-8a64d1470c68
+  kind: EndpointSlice
+  metadata:
+    annotations:
+      endpoints.kubernetes.io/last-change-trigger-time: "2026-11-01T10:55:43Z"
+    creationTimestamp: "2026-10-07T20:46:23Z"
+    generateName: openmrs-frontend-
+    generation: 205
+    labels:
+      endpointslice.kubernetes.io/managed-by: endpointslice-controller.k8s.io
+      kubernetes.io/service-name: openmrs-frontend
+    name: openmrs-frontend-5q9c5
+    namespace: openmrs37
+    ownerReferences:
+    - apiVersion: v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Service
+      name: openmrs-frontend
+      uid: 128558c8-dbee-4445-b8d1-b8d18bd9ae29
+    resourceVersion: "4015831"
+    uid: 3acf62e1-b9f1-49a5-b7bb-5fe78f38b117
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+- addressType: IPv4
+  apiVersion: discovery.k8s.io/v1
+  endpoints:
+  - addresses:
+    - 10.42.4.18
+    conditions:
+      ready: true
+      serving: true
+      terminating: false
+    nodeName: k3s-worker4
+    targetRef:
+      kind: Pod
+      name: openmrs-gateway-5794bbd8f4-rsxdq
+      namespace: openmrs37
+      uid: d1ee3bad-ac9f-4c38-8919-4d7650ba791d
+  kind: EndpointSlice
+  metadata:
+    annotations:
+      endpoints.kubernetes.io/last-change-trigger-time: "2026-11-01T10:55:43Z"
+    creationTimestamp: "2026-10-07T20:46:23Z"
+    generateName: openmrs-gateway-
+    generation: 205
+    labels:
+      endpointslice.kubernetes.io/managed-by: endpointslice-controller.k8s.io
+      kubernetes.io/service-name: openmrs-gateway
+    name: openmrs-gateway-2w4jl
+    namespace: openmrs37
+    ownerReferences:
+    - apiVersion: v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Service
+      name: openmrs-gateway
+      uid: 020e3216-5b5e-487b-b103-13781555364d
+    resourceVersion: "4015826"
+    uid: 069d3a89-1dab-440f-9bc4-f1daa59f7655
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+- addressType: IPv4
+  apiVersion: discovery.k8s.io/v1
+  endpoints:
+  - addresses:
+    - 10.42.2.79
+    conditions:
+      ready: true
+      serving: true
+      terminating: false
+    nodeName: k3s-worker2
+    targetRef:
+      kind: Pod
+      name: openmrs-mariadb-67d976cb7d-4snsx
+      namespace: openmrs37
+      uid: 02eae6a9-ff7f-4fe2-bf06-d54a231776b0
+  kind: EndpointSlice
+  metadata:
+    annotations:
+      endpoints.kubernetes.io/last-change-trigger-time: "2026-11-01T10:55:36Z"
+    creationTimestamp: "2026-10-07T20:46:23Z"
+    generateName: openmrs-mariadb-
+    generation: 214
+    labels:
+      endpointslice.kubernetes.io/managed-by: endpointslice-controller.k8s.io
+      kubernetes.io/service-name: openmrs-mariadb
+    name: openmrs-mariadb-w8t84
+    namespace: openmrs37
+    ownerReferences:
+    - apiVersion: v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Service
+      name: openmrs-mariadb
+      uid: 0a23881e-2764-406e-8cab-ae8901002a78
+    resourceVersion: "4015751"
+    uid: 9227e290-b825-43a7-924d-2ac18088a71b
+  ports:
+  - name: mysql
+    port: 3306
+    protocol: TCP
+kind: List
+metadata:
+  resourceVersion: ""

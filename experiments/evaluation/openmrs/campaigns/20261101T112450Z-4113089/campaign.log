@@ -1,0 +1,57 @@
+[2026-11-01T11:24:50Z] Generating campaign plan
+[2026-11-01T11:24:50Z] Campaign plan: /home/ubuntu/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/20261101T112450Z-4113089/plan.csv
+[2026-11-01T11:24:50Z] Planned logical rows: 1
+[2026-11-01T11:24:50Z] ==============================================
+[2026-11-01T11:24:50Z] Starting scenario: scenario-b
+[2026-11-01T11:24:50Z] ==============================================
+[2026-11-01T11:24:50Z] ==============================================
+[2026-11-01T11:24:50Z] PREPARING scenario-b/T5/101
+[2026-11-01T11:24:50Z] ==============================================
+[MODE] Applying T5 tolerations (5)
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[MODE] Deployment template verified: T5
+[MODE] VERIFIED T5: Ready Pod and tolerations correct
+[BACKEND RESET] Current nodeSelector: <none>
+[BACKEND RESET] Temporarily pinning backend to k3s-worker1
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] Removing temporary hostname selector; retaining required worker affinity
+Waiting for deployment spec update to be observed...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "openmrs-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "openmrs-backend" successfully rolled out
+[BACKEND RESET] READY: backend on k3s-worker1, no hostname pin, clinical health OK
+[MODE] T5 tolerations already configured; no rollout needed
+[MODE] Deployment template verified: T5
+[MODE] VERIFIED T5: Ready Pod and tolerations correct
+[2026-11-01T11:51:49Z] START scenario-b/T5/101
+[2026-11-01T11:51:49.148129937Z] OpenMRS experiment: scenario-b / T5 / 101
+[2026-11-01T11:51:49.737608283Z] Original Pod: openmrs-backend-7444f6dff9-7k6qw
+[2026-11-01T11:51:49.738713133Z] Original Node: k3s-worker1
+deployment.apps/openmrs-backend patched (no change)
+deployment "openmrs-backend" successfully rolled out
+[2026-11-01T11:51:50.053749433Z] Baseline observation: 30s
+[2026-11-01T11:52:20.058105209Z] Injecting scenario-b fault
+[2026-11-01T11:52:20.992182515Z] Observing partition for 600s
+[2026-11-01T12:02:23.258543453Z] Post-fault observation: 30s
+[2026-11-01T12:02:54.183205042Z] Experiment observation completed
+[2026-11-01T12:02:54.941511920Z] RUN COMPLETE: /home/ubuntu/failure-aware-k8s/experiments/evaluation/openmrs/scenario-b/T5/run-101
+[2026-11-01T12:02:54Z] COMPLETE scenario-b/T5/101
+[2026-11-01T12:03:54Z] Auditing completed runs for scenario-b
+[2026-11-01T12:03:54Z] scenario-b completed: 1/1
+[2026-11-01T12:03:54Z] SCENARIO VERIFIED COMPLETE: scenario-b
+[2026-11-01T12:03:54Z] ==============================================
+[2026-11-01T12:03:54Z] CAMPAIGN COMPLETED SUCCESSFULLY
+[2026-11-01T12:03:54Z] ==============================================
+[2026-11-01T12:03:54Z] Campaign directory: /home/ubuntu/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/20261101T112450Z-4113089
+[2026-11-01T12:03:54Z] Campaign plan: /home/ubuntu/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/20261101T112450Z-4113089/plan.csv
+[2026-11-01T12:03:54Z] Campaign summary: /home/ubuntu/failure-aware-k8s/experiments/evaluation/openmrs/campaigns/20261101T112450Z-4113089/summary.csv

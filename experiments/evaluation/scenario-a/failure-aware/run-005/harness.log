@@ -3,8 +3,8 @@ Target node: k3s-worker1
 Namespace: failure-aware
 Pod label selector: app=baseline-web
 Service targets:
-  k3s-worker1 -> http://102.34.160.87:30364/
-  k3s-worker2 -> http://102.34.160.103:30364/
+  k3s-worker1 -> http://10.10.0.11:30364/
+  k3s-worker2 -> http://10.10.0.12:30364/
 Run ID: run-20261018T172753Z
 Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline/scenario-a/runs/run-20261018T172753Z
 [LEASE] 2026-10-18T17:27:53.910443398+00:00 | k3s-worker1 | renewTime=2026-10-18T17:27:52.270741Z
@@ -94,7 +94,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [HTTP] 2026-10-18T17:28:09.554550288+00:00 | node=k3s-worker1 | status=200 | latency=172.111ms | success=true | placement=KNOWN | placement_error= | error=
 [LEASE] 2026-10-18T17:28:10.344156590+00:00 | k3s-worker1 | renewTime=2026-10-18T17:28:02.495743Z
 [POD] 2026-10-18T17:28:10.662333489+00:00 | baseline-web-5f5bbfb459-5qt86 | phase=Running | node=k3s-worker1 | deletion=
-[HTTP] 2026-10-18T17:28:11.680540794+00:00 | node=k3s-worker1 | status=0 | latency=15.918ms | success=false | placement=KNOWN | placement_error= | error=error sending request for url (http://102.34.160.103:30364/)
+[HTTP] 2026-10-18T17:28:11.680540794+00:00 | node=k3s-worker1 | status=0 | latency=15.918ms | success=false | placement=KNOWN | placement_error= | error=error sending request for url (http://10.10.0.12:30364/)
 [LEASE] 2026-10-18T17:28:11.680148773+00:00 | k3s-worker1 | renewTime=2026-10-18T17:28:02.495743Z
 [TAINT] 2026-10-18T17:28:11.680461083+00:00 | k3s-worker1 | taints=<none>
 [NODE] 2026-10-18T17:28:11.680233774+00:00 | k3s-worker1 | Ready=True
@@ -108,7 +108,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [TAINT] 2026-10-18T17:28:13.916903311+00:00 | k3s-worker1 | taints=<none>
 [POD] 2026-10-18T17:28:14.918089763+00:00 | baseline-web-5f5bbfb459-5qt86 | phase=Running | node=k3s-worker1 | deletion=
 [LEASE] 2026-10-18T17:28:15.222665473+00:00 | k3s-worker1 | renewTime=2026-10-18T17:28:02.495743Z
-[HTTP] 2026-10-18T17:28:13.048564659+00:00 | node=k3s-worker1 | status=0 | latency=3137.780ms | success=false | placement=KNOWN | placement_error= | error=error sending request for url (http://102.34.160.103:30364/)
+[HTTP] 2026-10-18T17:28:13.048564659+00:00 | node=k3s-worker1 | status=0 | latency=3137.780ms | success=false | placement=KNOWN | placement_error= | error=error sending request for url (http://10.10.0.12:30364/)
 [TAINT] 2026-10-18T17:28:15.222439049+00:00 | k3s-worker1 | taints=<none>
 [NODE] 2026-10-18T17:28:15.222749066+00:00 | k3s-worker1 | Ready=True
 [POD] 2026-10-18T17:28:16.224781231+00:00 | baseline-web-5f5bbfb459-5qt86 | phase=Running | node=k3s-worker1 | deletion=
@@ -123,7 +123,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-18T17:28:19.227327548+00:00 | k3s-worker1 | renewTime=2026-10-18T17:28:02.495743Z
 [TAINT] 2026-10-18T17:28:19.227384457+00:00 | k3s-worker1 | taints=<none>
 [NODE] 2026-10-18T17:28:19.227119548+00:00 | k3s-worker1 | Ready=True
-[HTTP] 2026-10-18T17:28:16.549709282+00:00 | node=k3s-worker1 | status=0 | latency=3001.737ms | success=false | placement=KNOWN | placement_error= | error=error sending request for url (http://102.34.160.103:30364/)
+[HTTP] 2026-10-18T17:28:16.549709282+00:00 | node=k3s-worker1 | status=0 | latency=3001.737ms | success=false | placement=KNOWN | placement_error= | error=error sending request for url (http://10.10.0.12:30364/)
 [POD] 2026-10-18T17:28:20.228570035+00:00 | baseline-web-5f5bbfb459-5qt86 | phase=Running | node=k3s-worker1 | deletion=
 [LEASE] 2026-10-18T17:28:20.494088340+00:00 | k3s-worker1 | renewTime=2026-10-18T17:28:02.495743Z
 [NODE] 2026-10-18T17:28:20.756157151+00:00 | k3s-worker1 | Ready=True
@@ -133,7 +133,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-18T17:28:22.176375567+00:00 | k3s-worker1 | renewTime=2026-10-18T17:28:02.495743Z
 [NODE] 2026-10-18T17:28:22.176409356+00:00 | k3s-worker1 | Ready=True
 [POD] 2026-10-18T17:28:23.178280643+00:00 | baseline-web-5f5bbfb459-5qt86 | phase=Running | node=k3s-worker1 | deletion=
-[HTTP] 2026-10-18T17:28:20.756103179+00:00 | node=k3s-worker1 | status=0 | latency=3001.592ms | success=false | placement=KNOWN | placement_error= | error=error sending request for url (http://102.34.160.103:30364/)
+[HTTP] 2026-10-18T17:28:20.756103179+00:00 | node=k3s-worker1 | status=0 | latency=3001.592ms | success=false | placement=KNOWN | placement_error= | error=error sending request for url (http://10.10.0.12:30364/)
 [LEASE] 2026-10-18T17:28:23.535513614+00:00 | k3s-worker1 | renewTime=2026-10-18T17:28:02.495743Z
 [TAINT] 2026-10-18T17:28:23.535440199+00:00 | k3s-worker1 | taints=<none>
 [NODE] 2026-10-18T17:28:23.535284921+00:00 | k3s-worker1 | Ready=True
@@ -146,7 +146,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [TAINT] 2026-10-18T17:28:26.185770132+00:00 | k3s-worker1 | taints=<none>
 [NODE] 2026-10-18T17:28:26.185563773+00:00 | k3s-worker1 | Ready=True
 [POD] 2026-10-18T17:28:27.187295596+00:00 | baseline-web-5f5bbfb459-5qt86 | phase=Running | node=k3s-worker1 | deletion=
-[HTTP] 2026-10-18T17:28:24.836562249+00:00 | node=k3s-worker1 | status=0 | latency=3002.159ms | success=false | placement=KNOWN | placement_error= | error=error sending request for url (http://102.34.160.103:30364/)
+[HTTP] 2026-10-18T17:28:24.836562249+00:00 | node=k3s-worker1 | status=0 | latency=3002.159ms | success=false | placement=KNOWN | placement_error= | error=error sending request for url (http://10.10.0.12:30364/)
 [LEASE] 2026-10-18T17:28:27.826734111+00:00 | k3s-worker1 | renewTime=2026-10-18T17:28:02.495743Z
 [TAINT] 2026-10-18T17:28:27.826504409+00:00 | k3s-worker1 | taints=<none>
 [NODE] 2026-10-18T17:28:27.826587940+00:00 | k3s-worker1 | Ready=True
@@ -156,7 +156,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-18T17:28:29.233465801+00:00 | k3s-worker1 | renewTime=2026-10-18T17:28:02.495743Z
 [POD] 2026-10-18T17:28:30.235129626+00:00 | baseline-web-5f5bbfb459-5qt86 | phase=Running | node=k3s-worker1 | deletion=
 [TAINT] 2026-10-18T17:28:30.882769869+00:00 | k3s-worker1 | taints=<none>
-[HTTP] 2026-10-18T17:28:29.233530782+00:00 | node=k3s-worker1 | status=0 | latency=3001.097ms | success=false | placement=KNOWN | placement_error= | error=error sending request for url (http://102.34.160.103:30364/)
+[HTTP] 2026-10-18T17:28:29.233530782+00:00 | node=k3s-worker1 | status=0 | latency=3001.097ms | success=false | placement=KNOWN | placement_error= | error=error sending request for url (http://10.10.0.12:30364/)
 [LEASE] 2026-10-18T17:28:32.198957044+00:00 | k3s-worker1 | renewTime=2026-10-18T17:28:02.495743Z
 [NODE] 2026-10-18T17:28:32.199155933+00:00 | k3s-worker1 | Ready=True
 [POD] 2026-10-18T17:28:32.198845614+00:00 | baseline-web-5f5bbfb459-5qt86 | phase=Running | node=k3s-worker1 | deletion=
@@ -171,7 +171,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [TAINT] 2026-10-18T17:28:35.771078378+00:00 | k3s-worker1 | taints=<none>
 [LEASE] 2026-10-18T17:28:36.035731347+00:00 | k3s-worker1 | renewTime=2026-10-18T17:28:02.495743Z
 [NODE] 2026-10-18T17:28:36.035633506+00:00 | k3s-worker1 | Ready=True
-[HTTP] 2026-10-18T17:28:33.512825469+00:00 | node=k3s-worker1 | status=0 | latency=3002.522ms | success=false | placement=KNOWN | placement_error= | error=error sending request for url (http://102.34.160.103:30364/)
+[HTTP] 2026-10-18T17:28:33.512825469+00:00 | node=k3s-worker1 | status=0 | latency=3002.522ms | success=false | placement=KNOWN | placement_error= | error=error sending request for url (http://10.10.0.12:30364/)
 [POD] 2026-10-18T17:28:36.369308466+00:00 | baseline-web-5f5bbfb459-5qt86 | phase=Running | node=k3s-worker1 | deletion=
 [TAINT] 2026-10-18T17:28:37.037168643+00:00 | k3s-worker1 | taints=<none>
 [LEASE] 2026-10-18T17:28:37.368720564+00:00 | k3s-worker1 | renewTime=2026-10-18T17:28:02.495743Z
@@ -185,7 +185,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-18T17:28:39.877689026+00:00 | k3s-worker1 | renewTime=2026-10-18T17:28:02.495743Z
 [NODE] 2026-10-18T17:28:39.877482186+00:00 | k3s-worker1 | Ready=True
 [POD] 2026-10-18T17:28:40.266785755+00:00 | baseline-web-5f5bbfb459-5qt86 | phase=Running | node=k3s-worker1 | deletion=
-[HTTP] 2026-10-18T17:28:37.602212400+00:00 | node=k3s-worker1 | status=0 | latency=3001.531ms | success=false | placement=KNOWN | placement_error= | error=error sending request for url (http://102.34.160.103:30364/)
+[HTTP] 2026-10-18T17:28:37.602212400+00:00 | node=k3s-worker1 | status=0 | latency=3001.531ms | success=false | placement=KNOWN | placement_error= | error=error sending request for url (http://10.10.0.12:30364/)
 [TAINT] 2026-10-18T17:28:40.879040863+00:00 | k3s-worker1 | taints=<none>
 [LEASE] 2026-10-18T17:28:41.100692062+00:00 | k3s-worker1 | renewTime=2026-10-18T17:28:02.495743Z
 [NODE] 2026-10-18T17:28:41.384352569+00:00 | k3s-worker1 | Ready=True
@@ -197,7 +197,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [TAINT] 2026-10-18T17:28:43.308259063+00:00 | k3s-worker1 | taints=<none>
 [LEASE] 2026-10-18T17:28:43.644356345+00:00 | k3s-worker1 | renewTime=2026-10-18T17:28:02.495743Z
 [NODE] 2026-10-18T17:28:43.954502472+00:00 | k3s-worker1 | Ready=True
-[HTTP] 2026-10-18T17:28:41.627588390+00:00 | node=k3s-worker1 | status=0 | latency=3001.958ms | success=false | placement=KNOWN | placement_error= | error=error sending request for url (http://102.34.160.103:30364/)
+[HTTP] 2026-10-18T17:28:41.627588390+00:00 | node=k3s-worker1 | status=0 | latency=3001.958ms | success=false | placement=KNOWN | placement_error= | error=error sending request for url (http://10.10.0.12:30364/)
 [POD] 2026-10-18T17:28:44.267298729+00:00 | baseline-web-5f5bbfb459-5qt86 | phase=Running | node=k3s-worker1 | deletion=
 [TAINT] 2026-10-18T17:28:44.635189993+00:00 | k3s-worker1 | taints=<none>
 [LEASE] 2026-10-18T17:28:44.911433079+00:00 | k3s-worker1 | renewTime=2026-10-18T17:28:02.495743Z
@@ -212,7 +212,7 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [NODE] 2026-10-18T17:28:47.138089985+00:00 | k3s-worker1 | Ready=True
 [POD] 2026-10-18T17:28:47.559010383+00:00 | baseline-web-5f5bbfb459-5qt86 | phase=Running | node=k3s-worker1 | deletion=
 [LEASE] 2026-10-18T17:28:47.932974634+00:00 | k3s-worker1 | renewTime=2026-10-18T17:28:02.495743Z
-[HTTP] 2026-10-18T17:28:45.632593430+00:00 | node=k3s-worker1 | status=0 | latency=3257.971ms | success=false | placement=KNOWN | placement_error= | error=error sending request for url (http://102.34.160.103:30364/)
+[HTTP] 2026-10-18T17:28:45.632593430+00:00 | node=k3s-worker1 | status=0 | latency=3257.971ms | success=false | placement=KNOWN | placement_error= | error=error sending request for url (http://10.10.0.12:30364/)
 [TAINT] 2026-10-18T17:28:47.911398067+00:00 | k3s-worker1 | taints=<none>
 [NODE] 2026-10-18T17:28:48.385020274+00:00 | k3s-worker1 | Ready=True
 [POD] 2026-10-18T17:28:48.913541477+00:00 | baseline-web-5f5bbfb459-5qt86 | phase=Running | node=k3s-worker1 | deletion=
@@ -226,40 +226,40 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [POD] 2026-10-18T17:28:51.989184676+00:00 | baseline-web-5f5bbfb459-5qt86 | phase=Running | node=k3s-worker1 | deletion=
 [TAINT] 2026-10-18T17:28:52.301747494+00:00 | k3s-worker1 | taints=<none>
 [NODE] 2026-10-18T17:28:52.301791541+00:00 | k3s-worker1 | Ready=True
-[HTTP] 2026-10-18T17:28:49.678063569+00:00 | node=k3s-worker1 | status=0 | latency=3003.125ms | success=false | placement=KNOWN | placement_error= | error=error sending request for url (http://102.34.160.103:30364/)
+[HTTP] 2026-10-18T17:28:49.678063569+00:00 | node=k3s-worker1 | status=0 | latency=3003.125ms | success=false | placement=KNOWN | placement_error= | error=error sending request for url (http://10.10.0.12:30364/)
 [LEASE] 2026-10-18T17:28:53.303127125+00:00 | k3s-worker1 | renewTime=2026-10-18T17:28:02.495743Z
 [POD] 2026-10-18T17:28:53.458574396+00:00 | baseline-web-5f5bbfb459-5qt86 | phase=Running | node=k3s-worker1 | deletion=
 [LEASE] 2026-10-18T17:28:54.635402714+00:00 | k3s-worker1 | renewTime=2026-10-18T17:28:02.495743Z
 [NODE] 2026-10-18T17:28:54.635443024+00:00 | k3s-worker1 | Ready=Unknown
 [TAINT] 2026-10-18T17:28:54.635511497+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [EVENT] 2026-10-18T17:28:54.635566172+00:00 | type=Normal | reason=NodeNotReady | object=Node/k3s-worker1 | message=Node k3s-worker1 status is now: NodeNotReady
-[HTTP] 2026-10-18T17:28:54.662348296+00:00 | node=k3s-worker1 | status=0 | latency=23.866ms | success=false | placement=KNOWN | placement_error= | error=error sending request for url (http://102.34.160.103:30364/)
+[HTTP] 2026-10-18T17:28:54.662348296+00:00 | node=k3s-worker1 | status=0 | latency=23.866ms | success=false | placement=KNOWN | placement_error= | error=error sending request for url (http://10.10.0.12:30364/)
 [POD] 2026-10-18T17:28:55.639017806+00:00 | baseline-web-5f5bbfb459-5qt86 | phase=Running | node=k3s-worker1 | deletion=
 [LEASE] 2026-10-18T17:28:56.107353534+00:00 | k3s-worker1 | renewTime=2026-10-18T17:28:02.495743Z
 [TAINT] 2026-10-18T17:28:56.107223939+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-18T17:28:56.107431452+00:00 | k3s-worker1 | Ready=Unknown
-[HTTP] 2026-10-18T17:28:56.329875119+00:00 | node=k3s-worker1 | status=0 | latency=32.182ms | success=false | placement=KNOWN | placement_error= | error=error sending request for url (http://102.34.160.103:30364/)
+[HTTP] 2026-10-18T17:28:56.329875119+00:00 | node=k3s-worker1 | status=0 | latency=32.182ms | success=false | placement=KNOWN | placement_error= | error=error sending request for url (http://10.10.0.12:30364/)
 [POD] 2026-10-18T17:28:57.108889044+00:00 | baseline-web-5f5bbfb459-5qt86 | phase=Running | node=k3s-worker1 | deletion=
 [NODE] 2026-10-18T17:28:58.038546076+00:00 | k3s-worker1 | Ready=Unknown
 [LEASE] 2026-10-18T17:28:58.038490893+00:00 | k3s-worker1 | renewTime=2026-10-18T17:28:02.495743Z
 [TAINT] 2026-10-18T17:28:58.038443961+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [POD] 2026-10-18T17:28:59.040296498+00:00 | baseline-web-5f5bbfb459-5qt86 | phase=Running | node=k3s-worker1 | deletion=
-[HTTP] 2026-10-18T17:28:58.038370310+00:00 | node=k3s-worker1 | status=0 | latency=28.782ms | success=false | placement=KNOWN | placement_error= | error=error sending request for url (http://102.34.160.103:30364/)
+[HTTP] 2026-10-18T17:28:58.038370310+00:00 | node=k3s-worker1 | status=0 | latency=28.782ms | success=false | placement=KNOWN | placement_error= | error=error sending request for url (http://10.10.0.12:30364/)
 [NODE] 2026-10-18T17:28:59.465474223+00:00 | k3s-worker1 | Ready=Unknown
 [LEASE] 2026-10-18T17:28:59.645390844+00:00 | k3s-worker1 | renewTime=2026-10-18T17:28:02.495743Z
 [TAINT] 2026-10-18T17:28:59.645438698+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [POD] 2026-10-18T17:29:00.209239212+00:00 | baseline-web-5f5bbfb459-5qt86 | phase=Running | node=k3s-worker1 | deletion=
-[HTTP] 2026-10-18T17:29:00.209165226+00:00 | node=k3s-worker1 | status=0 | latency=19.163ms | success=false | placement=KNOWN | placement_error= | error=error sending request for url (http://102.34.160.103:30364/)
+[HTTP] 2026-10-18T17:29:00.209165226+00:00 | node=k3s-worker1 | status=0 | latency=19.163ms | success=false | placement=KNOWN | placement_error= | error=error sending request for url (http://10.10.0.12:30364/)
 [NODE] 2026-10-18T17:29:00.646660480+00:00 | k3s-worker1 | Ready=Unknown
 [LEASE] 2026-10-18T17:29:00.810609308+00:00 | k3s-worker1 | renewTime=2026-10-18T17:28:02.495743Z
 [TAINT] 2026-10-18T17:29:01.063917183+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-18T17:29:01.781138112+00:00 | k3s-worker1 | Ready=Unknown
 [POD] 2026-10-18T17:29:01.421780278+00:00 | baseline-web-5f5bbfb459-5qt86 | phase=Running | node=k3s-worker1 | deletion=
-[HTTP] 2026-10-18T17:29:01.421611847+00:00 | node=k3s-worker1 | status=0 | latency=23.423ms | success=false | placement=KNOWN | placement_error= | error=error sending request for url (http://102.34.160.103:30364/)
+[HTTP] 2026-10-18T17:29:01.421611847+00:00 | node=k3s-worker1 | status=0 | latency=23.423ms | success=false | placement=KNOWN | placement_error= | error=error sending request for url (http://10.10.0.12:30364/)
 [LEASE] 2026-10-18T17:29:02.064371453+00:00 | k3s-worker1 | renewTime=2026-10-18T17:28:02.495743Z
 [TAINT] 2026-10-18T17:29:02.308000274+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-18T17:29:03.025623465+00:00 | k3s-worker1 | Ready=Unknown
-[HTTP] 2026-10-18T17:29:03.025535027+00:00 | node=k3s-worker1 | status=0 | latency=69.721ms | success=false | placement=KNOWN | placement_error= | error=error sending request for url (http://102.34.160.103:30364/)
+[HTTP] 2026-10-18T17:29:03.025535027+00:00 | node=k3s-worker1 | status=0 | latency=69.721ms | success=false | placement=KNOWN | placement_error= | error=error sending request for url (http://10.10.0.12:30364/)
 [POD] 2026-10-18T17:29:03.025787670+00:00 | baseline-web-5f5bbfb459-5qt86 | phase=Running | node=k3s-worker1 | deletion=
 [LEASE] 2026-10-18T17:29:03.308986232+00:00 | k3s-worker1 | renewTime=2026-10-18T17:28:02.495743Z
 [TAINT] 2026-10-18T17:29:03.635174203+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
@@ -267,12 +267,12 @@ Output directory: /home/daniel/failure-aware-k8s/harness/../experiments/baseline
 [LEASE] 2026-10-18T17:29:04.646986687+00:00 | k3s-worker1 | renewTime=2026-10-18T17:28:02.495743Z
 [POD] 2026-10-18T17:29:04.647171637+00:00 | baseline-web-5f5bbfb459-6dsg7 | phase=Running | node=k3s-worker3 | deletion=2026-10-18T17:29:34Z
 [POD] 2026-10-18T17:29:04.647171637+00:00 | baseline-web-694769f78d-9v2wq | phase=Running | node=k3s-worker2 | deletion=
-[HTTP] 2026-10-18T17:29:04.647102234+00:00 | node=k3s-worker3 | status=0 | latency=12.464ms | success=false | placement=KNOWN | placement_error= | error=error sending request for url (http://102.34.160.103:30364/)
+[HTTP] 2026-10-18T17:29:04.647102234+00:00 | node=k3s-worker3 | status=0 | latency=12.464ms | success=false | placement=KNOWN | placement_error= | error=error sending request for url (http://10.10.0.12:30364/)
 [TAINT] 2026-10-18T17:29:05.068677451+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-18T17:29:05.682917994+00:00 | k3s-worker1 | Ready=Unknown
 [LEASE] 2026-10-18T17:29:05.957472861+00:00 | k3s-worker1 | renewTime=2026-10-18T17:28:02.495743Z
 [POD] 2026-10-18T17:29:05.957643836+00:00 | baseline-web-694769f78d-9v2wq | phase=Running | node=k3s-worker2 | deletion=
-[HTTP] 2026-10-18T17:29:05.957237952+00:00 | node=k3s-worker2 | status=0 | latency=11.736ms | success=false | placement=KNOWN | placement_error= | error=error sending request for url (http://102.34.160.103:30364/)
+[HTTP] 2026-10-18T17:29:05.957237952+00:00 | node=k3s-worker2 | status=0 | latency=11.736ms | success=false | placement=KNOWN | placement_error= | error=error sending request for url (http://10.10.0.12:30364/)
 [TAINT] 2026-10-18T17:29:06.323582979+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
 [NODE] 2026-10-18T17:29:07.022104026+00:00 | k3s-worker1 | Ready=Unknown
 [LEASE] 2026-10-18T17:29:07.331958557+00:00 | k3s-worker1 | renewTime=2026-10-18T17:28:02.495743Z

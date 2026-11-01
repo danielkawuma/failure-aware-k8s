@@ -1,0 +1,67 @@
+Starting Failure-Aware Controller
+Target node: k3s-worker1
+Native suspicion trigger: Ready=Unknown
+Verification URL: http://10.10.0.11:30364
+Verification timeout: 3000 ms
+Verification attempts: 3
+Verification interval: 500 ms
+Workload: baseline-web
+Workload type: Stateless
+Duplication sensitive: false
+Namespace: failure-aware
+Pod label selector: app=baseline-web
+Recovery candidate: k3s-worker2
+Required recovery CPU: 100m
+Required recovery memory: 128 MiB
+Required recovery node labels: {"failure-aware.io/role": "recovery-candidate"}
+Kubernetes API timeout: 3000 ms
+Resource evaluation timeout: 10000 ms
+Enforcement timeout: 15000 ms
+Fencing timeout: 30000 ms
+Fencing supported: false
+Fencing command configured: false
+[HISTORY] Runtime history file: /home/ubuntu/failure-aware-k8s/controller/config/node-history-runtime.json
+Connected to Kubernetes API
+[HISTORY] Background collection task started
+[LISTENER] Watching node=k3s-worker1 for Ready=Unknown
+[LISTENER] Initializing node watch
+[HISTORY] Dynamic node-history collector started
+[INITIAL STATE] node=k3s-worker1 | Ready=Some("True")
+[LISTENER] Initial node state synchronized
+[HISTORY] 2026-10-31T02:23:12.348739049+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-31T02:23:42.466076798+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-31T02:24:12.560141958+00:00 | nodes=5 | history_updated=true
+[SUSPICION] 2026-10-31T02:24:12.944683971+00:00 | node=k3s-worker1 | Ready=Some("True") -> Unknown
+[VERIFY] attempt=1/3 | reachable=false | HTTP=None | latency=3001.241 ms | error=Some("error sending request for url (http://10.10.0.11:30364/)")
+[VERIFY] attempt=2/3 | reachable=false | HTTP=None | latency=3001.743 ms | error=Some("error sending request for url (http://10.10.0.11:30364/)")
+[VERIFY] attempt=3/3 | reachable=false | HTTP=None | latency=3002.044 ms | error=Some("error sending request for url (http://10.10.0.11:30364/)")
+[VERIFICATION] node=k3s-worker1 | state=Unreachable | attempts=3 | successes=0 | failures=3
+[WORKLOAD] name=baseline-web | target_node=k3s-worker1 | duplication_sensitive=false
+[WORKLOAD] node=k3s-worker1 | name=baseline-web | type=Stateless | duplication_sensitive=false
+[RECOVERY SAFETY] state=Safe | fencing_required=false | fencing_supported=false
+[CANDIDATE] node=k3s-worker2 | eligible=true | Ready=true | schedulable=true | labels_match=true | alloc_cpu=4000m | requested_cpu=300m | remaining_cpu=3700m | required_cpu=100m | alloc_memory=3916Mi | requested_memory=512Mi | remaining_memory=3404Mi | required_memory=128Mi | reliability=1.000000
+[CANDIDATE] node=k3s-worker3 | eligible=true | Ready=true | schedulable=true | labels_match=true | alloc_cpu=2000m | requested_cpu=0m | remaining_cpu=2000m | required_cpu=100m | alloc_memory=1968Mi | requested_memory=0Mi | remaining_memory=1968Mi | required_memory=128Mi | reliability=0.925000
+[CANDIDATE] node=k3s-worker4 | eligible=true | Ready=true | schedulable=true | labels_match=true | alloc_cpu=2000m | requested_cpu=300m | remaining_cpu=1700m | required_cpu=100m | alloc_memory=1968Mi | requested_memory=512Mi | remaining_memory=1456Mi | required_memory=128Mi | reliability=0.925000
+[SELECTION] selected=k3s-worker2 | reason=highest_reliability_among_eligible | reliability=1.000000 | remaining_cpu=3700m | remaining_memory=3404Mi
+[RESOURCE] candidate=k3s-worker2 | state=Available | Ready=true | schedulable=true | remaining_cpu=3700m | remaining_memory=3404Mi | reliability=1.000000
+[DECISION] 2026-10-31T02:24:23.002095181+00:00 | node=k3s-worker1 | decision=Recover | fencing_required=false | selected_candidate=Some("k3s-worker2") | reason=workload is unreachable, recovery capacity is available, and recovery is safe
+[PLACEMENT] 2026-10-31T02:24:23.031109289+00:00 | workload=Deployment/baseline-web | candidate=k3s-worker2 | cleanup=pending
+[APPLICATION VERIFICATION FAILED] FAILURE_AWARE_RECOVERY_VERIFY_URL is required
+[ENFORCEMENT] 2026-10-31T02:24:25.118342658+00:00 | node=k3s-worker1 | action=RecoveryReleased | enforced=false | message=Replacement baseline-web-55b9bf7755-bgzjf is Ready but application verification failed: FAILURE_AWARE_RECOVERY_VERIFY_URL is required
+[HISTORY] 2026-10-31T02:24:42.857557377+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-31T02:25:12.949288639+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-31T02:25:43.030920046+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-31T02:26:13.113423260+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-31T02:26:43.203714649+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-31T02:27:13.859042398+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-31T02:27:43.941292338+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-31T02:28:14.015289036+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-31T02:28:44.096504556+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-31T02:29:14.859152582+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-31T02:29:44.931376061+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-31T02:30:15.023538954+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-31T02:30:45.103174606+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-31T02:31:15.408314703+00:00 | nodes=5 | history_updated=true
+[RECOVERED] 2026-10-31T02:31:34.456759454+00:00 | node=k3s-worker1 | Ready=Unknown -> True
+[HISTORY] 2026-10-31T02:31:45.867451248+00:00 | nodes=5 | history_updated=true
+[HISTORY] 2026-10-31T02:32:15.942596639+00:00 | nodes=5 | history_updated=true

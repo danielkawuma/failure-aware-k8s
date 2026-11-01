@@ -3,7 +3,7 @@ kind: Pod
 metadata:
   annotations:
     kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"v1","kind":"Pod","metadata":{"annotations":{},"labels":{"arm":"fenced","experiment":"concurrent-writer"},"name":"w2-original","namespace":"failure-aware-writer-test"},"spec":{"containers":[{"command":["sh","-ec","exec mariadbd             --datadir=/var/lib/mysql             --socket=/tmp/mariadb.sock             --pid-file=/tmp/mariadb.pid             --skip-networking             --innodb-flush-log-at-trx-commit=1\n"],"image":"mariadb:10.11.19","name":"mariadb","volumeMounts":[{"mountPath":"/var/lib/mysql","name":"database"}]}],"nodeSelector":{"kubernetes.io/hostname":"k3s-worker1"},"restartPolicy":"Never","securityContext":{"runAsGroup":999,"runAsUser":999},"terminationGracePeriodSeconds":30,"volumes":[{"name":"database","nfs":{"path":"/srv/failure-aware/concurrent-writer/database/w2-001","server":"102.34.160.36"}}]}}
+      {"apiVersion":"v1","kind":"Pod","metadata":{"annotations":{},"labels":{"arm":"fenced","experiment":"concurrent-writer"},"name":"w2-original","namespace":"failure-aware-writer-test"},"spec":{"containers":[{"command":["sh","-ec","exec mariadbd             --datadir=/var/lib/mysql             --socket=/tmp/mariadb.sock             --pid-file=/tmp/mariadb.pid             --skip-networking             --innodb-flush-log-at-trx-commit=1\n"],"image":"mariadb:10.11.19","name":"mariadb","volumeMounts":[{"mountPath":"/var/lib/mysql","name":"database"}]}],"nodeSelector":{"kubernetes.io/hostname":"k3s-worker1"},"restartPolicy":"Never","securityContext":{"runAsGroup":999,"runAsUser":999},"terminationGracePeriodSeconds":30,"volumes":[{"name":"database","nfs":{"path":"/srv/failure-aware/concurrent-writer/database/w2-001","server":"10.10.0.13"}}]}}
   creationTimestamp: "2026-10-19T14:22:44Z"
   deletionGracePeriodSeconds: 30
   deletionTimestamp: "2026-10-19T14:34:59Z"
@@ -62,7 +62,7 @@ spec:
   - name: database
     nfs:
       path: /srv/failure-aware/concurrent-writer/database/w2-001
-      server: 102.34.160.36
+      server: 10.10.0.13
   - name: kube-api-access-6lpjn
     projected:
       defaultMode: 420
@@ -134,9 +134,9 @@ status:
       name: kube-api-access-6lpjn
       readOnly: true
       recursiveReadOnly: Disabled
-  hostIP: 102.34.160.87
+  hostIP: 10.10.0.11
   hostIPs:
-  - ip: 102.34.160.87
+  - ip: 10.10.0.11
   observedGeneration: 2
   phase: Running
   podIP: 10.42.1.123

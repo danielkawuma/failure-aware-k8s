@@ -1,0 +1,881 @@
+Starting harness for scenario: scenario-b
+Target node: k3s-worker1
+Namespace: failure-aware
+Pod label selector: app=baseline-web
+Service targets:
+  k3s-worker1 -> http://10.10.0.11:30364
+  k3s-worker2 -> http://10.10.0.12:30364
+Run ID: run-20261101T100814Z
+Output directory: /home/ubuntu/failure-aware-k8s/harness/../experiments/baseline/scenario-b/runs/run-20261101T100814Z
+[TAINT] 2026-11-01T10:08:14.253022519+00:00 | k3s-worker1 | taints=<none>
+[EVENT] 2026-11-01T10:08:14.253111262+00:00 | type=Normal | reason=NodeNotReady | object=Node/k3s-worker1 | message=Node k3s-worker1 status is now: NodeNotReady
+[EVENT] 2026-11-01T10:08:14.253111262+00:00 | type=Normal | reason=NodeHasSufficientMemory | object=Node/k3s-worker1 | message=Node k3s-worker1 status is now: NodeHasSufficientMemory
+[EVENT] 2026-11-01T10:08:14.253111262+00:00 | type=Normal | reason=NodeHasNoDiskPressure | object=Node/k3s-worker1 | message=Node k3s-worker1 status is now: NodeHasNoDiskPressure
+[EVENT] 2026-11-01T10:08:14.253111262+00:00 | type=Normal | reason=NodeHasSufficientPID | object=Node/k3s-worker1 | message=Node k3s-worker1 status is now: NodeHasSufficientPID
+[EVENT] 2026-11-01T10:08:14.253111262+00:00 | type=Normal | reason=NodeReady | object=Node/k3s-worker1 | message=Node k3s-worker1 status is now: NodeReady
+[NODE] 2026-11-01T10:08:14.252942961+00:00 | k3s-worker1 | Ready=True
+[LEASE] 2026-11-01T10:08:14.252985547+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:13.579178Z
+[POD] 2026-11-01T10:08:14.253016022+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[HTTP] 2026-11-01T10:08:14.300352659+00:00 | node=k3s-worker1 | status=200 | latency=4.424ms | success=true | placement=KNOWN | placement_error= | error=
+[TAINT] 2026-11-01T10:08:15.336517010+00:00 | k3s-worker1 | taints=<none>
+[NODE] 2026-11-01T10:08:15.340800977+00:00 | k3s-worker1 | Ready=True
+[LEASE] 2026-11-01T10:08:15.397094318+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:13.579178Z
+[POD] 2026-11-01T10:08:15.822243086+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[HTTP] 2026-11-01T10:08:15.926010404+00:00 | node=k3s-worker1 | status=200 | latency=2.780ms | success=true | placement=KNOWN | placement_error= | error=
+[TAINT] 2026-11-01T10:08:16.397974718+00:00 | k3s-worker1 | taints=<none>
+[LEASE] 2026-11-01T10:08:16.459120749+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:13.579178Z
+[NODE] 2026-11-01T10:08:16.459335368+00:00 | k3s-worker1 | Ready=True
+[POD] 2026-11-01T10:08:16.927047919+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-11-01T10:08:17.460011008+00:00 | k3s-worker1 | taints=<none>
+[LEASE] 2026-11-01T10:08:17.516760991+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:13.579178Z
+[NODE] 2026-11-01T10:08:17.571865753+00:00 | k3s-worker1 | Ready=True
+[HTTP] 2026-11-01T10:08:16.988088870+00:00 | node=k3s-worker1 | status=200 | latency=3.197ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:08:17.989703639+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-11-01T10:08:18.518378078+00:00 | k3s-worker1 | taints=<none>
+[LEASE] 2026-11-01T10:08:18.573304362+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:13.579178Z
+[NODE] 2026-11-01T10:08:18.627276838+00:00 | k3s-worker1 | Ready=True
+[HTTP] 2026-11-01T10:08:18.681280769+00:00 | node=k3s-worker1 | status=200 | latency=3.018ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:08:19.079600734+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[LEASE] 2026-11-01T10:08:19.823530858+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:13.579178Z
+[TAINT] 2026-11-01T10:08:19.823647549+00:00 | k3s-worker1 | taints=<none>
+[NODE] 2026-11-01T10:08:19.823571094+00:00 | k3s-worker1 | Ready=True
+[HTTP] 2026-11-01T10:08:19.823610819+00:00 | node=k3s-worker1 | status=200 | latency=2.569ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:08:20.823947840+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[LEASE] 2026-11-01T10:08:20.945975758+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:13.579178Z
+[NODE] 2026-11-01T10:08:20.945910648+00:00 | k3s-worker1 | Ready=True
+[TAINT] 2026-11-01T10:08:20.945860818+00:00 | k3s-worker1 | taints=<none>
+[HTTP] 2026-11-01T10:08:20.945755781+00:00 | node=k3s-worker1 | status=200 | latency=2.950ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:08:21.884309983+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-11-01T10:08:22.036699433+00:00 | k3s-worker1 | taints=<none>
+[HTTP] 2026-11-01T10:08:22.036526397+00:00 | node=k3s-worker1 | status=200 | latency=2.875ms | success=true | placement=KNOWN | placement_error= | error=
+[LEASE] 2026-11-01T10:08:22.036599437+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:13.579178Z
+[NODE] 2026-11-01T10:08:22.036682389+00:00 | k3s-worker1 | Ready=True
+[POD] 2026-11-01T10:08:23.037703320+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[LEASE] 2026-11-01T10:08:23.821638977+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:13.579178Z
+[TAINT] 2026-11-01T10:08:23.821529893+00:00 | k3s-worker1 | taints=<none>
+[NODE] 2026-11-01T10:08:23.821337365+00:00 | k3s-worker1 | Ready=True
+[HTTP] 2026-11-01T10:08:23.821575574+00:00 | node=k3s-worker1 | status=200 | latency=3.641ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:08:24.821901650+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[LEASE] 2026-11-01T10:08:24.927312284+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[HTTP] 2026-11-01T10:08:24.927097447+00:00 | node=k3s-worker1 | status=200 | latency=2.591ms | success=true | placement=KNOWN | placement_error= | error=
+[TAINT] 2026-11-01T10:08:24.927170754+00:00 | k3s-worker1 | taints=<none>
+[NODE] 2026-11-01T10:08:24.927257687+00:00 | k3s-worker1 | Ready=True
+[POD] 2026-11-01T10:08:25.927949165+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[NODE] 2026-11-01T10:08:26.033273715+00:00 | k3s-worker1 | Ready=True
+[LEASE] 2026-11-01T10:08:26.033389469+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:08:26.033455596+00:00 | k3s-worker1 | taints=<none>
+[HTTP] 2026-11-01T10:08:26.033423895+00:00 | node=k3s-worker1 | status=200 | latency=2.535ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:08:27.033915050+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-11-01T10:08:27.822341058+00:00 | k3s-worker1 | taints=<none>
+[LEASE] 2026-11-01T10:08:27.822543246+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[HTTP] 2026-11-01T10:08:27.824655443+00:00 | node=k3s-worker1 | status=200 | latency=2.799ms | success=true | placement=KNOWN | placement_error= | error=
+[NODE] 2026-11-01T10:08:27.822507990+00:00 | k3s-worker1 | Ready=True
+[POD] 2026-11-01T10:08:28.822969076+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-11-01T10:08:28.884258473+00:00 | k3s-worker1 | taints=<none>
+[NODE] 2026-11-01T10:08:28.936593071+00:00 | k3s-worker1 | Ready=True
+[LEASE] 2026-11-01T10:08:28.936652808+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[HTTP] 2026-11-01T10:08:28.936705560+00:00 | node=k3s-worker1 | status=200 | latency=2.850ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:08:29.878403788+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[NODE] 2026-11-01T10:08:30.031127873+00:00 | k3s-worker1 | Ready=True
+[LEASE] 2026-11-01T10:08:30.031196393+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:08:30.031152978+00:00 | k3s-worker1 | taints=<none>
+[HTTP] 2026-11-01T10:08:30.031237975+00:00 | node=k3s-worker1 | status=200 | latency=5.895ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:08:31.032059793+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[NODE] 2026-11-01T10:08:31.097790130+00:00 | k3s-worker1 | Ready=True
+[LEASE] 2026-11-01T10:08:31.152358532+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:08:31.152265716+00:00 | k3s-worker1 | taints=<none>
+[HTTP] 2026-11-01T10:08:31.152177739+00:00 | node=k3s-worker1 | status=200 | latency=3.247ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:08:32.091232776+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[NODE] 2026-11-01T10:08:32.153321807+00:00 | k3s-worker1 | Ready=True
+[LEASE] 2026-11-01T10:08:32.219123759+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:08:32.272445439+00:00 | k3s-worker1 | taints=<none>
+[HTTP] 2026-11-01T10:08:32.824314412+00:00 | node=k3s-worker1 | status=200 | latency=2.961ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:08:33.154488836+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-11-01T10:08:33.823772829+00:00 | k3s-worker1 | taints=<none>
+[LEASE] 2026-11-01T10:08:33.823673619+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[NODE] 2026-11-01T10:08:33.823798888+00:00 | k3s-worker1 | Ready=True
+[HTTP] 2026-11-01T10:08:33.927073070+00:00 | node=k3s-worker1 | status=200 | latency=3.253ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:08:34.823816818+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[LEASE] 2026-11-01T10:08:34.927495851+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[NODE] 2026-11-01T10:08:34.927315951+00:00 | k3s-worker1 | Ready=True
+[TAINT] 2026-11-01T10:08:34.927416219+00:00 | k3s-worker1 | taints=<none>
+[HTTP] 2026-11-01T10:08:34.987749059+00:00 | node=k3s-worker1 | status=200 | latency=3.417ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:08:35.928147916+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[LEASE] 2026-11-01T10:08:36.037321542+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[NODE] 2026-11-01T10:08:36.037274272+00:00 | k3s-worker1 | Ready=True
+[TAINT] 2026-11-01T10:08:36.037353895+00:00 | k3s-worker1 | taints=<none>
+[HTTP] 2026-11-01T10:08:36.046482223+00:00 | node=k3s-worker1 | status=200 | latency=2.947ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:08:37.037844465+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[LEASE] 2026-11-01T10:08:37.143745670+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:08:37.143817389+00:00 | k3s-worker1 | taints=<none>
+[NODE] 2026-11-01T10:08:37.143660847+00:00 | k3s-worker1 | Ready=True
+[HTTP] 2026-11-01T10:08:37.143525247+00:00 | node=k3s-worker1 | status=200 | latency=3.135ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:08:38.143755306+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[LEASE] 2026-11-01T10:08:38.211989850+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[NODE] 2026-11-01T10:08:38.270046310+00:00 | k3s-worker1 | Ready=True
+[TAINT] 2026-11-01T10:08:38.270008378+00:00 | k3s-worker1 | taints=<none>
+[HTTP] 2026-11-01T10:08:38.824908329+00:00 | node=k3s-worker1 | status=200 | latency=3.431ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:08:39.210274896+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-11-01T10:08:39.427908960+00:00 | k3s-worker1 | taints=<none>
+[NODE] 2026-11-01T10:08:39.427823171+00:00 | k3s-worker1 | Ready=True
+[LEASE] 2026-11-01T10:08:39.427878956+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[HTTP] 2026-11-01T10:08:39.927174627+00:00 | node=k3s-worker1 | status=200 | latency=3.065ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:08:40.428886555+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-11-01T10:08:40.491507263+00:00 | k3s-worker1 | taints=<none>
+[LEASE] 2026-11-01T10:08:40.547030908+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[NODE] 2026-11-01T10:08:40.547149726+00:00 | k3s-worker1 | Ready=True
+[HTTP] 2026-11-01T10:08:41.033900912+00:00 | node=k3s-worker1 | status=200 | latency=3.365ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:08:41.487939296+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[LEASE] 2026-11-01T10:08:41.820474892+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[NODE] 2026-11-01T10:08:41.820581524+00:00 | k3s-worker1 | Ready=True
+[TAINT] 2026-11-01T10:08:41.820549438+00:00 | k3s-worker1 | taints=<none>
+[HTTP] 2026-11-01T10:08:42.090071376+00:00 | node=k3s-worker1 | status=200 | latency=3.524ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:08:42.821645749+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[NODE] 2026-11-01T10:08:42.926993157+00:00 | k3s-worker1 | Ready=True
+[LEASE] 2026-11-01T10:08:42.927076820+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:08:42.927121208+00:00 | k3s-worker1 | taints=<none>
+[HTTP] 2026-11-01T10:08:43.146534581+00:00 | node=k3s-worker1 | status=200 | latency=3.354ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:08:43.928500970+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[LEASE] 2026-11-01T10:08:43.988091232+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[NODE] 2026-11-01T10:08:43.988154111+00:00 | k3s-worker1 | Ready=True
+[TAINT] 2026-11-01T10:08:44.044346393+00:00 | k3s-worker1 | taints=<none>
+[HTTP] 2026-11-01T10:08:44.821964184+00:00 | node=k3s-worker1 | status=200 | latency=3.113ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:08:44.989361050+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[LEASE] 2026-11-01T10:08:45.047157628+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[NODE] 2026-11-01T10:08:45.047092846+00:00 | k3s-worker1 | Ready=True
+[TAINT] 2026-11-01T10:08:45.101610342+00:00 | k3s-worker1 | taints=<none>
+[HTTP] 2026-11-01T10:08:45.928981200+00:00 | node=k3s-worker1 | status=200 | latency=3.264ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:08:46.048264376+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[LEASE] 2026-11-01T10:08:46.103898878+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:08:46.156505934+00:00 | k3s-worker1 | taints=<none>
+[NODE] 2026-11-01T10:08:46.156619393+00:00 | k3s-worker1 | Ready=True
+[POD] 2026-11-01T10:08:47.105654544+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[HTTP] 2026-11-01T10:08:47.036764473+00:00 | node=k3s-worker1 | status=200 | latency=4.610ms | success=true | placement=KNOWN | placement_error= | error=
+[LEASE] 2026-11-01T10:08:47.212452160+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:08:47.217673352+00:00 | k3s-worker1 | taints=<none>
+[NODE] 2026-11-01T10:08:47.217653364+00:00 | k3s-worker1 | Ready=True
+[POD] 2026-11-01T10:08:48.213000193+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[LEASE] 2026-11-01T10:08:48.352143446+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[HTTP] 2026-11-01T10:08:48.352219074+00:00 | node=k3s-worker1 | status=200 | latency=3.113ms | success=true | placement=KNOWN | placement_error= | error=
+[NODE] 2026-11-01T10:08:48.352231814+00:00 | k3s-worker1 | Ready=True
+[TAINT] 2026-11-01T10:08:48.352170463+00:00 | k3s-worker1 | taints=<none>
+[POD] 2026-11-01T10:08:49.352940194+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[NODE] 2026-11-01T10:08:49.479818046+00:00 | k3s-worker1 | Ready=True
+[LEASE] 2026-11-01T10:08:49.479786104+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:08:49.479833941+00:00 | k3s-worker1 | taints=<none>
+[HTTP] 2026-11-01T10:08:49.479755345+00:00 | node=k3s-worker1 | status=200 | latency=3.108ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:08:50.480513991+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-11-01T10:08:50.604403686+00:00 | k3s-worker1 | taints=<none>
+[NODE] 2026-11-01T10:08:50.604506088+00:00 | k3s-worker1 | Ready=True
+[LEASE] 2026-11-01T10:08:50.604529183+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[HTTP] 2026-11-01T10:08:50.824008961+00:00 | node=k3s-worker1 | status=200 | latency=2.984ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:08:51.539948499+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-11-01T10:08:51.821825338+00:00 | k3s-worker1 | taints=<none>
+[NODE] 2026-11-01T10:08:51.821899719+00:00 | k3s-worker1 | Ready=True
+[LEASE] 2026-11-01T10:08:51.821707201+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[HTTP] 2026-11-01T10:08:51.884257323+00:00 | node=k3s-worker1 | status=200 | latency=3.318ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:08:52.823004281+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[NODE] 2026-11-01T10:08:52.887457149+00:00 | k3s-worker1 | Ready=True
+[LEASE] 2026-11-01T10:08:52.891711421+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:08:52.887507392+00:00 | k3s-worker1 | taints=<none>
+[HTTP] 2026-11-01T10:08:52.949307024+00:00 | node=k3s-worker1 | status=200 | latency=2.818ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:08:53.878761894+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[NODE] 2026-11-01T10:08:53.950059748+00:00 | k3s-worker1 | Ready=True
+[LEASE] 2026-11-01T10:08:54.006507157+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:08:54.006472033+00:00 | k3s-worker1 | taints=<none>
+[HTTP] 2026-11-01T10:08:54.255429916+00:00 | node=k3s-worker1 | status=200 | latency=3.372ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:08:54.936849615+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[NODE] 2026-11-01T10:08:55.062507039+00:00 | k3s-worker1 | Ready=True
+[LEASE] 2026-11-01T10:08:55.117508884+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:08:55.117536769+00:00 | k3s-worker1 | taints=<none>
+[HTTP] 2026-11-01T10:08:55.310967599+00:00 | node=k3s-worker1 | status=200 | latency=3.029ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:08:56.063237753+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[NODE] 2026-11-01T10:08:56.118357187+00:00 | k3s-worker1 | Ready=True
+[LEASE] 2026-11-01T10:08:56.181150289+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:08:56.181089416+00:00 | k3s-worker1 | taints=<none>
+[HTTP] 2026-11-01T10:08:56.821896743+00:00 | node=k3s-worker1 | status=200 | latency=3.169ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:08:57.116784754+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[LEASE] 2026-11-01T10:08:57.277783659+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[NODE] 2026-11-01T10:08:57.277952517+00:00 | k3s-worker1 | Ready=True
+[TAINT] 2026-11-01T10:08:57.277844094+00:00 | k3s-worker1 | taints=<none>
+[HTTP] 2026-11-01T10:08:57.929805586+00:00 | node=k3s-worker1 | status=200 | latency=2.873ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:08:58.278856254+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[LEASE] 2026-11-01T10:08:58.338412498+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:08:58.393693+00:00 | k3s-worker1 | taints=<none>
+[NODE] 2026-11-01T10:08:58.393868404+00:00 | k3s-worker1 | Ready=True
+[HTTP] 2026-11-01T10:08:59.035762756+00:00 | node=k3s-worker1 | status=200 | latency=3.269ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:08:59.339633181+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-11-01T10:08:59.704350633+00:00 | k3s-worker1 | taints=<none>
+[NODE] 2026-11-01T10:08:59.704400678+00:00 | k3s-worker1 | Ready=True
+[LEASE] 2026-11-01T10:08:59.704391946+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[HTTP] 2026-11-01T10:09:00.142109083+00:00 | node=k3s-worker1 | status=200 | latency=2.872ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:09:00.704942652+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[LEASE] 2026-11-01T10:09:00.770700389+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:09:00.766478200+00:00 | k3s-worker1 | taints=<none>
+[NODE] 2026-11-01T10:09:00.766420811+00:00 | k3s-worker1 | Ready=True
+[HTTP] 2026-11-01T10:09:01.206329606+00:00 | node=k3s-worker1 | status=200 | latency=4.034ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:09:01.760337305+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[LEASE] 2026-11-01T10:09:01.826708679+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:09:01.878421451+00:00 | k3s-worker1 | taints=<none>
+[NODE] 2026-11-01T10:09:01.878359062+00:00 | k3s-worker1 | Ready=True
+[HTTP] 2026-11-01T10:09:02.261539399+00:00 | node=k3s-worker1 | status=200 | latency=5.569ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:09:02.820853287+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[LEASE] 2026-11-01T10:09:02.879393085+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:09:02.934329438+00:00 | k3s-worker1 | taints=<none>
+[NODE] 2026-11-01T10:09:02.991492408+00:00 | k3s-worker1 | Ready=True
+[HTTP] 2026-11-01T10:09:03.320066434+00:00 | node=k3s-worker1 | status=200 | latency=3.085ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:09:03.879778619+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[LEASE] 2026-11-01T10:09:03.940098403+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:09:03.992612869+00:00 | k3s-worker1 | taints=<none>
+[NODE] 2026-11-01T10:09:04.045269189+00:00 | k3s-worker1 | Ready=True
+[HTTP] 2026-11-01T10:09:04.822940749+00:00 | node=k3s-worker1 | status=200 | latency=3.444ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:09:04.941537840+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[LEASE] 2026-11-01T10:09:04.999454772+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:09:05.051676774+00:00 | k3s-worker1 | taints=<none>
+[NODE] 2026-11-01T10:09:05.103789996+00:00 | k3s-worker1 | Ready=True
+[POD] 2026-11-01T10:09:06.000408939+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[HTTP] 2026-11-01T10:09:05.931907801+00:00 | node=k3s-worker1 | status=200 | latency=3.220ms | success=true | placement=KNOWN | placement_error= | error=
+[LEASE] 2026-11-01T10:09:06.053462685+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:09:06.104821513+00:00 | k3s-worker1 | taints=<none>
+[NODE] 2026-11-01T10:09:06.158631645+00:00 | k3s-worker1 | Ready=True
+[POD] 2026-11-01T10:09:07.054583995+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-11-01T10:09:07.344090621+00:00 | k3s-worker1 | taints=<none>
+[LEASE] 2026-11-01T10:09:07.344063283+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[NODE] 2026-11-01T10:09:07.344131998+00:00 | k3s-worker1 | Ready=True
+[HTTP] 2026-11-01T10:09:07.344170907+00:00 | node=k3s-worker1 | status=200 | latency=3.141ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:09:08.344897940+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-11-01T10:09:08.468328015+00:00 | k3s-worker1 | taints=<none>
+[LEASE] 2026-11-01T10:09:08.468354590+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[NODE] 2026-11-01T10:09:08.468254353+00:00 | k3s-worker1 | Ready=True
+[HTTP] 2026-11-01T10:09:08.822947531+00:00 | node=k3s-worker1 | status=200 | latency=3.227ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:09:09.402803555+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[LEASE] 2026-11-01T10:09:09.578804801+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[NODE] 2026-11-01T10:09:09.578665349+00:00 | k3s-worker1 | Ready=True
+[TAINT] 2026-11-01T10:09:09.578740422+00:00 | k3s-worker1 | taints=<none>
+[POD] 2026-11-01T10:09:10.579633945+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[HTTP] 2026-11-01T10:09:09.929384947+00:00 | node=k3s-worker1 | status=200 | latency=4.316ms | success=true | placement=KNOWN | placement_error= | error=
+[TAINT] 2026-11-01T10:09:10.821407297+00:00 | k3s-worker1 | taints=<none>
+[LEASE] 2026-11-01T10:09:10.821307287+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[NODE] 2026-11-01T10:09:10.821337680+00:00 | k3s-worker1 | Ready=True
+[POD] 2026-11-01T10:09:11.822277388+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[HTTP] 2026-11-01T10:09:11.822237096+00:00 | node=k3s-worker1 | status=200 | latency=3.245ms | success=true | placement=KNOWN | placement_error= | error=
+[TAINT] 2026-11-01T10:09:11.876753223+00:00 | k3s-worker1 | taints=<none>
+[LEASE] 2026-11-01T10:09:11.926276634+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[NODE] 2026-11-01T10:09:11.926332494+00:00 | k3s-worker1 | Ready=True
+[POD] 2026-11-01T10:09:12.927777492+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-11-01T10:09:12.927848637+00:00 | k3s-worker1 | taints=<none>
+[LEASE] 2026-11-01T10:09:12.983185937+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[HTTP] 2026-11-01T10:09:12.927676526+00:00 | node=k3s-worker1 | status=200 | latency=3.216ms | success=true | placement=KNOWN | placement_error= | error=
+[NODE] 2026-11-01T10:09:12.987683936+00:00 | k3s-worker1 | Ready=True
+[POD] 2026-11-01T10:09:13.989534226+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[NODE] 2026-11-01T10:09:14.050299201+00:00 | k3s-worker1 | Ready=True
+[HTTP] 2026-11-01T10:09:14.047865702+00:00 | node=k3s-worker1 | status=200 | latency=2.656ms | success=true | placement=KNOWN | placement_error= | error=
+[TAINT] 2026-11-01T10:09:14.048143511+00:00 | k3s-worker1 | taints=<none>
+[LEASE] 2026-11-01T10:09:14.048181541+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[POD] 2026-11-01T10:09:15.048944279+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[LEASE] 2026-11-01T10:09:15.144017133+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[HTTP] 2026-11-01T10:09:15.144118354+00:00 | node=k3s-worker1 | status=200 | latency=2.871ms | success=true | placement=KNOWN | placement_error= | error=
+[TAINT] 2026-11-01T10:09:15.144198720+00:00 | k3s-worker1 | taints=<none>
+[NODE] 2026-11-01T10:09:15.144160637+00:00 | k3s-worker1 | Ready=True
+[POD] 2026-11-01T10:09:16.144925353+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[HTTP] 2026-11-01T10:09:16.251475724+00:00 | node=k3s-worker1 | status=200 | latency=2.599ms | success=true | placement=KNOWN | placement_error= | error=
+[LEASE] 2026-11-01T10:09:16.251655217+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[NODE] 2026-11-01T10:09:16.251407938+00:00 | k3s-worker1 | Ready=True
+[TAINT] 2026-11-01T10:09:16.251542610+00:00 | k3s-worker1 | taints=<none>
+[POD] 2026-11-01T10:09:17.251893733+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[LEASE] 2026-11-01T10:09:17.402510469+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:09:17.402414337+00:00 | k3s-worker1 | taints=<none>
+[NODE] 2026-11-01T10:09:17.402614332+00:00 | k3s-worker1 | Ready=True
+[HTTP] 2026-11-01T10:09:17.402545617+00:00 | node=k3s-worker1 | status=200 | latency=2.758ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:09:18.403175745+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[LEASE] 2026-11-01T10:09:18.821125563+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:09:18.821099350+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[NODE] 2026-11-01T10:09:18.821166047+00:00 | k3s-worker1 | Ready=Unknown
+[HTTP] 2026-11-01T10:09:18.821038908+00:00 | node=k3s-worker1 | status=200 | latency=2.615ms | success=true | placement=KNOWN | placement_error= | error=
+[EVENT] 2026-11-01T10:09:18.821263773+00:00 | type=Normal | reason=NodeNotReady | object=Node/k3s-worker1 | message=Node k3s-worker1 status is now: NodeNotReady
+[POD] 2026-11-01T10:09:19.821765857+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-11-01T10:09:20.821679919+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[NODE] 2026-11-01T10:09:20.821711192+00:00 | k3s-worker1 | Ready=Unknown
+[LEASE] 2026-11-01T10:09:20.821765031+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[HTTP] 2026-11-01T10:09:20.821799397+00:00 | node=k3s-worker1 | status=200 | latency=3.055ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:09:21.821872024+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-11-01T10:09:21.929375792+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[NODE] 2026-11-01T10:09:21.929413661+00:00 | k3s-worker1 | Ready=Unknown
+[LEASE] 2026-11-01T10:09:21.929451143+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[HTTP] 2026-11-01T10:09:21.929278625+00:00 | node=k3s-worker1 | status=200 | latency=2.748ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:09:22.930427127+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-11-01T10:09:22.994943633+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[LEASE] 2026-11-01T10:09:23.051681326+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[NODE] 2026-11-01T10:09:23.051801409+00:00 | k3s-worker1 | Ready=Unknown
+[HTTP] 2026-11-01T10:09:23.051571075+00:00 | node=k3s-worker1 | status=200 | latency=3.325ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:09:23.989841697+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-11-01T10:09:24.052165910+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[LEASE] 2026-11-01T10:09:24.120062081+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[NODE] 2026-11-01T10:09:24.174172414+00:00 | k3s-worker1 | Ready=Unknown
+[HTTP] 2026-11-01T10:09:24.174082098+00:00 | node=k3s-worker1 | status=200 | latency=2.930ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:09:25.050884227+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-11-01T10:09:25.148949527+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[LEASE] 2026-11-01T10:09:25.204940824+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[NODE] 2026-11-01T10:09:25.262861421+00:00 | k3s-worker1 | Ready=Unknown
+[HTTP] 2026-11-01T10:09:25.262795357+00:00 | node=k3s-worker1 | status=200 | latency=3.253ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:09:26.149768387+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[TAINT] 2026-11-01T10:09:26.253607980+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[LEASE] 2026-11-01T10:09:26.305351929+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[HTTP] 2026-11-01T10:09:26.355998069+00:00 | node=k3s-worker1 | status=200 | latency=2.618ms | success=true | placement=KNOWN | placement_error= | error=
+[NODE] 2026-11-01T10:09:26.355944668+00:00 | k3s-worker1 | Ready=Unknown
+[POD] 2026-11-01T10:09:27.253987613+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=
+[NODE] 2026-11-01T10:09:27.472867701+00:00 | k3s-worker1 | Ready=Unknown
+[TAINT] 2026-11-01T10:09:27.473083057+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[LEASE] 2026-11-01T10:09:27.473003821+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[HTTP] 2026-11-01T10:09:27.473042333+00:00 | node=k3s-worker1 | status=200 | latency=5.104ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:09:28.474470012+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[LEASE] 2026-11-01T10:09:28.822301194+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[HTTP] 2026-11-01T10:09:28.824412921+00:00 | node=k3s-worker1 | status=200 | latency=2.618ms | success=true | placement=KNOWN | placement_error= | error=
+[TAINT] 2026-11-01T10:09:28.822195434+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[NODE] 2026-11-01T10:09:28.822286871+00:00 | k3s-worker1 | Ready=Unknown
+[POD] 2026-11-01T10:09:29.823435298+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:09:29.823435298+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[NODE] 2026-11-01T10:09:29.928698936+00:00 | k3s-worker1 | Ready=Unknown
+[LEASE] 2026-11-01T10:09:29.928747555+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:09:29.928689134+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[HTTP] 2026-11-01T10:09:29.928658254+00:00 | node=k3s-worker3 | status=200 | latency=3.793ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:09:30.928764849+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:09:30.928764849+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[LEASE] 2026-11-01T10:09:31.073195014+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[NODE] 2026-11-01T10:09:31.073286381+00:00 | k3s-worker1 | Ready=Unknown
+[TAINT] 2026-11-01T10:09:31.073132729+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[HTTP] 2026-11-01T10:09:31.270676828+00:00 | node=k3s-worker3 | status=200 | latency=2.726ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:09:32.073972535+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:09:32.073972535+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[TAINT] 2026-11-01T10:09:32.178918949+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[LEASE] 2026-11-01T10:09:32.178955617+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[NODE] 2026-11-01T10:09:32.178889306+00:00 | k3s-worker1 | Ready=Unknown
+[HTTP] 2026-11-01T10:09:32.325303236+00:00 | node=k3s-worker3 | status=200 | latency=2.994ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:09:33.179893765+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:09:33.179893765+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[TAINT] 2026-11-01T10:09:33.240602582+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[NODE] 2026-11-01T10:09:33.291831430+00:00 | k3s-worker1 | Ready=Unknown
+[LEASE] 2026-11-01T10:09:33.291893962+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[HTTP] 2026-11-01T10:09:33.380318130+00:00 | node=k3s-worker3 | status=200 | latency=2.754ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:09:34.234891669+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:09:34.234891669+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[TAINT] 2026-11-01T10:09:34.293279614+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[NODE] 2026-11-01T10:09:34.348503271+00:00 | k3s-worker1 | Ready=Unknown
+[LEASE] 2026-11-01T10:09:34.404395350+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[HTTP] 2026-11-01T10:09:34.442689618+00:00 | node=k3s-worker3 | status=200 | latency=3.564ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:09:35.292638080+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:09:35.292638080+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[TAINT] 2026-11-01T10:09:35.350448458+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[NODE] 2026-11-01T10:09:35.406098138+00:00 | k3s-worker1 | Ready=Unknown
+[LEASE] 2026-11-01T10:09:35.459265980+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[HTTP] 2026-11-01T10:09:35.824766340+00:00 | node=k3s-worker3 | status=200 | latency=3.446ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:09:36.351427313+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:09:36.351427313+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[TAINT] 2026-11-01T10:09:36.407410488+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[NODE] 2026-11-01T10:09:36.461640619+00:00 | k3s-worker1 | Ready=Unknown
+[LEASE] 2026-11-01T10:09:36.529027863+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[HTTP] 2026-11-01T10:09:36.930494852+00:00 | node=k3s-worker3 | status=200 | latency=3.389ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:09:37.408729600+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:09:37.408729600+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[LEASE] 2026-11-01T10:09:37.821724793+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[NODE] 2026-11-01T10:09:37.821697699+00:00 | k3s-worker1 | Ready=Unknown
+[TAINT] 2026-11-01T10:09:37.821737942+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[HTTP] 2026-11-01T10:09:37.992168871+00:00 | node=k3s-worker3 | status=200 | latency=2.889ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:09:38.821898173+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:09:38.821898173+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[LEASE] 2026-11-01T10:09:38.881195218+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:09:38.937427833+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[NODE] 2026-11-01T10:09:38.937378274+00:00 | k3s-worker1 | Ready=Unknown
+[HTTP] 2026-11-01T10:09:39.052843968+00:00 | node=k3s-worker3 | status=200 | latency=3.363ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:09:39.877953300+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:09:39.877953300+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[NODE] 2026-11-01T10:09:40.032775024+00:00 | k3s-worker1 | Ready=Unknown
+[LEASE] 2026-11-01T10:09:40.032800795+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:09:40.032674007+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[HTTP] 2026-11-01T10:09:40.114106140+00:00 | node=k3s-worker3 | status=200 | latency=2.560ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:09:41.032951605+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:09:41.032951605+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[TAINT] 2026-11-01T10:09:41.137701766+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[NODE] 2026-11-01T10:09:41.137878465+00:00 | k3s-worker1 | Ready=Unknown
+[LEASE] 2026-11-01T10:09:41.137889509+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[HTTP] 2026-11-01T10:09:41.179187187+00:00 | node=k3s-worker3 | status=200 | latency=3.789ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:09:42.137905471+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:09:42.137905471+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[NODE] 2026-11-01T10:09:42.241931771+00:00 | k3s-worker1 | Ready=Unknown
+[LEASE] 2026-11-01T10:09:42.241961653+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:09:42.241995022+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[HTTP] 2026-11-01T10:09:42.252206438+00:00 | node=k3s-worker3 | status=200 | latency=2.881ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:09:43.243292248+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:09:43.243292248+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[NODE] 2026-11-01T10:09:43.307568630+00:00 | k3s-worker1 | Ready=Unknown
+[LEASE] 2026-11-01T10:09:43.366782750+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:09:43.366902355+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[HTTP] 2026-11-01T10:09:43.366712027+00:00 | node=k3s-worker3 | status=200 | latency=2.570ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:09:44.302677533+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:09:44.302677533+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[TAINT] 2026-11-01T10:09:44.823403820+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[HTTP] 2026-11-01T10:09:44.823308544+00:00 | node=k3s-worker3 | status=200 | latency=2.681ms | success=true | placement=KNOWN | placement_error= | error=
+[LEASE] 2026-11-01T10:09:44.823372666+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[NODE] 2026-11-01T10:09:44.823601345+00:00 | k3s-worker1 | Ready=Unknown
+[POD] 2026-11-01T10:09:45.823973256+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:09:45.823973256+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[TAINT] 2026-11-01T10:09:45.884137478+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[NODE] 2026-11-01T10:09:45.938327518+00:00 | k3s-worker1 | Ready=Unknown
+[HTTP] 2026-11-01T10:09:45.938432174+00:00 | node=k3s-worker3 | status=200 | latency=3.263ms | success=true | placement=KNOWN | placement_error= | error=
+[LEASE] 2026-11-01T10:09:45.938459017+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[POD] 2026-11-01T10:09:46.882715739+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:09:46.882715739+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[TAINT] 2026-11-01T10:09:46.942961909+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[NODE] 2026-11-01T10:09:47.002445166+00:00 | k3s-worker1 | Ready=Unknown
+[LEASE] 2026-11-01T10:09:47.061937712+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[HTTP] 2026-11-01T10:09:47.062078332+00:00 | node=k3s-worker3 | status=200 | latency=3.029ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:09:47.943795897+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:09:47.943795897+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[TAINT] 2026-11-01T10:09:48.086180349+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[NODE] 2026-11-01T10:09:48.086079898+00:00 | k3s-worker1 | Ready=Unknown
+[LEASE] 2026-11-01T10:09:48.138318298+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[HTTP] 2026-11-01T10:09:48.383233896+00:00 | node=k3s-worker3 | status=200 | latency=3.172ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:09:49.086963238+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:09:49.086963238+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[TAINT] 2026-11-01T10:09:49.142687439+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[LEASE] 2026-11-01T10:09:49.199615395+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[NODE] 2026-11-01T10:09:49.199684514+00:00 | k3s-worker1 | Ready=Unknown
+[HTTP] 2026-11-01T10:09:49.441176348+00:00 | node=k3s-worker3 | status=200 | latency=2.923ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:09:50.142942873+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:09:50.142942873+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[LEASE] 2026-11-01T10:09:50.298824729+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:09:50.298926477+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[NODE] 2026-11-01T10:09:50.298727429+00:00 | k3s-worker1 | Ready=Unknown
+[HTTP] 2026-11-01T10:09:50.504318972+00:00 | node=k3s-worker3 | status=200 | latency=2.747ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:09:51.300015864+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:09:51.300015864+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[TAINT] 2026-11-01T10:09:51.628009649+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[NODE] 2026-11-01T10:09:51.628132732+00:00 | k3s-worker1 | Ready=Unknown
+[LEASE] 2026-11-01T10:09:51.628044136+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[HTTP] 2026-11-01T10:09:51.627950518+00:00 | node=k3s-worker3 | status=200 | latency=3.064ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:09:52.629051387+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:09:52.629051387+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[TAINT] 2026-11-01T10:09:52.695868345+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[LEASE] 2026-11-01T10:09:52.751505186+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[NODE] 2026-11-01T10:09:52.751474379+00:00 | k3s-worker1 | Ready=Unknown
+[HTTP] 2026-11-01T10:09:52.822798831+00:00 | node=k3s-worker3 | status=200 | latency=2.417ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:09:53.688979824+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:09:53.688979824+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[NODE] 2026-11-01T10:09:53.841739746+00:00 | k3s-worker1 | Ready=Unknown
+[LEASE] 2026-11-01T10:09:53.841716954+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:09:53.841777058+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[HTTP] 2026-11-01T10:09:53.878235881+00:00 | node=k3s-worker3 | status=200 | latency=5.439ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:09:54.841841417+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:09:54.841841417+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[TAINT] 2026-11-01T10:09:54.947876418+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[LEASE] 2026-11-01T10:09:54.947837407+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[HTTP] 2026-11-01T10:09:54.947685816+00:00 | node=k3s-worker3 | status=200 | latency=2.568ms | success=true | placement=KNOWN | placement_error= | error=
+[NODE] 2026-11-01T10:09:54.947800702+00:00 | k3s-worker1 | Ready=Unknown
+[POD] 2026-11-01T10:09:55.947804816+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:09:55.947804816+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[LEASE] 2026-11-01T10:09:56.056176109+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:09:56.056201295+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[HTTP] 2026-11-01T10:09:56.056241768+00:00 | node=k3s-worker3 | status=200 | latency=2.992ms | success=true | placement=KNOWN | placement_error= | error=
+[NODE] 2026-11-01T10:09:56.056277325+00:00 | k3s-worker1 | Ready=Unknown
+[POD] 2026-11-01T10:09:57.057325796+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:09:57.057325796+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[LEASE] 2026-11-01T10:09:57.453591679+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[NODE] 2026-11-01T10:09:57.453477855+00:00 | k3s-worker1 | Ready=Unknown
+[TAINT] 2026-11-01T10:09:57.453550969+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[HTTP] 2026-11-01T10:09:57.453671416+00:00 | node=k3s-worker3 | status=200 | latency=2.634ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:09:58.454300326+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:09:58.454300326+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[NODE] 2026-11-01T10:09:58.573678512+00:00 | k3s-worker1 | Ready=Unknown
+[LEASE] 2026-11-01T10:09:58.573699489+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:09:58.573569464+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[HTTP] 2026-11-01T10:09:58.670008738+00:00 | node=k3s-worker3 | status=200 | latency=2.798ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:09:59.574415726+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:09:59.574415726+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[HTTP] 2026-11-01T10:09:59.824352698+00:00 | node=k3s-worker3 | status=200 | latency=2.899ms | success=true | placement=KNOWN | placement_error= | error=
+[TAINT] 2026-11-01T10:09:59.824572530+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[LEASE] 2026-11-01T10:09:59.824429149+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[NODE] 2026-11-01T10:09:59.824462981+00:00 | k3s-worker1 | Ready=Unknown
+[POD] 2026-11-01T10:10:00.825112972+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:10:00.825112972+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[NODE] 2026-11-01T10:10:00.948068744+00:00 | k3s-worker1 | Ready=Unknown
+[LEASE] 2026-11-01T10:10:00.948223219+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:10:00.948136509+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[HTTP] 2026-11-01T10:10:00.948188163+00:00 | node=k3s-worker3 | status=200 | latency=4.775ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:10:01.882545731+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:10:01.882545731+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[LEASE] 2026-11-01T10:10:02.064281+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[NODE] 2026-11-01T10:10:02.064213297+00:00 | k3s-worker1 | Ready=Unknown
+[TAINT] 2026-11-01T10:10:02.064181948+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[HTTP] 2026-11-01T10:10:02.694161687+00:00 | node=k3s-worker3 | status=200 | latency=2.882ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:10:02.995332910+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:10:02.995332910+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[NODE] 2026-11-01T10:10:03.132185134+00:00 | k3s-worker1 | Ready=Unknown
+[TAINT] 2026-11-01T10:10:03.132092913+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[LEASE] 2026-11-01T10:10:03.132154650+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[HTTP] 2026-11-01T10:10:03.753053504+00:00 | node=k3s-worker3 | status=200 | latency=3.449ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:10:04.056664904+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:10:04.056664904+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[NODE] 2026-11-01T10:10:04.193682632+00:00 | k3s-worker1 | Ready=Unknown
+[LEASE] 2026-11-01T10:10:04.246543873+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:10:04.246633356+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[HTTP] 2026-11-01T10:10:04.904559125+00:00 | node=k3s-worker3 | status=200 | latency=3.023ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:10:05.113965128+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:10:05.113965128+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[NODE] 2026-11-01T10:10:05.249934332+00:00 | k3s-worker1 | Ready=Unknown
+[LEASE] 2026-11-01T10:10:05.302635180+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:10:05.356716600+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[HTTP] 2026-11-01T10:10:06.008922950+00:00 | node=k3s-worker3 | status=200 | latency=3.356ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:10:06.171632623+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:10:06.171632623+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[NODE] 2026-11-01T10:10:06.310935694+00:00 | k3s-worker1 | Ready=Unknown
+[LEASE] 2026-11-01T10:10:06.365199266+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:10:06.420839924+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[POD] 2026-11-01T10:10:07.230230326+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:10:07.230230326+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[HTTP] 2026-11-01T10:10:07.116637126+00:00 | node=k3s-worker3 | status=200 | latency=3.214ms | success=true | placement=KNOWN | placement_error= | error=
+[LEASE] 2026-11-01T10:10:07.628062291+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[NODE] 2026-11-01T10:10:07.627993209+00:00 | k3s-worker1 | Ready=Unknown
+[TAINT] 2026-11-01T10:10:07.627855702+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[POD] 2026-11-01T10:10:08.629003577+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:10:08.629003577+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[HTTP] 2026-11-01T10:10:08.628958308+00:00 | node=k3s-worker3 | status=200 | latency=3.417ms | success=true | placement=KNOWN | placement_error= | error=
+[LEASE] 2026-11-01T10:10:08.687749314+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[NODE] 2026-11-01T10:10:08.736800683+00:00 | k3s-worker1 | Ready=Unknown
+[TAINT] 2026-11-01T10:10:08.736740281+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[LEASE] 2026-11-01T10:10:09.747012941+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[HTTP] 2026-11-01T10:10:09.737985803+00:00 | node=k3s-worker3 | status=200 | latency=2.895ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:10:09.738039377+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:10:09.738039377+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[NODE] 2026-11-01T10:10:09.804469144+00:00 | k3s-worker1 | Ready=Unknown
+[TAINT] 2026-11-01T10:10:09.804504063+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[LEASE] 2026-11-01T10:10:10.805692855+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[NODE] 2026-11-01T10:10:10.868311447+00:00 | k3s-worker1 | Ready=Unknown
+[HTTP] 2026-11-01T10:10:10.859938308+00:00 | node=k3s-worker3 | status=200 | latency=3.112ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:10:10.859819417+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:10:10.859819417+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[TAINT] 2026-11-01T10:10:10.935929406+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[LEASE] 2026-11-01T10:10:11.861355931+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[NODE] 2026-11-01T10:10:11.937660686+00:00 | k3s-worker1 | Ready=Unknown
+[TAINT] 2026-11-01T10:10:11.999645075+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[POD] 2026-11-01T10:10:11.999807009+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:10:11.999807009+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[HTTP] 2026-11-01T10:10:11.999716812+00:00 | node=k3s-worker3 | status=200 | latency=3.338ms | success=true | placement=KNOWN | placement_error= | error=
+[LEASE] 2026-11-01T10:10:12.917609733+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[NODE] 2026-11-01T10:10:13.000238703+00:00 | k3s-worker1 | Ready=Unknown
+[TAINT] 2026-11-01T10:10:13.073180311+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[POD] 2026-11-01T10:10:13.161485107+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:10:13.161485107+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[HTTP] 2026-11-01T10:10:13.219568853+00:00 | node=k3s-worker3 | status=200 | latency=3.061ms | success=true | placement=KNOWN | placement_error= | error=
+[LEASE] 2026-11-01T10:10:13.971944230+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[NODE] 2026-11-01T10:10:14.059248856+00:00 | k3s-worker1 | Ready=Unknown
+[TAINT] 2026-11-01T10:10:14.126089889+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[POD] 2026-11-01T10:10:14.239196185+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:10:14.239196185+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[HTTP] 2026-11-01T10:10:14.822024592+00:00 | node=k3s-worker3 | status=200 | latency=3.006ms | success=true | placement=KNOWN | placement_error= | error=
+[LEASE] 2026-11-01T10:10:15.033270498+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[NODE] 2026-11-01T10:10:15.119564896+00:00 | k3s-worker1 | Ready=Unknown
+[TAINT] 2026-11-01T10:10:15.179237526+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[POD] 2026-11-01T10:10:15.822945340+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:10:15.822945340+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[HTTP] 2026-11-01T10:10:15.927996859+00:00 | node=k3s-worker3 | status=200 | latency=4.121ms | success=true | placement=KNOWN | placement_error= | error=
+[LEASE] 2026-11-01T10:10:16.086907423+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[NODE] 2026-11-01T10:10:16.176175848+00:00 | k3s-worker1 | Ready=Unknown
+[TAINT] 2026-11-01T10:10:16.237686270+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[POD] 2026-11-01T10:10:16.929256671+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:10:16.929256671+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[HTTP] 2026-11-01T10:10:16.991612426+00:00 | node=k3s-worker3 | status=200 | latency=2.602ms | success=true | placement=KNOWN | placement_error= | error=
+[LEASE] 2026-11-01T10:10:17.143862950+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[NODE] 2026-11-01T10:10:17.231597502+00:00 | k3s-worker1 | Ready=Unknown
+[TAINT] 2026-11-01T10:10:17.295839603+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[POD] 2026-11-01T10:10:17.986990692+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:10:17.986990692+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[LEASE] 2026-11-01T10:10:18.823111266+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:10:18.823189017+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[HTTP] 2026-11-01T10:10:18.823280953+00:00 | node=k3s-worker3 | status=200 | latency=3.005ms | success=true | placement=KNOWN | placement_error= | error=
+[NODE] 2026-11-01T10:10:18.823181971+00:00 | k3s-worker1 | Ready=Unknown
+[POD] 2026-11-01T10:10:19.823938361+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:10:19.823938361+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[LEASE] 2026-11-01T10:10:19.928873899+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[NODE] 2026-11-01T10:10:19.928929831+00:00 | k3s-worker1 | Ready=Unknown
+[TAINT] 2026-11-01T10:10:19.928805865+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[HTTP] 2026-11-01T10:10:19.928918542+00:00 | node=k3s-worker3 | status=200 | latency=3.042ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:10:20.929017766+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:10:20.929017766+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[TAINT] 2026-11-01T10:10:21.036535123+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[HTTP] 2026-11-01T10:10:21.036544577+00:00 | node=k3s-worker3 | status=200 | latency=3.022ms | success=true | placement=KNOWN | placement_error= | error=
+[LEASE] 2026-11-01T10:10:21.036459019+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[NODE] 2026-11-01T10:10:21.036377566+00:00 | k3s-worker1 | Ready=Unknown
+[POD] 2026-11-01T10:10:22.036953680+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:10:22.036953680+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[NODE] 2026-11-01T10:10:22.825404727+00:00 | k3s-worker1 | Ready=Unknown
+[LEASE] 2026-11-01T10:10:22.825271528+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:10:22.825375646+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[HTTP] 2026-11-01T10:10:22.825238388+00:00 | node=k3s-worker3 | status=200 | latency=2.640ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:10:23.825806538+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:10:23.825806538+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[NODE] 2026-11-01T10:10:24.342405581+00:00 | k3s-worker1 | Ready=Unknown
+[TAINT] 2026-11-01T10:10:24.342480088+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[LEASE] 2026-11-01T10:10:24.342317586+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[HTTP] 2026-11-01T10:10:24.342229039+00:00 | node=k3s-worker3 | status=200 | latency=2.936ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:10:25.343627123+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:10:25.343627123+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[NODE] 2026-11-01T10:10:25.449517699+00:00 | k3s-worker1 | Ready=Unknown
+[LEASE] 2026-11-01T10:10:25.449414138+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:10:25.449323578+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[HTTP] 2026-11-01T10:10:25.534827077+00:00 | node=k3s-worker3 | status=200 | latency=2.781ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:10:26.450466235+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[POD] 2026-11-01T10:10:26.450466235+00:00 | baseline-web-55cf7899fc-65mvf | phase=Running | node=k3s-worker1 | deletion=2026-11-01T10:09:58Z
+[NODE] 2026-11-01T10:10:26.509927881+00:00 | k3s-worker1 | Ready=Unknown
+[LEASE] 2026-11-01T10:10:26.520288530+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:10:26.565620452+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[HTTP] 2026-11-01T10:10:26.595830660+00:00 | node=k3s-worker3 | status=200 | latency=4.324ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:10:27.511559618+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[NODE] 2026-11-01T10:10:27.571223845+00:00 | k3s-worker1 | Ready=Unknown
+[LEASE] 2026-11-01T10:10:27.630437551+00:00 | k3s-worker1 | renewTime=2026-11-01T10:08:23.979809Z
+[TAINT] 2026-11-01T10:10:27.684164830+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[HTTP] 2026-11-01T10:10:27.824630207+00:00 | node=k3s-worker3 | status=200 | latency=2.911ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:10:28.572443338+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[LEASE] 2026-11-01T10:10:28.776872266+00:00 | k3s-worker1 | renewTime=2026-11-01T10:10:27.910065Z
+[NODE] 2026-11-01T10:10:28.777008152+00:00 | k3s-worker1 | Ready=Unknown
+[TAINT] 2026-11-01T10:10:28.776774720+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[HTTP] 2026-11-01T10:10:28.929420483+00:00 | node=k3s-worker3 | status=200 | latency=3.237ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:10:29.777852378+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[LEASE] 2026-11-01T10:10:29.839229679+00:00 | k3s-worker1 | renewTime=2026-11-01T10:10:27.910065Z
+[NODE] 2026-11-01T10:10:29.839168026+00:00 | k3s-worker1 | Ready=Unknown
+[TAINT] 2026-11-01T10:10:29.894854956+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[HTTP] 2026-11-01T10:10:30.079187924+00:00 | node=k3s-worker3 | status=200 | latency=3.467ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:10:30.838487430+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[LEASE] 2026-11-01T10:10:30.896632608+00:00 | k3s-worker1 | renewTime=2026-11-01T10:10:27.910065Z
+[TAINT] 2026-11-01T10:10:30.952223974+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[NODE] 2026-11-01T10:10:30.952320194+00:00 | k3s-worker1 | Ready=Unknown
+[HTTP] 2026-11-01T10:10:31.345966093+00:00 | node=k3s-worker3 | status=200 | latency=3.052ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:10:31.896396455+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[NODE] 2026-11-01T10:10:32.823510904+00:00 | k3s-worker1 | Ready=Unknown
+[TAINT] 2026-11-01T10:10:32.823431232+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[LEASE] 2026-11-01T10:10:32.823542418+00:00 | k3s-worker1 | renewTime=2026-11-01T10:10:27.910065Z
+[HTTP] 2026-11-01T10:10:32.824661256+00:00 | node=k3s-worker3 | status=200 | latency=2.792ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:10:33.824430394+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[NODE] 2026-11-01T10:10:33.884738262+00:00 | k3s-worker1 | Ready=Unknown
+[LEASE] 2026-11-01T10:10:33.942482546+00:00 | k3s-worker1 | renewTime=2026-11-01T10:10:27.910065Z
+[TAINT] 2026-11-01T10:10:33.942449561+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[HTTP] 2026-11-01T10:10:33.942355792+00:00 | node=k3s-worker3 | status=200 | latency=3.014ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:10:34.885980458+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[NODE] 2026-11-01T10:10:35.045376435+00:00 | k3s-worker1 | Ready=Unknown
+[LEASE] 2026-11-01T10:10:35.045346922+00:00 | k3s-worker1 | renewTime=2026-11-01T10:10:27.910065Z
+[TAINT] 2026-11-01T10:10:35.045180881+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoSchedule;node.kubernetes.io/unreachable=|NoExecute;
+[HTTP] 2026-11-01T10:10:35.342010303+00:00 | node=k3s-worker3 | status=200 | latency=3.454ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:10:36.046022280+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[TAINT] 2026-11-01T10:10:36.187054274+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoExecute;
+[NODE] 2026-11-01T10:10:36.187246505+00:00 | k3s-worker1 | Ready=True
+[EVENT] 2026-11-01T10:10:36.187207150+00:00 | type=Normal | reason=NodeHasSufficientMemory | object=Node/k3s-worker1 | message=Node k3s-worker1 status is now: NodeHasSufficientMemory
+[EVENT] 2026-11-01T10:10:36.187207150+00:00 | type=Normal | reason=NodeHasNoDiskPressure | object=Node/k3s-worker1 | message=Node k3s-worker1 status is now: NodeHasNoDiskPressure
+[EVENT] 2026-11-01T10:10:36.187207150+00:00 | type=Normal | reason=NodeHasSufficientPID | object=Node/k3s-worker1 | message=Node k3s-worker1 status is now: NodeHasSufficientPID
+[EVENT] 2026-11-01T10:10:36.187207150+00:00 | type=Normal | reason=NodeReady | object=Node/k3s-worker1 | message=Node k3s-worker1 status is now: NodeReady
+[LEASE] 2026-11-01T10:10:36.187176072+00:00 | k3s-worker1 | renewTime=2026-11-01T10:10:27.910065Z
+[HTTP] 2026-11-01T10:10:36.404788933+00:00 | node=k3s-worker3 | status=200 | latency=3.322ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:10:37.187953435+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[TAINT] 2026-11-01T10:10:37.821905836+00:00 | k3s-worker1 | taints=node.kubernetes.io/unreachable=|NoExecute;
+[LEASE] 2026-11-01T10:10:37.821692039+00:00 | k3s-worker1 | renewTime=2026-11-01T10:10:27.910065Z
+[NODE] 2026-11-01T10:10:37.821784940+00:00 | k3s-worker1 | Ready=True
+[HTTP] 2026-11-01T10:10:37.823014844+00:00 | node=k3s-worker3 | status=200 | latency=2.869ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:10:38.822235702+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[NODE] 2026-11-01T10:10:38.926682729+00:00 | k3s-worker1 | Ready=True
+[TAINT] 2026-11-01T10:10:38.926771431+00:00 | k3s-worker1 | taints=<none>
+[HTTP] 2026-11-01T10:10:38.926459492+00:00 | node=k3s-worker3 | status=200 | latency=3.383ms | success=true | placement=KNOWN | placement_error= | error=
+[LEASE] 2026-11-01T10:10:38.926565608+00:00 | k3s-worker1 | renewTime=2026-11-01T10:10:38.124217Z
+[POD] 2026-11-01T10:10:39.927560951+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[TAINT] 2026-11-01T10:10:40.367735325+00:00 | k3s-worker1 | taints=<none>
+[NODE] 2026-11-01T10:10:40.367742510+00:00 | k3s-worker1 | Ready=True
+[LEASE] 2026-11-01T10:10:40.367574658+00:00 | k3s-worker1 | renewTime=2026-11-01T10:10:38.124217Z
+[HTTP] 2026-11-01T10:10:40.367833015+00:00 | node=k3s-worker3 | status=200 | latency=3.474ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:10:41.367948673+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[TAINT] 2026-11-01T10:10:41.437269109+00:00 | k3s-worker1 | taints=<none>
+[NODE] 2026-11-01T10:10:41.494434607+00:00 | k3s-worker1 | Ready=True
+[LEASE] 2026-11-01T10:10:41.494522979+00:00 | k3s-worker1 | renewTime=2026-11-01T10:10:38.124217Z
+[HTTP] 2026-11-01T10:10:41.822130068+00:00 | node=k3s-worker3 | status=200 | latency=3.034ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:10:42.427363327+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[TAINT] 2026-11-01T10:10:42.822024598+00:00 | k3s-worker1 | taints=<none>
+[LEASE] 2026-11-01T10:10:42.821925129+00:00 | k3s-worker1 | renewTime=2026-11-01T10:10:38.124217Z
+[NODE] 2026-11-01T10:10:42.821991451+00:00 | k3s-worker1 | Ready=True
+[HTTP] 2026-11-01T10:10:42.930435374+00:00 | node=k3s-worker3 | status=200 | latency=3.120ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:10:43.823460335+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[TAINT] 2026-11-01T10:10:43.884442034+00:00 | k3s-worker1 | taints=<none>
+[NODE] 2026-11-01T10:10:43.945749068+00:00 | k3s-worker1 | Ready=True
+[LEASE] 2026-11-01T10:10:43.945655902+00:00 | k3s-worker1 | renewTime=2026-11-01T10:10:38.124217Z
+[POD] 2026-11-01T10:10:44.881650999+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[HTTP] 2026-11-01T10:10:44.821921039+00:00 | node=k3s-worker3 | status=200 | latency=3.432ms | success=true | placement=KNOWN | placement_error= | error=
+[TAINT] 2026-11-01T10:10:44.946552018+00:00 | k3s-worker1 | taints=<none>
+[LEASE] 2026-11-01T10:10:45.009829243+00:00 | k3s-worker1 | renewTime=2026-11-01T10:10:38.124217Z
+[NODE] 2026-11-01T10:10:45.009940042+00:00 | k3s-worker1 | Ready=True
+[TAINT] 2026-11-01T10:10:46.007562009+00:00 | k3s-worker1 | taints=<none>
+[LEASE] 2026-11-01T10:10:46.072141784+00:00 | k3s-worker1 | renewTime=2026-11-01T10:10:38.124217Z
+[NODE] 2026-11-01T10:10:46.130534347+00:00 | k3s-worker1 | Ready=True
+[HTTP] 2026-11-01T10:10:45.936934050+00:00 | node=k3s-worker3 | status=200 | latency=3.349ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:10:45.937020071+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[TAINT] 2026-11-01T10:10:47.067465929+00:00 | k3s-worker1 | taints=<none>
+[LEASE] 2026-11-01T10:10:47.130909412+00:00 | k3s-worker1 | renewTime=2026-11-01T10:10:38.124217Z
+[NODE] 2026-11-01T10:10:47.192860565+00:00 | k3s-worker1 | Ready=True
+[POD] 2026-11-01T10:10:47.826509893+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[HTTP] 2026-11-01T10:10:47.825613635+00:00 | node=k3s-worker3 | status=200 | latency=104.778ms | success=true | placement=KNOWN | placement_error= | error=
+[TAINT] 2026-11-01T10:10:48.127318237+00:00 | k3s-worker1 | taints=<none>
+[LEASE] 2026-11-01T10:10:48.194663027+00:00 | k3s-worker1 | renewTime=2026-11-01T10:10:38.124217Z
+[NODE] 2026-11-01T10:10:48.253236883+00:00 | k3s-worker1 | Ready=True
+[POD] 2026-11-01T10:10:48.931006983+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[HTTP] 2026-11-01T10:10:48.930963871+00:00 | node=k3s-worker3 | status=200 | latency=3.458ms | success=true | placement=KNOWN | placement_error= | error=
+[TAINT] 2026-11-01T10:10:49.194326877+00:00 | k3s-worker1 | taints=<none>
+[LEASE] 2026-11-01T10:10:49.256885498+00:00 | k3s-worker1 | renewTime=2026-11-01T10:10:48.313267Z
+[NODE] 2026-11-01T10:10:49.314024241+00:00 | k3s-worker1 | Ready=True
+[POD] 2026-11-01T10:10:50.042163357+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[NODE] 2026-11-01T10:10:50.644876748+00:00 | k3s-worker1 | Ready=True
+[LEASE] 2026-11-01T10:10:50.644771686+00:00 | k3s-worker1 | renewTime=2026-11-01T10:10:48.313267Z
+[TAINT] 2026-11-01T10:10:50.644678544+00:00 | k3s-worker1 | taints=<none>
+[HTTP] 2026-11-01T10:10:50.644823870+00:00 | node=k3s-worker3 | status=200 | latency=2.864ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:10:51.644962373+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[NODE] 2026-11-01T10:10:51.822971523+00:00 | k3s-worker1 | Ready=True
+[TAINT] 2026-11-01T10:10:51.822994704+00:00 | k3s-worker1 | taints=<none>
+[HTTP] 2026-11-01T10:10:51.822736838+00:00 | node=k3s-worker3 | status=200 | latency=3.315ms | success=true | placement=KNOWN | placement_error= | error=
+[LEASE] 2026-11-01T10:10:51.822849171+00:00 | k3s-worker1 | renewTime=2026-11-01T10:10:48.313267Z
+[POD] 2026-11-01T10:10:52.823968152+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[TAINT] 2026-11-01T10:10:52.960362376+00:00 | k3s-worker1 | taints=<none>
+[LEASE] 2026-11-01T10:10:52.960511383+00:00 | k3s-worker1 | renewTime=2026-11-01T10:10:48.313267Z
+[HTTP] 2026-11-01T10:10:52.960497958+00:00 | node=k3s-worker3 | status=200 | latency=3.268ms | success=true | placement=KNOWN | placement_error= | error=
+[NODE] 2026-11-01T10:10:52.960444916+00:00 | k3s-worker1 | Ready=True
+[POD] 2026-11-01T10:10:53.961021027+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[LEASE] 2026-11-01T10:10:54.343000310+00:00 | k3s-worker1 | renewTime=2026-11-01T10:10:48.313267Z
+[NODE] 2026-11-01T10:10:54.342892624+00:00 | k3s-worker1 | Ready=True
+[TAINT] 2026-11-01T10:10:54.343015359+00:00 | k3s-worker1 | taints=<none>
+[HTTP] 2026-11-01T10:10:54.343118009+00:00 | node=k3s-worker3 | status=200 | latency=3.738ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:10:55.344726837+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[LEASE] 2026-11-01T10:10:55.820530356+00:00 | k3s-worker1 | renewTime=2026-11-01T10:10:48.313267Z
+[TAINT] 2026-11-01T10:10:55.820563977+00:00 | k3s-worker1 | taints=<none>
+[NODE] 2026-11-01T10:10:55.820462129+00:00 | k3s-worker1 | Ready=True
+[HTTP] 2026-11-01T10:10:55.824682560+00:00 | node=k3s-worker3 | status=200 | latency=3.179ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:10:56.821382064+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[NODE] 2026-11-01T10:10:56.929359413+00:00 | k3s-worker1 | Ready=True
+[LEASE] 2026-11-01T10:10:56.929428141+00:00 | k3s-worker1 | renewTime=2026-11-01T10:10:48.313267Z
+[TAINT] 2026-11-01T10:10:56.929320576+00:00 | k3s-worker1 | taints=<none>
+[HTTP] 2026-11-01T10:10:56.929181449+00:00 | node=k3s-worker3 | status=200 | latency=3.829ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:10:57.930565538+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[TAINT] 2026-11-01T10:10:58.035232244+00:00 | k3s-worker1 | taints=<none>
+[NODE] 2026-11-01T10:10:58.035281453+00:00 | k3s-worker1 | Ready=True
+[LEASE] 2026-11-01T10:10:58.035203960+00:00 | k3s-worker1 | renewTime=2026-11-01T10:10:48.313267Z
+[HTTP] 2026-11-01T10:10:58.035096140+00:00 | node=k3s-worker3 | status=200 | latency=2.962ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:10:59.036659141+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[LEASE] 2026-11-01T10:10:59.820360135+00:00 | k3s-worker1 | renewTime=2026-11-01T10:10:58.502270Z
+[NODE] 2026-11-01T10:10:59.820276886+00:00 | k3s-worker1 | Ready=True
+[HTTP] 2026-11-01T10:10:59.820209573+00:00 | node=k3s-worker3 | status=200 | latency=3.117ms | success=true | placement=KNOWN | placement_error= | error=
+[TAINT] 2026-11-01T10:10:59.820321199+00:00 | k3s-worker1 | taints=<none>
+[POD] 2026-11-01T10:11:00.820920440+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[LEASE] 2026-11-01T10:11:00.927947076+00:00 | k3s-worker1 | renewTime=2026-11-01T10:10:58.502270Z
+[TAINT] 2026-11-01T10:11:00.927802968+00:00 | k3s-worker1 | taints=<none>
+[NODE] 2026-11-01T10:11:00.927913024+00:00 | k3s-worker1 | Ready=True
+[HTTP] 2026-11-01T10:11:00.927998136+00:00 | node=k3s-worker3 | status=200 | latency=6.389ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:11:01.928816221+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[LEASE] 2026-11-01T10:11:02.036502040+00:00 | k3s-worker1 | renewTime=2026-11-01T10:10:58.502270Z
+[TAINT] 2026-11-01T10:11:02.036467158+00:00 | k3s-worker1 | taints=<none>
+[NODE] 2026-11-01T10:11:02.036519026+00:00 | k3s-worker1 | Ready=True
+[HTTP] 2026-11-01T10:11:02.036563039+00:00 | node=k3s-worker3 | status=200 | latency=2.894ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:11:03.037695597+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[TAINT] 2026-11-01T10:11:03.142687951+00:00 | k3s-worker1 | taints=<none>
+[NODE] 2026-11-01T10:11:03.142564567+00:00 | k3s-worker1 | Ready=True
+[LEASE] 2026-11-01T10:11:03.142830202+00:00 | k3s-worker1 | renewTime=2026-11-01T10:10:58.502270Z
+[HTTP] 2026-11-01T10:11:03.209168903+00:00 | node=k3s-worker3 | status=200 | latency=3.035ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:11:04.142920846+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[NODE] 2026-11-01T10:11:04.343407461+00:00 | k3s-worker1 | Ready=True
+[TAINT] 2026-11-01T10:11:04.343524384+00:00 | k3s-worker1 | taints=<none>
+[LEASE] 2026-11-01T10:11:04.343467186+00:00 | k3s-worker1 | renewTime=2026-11-01T10:10:58.502270Z
+[HTTP] 2026-11-01T10:11:04.343327602+00:00 | node=k3s-worker3 | status=200 | latency=3.100ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:11:05.344270897+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[LEASE] 2026-11-01T10:11:05.820443619+00:00 | k3s-worker1 | renewTime=2026-11-01T10:10:58.502270Z
+[HTTP] 2026-11-01T10:11:05.823668303+00:00 | node=k3s-worker3 | status=200 | latency=3.198ms | success=true | placement=KNOWN | placement_error= | error=
+[TAINT] 2026-11-01T10:11:05.820409725+00:00 | k3s-worker1 | taints=<none>
+[NODE] 2026-11-01T10:11:05.820552700+00:00 | k3s-worker1 | Ready=True
+[POD] 2026-11-01T10:11:06.821532308+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[LEASE] 2026-11-01T10:11:06.928786180+00:00 | k3s-worker1 | renewTime=2026-11-01T10:10:58.502270Z
+[TAINT] 2026-11-01T10:11:06.928641049+00:00 | k3s-worker1 | taints=<none>
+[HTTP] 2026-11-01T10:11:06.928603289+00:00 | node=k3s-worker3 | status=200 | latency=3.428ms | success=true | placement=KNOWN | placement_error= | error=
+[NODE] 2026-11-01T10:11:06.928512391+00:00 | k3s-worker1 | Ready=True
+[POD] 2026-11-01T10:11:07.928870609+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[NODE] 2026-11-01T10:11:08.034240652+00:00 | k3s-worker1 | Ready=True
+[TAINT] 2026-11-01T10:11:08.034348390+00:00 | k3s-worker1 | taints=<none>
+[HTTP] 2026-11-01T10:11:08.034429574+00:00 | node=k3s-worker3 | status=200 | latency=3.556ms | success=true | placement=KNOWN | placement_error= | error=
+[LEASE] 2026-11-01T10:11:08.034507831+00:00 | k3s-worker1 | renewTime=2026-11-01T10:10:58.502270Z
+[POD] 2026-11-01T10:11:09.035889903+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[LEASE] 2026-11-01T10:11:09.822299995+00:00 | k3s-worker1 | renewTime=2026-11-01T10:11:08.668015Z
+[TAINT] 2026-11-01T10:11:09.822398879+00:00 | k3s-worker1 | taints=<none>
+[HTTP] 2026-11-01T10:11:09.822553982+00:00 | node=k3s-worker3 | status=200 | latency=3.848ms | success=true | placement=KNOWN | placement_error= | error=
+[NODE] 2026-11-01T10:11:09.822567027+00:00 | k3s-worker1 | Ready=True
+[POD] 2026-11-01T10:11:10.823419241+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[NODE] 2026-11-01T10:11:10.924377131+00:00 | k3s-worker1 | Ready=True
+[LEASE] 2026-11-01T10:11:10.924726230+00:00 | k3s-worker1 | renewTime=2026-11-01T10:11:08.668015Z
+[HTTP] 2026-11-01T10:11:10.924690419+00:00 | node=k3s-worker3 | status=200 | latency=2.893ms | success=true | placement=KNOWN | placement_error= | error=
+[TAINT] 2026-11-01T10:11:10.924613861+00:00 | k3s-worker1 | taints=<none>
+[POD] 2026-11-01T10:11:11.924906206+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[NODE] 2026-11-01T10:11:12.135908491+00:00 | k3s-worker1 | Ready=True
+[TAINT] 2026-11-01T10:11:12.135827657+00:00 | k3s-worker1 | taints=<none>
+[LEASE] 2026-11-01T10:11:12.135800152+00:00 | k3s-worker1 | renewTime=2026-11-01T10:11:08.668015Z
+[HTTP] 2026-11-01T10:11:12.135826166+00:00 | node=k3s-worker3 | status=200 | latency=6.214ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:11:13.135888792+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[NODE] 2026-11-01T10:11:13.231294658+00:00 | k3s-worker1 | Ready=True
+[LEASE] 2026-11-01T10:11:13.231261951+00:00 | k3s-worker1 | renewTime=2026-11-01T10:11:08.668015Z
+[TAINT] 2026-11-01T10:11:13.231211519+00:00 | k3s-worker1 | taints=<none>
+[HTTP] 2026-11-01T10:11:13.425753850+00:00 | node=k3s-worker3 | status=200 | latency=3.846ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:11:14.231912957+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[NODE] 2026-11-01T10:11:14.341818416+00:00 | k3s-worker1 | Ready=True
+[TAINT] 2026-11-01T10:11:14.341743515+00:00 | k3s-worker1 | taints=<none>
+[LEASE] 2026-11-01T10:11:14.341621727+00:00 | k3s-worker1 | renewTime=2026-11-01T10:11:08.668015Z
+[HTTP] 2026-11-01T10:11:14.485172783+00:00 | node=k3s-worker3 | status=200 | latency=2.919ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:11:15.341954958+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[HTTP] 2026-11-01T10:11:15.822212368+00:00 | node=k3s-worker3 | status=200 | latency=3.041ms | success=true | placement=KNOWN | placement_error= | error=
+[LEASE] 2026-11-01T10:11:15.821034289+00:00 | k3s-worker1 | renewTime=2026-11-01T10:11:08.668015Z
+[NODE] 2026-11-01T10:11:15.820949538+00:00 | k3s-worker1 | Ready=True
+[TAINT] 2026-11-01T10:11:15.820866275+00:00 | k3s-worker1 | taints=<none>
+[POD] 2026-11-01T10:11:16.822160721+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[NODE] 2026-11-01T10:11:16.927273292+00:00 | k3s-worker1 | Ready=True
+[TAINT] 2026-11-01T10:11:16.926993791+00:00 | k3s-worker1 | taints=<none>
+[LEASE] 2026-11-01T10:11:16.927109666+00:00 | k3s-worker1 | renewTime=2026-11-01T10:11:08.668015Z
+[HTTP] 2026-11-01T10:11:16.927188704+00:00 | node=k3s-worker3 | status=200 | latency=7.203ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:11:17.927917026+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[NODE] 2026-11-01T10:11:18.034085686+00:00 | k3s-worker1 | Ready=True
+[LEASE] 2026-11-01T10:11:18.034219445+00:00 | k3s-worker1 | renewTime=2026-11-01T10:11:08.668015Z
+[HTTP] 2026-11-01T10:11:18.033869995+00:00 | node=k3s-worker3 | status=200 | latency=3.219ms | success=true | placement=KNOWN | placement_error= | error=
+[TAINT] 2026-11-01T10:11:18.034042800+00:00 | k3s-worker1 | taints=<none>
+[POD] 2026-11-01T10:11:19.034996583+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[NODE] 2026-11-01T10:11:19.142815678+00:00 | k3s-worker1 | Ready=True
+[LEASE] 2026-11-01T10:11:19.142765265+00:00 | k3s-worker1 | renewTime=2026-11-01T10:11:18.730951Z
+[TAINT] 2026-11-01T10:11:19.142894821+00:00 | k3s-worker1 | taints=<none>
+[HTTP] 2026-11-01T10:11:19.142894553+00:00 | node=k3s-worker3 | status=200 | latency=3.231ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:11:20.143297012+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[HTTP] 2026-11-01T10:11:20.822526382+00:00 | node=k3s-worker3 | status=200 | latency=2.799ms | success=true | placement=KNOWN | placement_error= | error=
+[TAINT] 2026-11-01T10:11:20.822501862+00:00 | k3s-worker1 | taints=<none>
+[NODE] 2026-11-01T10:11:20.822506559+00:00 | k3s-worker1 | Ready=True
+[LEASE] 2026-11-01T10:11:20.822316450+00:00 | k3s-worker1 | renewTime=2026-11-01T10:11:18.730951Z
+[POD] 2026-11-01T10:11:21.823440905+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[LEASE] 2026-11-01T10:11:21.928669274+00:00 | k3s-worker1 | renewTime=2026-11-01T10:11:18.730951Z
+[TAINT] 2026-11-01T10:11:21.928816032+00:00 | k3s-worker1 | taints=<none>
+[NODE] 2026-11-01T10:11:21.928878180+00:00 | k3s-worker1 | Ready=True
+[HTTP] 2026-11-01T10:11:21.928934949+00:00 | node=k3s-worker3 | status=200 | latency=3.173ms | success=true | placement=KNOWN | placement_error= | error=
+[POD] 2026-11-01T10:11:22.929304422+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[HTTP] 2026-11-01T10:11:23.036222172+00:00 | node=k3s-worker3 | status=200 | latency=7.139ms | success=true | placement=KNOWN | placement_error= | error=
+[TAINT] 2026-11-01T10:11:23.036323145+00:00 | k3s-worker1 | taints=<none>
+[NODE] 2026-11-01T10:11:23.036434371+00:00 | k3s-worker1 | Ready=True
+[LEASE] 2026-11-01T10:11:23.036357929+00:00 | k3s-worker1 | renewTime=2026-11-01T10:11:18.730951Z
+[POD] 2026-11-01T10:11:24.037354177+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[TAINT] 2026-11-01T10:11:24.110300822+00:00 | k3s-worker1 | taints=<none>
+[HTTP] 2026-11-01T10:11:24.110405271+00:00 | node=k3s-worker3 | status=200 | latency=65.813ms | success=true | placement=KNOWN | placement_error= | error=
+[NODE] 2026-11-01T10:11:24.112571469+00:00 | k3s-worker1 | Ready=True
+[LEASE] 2026-11-01T10:11:24.175973679+00:00 | k3s-worker1 | renewTime=2026-11-01T10:11:18.730951Z
+[POD] 2026-11-01T10:11:25.094964958+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[TAINT] 2026-11-01T10:11:25.176118750+00:00 | k3s-worker1 | taints=<none>
+[LEASE] 2026-11-01T10:11:25.232690107+00:00 | k3s-worker1 | renewTime=2026-11-01T10:11:18.730951Z
+[HTTP] 2026-11-01T10:11:25.229797328+00:00 | node=k3s-worker3 | status=200 | latency=3.152ms | success=true | placement=KNOWN | placement_error= | error=
+[NODE] 2026-11-01T10:11:25.229661575+00:00 | k3s-worker1 | Ready=True
+[POD] 2026-11-01T10:11:26.151547813+00:00 | baseline-web-55cf7899fc-4m86l | phase=Running | node=k3s-worker3 | deletion=
+[LEASE] 2026-11-01T10:11:26.821582852+00:00 | k3s-worker1 | renewTime=2026-11-01T10:11:18.730951Z
+[HTTP] 2026-11-01T10:11:26.821689169+00:00 | node=k3s-worker3 | status=200 | latency=3.189ms | success=true | placement=KNOWN | placement_error= | error=
+[TAINT] 2026-11-01T10:11:26.821592384+00:00 | k3s-worker1 | taints=<none>
+[NODE] 2026-11-01T10:11:26.821505043+00:00 | k3s-worker1 | Ready=True
+
+Shutdown requested.
+Harness stopped. Results saved under:
+/home/ubuntu/failure-aware-k8s/harness/../experiments/baseline/scenario-b/runs/run-20261101T100814Z
