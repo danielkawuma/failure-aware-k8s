@@ -141,7 +141,7 @@ and summarised in the paper's Acknowledgment.
 
 ## Citation
 
-Release `v1.1.0-research`, archived on Zenodo (DOI to be added). Release
+Release `v1.1.1-research`, archived on Zenodo (DOI to be added). Release
 `v1.0.0-research` is kept unchanged.
 
 ## License
