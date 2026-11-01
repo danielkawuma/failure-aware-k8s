@@ -5,7 +5,7 @@ NS="${OPENMRS_NAMESPACE:-openmrs37}"
 DEP="${OPENMRS_BACKEND_DEPLOYMENT:-openmrs-backend}"
 TARGET="${OPENMRS_BACKEND_FAULT_NODE:-k3s-worker1}"
 TIMEOUT="${OPENMRS_RESET_TIMEOUT_SECONDS:-1200}"
-HEALTH="${OPENMRS_HEALTH_URL:-http://102.34.160.87:30366/openmrs/health/started}"
+HEALTH="${OPENMRS_HEALTH_URL:-http://10.10.0.11:30366/openmrs/health/started}"
 log(){ printf '[BACKEND RESET] %s\n' "$*"; }
 fail(){ log "ERROR: $*" >&2; exit 1; }
 [[ "$TIMEOUT" =~ ^[0-9]+$ ]] && (( TIMEOUT > 0 )) || fail 'Invalid reset timeout'

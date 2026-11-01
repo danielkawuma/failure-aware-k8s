@@ -217,7 +217,7 @@ assert any(
         --connect-timeout 3 \
         --max-time 10 \
         -o /dev/null \
-        "http://102.34.160.104:30366/openmrs/health/started" ||
+        "http://10.10.0.14:30366/openmrs/health/started" ||
         return 1
 
     echo START_VERIFIED > "$dir/start-verification.txt"

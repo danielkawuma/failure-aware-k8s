@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 
 NS="failure-aware-writer-test"
-SERVER="102.34.160.36"
+SERVER="10.10.0.13"
 EXPORT="/srv/failure-aware/concurrent-writer/database/w2-001"
 IMAGE="mariadb:10.11.19"
 

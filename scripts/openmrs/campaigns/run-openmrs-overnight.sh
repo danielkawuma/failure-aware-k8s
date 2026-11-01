@@ -63,9 +63,9 @@ fault_absent() {
     ssh -i "$SSH_KEY" \
         -o BatchMode=yes \
         -o ConnectTimeout=5 \
-        ubuntu@102.34.160.87 \
+        ubuntu@10.10.0.11 \
         'if sudo -n iptables -C OUTPUT \
-             -p tcp -d 102.34.160.89 \
+             -p tcp -d 10.10.0.10 \
              --dport 6443 -j DROP 2>/dev/null; then
              exit 1
          fi'
@@ -92,7 +92,7 @@ healthy() {
     curl --silent --show-error --fail \
         --connect-timeout 3 \
         --max-time 10 \
-        http://102.34.160.87:30366/openmrs/health/started \
+        http://10.10.0.11:30366/openmrs/health/started \
         >/dev/null
 }
 

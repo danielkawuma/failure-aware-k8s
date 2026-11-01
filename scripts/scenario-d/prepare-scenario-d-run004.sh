@@ -10,9 +10,9 @@ exec > >(tee "$OUT/preflight.log") 2>&1
 printf 'RUN_ID=%s\nOUT=%s\n' "$RUN_ID" "$OUT"
 export SSH_KEY="${SSH_KEY:-$HOME/.ssh/k8s-aware}"
 export OPENMRS_CD_ORIGINAL_NODE=k3s-worker3
-export OPENMRS_CD_ORIGINAL_IP=102.34.160.36
+export OPENMRS_CD_ORIGINAL_IP=10.10.0.13
 printf '\n=== Original runtime (read only) ===\n'
-ssh -i "$SSH_KEY" -o BatchMode=yes -o ConnectTimeout=5 ubuntu@102.34.160.36 \
+ssh -i "$SSH_KEY" -o BatchMode=yes -o ConnectTimeout=5 ubuntu@10.10.0.13 \
   'sudo -n ps -eo pid,ppid,stat,etime,comm,args | grep -E "[m]ariadbd|[m]ysqld" || true' \
   | tee "$OUT/original-processes.txt"
 printf '\n=== Pods ===\n'

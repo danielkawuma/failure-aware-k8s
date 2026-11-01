@@ -114,7 +114,7 @@ FAULT_E="$ROOT/scripts/fault.sh"
 
 # Use an unaffected worker for clinical verification.
 # This must be independently verified as reachable before the campaign.
-TARGET_URL="${OPENMRS_CLINICAL_URL:-http://102.34.160.103:30366/openmrs/health/started}"
+TARGET_URL="${OPENMRS_CLINICAL_URL:-http://10.10.0.12:30366/openmrs/health/started}"
 
 HPID=''
 CPID=''

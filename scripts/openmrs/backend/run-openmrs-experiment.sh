@@ -459,7 +459,7 @@ fi
 if [[ "$SCENARIO" == scenario-c ]]; then
     # Establish that the independent path works BEFORE injecting the fault.
     ssh -i "$SSH_KEY" -o BatchMode=yes -o ConnectTimeout=5 \
-      ubuntu@102.34.160.103 \
+      ubuntu@10.10.0.12 \
       "curl -fsS --connect-timeout 2 --max-time 10 http://$ORIGINAL_IP:8080/openmrs/health/started" \
       > "$RUN_DIR/old-backend-before-fault.txt" 2>&1 || \
       fail "Worker2 cannot reach original backend before fault; invalid test"
@@ -477,7 +477,7 @@ if [[ "$SCENARIO" == scenario-c ]]; then
     "$OPENMRS_C_FAULT" status >> "$RUN_DIR/fault-apply.log" 2>&1 || fail "Fault not verified"
     # Independent client check: the old backend must become unreachable.
     if ssh -i "$SSH_KEY" -o BatchMode=yes -o ConnectTimeout=5 \
-      ubuntu@102.34.160.103 \
+      ubuntu@10.10.0.12 \
       "curl -fsS --connect-timeout 2 --max-time 4 http://$ORIGINAL_IP:8080/openmrs/health/started" \
       > "$RUN_DIR/old-backend-during-fault.txt" 2>&1; then
         fail "Original backend still reachable from Worker2: invalid Scenario C fault"

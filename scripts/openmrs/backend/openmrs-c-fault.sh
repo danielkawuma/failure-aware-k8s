@@ -4,7 +4,7 @@ set -Eeuo pipefail
 ACTION=${1:?Usage: openmrs-c-fault.sh apply|status|clear|absent [pod-ip]}
 POD_IP=${2:-}
 SSH_KEY=${SSH_KEY:-$HOME/.ssh/k8s-aware}
-HOST=${OPENMRS_FAULT_HOST:-ubuntu@102.34.160.87}
+HOST=${OPENMRS_FAULT_HOST:-ubuntu@10.10.0.11}
 REMOTE=${OPENMRS_REMOTE_FAULT:-/usr/local/sbin/openmrs-backend-fault}
 case "$ACTION" in apply|status|clear|absent) ;; *) exit 2;; esac
 if [[ "$ACTION" == apply ]]; then
@@ -12,7 +12,7 @@ if [[ "$ACTION" == apply ]]; then
 fi
 if [[ "$ACTION" == absent ]]; then
   ssh -i "$SSH_KEY" -o BatchMode=yes -o ConnectTimeout=5 "$HOST" \
-    "sudo -n test ! -e /run/openmrs-backend-fault-ip && ! sudo -n iptables -C OUTPUT -p tcp -d 102.34.160.89 --dport 6443 -j DROP 2>/dev/null"
+    "sudo -n test ! -e /run/openmrs-backend-fault-ip && ! sudo -n iptables -C OUTPUT -p tcp -d 10.10.0.10 --dport 6443 -j DROP 2>/dev/null"
   exit $?
 fi
 ssh -i "$SSH_KEY" -o BatchMode=yes -o ConnectTimeout=5 "$HOST" \

@@ -177,10 +177,10 @@ assert any(
     [[ -z "$selector" ]] ||
         fail "Hard nodeSelector remains: $selector"
 
-    http_ok "http://102.34.160.103:30364/" ||
+    http_ok "http://10.10.0.12:30364/" ||
         fail "Kubernetes Nginx HTTP unavailable"
 
-    http_ok "http://102.34.160.87:8081/" ||
+    http_ok "http://10.10.0.11:8081/" ||
         fail "Standalone Nginx HTTP unavailable"
 
     log "Preflight passed"

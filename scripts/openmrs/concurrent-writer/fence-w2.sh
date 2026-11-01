@@ -4,7 +4,7 @@ set -Eeuo pipefail
 ACTION="${1:-}"
 
 CHAIN="FA_WRITER_TEST"
-WORKER1="102.34.160.87"
+WORKER1="10.10.0.11"
 NFS_PORT="2049"
 
 fail() {

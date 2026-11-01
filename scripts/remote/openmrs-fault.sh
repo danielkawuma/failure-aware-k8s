@@ -4,7 +4,7 @@ set -Eeuo pipefail
 ACTION="${1:-}"
 POD_IP="${2:-}"
 
-API_IP="102.34.160.89"
+API_IP="10.10.0.10"
 API_PORT="6443"
 BACKEND_PORT="8080"
 

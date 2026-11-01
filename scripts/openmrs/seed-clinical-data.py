@@ -144,7 +144,7 @@ def main():
         "--base",
         default=os.getenv(
             "OPENMRS_BASE_URL",
-            "http://102.34.160.87:30366/openmrs"
+            "http://10.10.0.11:30366/openmrs"
         )
     )
     parser.add_argument("--apply", action="store_true")

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-API_SERVER_IP="102.34.160.89"
+API_SERVER_IP="10.10.0.10"
 API_SERVER_PORT="6443"
 NETWORK_INTERFACE="ens3"
 WORKLOAD_STATE_FILE="/run/failure-aware-fault-pod-ip"

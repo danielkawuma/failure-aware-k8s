@@ -15,6 +15,6 @@ kubectl get pods -n openmrs37 -l app=openmrs-backend -o wide
 node="$(kubectl get pods -n openmrs37 -l app=openmrs-backend -o jsonpath='{.items[0].spec.nodeName}')"
 [[ "$node" == k3s-worker1 ]] || { echo "Backend must be reset to k3s-worker1; currently $node" >&2; exit 1; }
 echo '=== HEALTH ==='
-health="${OPENMRS_CLINICAL_URL:-http://102.34.160.87:30366/openmrs/health/started}"
+health="${OPENMRS_CLINICAL_URL:-http://10.10.0.11:30366/openmrs/health/started}"
 curl -fsS --connect-timeout 3 --max-time 10 "$health" >/dev/null
 printf 'PREFLIGHT_OK: backend=%s profile fault inactive\n' "$node"

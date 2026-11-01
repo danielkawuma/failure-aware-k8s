@@ -12,7 +12,7 @@ from pathlib import Path
 
 BASE_URL = os.environ.get(
     "OPENMRS_BASE_URL",
-    "http://102.34.160.87:30366/openmrs"
+    "http://10.10.0.11:30366/openmrs"
 ).rstrip("/")
 
 SOURCE_UUID = "8549f706-7e85-4c1d-9424-217d50a2988b"
