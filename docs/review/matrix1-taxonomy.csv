@@ -1,0 +1,25 @@
+paper_id,citation_key,Substrate,Objective,Decision mechanism,Impl. layer,Scaling behaviour,Evaluation method,Domain
+P002,manaouil2021wanwide,OS container (vanilla),Pod/API/DNS latency,N/A (stock K8s),Kernel/interface,N/A,"Bare-metal, WAN emulation","Edge, general"
+P008,kedar2026digitaltwin,OS container + Kafka,"Recovery speed, SLA",Hybrid: quorum + ML ensemble,Streaming/inference/control,Adaptive hybrid,"Public-cloud clusters (GCP, AWS)",Manufacturing
+P009,tola2026selfhealing,OS container (K8s/K3s),"SLA risk, MTTR",Predictive loop (LSTM + policy),User-space middleware,Predictive,Simulation,Telecom/NFV
+P012,chen2026empirical,OS container (K8s),"Response time, success rate",N/A (stock K8s recovery),Control + data plane,Failure-triggered,Emulation + bare-metal,General cloud/edge
+P013,barletta2026slo,OS container (K8s/Swarm),Orchestration/failover time,"Static, fixed-priority",Control-plane core,Failure-triggered,"Bare-metal, two testbeds",Real-time/5G
+P015,morabito2026consensus,OS container (Docker),Task placement latency,Decentralized consensus,User-space middleware,N/A,Bare-metal (Pi cluster),Edge microservices
+P020,rodriguez2026arapo,OS container (custom orch.),"Overload time, energy",Hybrid: CNN+LSTM + threshold,Distributed control plane,Predictive,Heterogeneous edge testbed,Healthcare/hospital
+P021,gao2026dsfro,Container + GPU (MIG),Job completion time,Hybrid ML (LSTM + GA),Scheduler extender,Predictive+placement,Real testbed + trace replay,Hyperscale ML training
+P022,keum2026mutualcloud,Custom P2P/DHT agent,Scheduling/recovery latency,Decentralized lease + DHT,"User-space, custom",N/A,Simulation,General distributed
+P026,gurudu2026chaos,OS container (K8s),"MTTD, MTTR, availability",Static (native K8s healing),User-space (observability),Reactive,Case study/demo,General enterprise
+P029,chen2026distributed,OS container (K8s),"P99 latency, consistency","Rule-based, threshold+hysteresis",User-space middleware,N/A,Fault-injection + statistics,E-commerce
+P031,bongu2026middleware,"OS container (K8s, dual)","Throughput, p95 latency","Reactive, policy threshold",User-space middleware,Reactive,"Bare-metal, dual-cluster",Enterprise hybrid-cloud
+P037,kwon2026erpf,OS container + bare-metal edge,"Task duration, std. dev.",Adaptive heuristic (EWMA),User-space (above K8s),Partition-level resize,"Bare-metal, real failure",Video analytics/edge AI
+P038,javens2026adaptive,OS container (Docker Swarm),"Voting rounds, failure rate",Real-time control loop + SVC,User-space middleware,Adaptive quorum,"Emulated Swarm tasks, scripted faults",IoT/edge sensing
+P019,kang2026evmm,"OS container (K8s, CRI-O)","Execution time, container restarts, request success",Static priority model,Node-level agent via CRI,"Vertical memory scaling, suspend and checkpoint","Bare-metal, four-node cluster",Stateful batch and stateless services
+P052,naim2026doublecheck,Host/device level,"Failure freq., downtime","Static, two-step heartbeat",User-space middleware,N/A,90-day field deployment,Clinical support
+P054,jerrari2026ha,OS container (GKE),"RTO, RPO, throughput",Static (Raft consensus),User-space middleware,Failure-triggered,"Managed cloud (GKE), network emulation",Enterprise OLTP
+P056,jin2026replicationfree,OS container (Alibaba K8s),"RTO, throughput","Static, lease state machine",Kernel + user-space,Failure-triggered,Production cloud cluster,Cloud messaging
+P057,li2026pyramid,Hybrid: VM-TEE + container,Control/data-plane latency,"Static, guard state machine",Control plane + kernel,N/A,Bare-metal + simulation,Multi-tenant cloud
+P023,chen2026cast,OS container (service under test),"Vulnerabilities found, bug coverage",Rule-based test prioritisation and threshold oracles,User-space testing framework,N/A,Production deployment and 48-bug benchmark,Production cloud microservices
+P058,jensen2021raft,N/A (network emulation testbed),"Success rate, latency, elections",N/A (studies Raft/etcd),System coordination substrate,N/A,Network emulation,General coordination
+P027,dsouza2026selfhealing,OS container (K8s),"MTTR, success rate, energy",Hybrid: anomaly detection + RL,User-space,Failure-triggered,Fault-injection benchmark,Web applications
+P033,nigam2026chaos,"OS container (K8s, Pi, GPU)","SLO violations, MTTR",Deep RL (PPO),User-space middleware,N/A,"Bare-metal, three environments","Mixed: web, edge, AI"
+P034,mishra2026aidriven,OS container + OpenStack,"Prediction accuracy, MTTR",Hybrid: supervised + threshold,User-space,Predictive,Log analysis + emulated cloud,General hybrid cloud

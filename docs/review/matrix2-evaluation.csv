@@ -1,0 +1,25 @@
+paper_id,citation_key,Environment,Workload generator,Fault-injection tool,Fault parameters
+P002,manaouil2021wanwide,"Grid'5000, real physical cluster",ClusterLoader + Prometheus,Netem,Latency 0/50/250/400ms; loss up to 10%
+P008,kedar2026digitaltwin,Real GCP + AWS clusters,Custom workload generator + Kafka,Simulated packet loss/RTT,150-300ms RTT/1% loss; 800-1200ms/10% loss (severe)
+P009,tola2026selfhealing,Simulation (50 synthetic VNFs),Custom synthetic VNF generator,None,Gradual resource-overload ramp; no network faults
+P012,chen2026empirical,"4/8-node K8s, cloud+edge",Locust,Chaos Mesh,"7 fault types, 4 intensities incl. network partition"
+P013,barletta2026slo,"2 heterogeneous testbeds (incl. Pi 4, Kria KV260)","Custom UDP echo, Open5GS+UERANSIM",K8s NoExecution taint,"Taint-based exclusion; 5-20 pods/node, 1-3 dest. nodes"
+P015,morabito2026consensus,6 Raspberry Pi 4,Custom test harness,None,No fault injection; steady request rates only
+P020,rodriguez2026arapo,3 heterogeneous edge nodes,Locust,None (load-triggered),"Dual-threshold CPU load only (=80%, =64%)"
+P021,gao2026dsfro,20-node heterogeneous GPU testbed,Trace replay,"None (designed, untested)","Heartbeat 1s, 3-miss threshold; not experimentally triggered"
+P022,keum2026mutualcloud,"Simulation, single dev machine",Own simulator,Simulated churn model,"1-5% node failure rate; K8s/Hyperledger baselines modeled, not run"
+P026,gurudu2026chaos,K8s (cluster details not given),Own telemetry,LitmusChaos,"Named, not quantified (pod term., CPU/mem., network)"
+P029,chen2026distributed,K8s 1.29 + Kafka + PostgreSQL,k6,Chaos Mesh,5 fault types incl. partition; duration not quantified
+P031,bongu2026middleware,Private + public K8s clusters,"DeathStarBench, Train-Ticket",Not named,"Broker outages, cross-cluster link failures"
+P037,kwon2026erpf,K8s + real Pi/Jetson devices,"Real workloads (YOLOv8, transcoding)",Custom worker-disconnect injector,"Real failure across 3 worker pairs, 20s reintegration"
+P038,javens2026adaptive,70 emulated Swarm tasks; hardware not reported,Custom query client,Custom probabilistic injector,1% message-drop; 0-32/70 nodes faulty
+P019,kang2026evmm,"Four-node bare-metal K8s, 1 Gbps",Stateful benchmark applications; concurrent request workers,None,"Memory pressure induced by workload: oversubscription up to 150%; normal, peak, and overload concurrency"
+P052,naim2026doublecheck,2 real production servers,Live clinical traffic,Manual (by hand),"4 fault types, manual trigger"
+P054,jerrari2026ha,3-node GKE,pgbench,tc netem,Pod kill; 100% loss; kill 2/3 nodes in 5s
+P056,jin2026replicationfree,Real Alibaba Cloud K8s,Custom RocketMQ generator,ChaosBlade + manual port stop,"Node crash, forced migration, I/O hang, port-stop ``partition''"
+P057,li2026pyramid,6-node AMD SEV-SNP cluster,"K-Bench, app benchmarks",None (threat model only),"Arbitrary disconnection/clock manipulation, not fault-injected"
+P023,chen2026cast,Huawei Cloud production services; per-test isolated containers,Replayed production traffic,Application-level fault library,"Software exceptions and inter-service communication errors; 137 potential vulnerabilities, 89 confirmed; 90% coverage of 48 reproduced bugs"
+P058,jensen2021raft,"Mininet, real etcd binary",Custom write-traffic generator,iptables,"Leader crash, full/partial/intermittent partition"
+P027,dsouza2026selfhealing,Infrastructure not reported,Custom Python monitoring service,Custom (unnamed),6 fault types incl. network delay; 30 trials each
+P033,nigam2026chaos,"6-node K8s, 4-node Pi 5 edge, 4-node A100","Locust, wrk2",RL-driven fault selection,"Latency 50-300ms, loss 0.1-5%, CPU 60-95%"
+P034,mishra2026aidriven,Log analysis + emulated hybrid cloud,Not specified,Not specified,No fault parameters reported

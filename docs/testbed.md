@@ -18,9 +18,9 @@ three virtual machines running K3s.
 
 | Node | Role | Hostname | IP Address | vCPU | RAM | Disk | OS |
 |---|---|---|---|---:|---:|---:|---|
-| Server | K3s control plane | `k3s-server` | `102.34.160.89` | 4 | 4 GB | 100 GB | Ubuntu 24.04.5 LTS, Kernel `6.8.0-59-generic` |
-| Worker 1 | Primary fault target | `k3s-worker1` | `102.34.160.87` | 4 | 4 GB | 100 GB | Ubuntu 24.04.5 LTS, Kernel `6.8.0-59-generic` |
-| Worker 2 | Recovery target | `k3s-worker2` | `102.34.160.103` | 4 | 4 GB | 100 GB | Ubuntu 24.04.5 LTS, Kernel `6.8.0-59-generic` |
+| Server | K3s control plane | `k3s-server` | `10.10.0.10` | 4 | 4 GB | 100 GB | Ubuntu 24.04.5 LTS, Kernel `6.8.0-59-generic` |
+| Worker 1 | Primary fault target | `k3s-worker1` | `10.10.0.11` | 4 | 4 GB | 100 GB | Ubuntu 24.04.5 LTS, Kernel `6.8.0-59-generic` |
+| Worker 2 | Recovery target | `k3s-worker2` | `10.10.0.12` | 4 | 4 GB | 100 GB | Ubuntu 24.04.5 LTS, Kernel `6.8.0-59-generic` |
 
 The Rust experimental harness and external workload generator run from
 a separate client machine outside the K3s cluster.
@@ -132,9 +132,9 @@ hostname
 The configured node addresses are:
 
 ```text
-102.34.160.89   k3s-server
-102.34.160.87   k3s-worker1
-102.34.160.103  k3s-worker2
+10.10.0.10   k3s-server
+10.10.0.11   k3s-worker1
+10.10.0.12  k3s-worker2
 ```
 
 ---
@@ -151,9 +151,9 @@ sudo nano /etc/hosts
 Add:
 
 ```text
-102.34.160.89   k3s-server
-102.34.160.87   k3s-worker1
-102.34.160.103  k3s-worker2
+10.10.0.10   k3s-server
+10.10.0.11   k3s-worker1
+10.10.0.12  k3s-worker2
 ```
 
 Verify:
@@ -263,7 +263,7 @@ On `k3s-worker1`:
 ```bash
 curl -sfL https://get.k3s.io | \
 INSTALL_K3S_VERSION='v1.36.4+k3s1' \
-K3S_URL=https://102.34.160.89:6443 \
+K3S_URL=https://10.10.0.10:6443 \
 K3S_TOKEN='[K3S_TOKEN]' sh -
 ```
 
@@ -295,7 +295,7 @@ On `k3s-worker2`:
 ```bash
 curl -sfL https://get.k3s.io | \
 INSTALL_K3S_VERSION='v1.36.4+k3s1' \
-K3S_URL=https://102.34.160.89:6443 \
+K3S_URL=https://10.10.0.10:6443 \
 K3S_TOKEN='[K3S_TOKEN]' sh -
 ```
 
@@ -947,7 +947,7 @@ Independent application path:
 External Client
       |
       v
-102.34.160.87
+10.10.0.11
       |
       v
 baseline-web on k3s-worker1
@@ -1014,7 +1014,7 @@ Script:
 ```sh
 #!/bin/sh
 
-URL="http://102.34.160.87:[NODEPORT]"
+URL="http://10.10.0.11:[NODEPORT]"
 
 while true; do
     date '+%Y-%m-%dT%H:%M:%S.%3N'
@@ -1074,7 +1074,7 @@ Script:
 ```sh
 #!/bin/sh
 
-URL="http://102.34.160.87:[NODEPORT]"
+URL="http://10.10.0.11:[NODEPORT]"
 OUTPUT="baseline-http-latency.txt"
 
 : > "$OUTPUT"
@@ -1132,7 +1132,7 @@ They are **not formal experimental results**.
 The NodePort should also be tested against Worker 2:
 
 ```bash
-curl http://102.34.160.103:[NODEPORT]
+curl http://10.10.0.12:[NODEPORT]
 ```
 ![Workload on worker1 reachable from worker2](image-2.png)
 Record:
@@ -1392,20 +1392,20 @@ Source:
 
 ```text
 k3s-worker1
-102.34.160.87
+10.10.0.11
 ```
 
 Destination:
 
 ```text
 k3s-server
-102.34.160.89
+10.10.0.10
 ```
 
 Command:
 
 ```bash
-ping -c 100 102.34.160.89
+ping -c 100 10.10.0.10
 ```
 
 Observed result:
@@ -1439,20 +1439,20 @@ Source:
 
 ```text
 k3s-server
-102.34.160.89
+10.10.0.10
 ```
 
 Destination:
 
 ```text
 k3s-worker1
-102.34.160.87
+10.10.0.11
 ```
 
 Command:
 
 ```bash
-ping -c 100 102.34.160.87
+ping -c 100 10.10.0.11
 ```
 
 Observed result:
@@ -1493,13 +1493,13 @@ Destination:
 
 ```text
 k3s-worker1
-102.34.160.87
+10.10.0.11
 ```
 
 Command:
 
 ```bash
-ping -c 100 102.34.160.87
+ping -c 100 10.10.0.11
 ```
 
 Observed result:
@@ -1541,13 +1541,13 @@ Destination:
 
 ```text
 k3s-server
-102.34.160.89
+10.10.0.10
 ```
 
 Command:
 
 ```bash
-ping -c 100 102.34.160.89
+ping -c 100 10.10.0.10
 ```
 
 Observed result:
@@ -1585,20 +1585,20 @@ Source:
 
 ```text
 k3s-worker1
-102.34.160.87
+10.10.0.11
 ```
 
 Destination:
 
 ```text
 k3s-worker2
-102.34.160.103
+10.10.0.12
 ```
 
 Command:
 
 ```bash
-ping -c 100 102.34.160.103
+ping -c 100 10.10.0.12
 ```
 
 Observed result:
@@ -1669,7 +1669,7 @@ iperf3 -s
 From `k3s-worker1`:
 
 ```bash
-iperf3 -c 102.34.160.89 -t 30
+iperf3 -c 10.10.0.10 -t 30
 ```
 
 Observed result:
@@ -1698,7 +1698,7 @@ With the `iperf3` server still running on `k3s-server`, execute from
 Worker 1:
 
 ```bash
-iperf3 -c 102.34.160.89 -t 30 -R
+iperf3 -c 10.10.0.10 -t 30 -R
 ```
 
 Observed result:
@@ -1734,7 +1734,7 @@ iperf3 -s
 From the external experimental client:
 
 ```bash
-iperf3 -c 102.34.160.87 -t 30
+iperf3 -c 10.10.0.11 -t 30
 ```
 
 Observed result:
@@ -1762,7 +1762,7 @@ External Client -> Worker1 ~= 44 Mbit/s
 Using reverse mode from the external client:
 
 ```bash
-iperf3 -c 102.34.160.87 -t 30 -R
+iperf3 -c 10.10.0.11 -t 30 -R
 ```
 
 Observed result:
@@ -1800,7 +1800,7 @@ iperf3 -s
 From `k3s-worker1`:
 
 ```bash
-iperf3 -c 102.34.160.103 -t 30
+iperf3 -c 10.10.0.12 -t 30
 ```
 
 Observed result:
@@ -1828,7 +1828,7 @@ Worker1 -> Worker2 = 13.2 Gbit/s
 With the server running on Worker 2, execute reverse mode from Worker 1:
 
 ```bash
-iperf3 -c 102.34.160.103 -t 30 -R
+iperf3 -c 10.10.0.12 -t 30 -R
 ```
 
 Observed result:
@@ -1895,7 +1895,7 @@ on `k3s-server`.
 From Worker 1:
 
 ```bash
-iperf3 -c 102.34.160.89 -u -b 10M -t 30
+iperf3 -c 10.10.0.10 -u -b 10M -t 30
 ```
 
 Observed receiver result:
@@ -1932,7 +1932,7 @@ on `k3s-worker1`.
 From the external client:
 
 ```bash
-iperf3 -c 102.34.160.87 -u -b 10M -t 30
+iperf3 -c 10.10.0.11 -u -b 10M -t 30
 ```
 
 Observed receiver result:
@@ -1974,7 +1974,7 @@ on `k3s-worker2`.
 From Worker 1:
 
 ```bash
-iperf3 -c 102.34.160.103 -u -b 10M -t 30
+iperf3 -c 10.10.0.12 -u -b 10M -t 30
 ```
 
 Observed receiver result:
@@ -2074,21 +2074,21 @@ than relying only on screenshots.
 For example, ping output can be captured using:
 
 ```bash
-ping -c 100 102.34.160.89 \
+ping -c 100 10.10.0.10 \
   | tee experiments/baseline/network/ping/worker1-to-server.txt
 ```
 
 TCP output can be captured using:
 
 ```bash
-iperf3 -c 102.34.160.89 -t 30 \
+iperf3 -c 10.10.0.10 -t 30 \
   | tee experiments/baseline/network/tcp/worker1-to-server.txt
 ```
 
 UDP output can be captured using:
 
 ```bash
-iperf3 -c 102.34.160.89 -u -b 10M -t 30 \
+iperf3 -c 10.10.0.10 -u -b 10M -t 30 \
   | tee experiments/baseline/network/udp/worker1-to-server.txt
 ```
 ---
@@ -2143,7 +2143,7 @@ The target condition was:
 CONTROL-PLANE PATH
 
 k3s-worker1                  k3s-server
-102.34.160.87               102.34.160.89
+10.10.0.11               10.10.0.10
 
       X -------------------- X
           TCP/6443 blocked
@@ -2159,7 +2159,7 @@ External Client
       | HTTP
       v
 k3s-worker1
-102.34.160.87
+10.10.0.11
       |
       v
 baseline-web
@@ -2207,9 +2207,9 @@ The relevant nodes were:
 
 | Component | Hostname | IP Address | Role |
 |---|---|---|---|
-| Control plane | `k3s-server` | `102.34.160.89` | Kubernetes control plane |
-| Fault target | `k3s-worker1` | `102.34.160.87` | Partitioned worker |
-| Recovery worker | `k3s-worker2` | `102.34.160.103` | Available recovery capacity |
+| Control plane | `k3s-server` | `10.10.0.10` | Kubernetes control plane |
+| Fault target | `k3s-worker1` | `10.10.0.11` | Partitioned worker |
+| Recovery worker | `k3s-worker2` | `10.10.0.12` | Available recovery capacity |
 | External client | External machine | `[CLIENT_IP]` | Independent service verification |
 
 The baseline workload was:
@@ -2226,7 +2226,7 @@ NodePort:     30364
 The externally tested endpoint was:
 
 ```text
-http://102.34.160.87:30364
+http://10.10.0.11:30364
 ```
 
 ---
@@ -2389,7 +2389,7 @@ sh workloads/test-workload/independent-path-test.sh
 The script continued sending HTTP requests directly to:
 
 ```text
-102.34.160.87:30364
+10.10.0.11:30364
 ```
 
 throughout the partition.
@@ -2417,12 +2417,12 @@ The relevant communication path was:
 
 ```text
 k3s-worker1
-102.34.160.87
+10.10.0.11
       |
       | TCP/6443
       v
 k3s-server
-102.34.160.89
+10.10.0.10
 ```
 
 The following rule was inserted on `k3s-worker1`:
@@ -2430,7 +2430,7 @@ The following rule was inserted on `k3s-worker1`:
 ```bash
 sudo iptables -I OUTPUT 1 \
   -p tcp \
-  -d 102.34.160.89 \
+  -d 10.10.0.10 \
   --dport 6443 \
   -j DROP
 ```
@@ -2666,7 +2666,7 @@ Terminating
 the external client continued successfully accessing:
 
 ```text
-http://102.34.160.87:30364
+http://10.10.0.11:30364
 ```
 
 The workload continued returning:
@@ -2679,7 +2679,7 @@ The Nginx service was also independently accessible through a web
 browser using:
 
 ```text
-102.34.160.87:30364
+10.10.0.11:30364
 ```
 ![Workload accessible in the browser during a partition](images/workload-browser-access.png)
 
@@ -2705,7 +2705,7 @@ INDEPENDENT APPLICATION VIEW
 External Client
        |
        v
-102.34.160.87:30364
+10.10.0.11:30364
        |
        v
 Nginx workload
@@ -2890,7 +2890,7 @@ was removed using the exact rule specification:
 ```bash
 sudo iptables -D OUTPUT \
   -p tcp \
-  -d 102.34.160.89 \
+  -d 10.10.0.10 \
   --dport 6443 \
   -j DROP
 ```
@@ -3040,7 +3040,7 @@ The following pilot objectives were successfully completed:
 - [x] `NoExecute` unreachable taint observed
 - [x] Original workload Pod observed entering `Terminating`
 - [x] External client continued receiving HTTP `200`
-- [x] Workload independently verified through `102.34.160.87:30364`
+- [x] Workload independently verified through `10.10.0.11:30364`
 - [x] Native Kubernetes behaviour recorded without controller intervention
 - [x] Unreachable taints captured to reproducibility file
 - [x] Experimental firewall rule removed using exact-rule deletion
@@ -3271,7 +3271,7 @@ with:
 ```json
 {
   "scenario": "scenario-b",
-  "target_url": "http://102.34.160.87:30364",
+  "target_url": "http://10.10.0.11:30364",
   "target_node": "k3s-worker1",
   "namespace": "failure-aware",
   "pod_label_selector": "app=baseline-web",
@@ -3482,7 +3482,7 @@ A representative record is:
   "run_id": "run-20260920T161500Z",
   "scenario": "scenario-b",
   "start_time_utc": "2026-09-20T16:15:00+00:00",
-  "target_url": "http://102.34.160.87:30364",
+  "target_url": "http://10.10.0.11:30364",
   "target_node": "k3s-worker1",
   "namespace": "failure-aware",
   "pod_label_selector": "app=baseline-web",
@@ -3508,7 +3508,7 @@ independent-path-test.sh
 The target for Scenario B is:
 
 ```text
-http://102.34.160.87:30364
+http://10.10.0.11:30364
 ```
 
 Requests are issued approximately once per second.
@@ -4107,7 +4107,7 @@ Scenario B is still introduced manually on `k3s-worker1`:
 ```bash
 sudo iptables -I OUTPUT 1 \
   -p tcp \
-  -d 102.34.160.89 \
+  -d 10.10.0.10 \
   --dport 6443 \
   -j DROP
 ```
@@ -4117,7 +4117,7 @@ The partition is removed using:
 ```bash
 sudo iptables -D OUTPUT \
   -p tcp \
-  -d 102.34.160.89 \
+  -d 10.10.0.10 \
   --dport 6443 \
   -j DROP
 ```
@@ -4196,7 +4196,7 @@ On Worker 1:
 ```bash
 sudo iptables -I OUTPUT 1 \
   -p tcp \
-  -d 102.34.160.89 \
+  -d 10.10.0.10 \
   --dport 6443 \
   -j DROP
 ```
@@ -4219,7 +4219,7 @@ while continuing HTTP probing.
 ```bash
 sudo iptables -D OUTPUT \
   -p tcp \
-  -d 102.34.160.89 \
+  -d 10.10.0.10 \
   --dport 6443 \
   -j DROP
 ```
@@ -4875,7 +4875,7 @@ the following rule was inserted:
 ```bash
 sudo iptables -I OUTPUT 1 \
   -p tcp \
-  -d 102.34.160.89 \
+  -d 10.10.0.10 \
   --dport 6443 \
   -j DROP
 ```
@@ -4973,7 +4973,7 @@ The experimental partition was removed using:
 ```bash
 sudo iptables -D OUTPUT \
   -p tcp \
-  -d 102.34.160.89 \
+  -d 10.10.0.10 \
   --dport 6443 \
   -j DROP
 ```
@@ -5252,7 +5252,7 @@ to:
 {
   "target_node": "k3s-worker1",
   "trigger_ready_status": "Unknown",
-  "verification_url": "http://102.34.160.87:30364",
+  "verification_url": "http://10.10.0.11:30364",
   "verification_timeout_ms": 3000
 }
 ```
@@ -5268,7 +5268,7 @@ For the Scenario B test:
 
 ```text
 Verification endpoint:
-http://102.34.160.87:30364
+http://10.10.0.11:30364
 
 Verification timeout:
 3000 ms
@@ -5361,7 +5361,7 @@ When native Kubernetes suspicion is raised, the verifier sends an HTTP
 request to:
 
 ```text
-http://102.34.160.87:30364
+http://10.10.0.11:30364
 ```
 
 The request is independent of the Kubernetes Node-health signal.
@@ -5384,7 +5384,7 @@ Failure-Aware Controller
       |
       | HTTP
       v
-102.34.160.87:30364
+10.10.0.11:30364
       |
       v
 baseline-web
@@ -5524,7 +5524,7 @@ The startup output was:
 Starting Failure-Aware Controller
 Target node: k3s-worker1
 Native suspicion trigger: Ready=Unknown
-Verification URL: http://102.34.160.87:30364
+Verification URL: http://10.10.0.11:30364
 Verification timeout: 3000 ms
 Connected to Kubernetes API
 [LISTENER] Watching node=k3s-worker1 for Ready=Unknown
@@ -5552,7 +5552,7 @@ existing selective firewall rule on Worker 1:
 ```bash
 sudo iptables -I OUTPUT 1 \
   -p tcp \
-  -d 102.34.160.89 \
+  -d 10.10.0.10 \
   --dport 6443 \
   -j DROP
 ```
@@ -5603,7 +5603,7 @@ initiated the configured verification probe:
 
 ```text
 [VERIFY] 2026-09-20T18:56:36.100973630+00:00 |
-probing http://102.34.160.87:30364
+probing http://10.10.0.11:30364
 ```
 
 The difference between the recorded suspicion timestamp and the
@@ -5698,7 +5698,7 @@ After the verification test, the partition was removed using:
 ```bash
 sudo iptables -D OUTPUT \
   -p tcp \
-  -d 102.34.160.89 \
+  -d 10.10.0.10 \
   --dport 6443 \
   -j DROP
 ```
@@ -8134,7 +8134,7 @@ performed.
 The original Rust harness used a fixed HTTP target:
 
 ```text
-http://102.34.160.87:30364
+http://10.10.0.11:30364
 ```
 
 which corresponds to Worker1.
@@ -8168,7 +8168,7 @@ Therefore its verification URL remains associated with the affected
 Worker1 path:
 
 ```text
-http://102.34.160.87:30364
+http://10.10.0.11:30364
 ```
 
 This evidence is used for:
@@ -8202,11 +8202,11 @@ The harness configuration was extended with:
 "service_targets": [
   {
     "node": "k3s-worker1",
-    "url": "http://102.34.160.87:30364"
+    "url": "http://10.10.0.11:30364"
   },
   {
     "node": "k3s-worker2",
-    "url": "http://102.34.160.103:30364"
+    "url": "http://10.10.0.12:30364"
   }
 ]
 ```
@@ -8228,7 +8228,7 @@ determine .spec.nodeName
   k3s-worker1             k3s-worker2
         |                      |
         v                      v
-102.34.160.87           102.34.160.103
+10.10.0.11           10.10.0.12
         |                      |
         +----------+-----------+
                    |
@@ -8259,11 +8259,11 @@ with metadata:
   "service_targets": [
     {
       "node": "k3s-worker1",
-      "url": "http://102.34.160.87:30364"
+      "url": "http://10.10.0.11:30364"
     },
     {
       "node": "k3s-worker2",
-      "url": "http://102.34.160.103:30364"
+      "url": "http://10.10.0.12:30364"
     }
   ],
   "start_time_utc": "2026-09-21T07:43:58.003714783+00:00",
@@ -8290,7 +8290,7 @@ node=k3s-worker2
 It automatically selected:
 
 ```text
-http://102.34.160.103:30364
+http://10.10.0.12:30364
 ```
 
 and recorded:
@@ -8298,7 +8298,7 @@ and recorded:
 ```text
 [HTTP]
 node=k3s-worker2
-target=http://102.34.160.103:30364
+target=http://10.10.0.12:30364
 status=200
 latency=24.310 ms
 success=true
@@ -8308,7 +8308,7 @@ Subsequent CSV observations continued to identify:
 
 ```text
 node=k3s-worker2
-target=http://102.34.160.103:30364
+target=http://10.10.0.12:30364
 status=200
 success=true
 ```
@@ -8318,7 +8318,7 @@ For example:
 ```text
 2026-09-21T07:46:03.778115802+00:00,
 k3s-worker2,
-http://102.34.160.103:30364,
+http://10.10.0.12:30364,
 200,
 12.346724,
 true,
@@ -8329,7 +8329,7 @@ and:
 ```text
 2026-09-21T07:46:34.283766112+00:00,
 k3s-worker2,
-http://102.34.160.103:30364,
+http://10.10.0.12:30364,
 200,
 11.804561,
 true,
@@ -9675,11 +9675,11 @@ The harness contains both eligible service paths:
 "service_targets": [
   {
     "node": "k3s-worker1",
-    "url": "http://102.34.160.87:30364"
+    "url": "http://10.10.0.11:30364"
   },
   {
     "node": "k3s-worker2",
-    "url": "http://102.34.160.103:30364"
+    "url": "http://10.10.0.12:30364"
   }
 ]
 ```
