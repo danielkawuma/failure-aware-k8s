@@ -5,6 +5,12 @@
 #   ladder      Tuned-native baseline ladder (H1, H2) with
 #               per-second EndpointSlice and in-cluster client
 #               observation and controller resource sampling.
+#               Optional conditions (docs/hypotheses-addendum-2.md):
+#                 kh  kubelet hang: k3s-agent stopped on Worker1 while
+#                     its containers keep serving (KH_SECONDS)
+#                 fl  flapping link: the Scenario B rule is applied and
+#                     cleared in cycles of FL_DOWN_SECONDS down and
+#                     FL_UP_SECONDS up for FL_SECONDS
 #   probe-grid  Probe error rates under workload-path loss (H4).
 #   overhead    Controller overhead, 60-s windows (H5).
 #   all         ladder, then probe-grid, then overhead.
@@ -31,11 +37,16 @@ CAMPAIGN_ROOT="${REPO_ROOT}/experiments/evaluation/ladder"
 CURRENT_LINK="${CAMPAIGN_ROOT}/CURRENT"
 
 ARMS="${ARMS:-v0 t10 nx r2 fa1}"
-RP_DURATIONS="${RP_DURATIONS:-120 600}"
+RP_DURATIONS="${RP_DURATIONS-120 600}"   # set to "" for no reachable-partition cells
 UW_HOLD_SECONDS="${UW_HOLD_SECONDS:-480}"   # 0 leaves the UW condition out of the plan
 REPS="${REPS:-5}"
 LADDER_BASELINE_SECONDS="${LADDER_BASELINE_SECONDS:-10}"
 LADDER_POST_CLEAR_SECONDS="${LADDER_POST_CLEAR_SECONDS:-60}"
+KH_SECONDS="${KH_SECONDS:-0}"                # 0 leaves the kubelet-hang condition out
+FL_SECONDS="${FL_SECONDS:-0}"                # 0 leaves the flapping condition out
+FL_DOWN_SECONDS="${FL_DOWN_SECONDS:-75}"
+FL_UP_SECONDS="${FL_UP_SECONDS:-30}"
+STOP_AT_EPOCH="${STOP_AT_EPOCH:-}"           # no new run starts at or after this time
 
 PROBE_TRIALS="${PROBE_TRIALS:-100}"
 OVERHEAD_WINDOWS="${OVERHEAD_WINDOWS:-30}"
@@ -66,9 +77,9 @@ campaign_dir() {
     printf '%s\n' "${seed}" > "${dir}/seed.txt"
     ln -s "${id}" "${CURRENT_LINK}"
 
-    python3 - "${dir}" "${seed}" "${ARMS}" "${RP_DURATIONS}" "${UW_HOLD_SECONDS}" "${REPS}" <<'PY'
+    python3 - "${dir}" "${seed}" "${ARMS}" "${RP_DURATIONS}" "${UW_HOLD_SECONDS}" "${REPS}" "${KH_SECONDS}" "${FL_SECONDS}" <<'PY'
 import csv, random, sys
-d, seed, arms, rp, uw, reps = sys.argv[1:]
+d, seed, arms, rp, uw, reps, kh, fl = sys.argv[1:]
 rng = random.Random(int(seed))
 cells = []
 for arm in arms.split():
@@ -76,6 +87,10 @@ for arm in arms.split():
         cells.append((arm, "rp", int(dur)))
     if int(uw) > 0:
         cells.append((arm, "uw", int(uw)))
+    if int(kh) > 0:
+        cells.append((arm, "kh", int(kh)))
+    if int(fl) > 0:
+        cells.append((arm, "fl", int(fl)))
 rows = [(a, c, t, r) for (a, c, t) in cells for r in range(1, int(reps) + 1)]
 rng.shuffle(rows)
 with open(f"{d}/ladder-plan.csv", "w", newline="") as f:
@@ -95,6 +110,11 @@ PY
         echo "rp_durations=${RP_DURATIONS}"
         echo "uw_hold_seconds=${UW_HOLD_SECONDS}"
         echo "reps=${REPS}"
+        echo "kh_seconds=${KH_SECONDS}"
+        echo "fl_seconds=${FL_SECONDS}"
+        echo "fl_down_seconds=${FL_DOWN_SECONDS}"
+        echo "fl_up_seconds=${FL_UP_SECONDS}"
+        echo "preregistration_commit=${PREREG_COMMIT:-}"
         echo "kubectl_server=$(kubectl version -o json 2>/dev/null | python3 -c 'import json,sys;print(json.load(sys.stdin)["serverVersion"]["gitVersion"])' 2>/dev/null || echo unknown)"
     } > "${dir}/campaign.env"
 
@@ -136,6 +156,16 @@ preflight() {
     ssh -i "${SSH_KEY}" -o BatchMode=yes -o ConnectTimeout=5 \
         "${WORKER1_SSH}" sudo -n true \
         || { log "ERROR: passwordless sudo on Worker1 is required"; exit 1; }
+
+    if (( KH_SECONDS > 0 )); then
+        ssh -i "${SSH_KEY}" -o BatchMode=yes -o ConnectTimeout=5 \
+            "${WORKER1_SSH}" systemctl is-active k3s-agent >/dev/null \
+            || { log "ERROR: k3s-agent is not an active unit on Worker1"; exit 1; }
+        ssh -i "${SSH_KEY}" -o BatchMode=yes -o ConnectTimeout=5 \
+            "${WORKER1_SSH}" systemctl show k3s-agent -p KillMode | tee -a "${dir}/preflight.log" \
+            | grep -qx "KillMode=process" \
+            || { log "ERROR: k3s-agent KillMode is not 'process'; stopping it would stop the containers"; exit 1; }
+    fi
 
     kc get nodes -o wide >> "${dir}/preflight.log"
     kc get pods -A -o wide >> "${dir}/preflight.log"
@@ -336,6 +366,49 @@ worker1_probe() {
 # One ladder run
 # ------------------------------------------------------------
 
+ssh_w1() {
+    ssh -i "${SSH_KEY}" -o BatchMode=yes -o ConnectTimeout=5 "${WORKER1_SSH}" "$@"
+}
+
+# Kubelet hang: stopping the k3s agent stops the kubelet, kube-proxy and
+# flannel processes but, with KillMode=process, leaves the containers
+# and the node's network rules in place, so the workload keeps serving.
+kh_apply() { ssh_w1 "sudo -n systemctl stop k3s-agent"; }
+kh_clear() { ssh_w1 "sudo -n systemctl start k3s-agent"; }
+
+# Flapping link: the Scenario B rule is applied and cleared in cycles.
+# Every transition is written to fault-flap-transitions.csv.
+RUN_FLAP_PID=""
+flapper() {
+    local out="$1"
+    echo "timestamp_utc,state" > "${out}"
+    while true; do
+        "${FAULT}" scenario-b apply >/dev/null 2>&1 && echo "$(utc_now),down" >> "${out}"
+        sleep "${FL_DOWN_SECONDS}"
+        "${FAULT}" scenario-b clear >/dev/null 2>&1 && echo "$(utc_now),up" >> "${out}"
+        sleep "${FL_UP_SECONDS}"
+    done
+}
+
+fault_clear() {
+    case "$1" in
+        scenario-b|scenario-c) "${FAULT}" "$1" clear ;;
+        kubelet-hang) kh_clear ;;
+        flapping)
+            if [[ -n "${RUN_FLAP_PID}" ]]; then
+                kill -TERM "${RUN_FLAP_PID}" 2>/dev/null
+                wait "${RUN_FLAP_PID}" 2>/dev/null
+                RUN_FLAP_PID=""
+            fi
+            # An apply already in flight when the flapper stops may land
+            # after the first clear, so the rule is cleared twice.
+            "${FAULT}" scenario-b clear
+            sleep 5
+            "${FAULT}" scenario-b clear || true
+            ;;
+    esac
+}
+
 RUN_FAULT_ACTIVE="false"
 RUN_FAULT_SCENARIO=""
 RUN_HARNESS_PID=""
@@ -346,7 +419,7 @@ RUN_PIDS=()
 run_cleanup() {
     set +e
     if [[ "${RUN_FAULT_ACTIVE}" == "true" ]]; then
-        "${FAULT}" "${RUN_FAULT_SCENARIO}" clear
+        fault_clear "${RUN_FAULT_SCENARIO}"
         RUN_FAULT_ACTIVE="false"
     fi
     # The harness saves its observations on SIGINT; background shell
@@ -392,6 +465,7 @@ ladder_run() {
     trap 'exit 143' TERM
 
     "${FAULT}" clear-all > "${rdir}/fault-preclear.log" 2>&1 || true
+    ssh_w1 "sudo -n systemctl start k3s-agent" >> "${rdir}/fault-preclear.log" 2>&1 || true
     wait_node_ready "${WORKER1_NODE}" 180 && wait_node_ready "${WORKER2_NODE}" 180 \
         || { echo "nodes not ready $(utc_now)" > "${rdir}/ABORTED"; return 0; }
 
@@ -420,13 +494,12 @@ ladder_run() {
     client_ip="$(kc -n "${NAMESPACE}" get svc baseline-web -o jsonpath='{.spec.clusterIP}')"
 
     local harness_config
-    if [[ "${condition}" == "rp" ]]; then
-        harness_config="${SCENARIO_B_CONFIG}"
-        RUN_FAULT_SCENARIO="scenario-b"
-    else
-        harness_config="${SCENARIO_C_CONFIG}"
-        RUN_FAULT_SCENARIO="scenario-c"
-    fi
+    case "${condition}" in
+        rp) harness_config="${SCENARIO_B_CONFIG}"; RUN_FAULT_SCENARIO="scenario-b" ;;
+        uw) harness_config="${SCENARIO_C_CONFIG}"; RUN_FAULT_SCENARIO="scenario-c" ;;
+        kh) harness_config="${SCENARIO_B_CONFIG}"; RUN_FAULT_SCENARIO="kubelet-hang" ;;
+        fl) harness_config="${SCENARIO_B_CONFIG}"; RUN_FAULT_SCENARIO="flapping" ;;
+    esac
 
     # The harness measures one fixed client path: the Service through the
     # Worker2 NodePort, i.e. a client entering the cluster on a node that
@@ -484,16 +557,18 @@ PY
     # Marked active before applying, so a partial apply is still cleared.
     RUN_FAULT_ACTIVE="true"
     utc_now > "${rdir}/fault-time.txt"
-    if [[ "${condition}" == "rp" ]]; then
-        "${FAULT}" scenario-b apply > "${rdir}/fault-apply.log" 2>&1
-    else
-        "${FAULT}" scenario-c apply "${original_ip}" > "${rdir}/fault-apply.log" 2>&1
-    fi
+    case "${condition}" in
+        rp) "${FAULT}" scenario-b apply > "${rdir}/fault-apply.log" 2>&1 ;;
+        uw) "${FAULT}" scenario-c apply "${original_ip}" > "${rdir}/fault-apply.log" 2>&1 ;;
+        kh) kh_apply > "${rdir}/fault-apply.log" 2>&1 ;;
+        fl) flapper "${rdir}/fault-flap-transitions.csv" > "${rdir}/fault-apply.log" 2>&1 &
+            RUN_FLAP_PID="$!" ;;
+    esac
 
     sleep "${fault_seconds}"
 
     utc_now > "${rdir}/fault-clear-time.txt"
-    "${FAULT}" "${RUN_FAULT_SCENARIO}" clear > "${rdir}/fault-clear.log" 2>&1
+    fault_clear "${RUN_FAULT_SCENARIO}" > "${rdir}/fault-clear.log" 2>&1
     RUN_FAULT_ACTIVE="false"
 
     sleep "${LADDER_POST_CLEAR_SECONDS}"
@@ -530,6 +605,10 @@ ladder() {
     for line in "${plan[@]}"; do
         IFS=',' read -r order run_id arm condition fault_seconds _rep <<< "${line}"
         [[ -f "${dir}/runs/${run_id}/COMPLETE" ]] && continue
+        if [[ -n "${STOP_AT_EPOCH}" ]] && (( $(date +%s) >= STOP_AT_EPOCH )); then
+            log "Stop time reached; no new run started"
+            break
+        fi
 
         # Each run executes in its own subshell, so a failure in one run
         # clears its fault and stops its observers without ending the
