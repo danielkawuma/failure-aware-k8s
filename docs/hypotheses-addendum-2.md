@@ -66,3 +66,11 @@ the original writer after the fence falsifies it.
 No new run starts after the time set in the runner (08:00 EAT for ladder
 runs, 07:30 EAT for live-writer runs). Runs not started are reported as
 not run; started runs are reported whether completed or aborted.
+
+## Addendum, 7 November 2026: duration-sweep top-up
+
+Added before its first run. Two more runs per cell of the extension
+sweep E2 (V0, T10, NX and FA1 under reachable partitions of 15, 60 and
+300 s; 24 runs) in a new seeded campaign, pooled with the existing E2
+runs and reported as before with Clopper-Pearson intervals. No new run
+starts after 12:00 EAT.
