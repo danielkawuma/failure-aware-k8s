@@ -417,7 +417,7 @@ OpenMRS & Scenario C+D run 003 & FA1 & 1 & Trial run before the campaign, withou
 
 \begin{table}[ht]
 \centering
-\caption{Second-phase campaigns (commit \texttt{4ce8078}, extension addendum \texttt{ddfc677}).}\label{tab:s14}
+\caption{Second-phase campaigns (commit \texttt{4ce8078}, extension addendum \texttt{ddfc677}, addendum 2 \texttt{90ca414} and \texttt{e0510b0}).}\label{tab:s14}
 \footnotesize
 \begin{tabular}{@{}p{0.22\textwidth}p{0.30\textwidth}p{0.10\textwidth}p{0.30\textwidth}@{}}
 \toprule
@@ -426,14 +426,19 @@ Campaign & Arms and conditions & Runs & Status \\
 Baseline ladder (seed 3106524066) & V0, T10, NX, R2, FA1; reachable 120 and 600~s, unreachable 480~s & 75 & 75 completed, 0 aborted \\
 Ladder, second set (seed 781441089) & V0, T10, NX, R2, FA1; reachable 600~s, unreachable 480~s & 30 & 30 completed, 0 aborted; pooled with the baseline ladder \\
 Ladder, third set (seed 472857209) & V0, T10, NX, R2, FA1; reachable 120~s & 15 & 15 completed, 0 aborted; pooled with the baseline ladder \\
+Ladder, fourth set (seed 105837992) & V0, T10, NX, R2, FA1; reachable 120 and 600~s, unreachable 480~s & 30 & 30 completed, 0 aborted; pooled with the baseline ladder \\
 Probe grid & Six workload states, 100 trials each, $k=1,3,5$ & 600 trials & Completed \\
 Overhead & 30 idle windows with and 30 without the controller & 60 windows & Completed \\
 Live writer, first campaign (seed 3063071617) & Planned 10 fenced and 10 unfenced & 20 & 20 completed; no fence applied in any run; reported as unfenced \\
 Live writer, fenced (seed 721711068) & Fenced & 10 & 10 completed, 0 aborted \\
 Live writer, fenced (seed 2559281726) & Fenced & 10 & 10 completed, 0 aborted \\
+Live writer, fenced (seed 2503413994) & Fenced & 20 & 20 completed, 0 aborted \\
 Probe grid, extended (seed 781441089) & Reply delay 0.5, 1.0, 1.5~s; reply loss 70 and 90\%; 100 trials each, $k=1,3,5$ & 500 trials & Completed \\
 Extension E1 (seed 2000988837) & T5, T30; reachable 120 and 600~s & 20 & 20 completed, 0 aborted \\
 Extension E2 (seed 3566506833) & V0, T10, NX, FA1; reachable 15, 60, 300~s & 36 & 36 completed, 0 aborted \\
+Extension E2, second set (seed 318798590) & V0, T10, NX, FA1; reachable 15, 60, 300~s & 24 & 24 completed, 0 aborted; pooled with E2 \\
+Kubelet hang (seed 390908591) & V0, T10, FA1; \texttt{k3s-agent} stopped 480~s & 15 & 15 completed, 0 aborted \\
+Flapping link (seed 1318125661) & V0, T10, FA1; 75~s down, 30~s up, for 600~s & 15 & 15 completed, 0 aborted \\
 OpenMRS Scenario B under load (runs 101--103) & V0, T5, T10, T30, FA1; 600-s partition; ten virtual clinical users & 14 & 14 completed, 0 aborted (T30: two runs) \\
 \bottomrule
 \end{tabular}
@@ -561,9 +566,10 @@ F3 & The integrated configuration retains the workload. & Nginx: 32/32 retained 
 F4 & A PRESERVE decision does not by itself stop native eviction. & OpenMRS: both FA1 runs that outlasted a 300-second window were evicted despite PRESERVE. & Clear mechanism; two runs.\\
 F5 & Avoiding a duplicate backend avoids a substantial reservation. & OpenMRS backend: 929~MiB used, 1,400~MiB and 750m CPU requested. Every replacement (12 native and tuned runs, FA1 runs 004 and 005) was placed on Worker2, taking 48\% of its unreserved memory; Worker4 could not admit one. & Request-based; client cost under load in Scenario B runs 101--103.\\
 F6 & The controller releases an unreachable workload for recovery on an eligible candidate. & Nginx: RECOVER and a running replacement in 30/30 runs. OpenMRS: RECOVER in 2/2 runs, replacement placed on the selected worker, clinical service restored. & Strong for Nginx; consistent for OpenMRS.\\
-F7 & Storage is fenced before a duplication-sensitive workload is released and stays fenced until the original writer is retired. & PostgreSQL: ordering held in 31/31 runs (88.8--100\%) with the writer stopped first. MariaDB: fence verified before replacement and released only after the original process was verified absent in 10/10 runs (69.2--100\%), with the original runtime not stopped first. & Ordering held in every run.\\
+F7 & Storage is fenced before a duplication-sensitive workload is released and stays fenced until the original writer is retired. & PostgreSQL: ordering held in 31/31 runs (88.8--100\%) with the writer stopped first. MariaDB: fence verified before replacement and released only after the original process was verified absent in 10/10 runs (69.2--100\%), with the original runtime not stopped first. Live writer: 0 of 40 fenced runs with a commit by the original after the fence (0--8.8\%), against 20 of 20 unfenced. & Ordering held in every run; no post-fence commit.\\
 F8 & Removal of a Pod from Kubernetes does not mean its process has exited. & MariaDB run 003: original process in state \texttt{D} for more than 14 hours after its Pod disappeared from the API; runs 011--020 retired it by SSH reboot before releasing the fence (mean reconciliation 575.56~s). & Observed; reconciliation repeatable in 10 runs.\\
-F9 & Under genuine worker shutdown the controller classifies the workload correctly and, when a verified destination exists, restores service sooner than native K3s or a single node. & Nginx Scenario A: unreachable in 5/5; RECOVER with replacement on the selected node in 4/5 (28.4--99.5\%), median outage 61.36~s over those four, against 350.06~s natively and 530.88~s for a single node. In run 004 no verified destination was available, the workload was held, and the outage was 592.37~s; the five-run median is 62.43~s. & Five runs per arm; wide intervals.\\ \bottomrule
+F9 & Under genuine worker shutdown the controller classifies the workload correctly and, when a verified destination exists, restores service sooner than native K3s or a single node. & Nginx Scenario A: unreachable in 5/5; RECOVER with replacement on the selected node in 4/5 (28.4--99.5\%), median outage 61.36~s over those four, against 350.06~s natively and 530.88~s for a single node. In run 004 no verified destination was available, the workload was held, and the outage was 592.37~s; the five-run median is 62.43~s. & Five runs per arm; wide intervals.\\
+F10 & Preservation holds when the kubelet hangs and when the control-plane link flaps. & Kubelet hang (480~s): FA1 replaced 0/5, V0 5/5, T10 5/5. Flapping link (six cycles): FA1 replaced 0/5 with 30 PRESERVE decisions in 30 suspicion episodes, V0 0/5, T10 5/5. & Clear; five runs per arm.\\ \bottomrule
 \end{tabular}
 \end{table}
 

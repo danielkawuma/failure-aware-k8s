@@ -36,9 +36,10 @@ three availability zones. The paper reports every figure with its interval.
 | Question | Result |
 |---|---|
 | Is a reachable workload kept through a 600-s partition? | Native K3s replaced it in 30 of 30 runs; the controller with non-expiring tolerations kept it in 32 of 32 valid runs. |
-| Against tuned and replicated baselines (ladder) | Only the controller arm both kept the reachable workload and recovered an unreachable one within 15 s of a 10-s toleration (63.9 s against 62.2 s). |
+| Against tuned and replicated baselines (ladder) | Only the controller arm both kept the reachable workload and recovered an unreachable one within 15 s of a 10-s toleration (63.9 s against 62.1 s, ten runs per cell). |
 | After a real worker shutdown | Service restored in 4 of 5 runs; five-run median outage 62 s against 350 s natively. |
-| Database writer during a partition | With the fence the original committed nothing after it in 20 of 20 runs; without it, about 1,025 rows per run after the replacement was released. |
+| Database writer during a partition | With the fence the original committed nothing after it in 40 of 40 runs; without it, about 1,025 rows per run after the replacement was released. |
+| Hung kubelet and flapping link | The controller kept the workload in 10 of 10 runs; a 10-s toleration replaced it in 10 of 10. |
 | Probe errors | No false RECOVER in 200 healthy or 10%-loss trials and no false PRESERVE in 100 unreachable trials. |
 | Overhead | About 1 millicore of CPU and 20 MiB of memory. |
 
@@ -113,6 +114,7 @@ Individual campaigns:
 |---|---|
 | Baseline ladder (V0, T10, NX, R2, FA1) | `scripts/ladder/campaign.sh ladder` |
 | Live-writer fencing | `LW_ARMS=fenced RUNS_PER_ARM=10 scripts/live-writer/campaign.sh run` |
+| Kubelet hang, flapping link and top-ups, in sequence | `bash scripts/run-extra-campaigns.sh` (needs `SSH_KEY`, `PREREG_COMMIT`) |
 | OpenMRS Scenario B under clinical load | `bash scripts/openmrs/load/run-openmrs-load-campaign.sh` (needs `OPENMRS_USER`, `OPENMRS_PASS`, `OPENMRS_BASE_URL`) |
 
 Every campaign logs its seed and run order before the first run, and every
@@ -124,6 +126,7 @@ attempt keeps its directory under `experiments/evaluation/`.
 - Hypotheses H1 to H5 with falsifying numbers: commit `4ce8078`, before the
   second-phase campaigns.
 - Extension addendum: commit `ddfc677`.
+- Addendum 2 (kubelet hang, flapping link and top-up campaigns): commits `90ca414` and `e0510b0`.
 
 ## Data
 
@@ -141,8 +144,8 @@ and summarised in the paper's Acknowledgment.
 
 ## Citation
 
-Release `v1.1.1-research`, archived on Zenodo (DOI 10.5281/zenodo.23866292). Release
-`v1.0.0-research` is kept unchanged.
+Release `v1.2.0-research`, archived on Zenodo (DOI 10.5281/zenodo.23866292, which
+covers every version). Earlier releases are kept unchanged.
 
 ## License
 
