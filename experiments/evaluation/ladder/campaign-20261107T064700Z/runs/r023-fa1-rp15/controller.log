@@ -1,0 +1,33 @@
+Starting Failure-Aware Controller
+Target node: k3s-worker1
+Native suspicion trigger: Ready=Unknown
+Verification URL: http://10.10.0.11:30364
+Verification timeout: 3000 ms
+Verification attempts: 3
+Verification interval: 500 ms
+Workload: baseline-web
+Workload type: Stateless
+Duplication sensitive: false
+Namespace: failure-aware
+Pod label selector: app=baseline-web
+Recovery candidate: k3s-worker2
+Required recovery CPU: 100m
+Required recovery memory: 128 MiB
+Required recovery node labels: {"failure-aware.io/role": "recovery-candidate"}
+Kubernetes API timeout: 3000 ms
+Resource evaluation timeout: 10000 ms
+Enforcement timeout: 15000 ms
+Fencing timeout: 30000 ms
+Fencing supported: false
+Fencing command configured: false
+[HISTORY] Runtime history file: /home/ubuntu/failure-aware-k8s/controller/config/node-history-runtime.json
+Connected to Kubernetes API
+[HISTORY] Background collection task started
+[LISTENER] Watching node=k3s-worker1 for Ready=Unknown
+[LISTENER] Initializing node watch
+[HISTORY] Dynamic node-history collector started
+[INITIAL STATE] node=k3s-worker1 | Ready=Some("True")
+[LISTENER] Initial node state synchronized
+[HISTORY ERROR] 2026-11-07T08:06:40.321045070+00:00 | trailing characters at line 1 column 93
+[HISTORY ERROR] 2026-11-07T08:07:10.429139257+00:00 | trailing characters at line 1 column 93
+[HISTORY ERROR] 2026-11-07T08:07:40.459464127+00:00 | trailing characters at line 1 column 93

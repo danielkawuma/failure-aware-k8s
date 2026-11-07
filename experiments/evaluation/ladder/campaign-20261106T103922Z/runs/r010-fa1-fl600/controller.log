@@ -1,0 +1,107 @@
+Starting Failure-Aware Controller
+Target node: k3s-worker1
+Native suspicion trigger: Ready=Unknown
+Verification URL: http://10.10.0.11:30364
+Verification timeout: 3000 ms
+Verification attempts: 3
+Verification interval: 500 ms
+Workload: baseline-web
+Workload type: Stateless
+Duplication sensitive: false
+Namespace: failure-aware
+Pod label selector: app=baseline-web
+Recovery candidate: k3s-worker2
+Required recovery CPU: 100m
+Required recovery memory: 128 MiB
+Required recovery node labels: {"failure-aware.io/role": "recovery-candidate"}
+Kubernetes API timeout: 3000 ms
+Resource evaluation timeout: 10000 ms
+Enforcement timeout: 15000 ms
+Fencing timeout: 30000 ms
+Fencing supported: false
+Fencing command configured: false
+[HISTORY] Runtime history file: /home/ubuntu/failure-aware-k8s/controller/config/node-history-runtime.json
+Connected to Kubernetes API
+[HISTORY] Background collection task started
+[HISTORY] Dynamic node-history collector started
+[LISTENER] Watching node=k3s-worker1 for Ready=Unknown
+[LISTENER] Initializing node watch
+[INITIAL STATE] node=k3s-worker1 | Ready=Some("True")
+[LISTENER] Initial node state synchronized
+[HISTORY ERROR] 2026-11-06T12:22:51.381542959+00:00 | trailing characters at line 1 column 93
+[HISTORY ERROR] 2026-11-06T12:23:21.413078132+00:00 | trailing characters at line 1 column 93
+[HISTORY ERROR] 2026-11-06T12:23:51.848989861+00:00 | trailing characters at line 1 column 93
+[SUSPICION] 2026-11-06T12:23:53.252631200+00:00 | node=k3s-worker1 | Ready=Some("True") -> Unknown
+[VERIFY] attempt=1/3 | reachable=true | HTTP=Some(200) | latency=6.232 ms | error=None
+[VERIFY] attempt=2/3 | reachable=true | HTTP=Some(200) | latency=3.066 ms | error=None
+[VERIFY] attempt=3/3 | reachable=true | HTTP=Some(200) | latency=3.199 ms | error=None
+[VERIFICATION] node=k3s-worker1 | state=ReachableOutsideControlPlane | attempts=3 | successes=3 | failures=0
+[SHORT CIRCUIT] node=k3s-worker1 | candidate_evaluation=skipped | workload_discovery=skipped | reason=reachable
+[DECISION] 2026-11-06T12:23:54.273300532+00:00 | node=k3s-worker1 | decision=Preserve | fencing_required=false | selected_candidate=None | reason=workload remains reachable outside the control-plane path; unnecessary recovery is avoided
+[ENFORCEMENT] node=k3s-worker1 | action=PreserveExisting | no disruptive action
+[HISTORY ERROR] 2026-11-06T12:24:21.947863717+00:00 | trailing characters at line 1 column 93
+[RECOVERED] 2026-11-06T12:24:26.201645997+00:00 | node=k3s-worker1 | Ready=Unknown -> True
+[HISTORY ERROR] 2026-11-06T12:24:51.996955924+00:00 | trailing characters at line 1 column 93
+[HISTORY ERROR] 2026-11-06T12:25:22.086791225+00:00 | trailing characters at line 1 column 93
+[SUSPICION] 2026-11-06T12:25:43.354167612+00:00 | node=k3s-worker1 | Ready=Some("True") -> Unknown
+[VERIFY] attempt=1/3 | reachable=true | HTTP=Some(200) | latency=9.292 ms | error=None
+[VERIFY] attempt=2/3 | reachable=true | HTTP=Some(200) | latency=3.034 ms | error=None
+[VERIFY] attempt=3/3 | reachable=true | HTTP=Some(200) | latency=3.270 ms | error=None
+[VERIFICATION] node=k3s-worker1 | state=ReachableOutsideControlPlane | attempts=3 | successes=3 | failures=0
+[SHORT CIRCUIT] node=k3s-worker1 | candidate_evaluation=skipped | workload_discovery=skipped | reason=reachable
+[DECISION] 2026-11-06T12:25:44.376614053+00:00 | node=k3s-worker1 | decision=Preserve | fencing_required=false | selected_candidate=None | reason=workload remains reachable outside the control-plane path; unnecessary recovery is avoided
+[ENFORCEMENT] node=k3s-worker1 | action=PreserveExisting | no disruptive action
+[HISTORY ERROR] 2026-11-06T12:25:52.141604563+00:00 | trailing characters at line 1 column 93
+[RECOVERED] 2026-11-06T12:26:08.347462665+00:00 | node=k3s-worker1 | Ready=Unknown -> True
+[HISTORY ERROR] 2026-11-06T12:26:22.247346748+00:00 | trailing characters at line 1 column 93
+[HISTORY ERROR] 2026-11-06T12:26:52.327304616+00:00 | trailing characters at line 1 column 93
+[SUSPICION] 2026-11-06T12:27:18.469715446+00:00 | node=k3s-worker1 | Ready=Some("True") -> Unknown
+[VERIFY] attempt=1/3 | reachable=true | HTTP=Some(200) | latency=5.085 ms | error=None
+[VERIFY] attempt=2/3 | reachable=true | HTTP=Some(200) | latency=3.120 ms | error=None
+[VERIFY] attempt=3/3 | reachable=true | HTTP=Some(200) | latency=3.532 ms | error=None
+[VERIFICATION] node=k3s-worker1 | state=ReachableOutsideControlPlane | attempts=3 | successes=3 | failures=0
+[SHORT CIRCUIT] node=k3s-worker1 | candidate_evaluation=skipped | workload_discovery=skipped | reason=reachable
+[DECISION] 2026-11-06T12:27:19.488073179+00:00 | node=k3s-worker1 | decision=Preserve | fencing_required=false | selected_candidate=None | reason=workload remains reachable outside the control-plane path; unnecessary recovery is avoided
+[ENFORCEMENT] node=k3s-worker1 | action=PreserveExisting | no disruptive action
+[HISTORY ERROR] 2026-11-06T12:27:22.842702936+00:00 | trailing characters at line 1 column 93
+[HISTORY ERROR] 2026-11-06T12:27:52.939823139+00:00 | trailing characters at line 1 column 93
+[RECOVERED] 2026-11-06T12:28:00.282892727+00:00 | node=k3s-worker1 | Ready=Unknown -> True
+[HISTORY ERROR] 2026-11-06T12:28:22.972988744+00:00 | trailing characters at line 1 column 93
+[HISTORY ERROR] 2026-11-06T12:28:53.054452302+00:00 | trailing characters at line 1 column 93
+[SUSPICION] 2026-11-06T12:29:03.630693819+00:00 | node=k3s-worker1 | Ready=Some("True") -> Unknown
+[VERIFY] attempt=1/3 | reachable=true | HTTP=Some(200) | latency=2.915 ms | error=None
+[VERIFY] attempt=2/3 | reachable=true | HTTP=Some(200) | latency=2.852 ms | error=None
+[VERIFY] attempt=3/3 | reachable=true | HTTP=Some(200) | latency=3.397 ms | error=None
+[VERIFICATION] node=k3s-worker1 | state=ReachableOutsideControlPlane | attempts=3 | successes=3 | failures=0
+[SHORT CIRCUIT] node=k3s-worker1 | candidate_evaluation=skipped | workload_discovery=skipped | reason=reachable
+[DECISION] 2026-11-06T12:29:04.643122274+00:00 | node=k3s-worker1 | decision=Preserve | fencing_required=false | selected_candidate=None | reason=workload remains reachable outside the control-plane path; unnecessary recovery is avoided
+[ENFORCEMENT] node=k3s-worker1 | action=PreserveExisting | no disruptive action
+[HISTORY ERROR] 2026-11-06T12:29:23.842761164+00:00 | trailing characters at line 1 column 93
+[RECOVERED] 2026-11-06T12:29:42.298167195+00:00 | node=k3s-worker1 | Ready=Unknown -> True
+[HISTORY ERROR] 2026-11-06T12:29:53.878004015+00:00 | trailing characters at line 1 column 93
+[HISTORY ERROR] 2026-11-06T12:30:24.841213304+00:00 | trailing characters at line 1 column 93
+[SUSPICION] 2026-11-06T12:30:53.715360994+00:00 | node=k3s-worker1 | Ready=Some("True") -> Unknown
+[VERIFY] attempt=1/3 | reachable=true | HTTP=Some(200) | latency=4.431 ms | error=None
+[VERIFY] attempt=2/3 | reachable=true | HTTP=Some(200) | latency=3.239 ms | error=None
+[VERIFY] attempt=3/3 | reachable=true | HTTP=Some(200) | latency=3.361 ms | error=None
+[VERIFICATION] node=k3s-worker1 | state=ReachableOutsideControlPlane | attempts=3 | successes=3 | failures=0
+[SHORT CIRCUIT] node=k3s-worker1 | candidate_evaluation=skipped | workload_discovery=skipped | reason=reachable
+[DECISION] 2026-11-06T12:30:54.731138285+00:00 | node=k3s-worker1 | decision=Preserve | fencing_required=false | selected_candidate=None | reason=workload remains reachable outside the control-plane path; unnecessary recovery is avoided
+[ENFORCEMENT] node=k3s-worker1 | action=PreserveExisting | no disruptive action
+[HISTORY ERROR] 2026-11-06T12:30:54.937179143+00:00 | trailing characters at line 1 column 93
+[HISTORY ERROR] 2026-11-06T12:31:25.016557562+00:00 | trailing characters at line 1 column 93
+[RECOVERED] 2026-11-06T12:31:34.416953662+00:00 | node=k3s-worker1 | Ready=Unknown -> True
+[HISTORY ERROR] 2026-11-06T12:31:55.109444479+00:00 | trailing characters at line 1 column 93
+[HISTORY ERROR] 2026-11-06T12:32:25.177775371+00:00 | trailing characters at line 1 column 93
+[SUSPICION] 2026-11-06T12:32:38.813018941+00:00 | node=k3s-worker1 | Ready=Some("True") -> Unknown
+[VERIFY] attempt=1/3 | reachable=true | HTTP=Some(200) | latency=6.623 ms | error=None
+[VERIFY] attempt=2/3 | reachable=true | HTTP=Some(200) | latency=3.009 ms | error=None
+[VERIFY] attempt=3/3 | reachable=true | HTTP=Some(200) | latency=3.081 ms | error=None
+[VERIFICATION] node=k3s-worker1 | state=ReachableOutsideControlPlane | attempts=3 | successes=3 | failures=0
+[SHORT CIRCUIT] node=k3s-worker1 | candidate_evaluation=skipped | workload_discovery=skipped | reason=reachable
+[DECISION] 2026-11-06T12:32:39.836699281+00:00 | node=k3s-worker1 | decision=Preserve | fencing_required=false | selected_candidate=None | reason=workload remains reachable outside the control-plane path; unnecessary recovery is avoided
+[ENFORCEMENT] node=k3s-worker1 | action=PreserveExisting | no disruptive action
+[HISTORY ERROR] 2026-11-06T12:32:55.208494753+00:00 | trailing characters at line 1 column 93
+[RECOVERED] 2026-11-06T12:33:05.778042636+00:00 | node=k3s-worker1 | Ready=Unknown -> True
+[HISTORY ERROR] 2026-11-06T12:33:25.258827454+00:00 | trailing characters at line 1 column 93
+[HISTORY ERROR] 2026-11-06T12:33:55.839124076+00:00 | trailing characters at line 1 column 93

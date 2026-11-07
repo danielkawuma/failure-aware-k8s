@@ -1,0 +1,62 @@
+Starting Failure-Aware Controller
+Target node: k3s-worker1
+Native suspicion trigger: Ready=Unknown
+Verification URL: http://10.10.0.11:30364
+Verification timeout: 3000 ms
+Verification attempts: 3
+Verification interval: 500 ms
+Workload: baseline-web
+Workload type: Stateless
+Duplication sensitive: false
+Namespace: failure-aware
+Pod label selector: app=baseline-web
+Recovery candidate: k3s-worker2
+Required recovery CPU: 100m
+Required recovery memory: 128 MiB
+Required recovery node labels: {"failure-aware.io/role": "recovery-candidate"}
+Kubernetes API timeout: 3000 ms
+Resource evaluation timeout: 10000 ms
+Enforcement timeout: 15000 ms
+Fencing timeout: 30000 ms
+Fencing supported: false
+Fencing command configured: false
+[HISTORY] Runtime history file: /home/ubuntu/failure-aware-k8s/controller/config/node-history-runtime.json
+Connected to Kubernetes API
+[HISTORY] Background collection task started
+[HISTORY] Dynamic node-history collector started
+[LISTENER] Watching node=k3s-worker1 for Ready=Unknown
+[LISTENER] Initializing node watch
+[INITIAL STATE] node=k3s-worker1 | Ready=Some("True")
+[LISTENER] Initial node state synchronized
+[HISTORY ERROR] 2026-11-06T14:03:16.378538601+00:00 | trailing characters at line 1 column 93
+[HISTORY ERROR] 2026-11-06T14:03:46.413948360+00:00 | trailing characters at line 1 column 93
+[HISTORY ERROR] 2026-11-06T14:04:16.842888729+00:00 | trailing characters at line 1 column 93
+[SUSPICION] 2026-11-06T14:04:17.623336734+00:00 | node=k3s-worker1 | Ready=Some("True") -> Unknown
+[VERIFY] attempt=1/3 | reachable=true | HTTP=Some(200) | latency=8.146 ms | error=None
+[VERIFY] attempt=2/3 | reachable=true | HTTP=Some(200) | latency=3.092 ms | error=None
+[VERIFY] attempt=3/3 | reachable=true | HTTP=Some(200) | latency=3.542 ms | error=None
+[VERIFICATION] node=k3s-worker1 | state=ReachableOutsideControlPlane | attempts=3 | successes=3 | failures=0
+[SHORT CIRCUIT] node=k3s-worker1 | candidate_evaluation=skipped | workload_discovery=skipped | reason=reachable
+[DECISION] 2026-11-06T14:04:18.646864422+00:00 | node=k3s-worker1 | decision=Preserve | fencing_required=false | selected_candidate=None | reason=workload remains reachable outside the control-plane path; unnecessary recovery is avoided
+[ENFORCEMENT] node=k3s-worker1 | action=PreserveExisting | no disruptive action
+[HISTORY ERROR] 2026-11-06T14:04:46.943310604+00:00 | trailing characters at line 1 column 93
+[HISTORY ERROR] 2026-11-06T14:05:16.974752561+00:00 | trailing characters at line 1 column 93
+[HISTORY ERROR] 2026-11-06T14:05:47.106594753+00:00 | trailing characters at line 1 column 93
+[HISTORY ERROR] 2026-11-06T14:06:17.851934406+00:00 | trailing characters at line 1 column 93
+[HISTORY ERROR] 2026-11-06T14:06:47.977923980+00:00 | trailing characters at line 1 column 93
+[HISTORY ERROR] 2026-11-06T14:07:18.299202872+00:00 | trailing characters at line 1 column 93
+[HISTORY ERROR] 2026-11-06T14:07:48.329256380+00:00 | trailing characters at line 1 column 93
+[HISTORY ERROR] 2026-11-06T14:08:18.453957018+00:00 | trailing characters at line 1 column 93
+[HISTORY ERROR] 2026-11-06T14:08:48.563357299+00:00 | trailing characters at line 1 column 93
+[HISTORY ERROR] 2026-11-06T14:09:18.853342887+00:00 | trailing characters at line 1 column 93
+[HISTORY ERROR] 2026-11-06T14:09:48.882906125+00:00 | trailing characters at line 1 column 93
+[HISTORY ERROR] 2026-11-06T14:10:19.006114113+00:00 | trailing characters at line 1 column 93
+[HISTORY ERROR] 2026-11-06T14:10:49.097012963+00:00 | trailing characters at line 1 column 93
+[HISTORY ERROR] 2026-11-06T14:11:19.175734804+00:00 | trailing characters at line 1 column 93
+[HISTORY ERROR] 2026-11-06T14:11:49.208782387+00:00 | trailing characters at line 1 column 93
+[HISTORY ERROR] 2026-11-06T14:12:19.853534025+00:00 | trailing characters at line 1 column 93
+[HISTORY ERROR] 2026-11-06T14:12:49.928775400+00:00 | trailing characters at line 1 column 93
+[HISTORY ERROR] 2026-11-06T14:13:20.026378303+00:00 | trailing characters at line 1 column 93
+[RECOVERED] 2026-11-06T14:13:28.629134647+00:00 | node=k3s-worker1 | Ready=Unknown -> True
+[HISTORY ERROR] 2026-11-06T14:13:50.086297733+00:00 | trailing characters at line 1 column 93
+[HISTORY ERROR] 2026-11-06T14:14:20.176034598+00:00 | trailing characters at line 1 column 93

@@ -2,9 +2,10 @@
 """Recompute the pooled second-phase results reported in the paper and check
 them against the values printed in the manuscript.
 
-Covers: the baseline ladder pooled over its three campaigns (H1, H2, decision
-timing), the extended probe grid, the live-writer campaigns (H3) and OpenMRS
-Scenario B under clinical load. Reads the recorded evidence only; runs no
+Covers: the baseline ladder pooled over its four campaigns (H1, H2, decision
+timing), the extended probe grid, the live-writer campaigns (H3), the
+kubelet-hang (H6) and flapping-link (H7) campaigns and OpenMRS Scenario B
+under clinical load. Reads the recorded evidence only; runs no
 experiment. Prints PASS or FAIL per statement and exits 1 on any FAIL.
 
 Usage:
@@ -26,9 +27,13 @@ from datetime import datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-LADDER = ["campaign-20261029T101038Z", "campaign-20261030T214135Z", "campaign-20261101T100434Z"]
+LADDER = ["campaign-20261029T101038Z", "campaign-20261030T214135Z", "campaign-20261101T100434Z",
+          "campaign-20261106T133133Z"]
+KUBELET_HANG = "campaign-20261106T081657Z"
+FLAPPING = "campaign-20261106T103922Z"
 PROBE_EXT = "campaign-20261030T214135Z/probe-grid-ext"
-LIVE_WRITER = ["campaign-20261029T201737Z", "campaign-20261030T042851Z", "campaign-20261031T111653Z"]
+LIVE_WRITER = ["campaign-20261029T201737Z", "campaign-20261030T042851Z", "campaign-20261031T111653Z",
+               "campaign-20261106T173316Z"]
 
 checks = []
 
@@ -63,12 +68,12 @@ def ladder(ev, al):
                 runs += list(csv.DictReader(f))
     for r in runs:
         r["replaced"] = r["original_replaced"] in ("True", "true", "1")
-    check("ladder runs pooled", len(runs), 120)
+    check("ladder runs pooled", len(runs), 150)
 
     def cell(arm, cond, dur):
         return [r for r in runs if (r["arm"], r["condition"], r["fault_seconds_planned"]) == (arm, cond, dur)]
 
-    for arm, expect in (("v0", (0, 8)), ("t10", (8, 8)), ("nx", (0, 0)), ("r2", (0, 8)), ("fa1", (0, 0))):
+    for arm, expect in (("v0", (0, 10)), ("t10", (10, 10)), ("nx", (0, 0)), ("r2", (0, 10)), ("fa1", (0, 0))):
         for dur, e in (("120", expect[0]), ("600", expect[1])):
             rs = cell(arm, "rp", dur)
             check(f"{arm} replaced at {dur} s (of {len(rs)})", sum(r["replaced"] for r in rs), e)
@@ -80,28 +85,28 @@ def ladder(ev, al):
             a, b = sum(r["replaced"] for r in fa), sum(r["replaced"] for r in c)
             pvals.append(al.fisher_exact(a, len(fa) - a, b, len(c) - b))
     holm = al.holm(pvals)
-    check("H1 Holm p, T10 at 120 s", round(holm[1], 4), 0.0009)
-    check("H1 Holm p, V0/T10/R2 at 600 s", round(max(holm[3:]), 4), 0.0009)
+    check("H1 Holm p, T10 at 120 s", round(holm[1], 5), 0.00006)
+    check("H1 Holm p, V0/T10/R2 at 600 s", round(max(holm[3:]), 5), 0.00006)
 
     def restored(arm):
         return [num(r["w2_nodeport_restored_s"]) for r in cell(arm, "uw", "480")]
     fa, t10 = restored("fa1"), restored("t10")
     check("H2 FA1 median restoration (s)", round(statistics.median(fa), 1), 63.9)
-    check("H2 T10 median restoration (s)", round(statistics.median(t10), 1), 62.2)
-    check("H2 Cliff's delta", round(al.cliffs_delta(fa, t10), 2), 0.47)
+    check("H2 T10 median restoration (s)", round(statistics.median(t10), 1), 62.1)
+    check("H2 Cliff's delta", round(al.cliffs_delta(fa, t10), 2), 0.54)
     nx = cell("nx", "uw", "480")
     check("NX restored before the fault healed",
           sum(1 for r in nx if math.isfinite(num(r["w2_nodeport_restored_s"]))
               and num(r["w2_nodeport_restored_s"]) < num(r["fault_seconds_measured"])), 0)
     f1 = [r for r in runs if r["arm"] == "fa1"]
-    check("FA1 decisions", len(f1), 24)
+    check("FA1 decisions", len(f1), 30)
     check("FA1 earliest decision (s)", round(min(num(r["decision_s"]) for r in f1), 1), 42.5)
     check("FA1 latest decision (s)", round(max(num(r["decision_s"]) for r in f1), 1), 65.2)
     pres = [num(r["decision_s"]) - num(r["original_endpoint_unready_s"]) for r in f1 if r["condition"] == "rp"]
     rec = [num(r["decision_s"]) - num(r["original_endpoint_unready_s"]) for r in f1 if r["condition"] == "uw"]
     check("PRESERVE after endpoint not ready, max (s)", round(max(pres), 2), 0.95)
     check("RECOVER after endpoint not ready, max (s)", round(max(rec), 1), 10.1)
-    check("controller CPU per run, max (millicores)", round(max(num(r["controller_cpu_fault_millicores"]) for r in f1), 2), 3.34)
+    check("controller CPU per run, max (millicores)", round(max(num(r["controller_cpu_fault_millicores"]) for r in f1), 2), 3.33)
 
 
 def probe_ext(ev, al):
@@ -122,13 +127,45 @@ def live_writer(ev):
                        check=True, stdout=subprocess.DEVNULL)
         s = json.loads((Path(tmp) / "live-writer-summary.json").read_text())
     f, u = s["fenced"], s["unfenced"]
-    check("fenced runs", f["runs_complete"], 20)
+    check("fenced runs", f["runs_complete"], 40)
     check("fenced runs with a post-fence commit", f["runs_with_original_commit_after_cutoff"], 0)
-    check("fenced upper bound (%)", round(100 * f["upper_95_rate"], 1), 16.8)
+    check("fenced upper bound (%)", round(100 * f["upper_95_rate"], 1), 8.8)
     check("unfenced runs", u["runs_complete"], 20)
     check("unfenced runs with commits after release", u["runs_with_original_commit_after_cutoff"], 20)
     check("unfenced commits after release, total", u["original_commits_after_cutoff_total"], 20515)
     check("runs with overlapping writers", f["runs_with_overlapping_writers"] + u["runs_with_overlapping_writers"], 0)
+
+
+def controller_episodes(log):
+    """Suspicion episodes and decisions in one controller log."""
+    text = log.read_text(errors="ignore")
+    return (len(re.findall(r"^\[SUSPICION\]", text, re.M)),
+            len(re.findall(r"decision=Preserve", text)),
+            len(re.findall(r"decision=Recover", text)))
+
+
+def other_faults(ev):
+    for name, campaign, expect in (
+        ("kubelet hang", KUBELET_HANG, {"v0": 5, "t10": 5, "fa1": 0}),
+        ("flapping link", FLAPPING, {"v0": 0, "t10": 5, "fa1": 0}),
+    ):
+        with tempfile.TemporaryDirectory() as tmp:
+            subprocess.run([sys.executable, str(ROOT / "analysis" / "analyze-ladder.py"),
+                            str(ev / "ladder" / campaign), "--output", tmp],
+                           check=True, stdout=subprocess.DEVNULL)
+            with open(Path(tmp) / "ladder-runs.csv", newline="") as f:
+                runs = list(csv.DictReader(f))
+        check(f"{name}: runs", len(runs), 15)
+        for arm, e in expect.items():
+            n = sum(r["original_replaced"] in ("True", "true", "1") for r in runs if r["arm"] == arm)
+            check(f"{name}: {arm} replaced (of 5)", n, e)
+        s = p = rec = 0
+        for d in sorted((ev / "ladder" / campaign / "runs").glob("*-fa1-*")):
+            a, b, c = controller_episodes(d / "controller.log")
+            s, p, rec = s + a, p + b, rec + c
+        check(f"{name}: FA1 suspicion episodes", s, 5 if name == "kubelet hang" else 30)
+        check(f"{name}: FA1 PRESERVE decisions", p, s)
+        check(f"{name}: FA1 RECOVER decisions", rec, 0)
 
 
 def ts(s):
@@ -170,6 +207,7 @@ def main():
     for part in (ladder, probe_ext):
         part(ev, al)
     live_writer(ev)
+    other_faults(ev)
     openmrs_load(ev)
     for what, v, e, st in checks:
         print(f"{st}  {what:52s} {v}  (paper: {e})")
