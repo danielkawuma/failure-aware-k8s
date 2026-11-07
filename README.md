@@ -144,7 +144,7 @@ and summarised in the paper's Acknowledgment.
 
 ## Citation
 
-Release `v1.2.0-research`, archived on Zenodo (DOI 10.5281/zenodo.23866292, which
+Release `v1.2.0-research`, archived on Zenodo (DOI 10.5281/zenodo.23866291, which
 covers every version). Earlier releases are kept unchanged.
 
 ## License
